@@ -1,9 +1,11 @@
-export const links = [
-  { name: "PRODUCTOS", path: "/products/0" },
-  { name: "CATEGORIAS", path: "/products/category" },
-  { name: "BLOG", path: "/blog" },
-  { name: "SOBRE NOSOTROS", path: "/aboutUs" },
-];
-
 export { NavBar } from "./NavBar";
 export { ModalNav } from "./ModalNav";
+export { SearchInput } from "./SearchInput";
+
+export const links = [
+  { name: "empresa", path: "/empresa" },
+  { name: "productos", path: "/productos" },
+  { name: "rrhh", path: "/rrhh" },
+  { name: "nosotros", path: "/nosotros" },
+  { name: "contacto", path: "/contacto" },
+];

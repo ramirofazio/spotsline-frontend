@@ -10,11 +10,11 @@
   }
 
   body {
-    @apply bg-base font-primary h-full w-full overflow-x-hidden;
+    @apply overflow-x-hidden bg-base font-primary dark:bg-gray;
   }
 
   h1 {
-    @apply font-primary text-gray text-xl font-semibold;
+    @apply font-primary text-xl font-semibold text-gray dark:text-base;
   }
 
   ::-webkit-scrollbar {
@@ -26,7 +26,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-yellow rounded-md;
+    @apply rounded-md bg-yellow;
   }
 
   input[type="number"]::-webkit-inner-spin-button,
@@ -43,7 +43,7 @@
 }
 
 .swiper-pagination-bullet {
-  @apply bg-yellow/50 !mr-3 h-3 w-3;
+  @apply !mr-3 h-3 w-3 bg-yellow/50;
 }
 
 .swiper-pagination-bullet-active {
