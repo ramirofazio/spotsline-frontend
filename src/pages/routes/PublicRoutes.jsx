@@ -1,7 +1,8 @@
+import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
 import { Landing } from "pages/landing/Landing";
 import { AboutUs } from "pages/aboutUs/AboutUs";
-import { Outlet } from "react-router-dom";
+import { NavBar } from "src/components/navs/index";
 
 export const publicRoutesPaths = [
   {
@@ -16,5 +17,10 @@ export const publicRoutesPaths = [
 ];
 
 export function PublicRoot() {
-  return <Outlet />;
+  return (
+    <main className="overflow-hidden">
+      <NavBar />
+      <Outlet />;
+    </main>
+  );
 }
