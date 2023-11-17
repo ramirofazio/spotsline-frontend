@@ -23,7 +23,7 @@ export default {
         ...defaultTheme,
       },
       transitionDuration: {
-        DEFAULT: "200ms",
+        DEFAULT: "100ms",
       },
     },
   },

@@ -27,7 +27,10 @@ export function NavBar() {
               {l.name}
             </NavLink>
           ))}
-          <i className="ri-instagram-line ml-20 text-3xl text-yellow" />
+          <i
+            className="ri-instagram-line icons ml-20 text-3xl text-yellow"
+            onClick={() => window.open("https://www.instagram.com/spotsline_iluminacion/?hl=es-la", "_blank")}
+          />
         </section>
       </div>
     </main>
