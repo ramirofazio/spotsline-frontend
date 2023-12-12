@@ -1,8 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
-import { Landing } from "pages/landing/Landing";
-import { AboutUs } from "pages/aboutUs/AboutUs";
-import { NavBar } from "components/navs/index";
+import { NavBar } from "../../components/navs";
+import {AboutUs, Company, Landing, Profile} from "../index"
 
 export const publicRoutesPaths = [
   {
@@ -11,6 +10,7 @@ export const publicRoutesPaths = [
     errorElement: <DefaultError />,
     children: [
       { path: "/", element: <Landing />, index: true },
+      { path: "/empresa", element: <Company /> },
       { path: "/AboutUs", element: <AboutUs /> },
     ],
   },

@@ -22,6 +22,9 @@ export default {
         s: "450px",
         ...defaultTheme,
       },
+      backgroundImage: {
+        empresaScaled: `url(https://www.spotsline.com.ar/wp-content/uploads/2021/05/empresa-scaled.jpg)`,
+      },
       transitionDuration: {
         DEFAULT: "100ms",
       },
