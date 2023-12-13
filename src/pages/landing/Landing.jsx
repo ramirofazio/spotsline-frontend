@@ -1,4 +1,3 @@
-
 export function Landing() {
   return (
     <main>
