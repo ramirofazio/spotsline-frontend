@@ -36,9 +36,9 @@ export function Company() {
             con honestidad y esfuerzo. Es nuestro objetivo que este sitio web pueda satisfacer todas vuestras
             necesidades y permita una mayor conexión entre ustedes y nuestra gente. Gracias por contar con nosotros.
           </p>
-          <div className="w-fit  mx-auto">
+          <a target="_blank" href="https://www.spotsline.com.ar/wp-content/uploads/2022/08/Politica-de-garantia-y-devoluciones.pdf" className="w-fit mx-auto">
             <DefaultButton text="POLITICA DE GARANTÍA Y DEVOLUCIÓN" className="my-3" />
-          </div>
+          </a>
         </span>
 
         <picture className="md:my-auto p-5">
