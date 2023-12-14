@@ -32,5 +32,15 @@ export default {
     },
   },
   darkMode: "class",
-  plugins: [nextui()],
+  plugins: [nextui({
+    layout: {
+      fontFamily: {
+        primary: ["Dosis", "sans-serif"],
+        secondary: ["Quicksand", "sans-serif"],
+      },
+      lineHeight: {
+        large: "2px"
+      }
+    }
+  })],
 };

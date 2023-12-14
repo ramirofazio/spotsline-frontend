@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { links, SearchInput } from "./index";
+import { links, SearchInput, ModalNav } from "./index";
 import logo from "assets/logo.png";
 import { ButtonWithIcon } from "components/buttons";
 
@@ -12,7 +12,8 @@ export function NavBar() {
           <SearchInput />
           <ButtonWithIcon icon={"ri-user-fill"} text={"INGRESA"} classname={"space-x-4 rounded-full"} />
         </section>
-        <section className="flex items-center">
+        <ModalNav />
+        {/* <nav className="hidden items-center border-2 lg:flex ">
           {links.map((l, index) => (
             <NavLink
               key={index}
@@ -31,7 +32,7 @@ export function NavBar() {
             className="ri-instagram-line icons ml-20 text-3xl text-yellow"
             onClick={() => window.open("https://www.instagram.com/spotsline_iluminacion/?hl=es-la", "_blank")}
           />
-        </section>
+        </nav> */}
       </div>
     </main>
   );
