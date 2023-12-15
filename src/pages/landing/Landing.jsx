@@ -1,7 +1,9 @@
+
+
 export function Landing() {
   return (
     <main>
-      <h1>Landing</h1>
+      <p className="text-lg uppercase tracking-wider font-bold">Landing</p>
     </main>
   );
 }
