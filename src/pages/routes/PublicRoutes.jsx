@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
 import { NavBar } from "../../components/navs";
-import {AboutUs, Company, Landing, Profile} from "../index"
+import { AboutUs, Company, Landing, SignIn } from "../index";
 
 export const publicRoutesPaths = [
   {
@@ -11,7 +11,8 @@ export const publicRoutesPaths = [
     children: [
       { path: "/", element: <Landing />, index: true },
       { path: "/empresa", element: <Company /> },
-      { path: "/AboutUs", element: <AboutUs /> },
+      { path: "/sobre_nosotros", element: <AboutUs /> },
+      { path: "/iniciar_sesión", element: <SignIn /> },
     ],
   },
 ];
