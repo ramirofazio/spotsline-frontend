@@ -12,7 +12,7 @@ export function NavBar() {
         <section className="mb-6 flex items-center space-x-4">
           <SearchInput />
           <ButtonWithIcon
-            onClick={() => navigate("iniciar_sesión")}
+            onClick={() => navigate("sign-in")}
             icon={"ri-user-fill"}
             text={"INGRESA"}
             classname={"space-x-4 rounded-full"}

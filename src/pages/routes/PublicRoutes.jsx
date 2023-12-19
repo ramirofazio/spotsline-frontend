@@ -10,9 +10,9 @@ export const publicRoutesPaths = [
     errorElement: <DefaultError />,
     children: [
       { path: "/", element: <Landing />, index: true },
-      { path: "/empresa", element: <Company /> },
-      { path: "/sobre_nosotros", element: <AboutUs /> },
-      { path: "/iniciar_sesión", element: <SignIn /> },
+      { path: "/company", element: <Company /> },
+      { path: "/about-us", element: <AboutUs /> },
+      { path: "/sign-in", element: <SignIn /> },
     ],
   },
 ];
