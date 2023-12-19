@@ -1,17 +1,33 @@
 import { BASE_API } from "./baseApi";
 
-const route = {
-  PRODUCT: "product",
-  AUTH: "auth",
-  USER: "user",
-  CART: "shoppingCart",
-  CHECKOUT: "checkout",
-};
-
 export const APISpot = {
   //? Rutas al backend POST, GET, PUT, etc...
-  loginByJWT: ({ accessToken }) => {
-    return BASE_API.post(`/${route.AUTH}/jwtAutoLogin`, { accessToken });
+  auth: {
+    _route: "auth",
+    loginByJWT: ({ accessToken }) => {
+      return BASE_API.post(`/${this._route}/jwtAutoLogin`, { accessToken });
+    },
+    firstTimePassword: (body) => {
+      return BASE_API.patch(`/${this._route}/first-time-password`, body);
+    },
+    initPasswordReset: (email) => {
+      return BASE_API.patch(`/${this._route}/init-password-reset`, { email });
+    },
+    confirmPasswordReset: (body) => {
+      return BASE_API.patch(`/${this._route}/confirm-password-reset`, body);
+    },
+  },
+  product: {
+    _route: "product",
+  },
+  user: {
+    _route: "user",
+  },
+  cart: {
+    _route: "shoppingCart",
+  },
+  checkout: {
+    _route: "checkout",
   },
 };
 
