@@ -1,7 +1,7 @@
 import { Input } from "@nextui-org/react";
 import { DefaultButton } from "../../components/buttons";
 import { useEffect, useState } from "react";
-import { isValidSignIn } from "../utils/validation";
+import { isValidSignIn } from "../../utils/validation";
 import { APISpot } from "../../api";
 import { useNavigate } from "react-router-dom";
 

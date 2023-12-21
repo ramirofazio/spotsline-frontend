@@ -1,6 +1,6 @@
 import { Input } from "@nextui-org/react";
 import { useState } from "react";
-import { isValidFirstSignIn } from "../utils/validation";
+import { isValidFirstSignIn } from "../../utils/validation";
 import { APISpot } from "../../api";
 import { DefaultButton } from "../../components/buttons";
 
