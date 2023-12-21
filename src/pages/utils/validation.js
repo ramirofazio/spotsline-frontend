@@ -14,8 +14,40 @@ export function isValidSignIn({ email, password }) {
 
   if (!password) errs.password = "ingrese una contraseña";
   else if (password.length < 8) errs.password = "debe tener al menos 8 caracteres";
-  /* else if (!regex.containUppercase.test(password)) errs.password = "debe tener al menos una letra en mayuscula";
-  else if (!regex.containNumber.test(password)) errs.password = "debe tener al menos un numero";
-  else if (regex.containSpace.test(password)) errs.password = "no puede tener espacios"; */
+
+  if (password) {
+    const getErr = validatePassword(password);
+    getErr ? (errs.password = getErr) : null;
+  }
+
+  return errs;
+}
+
+export function validatePassword(password) {
+  if (!password) return "ingrese una contraseña";
+  else if (password.length < 8 || password.length < 16) return "debe tener entre 8 y 16 caracteres";
+  /* else if (!regex.containUppercase.test(password)) return "debe tener al menos una letra en mayuscula";
+  else if (!regex.containNumber.test(password)) return "debe tener al menos un numero";
+  else if (regex.containSpace.test(password)) return "no puede tener espacios"; */
+  return false;
+}
+
+export function isValidFirstSignIn({ password, confirmPassword }) {
+  const errs = {};
+
+  if (password) {
+    const getErr = validatePassword(password);
+    getErr ? (errs.password = getErr) : null;
+  }
+
+  if (confirmPassword) {
+    const getErr = validatePassword(confirmPassword);
+    getErr ? (errs.confirmPassword = getErr) : null;
+  }
+
+  if (password !== confirmPassword) {
+    errs.submit = "las contraseñas no coinciden";
+  }
+
   return errs;
 }

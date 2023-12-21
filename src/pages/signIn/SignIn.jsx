@@ -3,8 +3,10 @@ import { DefaultButton } from "../../components/buttons";
 import { useEffect, useState } from "react";
 import { isValidSignIn } from "../utils/validation";
 import { APISpot } from "../../api";
+import { useNavigate } from "react-router-dom";
 
 export function SignIn() {
+  const navigate = useNavigate();
   const [signInData, setSignInData] = useState(false);
   const [errs, setErrs] = useState({});
   const [isVisible, setIsVisible] = useState(false);
@@ -21,8 +23,11 @@ export function SignIn() {
   async function handleSignIn(e) {
     try {
       e.preventDefault();
+      console.log(signInData);
       const res = await APISpot.auth.signIn(signInData);
       console.log(res);
+      const { accesToken, user } = res.data;
+      if (!user.firstSignIn) navigate("/first-sign-in");
     } catch (e) {
       console.log(e);
     }
