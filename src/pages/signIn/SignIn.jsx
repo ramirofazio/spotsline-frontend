@@ -1,5 +1,5 @@
 import { Input } from "@nextui-org/react";
-import { DefaultButton } from "../../components/buttons";
+import { DefaultButton } from "src/components/buttons";
 import { useState } from "react";
 import { isValidSignIn } from "../../utils/validation";
 import { APISpot, addAuthWithToken } from "../../api";
@@ -45,7 +45,7 @@ export function SignIn() {
     <section className="bg-white">
       <div className="mx-auto w-[65%] border-2">
         <h1 className="mx-auto">ACCEDER</h1>
-        <form onSubmit={(e) => handleSignIn(e)} className="my-5 flex flex-col gap-4 px-2 ">
+        <form onSubmit={(e) => handleSignIn(e)} className="data-invalid:bg-yellow my-5 flex flex-col gap-4 px-2">
           <Input
             name="email"
             className="mx-auto w-1/2 min-w-fit "

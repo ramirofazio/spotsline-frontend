@@ -21,6 +21,7 @@
     @apply w-fit
   }
 
+
   ::-webkit-scrollbar {
     @apply h-1 w-1 xl:w-2;
   }
