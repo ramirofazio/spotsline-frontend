@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { deleteOfStorage, getOfStorage, saveInStorage } from "src/utils/localStorage";
-import { addAuthWithToken } from "src/api";
+import { deleteOfStorage, getOfStorage, saveInStorage } from "../../utils/localStorage";
+
 
 const auth = createSlice({
   name: "auth",
@@ -22,10 +22,10 @@ const auth = createSlice({
           state.token = action.payload;
         }
 
-        if (state.token) {
+        /* if (state.token) {
           addAuthWithToken(state.token);
           saveInStorage("accessToken", state.token);
-        }
+        } */
       }
     },
   },

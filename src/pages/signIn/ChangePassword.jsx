@@ -1,10 +1,12 @@
 import { Input } from "@nextui-org/react";
 import { useState } from "react";
-import { isValidFirstSignIn } from "../../utils/validation";
+import { isValidPasswords } from "../../utils/validation";
 import { APISpot } from "../../api";
 import { DefaultButton } from "../../components/buttons";
+import { useLocation } from "react-router-dom";
 
-export function FirstSignIn() {
+export function ChangePassword() {
+  const { search } = useLocation();
   const [passwords, setPasswords] = useState("");
   const [errs, setErrs] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -13,7 +15,7 @@ export function FirstSignIn() {
   function handlePassword({ target }) {
     setPasswords((prev) => {
       const newData = { ...prev, [target.name]: target.value };
-      setErrs(isValidFirstSignIn(newData));
+      setErrs(isValidPasswords(newData));
       return newData;
     });
   }
@@ -21,19 +23,28 @@ export function FirstSignIn() {
   async function handleSubmit(e) {
     try {
       e.preventDefault();
-      const res = await APISpot.auth.signIn(signInData);
+      const res = await APISpot.auth.signIn(passwords);
       console.log(res);
     } catch (e) {
       console.log(e);
     }
   }
 
+
   return (
     <form className="flex flex-col items-center gap-6" onSubmit={handleSubmit}>
-      <span className="flex flex-col gap-2 w-fit justify-center items-center">
-        <h1>Bienvenido al nuevo sistema web de Spotsline!</h1>
-        <h2>cambie la contraseña otorgada</h2>
-      </span>
+      {search === "?type=first" && (
+        <span className="flex w-fit flex-col items-center justify-center gap-2">
+          <h1>Bienvenido al nuevo sistema web de Spotsline!</h1>
+          <h2>cambie la contraseña otorgada</h2>
+        </span>
+      )}
+      {search === "?type=change" && (
+        <span className="flex w-fit flex-col items-center justify-center gap-2">
+          <h1>A continuación ingrese su nueva contraseña</h1>
+          <h2>esta debe ser distinta a la anterior</h2>
+        </span>
+      )}
       <Input
         name="password"
         className="mx-auto w-1/2 min-w-fit"

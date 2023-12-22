@@ -32,7 +32,7 @@ export function validatePassword(password) {
   return false;
 }
 
-export function isValidFirstSignIn({ password, confirmPassword }) {
+export function isValidPasswords({ password, confirmPassword }) {
   const errs = {};
 
   if (password) {

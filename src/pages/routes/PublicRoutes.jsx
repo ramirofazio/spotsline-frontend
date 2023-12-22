@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
 import { NavBar } from "../../components/navs";
-import { AboutUs, Company, Landing, SignIn, FirstSignIn } from "../index";
+import { AboutUs, Company, Landing, SignIn, ChangePassword } from "../index";
 
 export const publicRoutesPaths = [
   {
@@ -13,7 +13,7 @@ export const publicRoutesPaths = [
       { path: "/company", element: <Company /> },
       { path: "/about-us", element: <AboutUs /> },
       { path: "/sign-in", element: <SignIn /> },
-      { path: "/first-sign-in", element: <FirstSignIn /> },
+      { path: "/change-password", element: <ChangePassword /> },
     ],
   },
 ];
