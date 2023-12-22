@@ -1,5 +1,5 @@
 import { Input } from "@nextui-org/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { isValidPasswords } from "../../utils/validation";
 import { APISpot } from "../../api";
 import { DefaultButton } from "../../components/buttons";
@@ -12,7 +12,7 @@ export function ChangePassword() {
   const [errs, setErrs] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
-  const { email } = useSelector((state) => state.user);
+  const { auth, user } = useSelector((state) => state);
 
   function handlePassword({ target }) {
     setPasswords((prev) => {
@@ -26,8 +26,11 @@ export function ChangePassword() {
     try {
       e.preventDefault();
       const res = await APISpot.auth.confirmPasswordReset({
-        ...passwords,
-        email
+        body: {
+          ...passwords,
+          email: user.email,
+        },
+        token: auth.token,
       });
       console.log(res.data);
     } catch (e) {
@@ -35,8 +38,9 @@ export function ChangePassword() {
     }
   }
 
+
   return (
-    <form className="flex flex-col items-center gap-6" onSubmit={handleSubmit}>
+    <form className="flex flex-col items-center gap-4" onSubmit={handleSubmit}>
       {search === "?type=first" && (
         <span className="flex w-fit flex-col items-center justify-center gap-2">
           <h1>Bienvenido al nuevo sistema web de Spotsline!</h1>
@@ -58,8 +62,8 @@ export function ChangePassword() {
         label="Contraseña"
         variant="bordered"
         labelPlacement="outside"
-        isInvalid={Boolean(errs)}
-        errorMessage={errs && errs}
+        isInvalid={Boolean(errs.newPassword)}
+        errorMessage={errs.newPassword && errs.newPassword}
         endContent={
           <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
             {isVisible ? (
@@ -80,8 +84,8 @@ export function ChangePassword() {
         label="Confirmar contraseña"
         variant="bordered"
         labelPlacement="outside"
-        isInvalid={Boolean(errs)}
-        errorMessage={errs && errs}
+        isInvalid={Boolean(errs.newPasswordConfirm)}
+        errorMessage={errs.newPasswordConfirm && errs.newPasswordConfirm}
         endContent={
           <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
             {isVisible ? (
@@ -93,6 +97,9 @@ export function ChangePassword() {
         }
         onChange={handlePassword}
       />
+      <p className={`invisible text-red-500 ${errs.submit && "!visible"}`}>
+        {errs.submit ? errs.submit : "placeholder"}
+      </p>
       <DefaultButton
         disabled={Object.values(errs)?.length || !Object.values(passwords)?.length ? true : false}
         type="submit"

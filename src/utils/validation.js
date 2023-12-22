@@ -42,9 +42,9 @@ export function isValidPasswords({ newPassword, newPasswordConfirm }) {
     getErr ? (errs.newPasswordConfirm = getErr) : null;
   }
 
-  /* if (newPassword !== newPasswordConfirm) {
+  if (newPassword !== newPasswordConfirm) {
     errs.submit = "las contraseñas no coinciden";
-  } */
+  }
 
   return errs;
 }

@@ -23,7 +23,7 @@ export const APISpot = {
     initPasswordReset: (email) => {
       return BASE_API.patch(`/${route.AUTH}/init-password-reset`, { email });
     },
-    confirmPasswordReset: (body) => {
+    confirmPasswordReset: ({ body }) => {
       return BASE_API.patch(`/${route.AUTH}/confirm-password-reset`, body);
     },
   },

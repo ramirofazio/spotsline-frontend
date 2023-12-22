@@ -2,7 +2,7 @@ import { Input } from "@nextui-org/react";
 import { DefaultButton } from "../../components/buttons";
 import { useState } from "react";
 import { isValidSignIn } from "../../utils/validation";
-import { APISpot } from "../../api";
+import { APISpot, addAuthWithToken } from "../../api";
 import { useNavigate } from "react-router-dom";
 import { actionsAuth, actionsUser } from "../../redux/reducers";
 import { useDispatch } from "react-redux";
@@ -30,9 +30,10 @@ export function SignIn() {
       const res = await APISpot.auth.signIn(signInData);
       console.log(res);
       const { access_token, user } = res.data;
+      addAuthWithToken(access_token);
+      dispatch(actionsAuth.setToken(access_token));
+      dispatch(actionsUser.setUser(user));
       if (!user.firstSignIn) {
-        dispatch(actionsAuth.setToken(access_token));
-        dispatch(actionsUser.setUser(user));
         navigate("/change-password?type=first");
       }
     } catch (e) {
