@@ -1,10 +1,10 @@
 import { Input } from "@nextui-org/react";
 import { DefaultButton } from "../../components/buttons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { isValidSignIn } from "../../utils/validation";
 import { APISpot } from "../../api";
 import { useNavigate } from "react-router-dom";
-import { actionsAuth } from "../../redux/reducers";
+import { actionsAuth, actionsUser } from "../../redux/reducers";
 import { useDispatch } from "react-redux";
 
 export function SignIn() {
@@ -32,6 +32,7 @@ export function SignIn() {
       const { access_token, user } = res.data;
       if (!user.firstSignIn) {
         dispatch(actionsAuth.setToken(access_token));
+        dispatch(actionsUser.setUser(user));
         navigate("/change-password?type=first");
       }
     } catch (e) {
@@ -39,9 +40,6 @@ export function SignIn() {
     }
   }
 
-  useEffect(() => {
-    console.log(signInData);
-  }, [signInData]);
   return (
     <section className="bg-white">
       <div className="mx-auto w-[65%] border-2">

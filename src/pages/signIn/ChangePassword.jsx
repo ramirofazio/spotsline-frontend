@@ -4,6 +4,7 @@ import { isValidPasswords } from "../../utils/validation";
 import { APISpot } from "../../api";
 import { DefaultButton } from "../../components/buttons";
 import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export function ChangePassword() {
   const { search } = useLocation();
@@ -11,6 +12,7 @@ export function ChangePassword() {
   const [errs, setErrs] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
+  const { email } = useSelector((state) => state.user);
 
   function handlePassword({ target }) {
     setPasswords((prev) => {
@@ -23,13 +25,15 @@ export function ChangePassword() {
   async function handleSubmit(e) {
     try {
       e.preventDefault();
-      const res = await APISpot.auth.signIn(passwords);
-      console.log(res);
+      const res = await APISpot.auth.confirmPasswordReset({
+        ...passwords,
+        email
+      });
+      console.log(res.data);
     } catch (e) {
       console.log(e);
     }
   }
-
 
   return (
     <form className="flex flex-col items-center gap-6" onSubmit={handleSubmit}>
@@ -46,7 +50,7 @@ export function ChangePassword() {
         </span>
       )}
       <Input
-        name="password"
+        name="newPassword"
         className="mx-auto w-1/2 min-w-fit"
         isRequired
         size="lg"
@@ -68,7 +72,7 @@ export function ChangePassword() {
         onChange={handlePassword}
       />
       <Input
-        name="confirmPassword"
+        name="newPasswordConfirm"
         className="mx-auto w-1/2 min-w-fit"
         isRequired
         size="lg"

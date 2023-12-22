@@ -29,22 +29,22 @@ export function validatePassword(password) {
   return false;
 }
 
-export function isValidPasswords({ password, confirmPassword }) {
+export function isValidPasswords({ newPassword, newPasswordConfirm }) {
   const errs = {};
 
-  if (password) {
-    const getErr = validatePassword(password);
-    getErr ? (errs.password = getErr) : null;
+  if (newPassword) {
+    const getErr = validatePassword(newPassword);
+    getErr ? (errs.newPassword = getErr) : null;
   }
 
-  if (confirmPassword) {
-    const getErr = validatePassword(confirmPassword);
-    getErr ? (errs.confirmPassword = getErr) : null;
+  if (newPasswordConfirm) {
+    const getErr = validatePassword(newPasswordConfirm);
+    getErr ? (errs.newPasswordConfirm = getErr) : null;
   }
 
-  if (password !== confirmPassword) {
+  /* if (newPassword !== newPasswordConfirm) {
     errs.submit = "las contraseñas no coinciden";
-  }
+  } */
 
   return errs;
 }
