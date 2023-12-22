@@ -26,7 +26,7 @@ module.exports = {
     "comma-spacing": "warn",
     "curly": "off",
     "operator-linebreak": "off",
-    "camelcase": "warn",
+    "camelcase": "off",
     "comma-dangle": "off",
     "new-cap": "warn",
     "no-duplicate-imports": "error",

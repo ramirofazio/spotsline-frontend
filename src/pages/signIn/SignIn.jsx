@@ -4,8 +4,11 @@ import { useEffect, useState } from "react";
 import { isValidSignIn } from "../../utils/validation";
 import { APISpot } from "../../api";
 import { useNavigate } from "react-router-dom";
+import { actionsAuth } from "../../redux/reducers";
+import { useDispatch } from "react-redux";
 
 export function SignIn() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [signInData, setSignInData] = useState(false);
   const [errs, setErrs] = useState({});
@@ -26,8 +29,11 @@ export function SignIn() {
       console.log(signInData);
       const res = await APISpot.auth.signIn(signInData);
       console.log(res);
-      const { accesToken, user } = res.data;
-      if (!user.firstSignIn) navigate("/first-sign-in");
+      const { access_token, user } = res.data;
+      if (!user.firstSignIn) {
+        dispatch(actionsAuth.setToken(access_token));
+        navigate("/change-password?type=first");
+      }
     } catch (e) {
       console.log(e);
     }

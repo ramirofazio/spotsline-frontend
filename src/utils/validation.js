@@ -12,9 +12,6 @@ export function isValidSignIn({ email, password }) {
   if (!email) errs.email = "ingrese un email";
   else if (!regex.isValidEmail.test(email)) errs.email = "ingrese un email valido";
 
-  if (!password) errs.password = "ingrese una contraseña";
-  else if (password.length < 8) errs.password = "debe tener al menos 8 caracteres";
-
   if (password) {
     const getErr = validatePassword(password);
     getErr ? (errs.password = getErr) : null;
@@ -25,7 +22,7 @@ export function isValidSignIn({ email, password }) {
 
 export function validatePassword(password) {
   if (!password) return "ingrese una contraseña";
-  else if (password.length < 8 || password.length < 16) return "debe tener entre 8 y 16 caracteres";
+  //else if (password.length < 8 || password.length < 16) return "debe tener entre 8 y 16 caracteres";
   /* else if (!regex.containUppercase.test(password)) return "debe tener al menos una letra en mayuscula";
   else if (!regex.containNumber.test(password)) return "debe tener al menos un numero";
   else if (regex.containSpace.test(password)) return "no puede tener espacios"; */

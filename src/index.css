@@ -10,7 +10,7 @@
   }
 
   body {
-    @apply overflow-x-hidden bg-base font-primary dark:bg-gray;
+    @apply overflow-x-hidden  font-primary dark:bg-gray;
   }
 
   h1 {
