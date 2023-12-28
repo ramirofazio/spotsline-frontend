@@ -32,15 +32,17 @@ export default {
     },
   },
   darkMode: "class",
-  plugins: [nextui({
-    layout: {
-      fontFamily: {
-        primary: ["Dosis", "sans-serif"],
-        secondary: ["Quicksand", "sans-serif"],
+  plugins: [
+    nextui({
+      layout: {
+        fontFamily: {
+          primary: ["Dosis", "sans-serif"],
+          secondary: ["Quicksand", "sans-serif"],
+        },
+        lineHeight: {
+          large: "2px",
+        },
       },
-      lineHeight: {
-        large: "2px"
-      }
-    }
-  })],
+    }),
+  ],
 };

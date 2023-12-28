@@ -1,5 +1,5 @@
 import { useRouteError, Link } from "react-router-dom";
-import logo from "src/assets/logo.png";
+import logo from "assets/logo.png";
 
 export function DefaultError() {
   console.log(useRouteError());

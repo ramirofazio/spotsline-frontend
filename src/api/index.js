@@ -6,14 +6,17 @@ const route = {
   USER: "users",
   CART: "shoppingCart",
   CHECKOUT: "checkout",
-
 };
 
 export const APISpot = {
+  getPaginatedProducts: async (take, skip) => {
+    const res = await BASE_API.get(`/${route.PRODUCT}/pag?take=${take}&&skip=${skip}`);
+    return res.data;
+  },
 
-getCategories: () => {
-    return BASE_API.get(`/`)
-},
+  getCategories: () => {
+    return BASE_API.get(`/`);
+  },
   loginByJWT: ({ accessToken }) => {
     return BASE_API.post(`/${route.AUTH}/jwtAutoLogin`, { accessToken });
   },
