@@ -1,15 +1,19 @@
 import { BASE_API } from "./baseApi";
 
 const route = {
-  PRODUCT: "product",
+  PRODUCT: "products",
   AUTH: "auth",
-  USER: "user",
+  USER: "users",
   CART: "shoppingCart",
   CHECKOUT: "checkout",
+
 };
 
 export const APISpot = {
-  //? Rutas al backend POST, GET, PUT, etc...
+
+getCategories: () => {
+    return BASE_API.get(`/`)
+},
   loginByJWT: ({ accessToken }) => {
     return BASE_API.post(`/${route.AUTH}/jwtAutoLogin`, { accessToken });
   },
