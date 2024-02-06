@@ -1,9 +1,9 @@
 import { BASE_API } from "./baseApi";
 
 const route = {
-  PRODUCT: "product",
+  PRODUCT: "products",
   AUTH: "auth",
-  USER: "user",
+  USER: "users",
   CART: "shoppingCart",
   CHECKOUT: "checkout",
 };
