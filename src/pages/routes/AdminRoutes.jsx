@@ -1,11 +1,16 @@
 import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
+import Layout from "../Layout";
 
 export const adminRoutesPaths = [
   {
     path: "/",
     errorElement: <DefaultError />,
-    element: <AdminRoot />,
+    element: (
+      <Layout>
+        <AdminRoot />
+      </Layout>
+    ),
     children: [
       {
         path: "/admin",

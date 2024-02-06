@@ -32,7 +32,6 @@ export function ModalNav() {
         {links.map((l, i) => (
           <NavbarItem key={i} className="0">
             <NavLink
-              key={i}
               to={l.path}
               className={({ isActive }) =>
                 `group mx-4 flex items-center text-lg uppercase tracking-wider transition  ${
@@ -57,7 +56,6 @@ export function ModalNav() {
         {links.map((l, i) => (
           <NavbarItem key={i} className="0">
             <NavLink
-              key={i}
               to={l.path}
               className={({ isActive }) =>
                 `group mx-4 flex items-center text-lg uppercase tracking-wider transition  ${

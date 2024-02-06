@@ -9,6 +9,18 @@ const route = {
 };
 
 export const APISpot = {
+
+//TODO acomodar estos 3 pedidos igual que el auth, metidos en un objeto `products`
+  getPaginatedProducts: async (take, skip) => {
+    const res = await BASE_API.get(`/${route.PRODUCT}/pag?take=${take}&&skip=${skip}`);
+    return res.data;
+  },
+  getCategories: () => {
+    return BASE_API.get(`/`);
+  },
+  loginByJWT: ({ accessToken }) => {
+    return BASE_API.post(`/${route.AUTH}/jwtAutoLogin`, { accessToken });
+  },
   //? Rutas al backend POST, GET, PUT, etc...
   auth: {
     loginByJWT: ({ accessToken }) => {
