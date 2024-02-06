@@ -1,10 +1,10 @@
-
-export function DefaultButton({text, className, ...props}) {
+export function DefaultButton({ text, className, ...props }) {
   return (
     <button
-    className={`bg-yellow rounded-xl py-2 px-3 font-secondary font-bold hover:transition-all hover:bg-gray hover:text-white  ${className} `}   {...props}
+      {...props}
+      className={`w-fit cursor-pointer rounded-xl bg-yellow px-3 py-2 font-secondary font-bold hover:bg-gray hover:text-white hover:transition-all disabled:pointer-events-none  disabled:bg-black disabled:opacity-40 ${className} `}
     >
       {text}
     </button>
-  )
+  );
 }

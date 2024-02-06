@@ -10,12 +10,17 @@
   }
 
   body {
-    @apply overflow-x-hidden bg-base font-primary dark:bg-gray;
+    @apply overflow-x-hidden  font-primary dark:bg-gray;
   }
 
   h1 {
-    @apply font-primary text-xl font-semibold text-gray dark:text-base;
+    @apply font-primary text-xl font-semibold text-gray dark:text-base w-fit;
   }
+
+  h2, h3, h4, p {
+    @apply w-fit
+  }
+
 
   ::-webkit-scrollbar {
     @apply h-1 w-1 xl:w-2;
