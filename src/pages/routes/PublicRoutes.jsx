@@ -3,6 +3,8 @@ import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
 import Loader from "components/Loader.jsx";
 import { APISpot } from "src/api/index.js";
+import Layout from "../Layout";
+//? Imp en lazy, mapeo componentes a default para que funcionen que el suspense
 const NavBar = lazy(() => import("components/navs/NavBar.jsx").then((module) => ({ default: module.NavBar })));
 const Landing = lazy(() => import("pages/landing/Landing.jsx").then((module) => ({ default: module.Landing })));
 const AboutUs = lazy(() => import("pages/aboutUs/AboutUs.jsx").then((module) => ({ default: module.AboutUs })));
@@ -12,7 +14,11 @@ const Products = lazy(() => import("pages/products/Products.jsx").then((module) 
 export const publicRoutesPaths = [
   {
     path: "/",
-    element: <PublicRoot />,
+    element: (
+      <Layout>
+        <PublicRoot />
+      </Layout>
+    ),
     errorElement: <DefaultError />,
     children: [
       { path: "/", element: <Landing />, index: true },
@@ -31,11 +37,9 @@ export const publicRoutesPaths = [
 
 export function PublicRoot() {
   return (
-    <Suspense fallback={<Loader />}>
-      <main className="overflow-hidden">
-        <NavBar />
-        <Outlet />;
-      </main>
-    </Suspense>
+    <main className="overflow-hidden">
+      <NavBar />
+      <Outlet />;
+    </main>
   );
 }

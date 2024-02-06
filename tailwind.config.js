@@ -15,7 +15,7 @@ export default {
         black: colors.black,
       },
       fontFamily: {
-        primary: ["Dosis", "sans-serif"],
+        primary: ["Titillium Web", "sans-serif"],
         secondary: ["Quicksand", "sans-serif"],
       },
       screens: {
