@@ -1,8 +1,14 @@
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
+import {
+  Navbar,
+  NavbarContent,
+  NavbarItem,
+  NavbarMenuToggle,
+  NavbarMenu,
+} from "@nextui-org/react";
 import { links } from ".";
 import React from "react";
-import { Navbar, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu } from "@nextui-org/react";
-import { NavLink, Link } from "react-router-dom";
+
+import { NavLink } from "react-router-dom";
 
 export function ModalNav() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -24,7 +30,7 @@ export function ModalNav() {
     <Navbar className="flex w-fit  items-center" onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent className="hidden gap-4 lg:flex " justify="start">
         {links.map((l, i) => (
-          <NavbarItem className="0" key={i}>
+          <NavbarItem key={i} className="0">
             <NavLink
               to={l.path}
               className={({ isActive }) =>
@@ -48,7 +54,7 @@ export function ModalNav() {
       </NavbarContent>
       <NavbarMenu>
         {links.map((l, i) => (
-          <NavbarItem className="0" key={i}>
+          <NavbarItem key={i} className="0">
             <NavLink
               to={l.path}
               className={({ isActive }) =>

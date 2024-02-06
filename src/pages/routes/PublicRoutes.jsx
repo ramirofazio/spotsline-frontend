@@ -1,7 +1,6 @@
-import { Suspense, lazy } from "react";
+import { lazy } from "react";
 import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
-import Loader from "components/Loader.jsx";
 import { APISpot } from "src/api/index.js";
 import Layout from "../Layout";
 //? Imp en lazy, mapeo componentes a default para que funcionen que el suspense
@@ -24,6 +23,8 @@ export const publicRoutesPaths = [
       { path: "/", element: <Landing />, index: true },
       { path: "/empresa", element: <Company /> },
       { path: "/nosotros", element: <AboutUs /> },
+      { path: "/sign-in", element: <SignIn /> },
+      { path: "/change-password", element: <ChangePassword /> },
       {
         path: "/productos/:page",
         element: <Products />,
