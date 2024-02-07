@@ -1,25 +1,69 @@
-import { SearchInput, ModalNav } from "./index";
+import React from "react";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarMenuToggle,
+  NavbarMenu,
+  NavbarItem,
+  NavbarMenuItem,
+  Link,
+  Button,
+  Image,
+} from "@nextui-org/react";
 import logo from "assets/logo.png";
-import { ButtonWithIcon } from "components/buttons";
-import { useNavigate } from "react-router-dom";
+import { links } from ".";
 
 export function NavBar() {
-  const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
   return (
-    <header className="flex w-full items-center justify-between  bg-white  p-6">
-      <img src={logo} className="w-40" />
-      <div className="flex w-full flex-col items-end gap-4 p-2">
-        <section className="mb-6 flex items-center space-x-4">
-          <SearchInput />
-          <ButtonWithIcon
-            onClick={() => navigate("sign-in")}
-            icon={"ri-user-fill"}
-            text={"INGRESA"}
-            classname={"space-x-4 rounded-full"}
-          />
-        </section>
-        <ModalNav />
-      </div>
-    </header>
+    <Navbar onMenuOpenChange={setIsMenuOpen}>
+      <NavbarContent>
+        <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className="sm:hidden" />
+        <NavbarBrand>
+          <Image src={logo} className="w-20" radius="none" />
+        </NavbarBrand>
+      </NavbarContent>
+
+      <NavbarContent className="hidden gap-4 sm:flex" justify="center">
+        <NavbarItem>
+          <Link color="foreground" href="#">
+            Features
+          </Link>
+        </NavbarItem>
+        <NavbarItem isActive>
+          <Link href="#" aria-current="page">
+            Customers
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" href="#">
+            Integrations
+          </Link>
+        </NavbarItem>
+      </NavbarContent>
+
+      <NavbarContent justify="end">
+        <NavbarItem className="hidden lg:flex">
+          <Link href="#">Login</Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Button as={Link} color="primary" href="sign-in" variant="solid">
+            LOGIN
+          </Button>
+        </NavbarItem>
+      </NavbarContent>
+
+      <NavbarMenu className="">
+        {links.map(({ name, path }, index) => (
+          <NavbarMenuItem key={index} className="gap-2">
+            <Link className="w-full " href={path} size="md" color="gray">
+              {name}
+            </Link>
+          </NavbarMenuItem>
+        ))}
+      </NavbarMenu>
+    </Navbar>
   );
 }

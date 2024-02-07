@@ -10,17 +10,8 @@
   }
 
   body {
-    @apply overflow-x-hidden  font-primary dark:bg-gray;
+    @apply overflow-x-hidden  font-primary;
   }
-
-  h1 {
-    @apply font-primary text-xl font-semibold text-gray dark:text-base w-fit;
-  }
-
-  h2, h3, h4, p {
-    @apply w-fit
-  }
-
 
   ::-webkit-scrollbar {
     @apply h-1 w-1 xl:w-2;
@@ -31,7 +22,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply rounded-md bg-yellow;
+    @apply rounded-md;
   }
 
   input[type="number"]::-webkit-inner-spin-button,
@@ -48,9 +39,9 @@
 }
 
 .swiper-pagination-bullet {
-  @apply !mr-3 h-3 w-3 bg-yellow/50;
+  @apply !mr-3 h-3 w-3 bg-primary/50;
 }
 
 .swiper-pagination-bullet-active {
-  @apply bg-yellow;
+  @apply bg-primary;
 }

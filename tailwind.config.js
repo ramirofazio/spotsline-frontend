@@ -1,4 +1,3 @@
-import colors from "tailwindcss/colors";
 import defaultTheme from "tailwindcss/defaultTheme";
 const { nextui } = require("@nextui-org/react");
 
@@ -8,11 +7,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        base: "#FFFAED",
-        yellow: "#F9CE41",
-        gray: "#1A1A1A",
-        white: colors.white,
-        black: colors.black,
+        primary: "#F9CE41",
+        secondary: "#484640",
+        background: "#FFFAED",
       },
       fontFamily: {
         primary: ["Titillium Web", "sans-serif"],
@@ -25,6 +22,7 @@ export default {
       },
       backgroundImage: {
         empresaScaled: `url(https://www.spotsline.com.ar/wp-content/uploads/2021/05/empresa-scaled.jpg)`,
+        //! Esto tiene que volar!
       },
       transitionDuration: {
         DEFAULT: "500ms",
@@ -34,13 +32,13 @@ export default {
   darkMode: "class",
   plugins: [
     nextui({
-      layout: {
-        fontFamily: {
-          primary: ["Dosis", "sans-serif"],
-          secondary: ["Quicksand", "sans-serif"],
-        },
-        lineHeight: {
-          large: "2px",
+      themes: {
+        light: {
+          colors: {
+            primary: "#F9CE41",
+            secondary: "#484640",
+            background: "#FFFAED",
+          },
         },
       },
     }),

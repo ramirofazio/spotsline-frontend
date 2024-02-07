@@ -1,30 +1,10 @@
-import {
-  Navbar,
-  NavbarContent,
-  NavbarItem,
-  NavbarMenuToggle,
-  NavbarMenu,
-} from "@nextui-org/react";
-import { links } from ".";
 import React from "react";
-
 import { NavLink } from "react-router-dom";
+import { Navbar, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu } from "@nextui-org/react";
+import { links } from ".";
 
 export function ModalNav() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-
-  const menuItems = [
-    "Profile",
-    "Dashboard",
-    "Activity",
-    "Analytics",
-    "System",
-    "Deployments",
-    "My Settings",
-    "Team Settings",
-    "Help & Feedback",
-    "Log Out",
-  ];
 
   return (
     <Navbar className="flex w-fit  items-center" onMenuOpenChange={setIsMenuOpen}>
@@ -47,10 +27,10 @@ export function ModalNav() {
       </NavbarContent>
       <NavbarContent justify="center" className="flex w-fit gap-10 ">
         <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className="justify-self-end lg:hidden" />
-        <i
+        {/* <i
           className="ri-instagram-line  icons  text-3xl text-yellow "
           onClick={() => window.open("https://www.instagram.com/spotsline_iluminacion/?hl=es-la", "_blank")}
-        />
+        /> */}
       </NavbarContent>
       <NavbarMenu>
         {links.map((l, i) => (
