@@ -8,8 +8,8 @@ export default {
     extend: {
       colors: {
         primary: "#F9CE41",
-        secondary: "#484640",
-        background: "#FFFAED",
+        secondary: "#3f3f3f",
+        background: "#FFF",
       },
       fontFamily: {
         primary: ["Titillium Web", "sans-serif"],
@@ -36,8 +36,19 @@ export default {
         light: {
           colors: {
             primary: "#F9CE41",
-            secondary: "#484640",
-            background: "#FFFAED",
+            secondary: "#3f3f3f",
+            background: "#FFF",
+            focus: "transparent",
+            //! Esto no va, pero era la unica forma de sacar los outline de las cosas de nextui
+          },
+        },
+        dark: {
+          colors: {
+            primary: "#F9CE41",
+            secondary: "#3f3f3f",
+            background: "#FFF",
+            focus: "transparent",
+            //! Esto no va, pero era la unica forma de sacar los outline de las cosas de nextui
           },
         },
       },

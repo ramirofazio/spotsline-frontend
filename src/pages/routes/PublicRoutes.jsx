@@ -10,8 +10,12 @@ const AboutUs = lazy(() => import("pages/aboutUs/AboutUs.jsx").then((module) => 
 const Company = lazy(() => import("pages/company/Company.jsx").then((module) => ({ default: module.Company })));
 const Products = lazy(() => import("pages/products/Products.jsx").then((module) => ({ default: module.Products })));
 const SignIn = lazy(() => import("pages/signIn/SignIn").then((module) => ({ default: module.SignIn })));
+const RecursosHumanos = lazy(() =>
+  import("pages/recursosHumanos/RecursosHumanos").then((module) => ({ default: module.RecursosHumanos }))
+);
+
 const ChangePassword = lazy(() =>
-  import("pages/ChangePassword/ChangePassword").then((module) => ({ default: module.ChangePassword }))
+  import("pages/signIn/ChangePassword").then((module) => ({ default: module.ChangePassword }))
 );
 
 export const publicRoutesPaths = [
@@ -19,6 +23,7 @@ export const publicRoutesPaths = [
     path: "/",
     element: (
       <Layout>
+        <NavBar />
         <PublicRoot />
       </Layout>
     ),
@@ -26,7 +31,8 @@ export const publicRoutesPaths = [
     children: [
       { path: "/", element: <Landing />, index: true },
       { path: "/empresa", element: <Company /> },
-      { path: "/nosotros", element: <AboutUs /> },
+      { path: "/rrhh", element: <RecursosHumanos /> },
+      { path: "/contacto", element: <AboutUs /> },
       { path: "/sign-in", element: <SignIn /> },
       { path: "/change-password", element: <ChangePassword /> },
       {
@@ -43,8 +49,7 @@ export const publicRoutesPaths = [
 export function PublicRoot() {
   return (
     <main className="overflow-hidden">
-      <NavBar />
-      <Outlet />;
+      <Outlet />
     </main>
   );
 }

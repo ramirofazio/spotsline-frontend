@@ -3,16 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-  *,
-  *::after,
-  *::before {
-    @apply box-border scroll-smooth;
-  }
-
-  body {
-    @apply overflow-x-hidden  font-primary;
-  }
-
   ::-webkit-scrollbar {
     @apply h-1 w-1 xl:w-2;
   }
