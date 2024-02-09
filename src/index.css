@@ -3,6 +3,14 @@
 @tailwind utilities;
 
 @layer base {
+  body,
+  html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    height: 100%;
+  }
+
   ::-webkit-scrollbar {
     @apply h-1 w-1 xl:w-2;
   }
@@ -34,4 +42,14 @@
 
 .swiper-pagination-bullet-active {
   @apply bg-primary;
+}
+
+.white-neon {
+  color: #fff;
+  text-shadow: 0 0 5px #fff;
+}
+
+.yellow-neon {
+  color: #f9ce41;
+  text-shadow: 0 0 5px #f9ce41;
 }

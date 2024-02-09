@@ -14,6 +14,7 @@ export default {
       fontFamily: {
         primary: ["Titillium Web", "sans-serif"],
         secondary: ["Quicksand", "sans-serif"],
+        slogan: ["Caveat", "sans-serif"],
       },
       screens: {
         xs: "375px",
@@ -22,6 +23,8 @@ export default {
       },
       backgroundImage: {
         empresaScaled: `url(https://www.spotsline.com.ar/wp-content/uploads/2021/05/empresa-scaled.jpg)`,
+        landingbg: `url("assets/landingbg.jpg")`,
+
         //! Esto tiene que volar!
       },
       transitionDuration: {

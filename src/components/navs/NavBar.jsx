@@ -10,33 +10,47 @@ import {
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
-  DropdownSection,
   DropdownItem,
 } from "@nextui-org/react";
-import logo from "assets/logo.png";
 import { links } from ".";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import logo from "assets/logo.png";
 
 const mockCategories = ["luz 1", "luz 2", "luz 3", "luz 4", "luz 5", "luz 6", "luz 8", "luz 9"];
 
 export function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [blur, setBlur] = React.useState(false);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  return (
-    <Navbar isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen} shouldHideOnScroll>
-      <NavbarContent justify="start" className="sm:hidden">
-        <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} />
-      </NavbarContent>
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      if (scrollY > 350) {
+        setBlur(true);
+      } else {
+        setBlur(false);
+      }
+    };
 
-      <NavbarContent justify="center">
-        <Image
-          src={logo}
-          className="w-20 hover:animate-pulse hover:cursor-pointer md:w-24"
-          onClick={() => navigate("/")}
-        />
+    document.addEventListener("scroll", handleScroll);
+
+    return () => {
+      document.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+  return (
+    <Navbar
+      shouldHideOnScroll
+      className="fixed bg-transparent"
+      isBlurred={isMenuOpen ? true : blur ? true : false}
+      isMenuOpen={isMenuOpen}
+      onMenuOpenChange={setIsMenuOpen}
+    >
+      <NavbarContent justify="start" className="sm:hidden">
+        <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className="mr-20" />
       </NavbarContent>
 
       <NavbarContent className="hidden gap-4 sm:flex" justify="center">
@@ -47,7 +61,7 @@ export function NavBar() {
               pathname === path && " border-primary"
             }`}
           >
-            <i class="ri-arrow-down-s-line text-lg font-bold text-primary transition group-hover:animate-pulse"></i>
+            <i className="ri-arrow-down-s-line text-lg font-bold text-primary transition group-hover:animate-pulse"></i>
             {name === "productos" ? (
               <Dropdown className="border-1 border-primary bg-secondary">
                 <DropdownTrigger className="text-secondary hover:cursor-pointer">PRODUCTOS</DropdownTrigger>
@@ -56,7 +70,7 @@ export function NavBar() {
                     key={index}
                     className="group my-[1px] transition hover:opacity-90"
                     startContent={
-                      <i class="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
+                      <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
                     }
                     onClick={() => navigate("/productos/0")}
                   >
@@ -67,7 +81,7 @@ export function NavBar() {
                       className="group my-[1px] transition hover:opacity-90"
                       key={index}
                       startContent={
-                        <i class="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
+                        <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
                       }
                       onClick={() => navigate(`/productos/${text}`)}
                       //? Algo asi habria que hacer aca para filtrar automaticamente por categoria
@@ -88,36 +102,41 @@ export function NavBar() {
           </NavbarItem>
         ))}
       </NavbarContent>
-
       <NavbarContent justify="end">
-        <Button
-          color="primary"
-          variant="solid"
-          radius="sm"
-          size="md"
-          className="font-semibold text-secondary"
-          endContent={<i className="ri-user-fill" />}
-          onClick={() => navigate("/sign-in")}
-        >
-          LOGIN
-        </Button>
+        <Image
+          src={logo}
+          hidden={isMenuOpen ? true : false}
+          className="ml-20 w-20 hover:animate-pulse hover:cursor-pointer md:w-24  "
+          onClick={() => navigate("/")}
+        />
       </NavbarContent>
 
-      <NavbarMenu className="gap-4">
+      <NavbarMenu className="gap-4 bg-gradient-to-br from-primary to-white/20">
+        <Image
+          src={logo}
+          hidden={isMenuOpen ? false : true}
+          disableSkeleton
+          className="absolute -right-24 -top-10 rotate-12"
+        />
         {links.map(({ name, path }, index) => (
           <Button
             key={index}
-            variant="solid"
-            fullWidth
-            radius="sm"
-            color="primary"
-            className="justify-start font-bold uppercase text-secondary "
-            startContent={<i class="ri-arrow-right-s-line text-lg text-secondary"></i>}
+            variant=""
+            className="w-52 justify-start rounded-none border-b-2 border-secondary  font-bold uppercase text-white"
+            startContent={<i className="ri-arrow-right-s-line text-md text-secondary"></i>}
             onClick={() => navigate(path)}
           >
             {name}
           </Button>
         ))}
+        <div className="mt-10 flex items-center justify-evenly ">
+          <Button className="bg-white" size="lg" isIconOnly>
+            <i className="ri-shopping-cart-2-fill text-2xl" />
+          </Button>
+          <Button className="bg-white" size="lg" isIconOnly>
+            <i className="ri-user-fill text-2xl" />
+          </Button>
+        </div>
       </NavbarMenu>
     </Navbar>
   );
