@@ -21,7 +21,7 @@ export function ProductCard({ description, id }) {
         <Button
           radius="full"
           className="bg-secondary px-6 text-[13px] uppercase text-primary shadow-xl hover:bg-primary hover:text-secondary"
-          onClick={() => navigate("/productos/" + id)}
+          onClick={() => navigate("/producto/" + id)}
         >
           <b>Ver más</b>
         </Button>
