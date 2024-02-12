@@ -44,22 +44,28 @@ export function NavBar() {
   return (
     <Navbar
       shouldHideOnScroll
-      className="fixed bg-transparent"
-      isBlurred={isMenuOpen ? true : blur ? true : false}
+      className="fixed bg-transparent md:py-4"
+      isBlurred={isMenuOpen ? true : blur ? true : window.innerWidth > 700 && window.innerWidth < 1000 ? true : false}
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
+      maxWidth="full"
     >
-      <NavbarContent justify="start" className="sm:hidden">
-        <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className="mr-20" />
+      <NavbarContent justify="start">
+        <Image
+          src={logo}
+          hidden={isMenuOpen ? true : false}
+          className="mr-20 w-20 transition hover:scale-110 hover:animate-pulse hover:cursor-pointer sm:w-24 md:w-32"
+          onClick={() => navigate("/")}
+        />
       </NavbarContent>
 
-      <NavbarContent className="hidden gap-4 sm:flex" justify="center">
+      <NavbarContent className="hidden gap-4 sm:flex xl:gap-24 " justify="center">
         {links.map(({ name, path }, index) => (
           <NavbarItem
             key={index}
             className={`group flex h-full items-center gap-2 border-b-4 border-transparent px-2 ${
-              pathname === path && " border-primary"
-            }`}
+              name === "inicio" && "hidden"
+            } ${pathname === path && " border-primary"}`}
           >
             <i className="ri-arrow-down-s-line text-lg font-bold text-primary transition group-hover:animate-pulse"></i>
             {name === "productos" ? (
@@ -102,13 +108,8 @@ export function NavBar() {
           </NavbarItem>
         ))}
       </NavbarContent>
-      <NavbarContent justify="end">
-        <Image
-          src={logo}
-          hidden={isMenuOpen ? true : false}
-          className="ml-20 w-20 hover:animate-pulse hover:cursor-pointer md:w-24  "
-          onClick={() => navigate("/")}
-        />
+      <NavbarContent justify="end" className="sm:hidden">
+        <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className="ml-20" />
       </NavbarContent>
 
       <NavbarMenu className="gap-4 bg-gradient-to-br from-primary to-white/20">
@@ -138,6 +139,23 @@ export function NavBar() {
           </Button>
         </div>
       </NavbarMenu>
+
+      <NavbarContent justify="end" className="hidden sm:flex">
+        <Button
+          className="bg-gradient-to-br from-primary to-background transition hover:scale-110"
+          size="md"
+          isIconOnly
+        >
+          <i className="ri-user-fill text-2xl" />
+        </Button>
+        <Button
+          className="bg-gradient-to-br from-primary to-background transition hover:scale-110"
+          size="md"
+          isIconOnly
+        >
+          <i className="ri-shopping-cart-2-fill text-2xl" />
+        </Button>
+      </NavbarContent>
     </Navbar>
   );
 }

@@ -6,10 +6,26 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}", "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      animation: {
+        glow: "glow 10s ease-in-out infinite",
+      },
+      keyframes: {
+        glow: {
+          "0%, 100%": { opacity: 0 },
+          "2%": { opacity: 0.3 },
+          "5%": { opacity: 0 },
+          "7%": { opacity: 0.3 },
+          "10%": { opacity: 0.25 },
+          "15%": { opacity: 0 },
+          "20%": { opacity: 0.45 },
+          "80%": { opacity: 0.5 },
+          "85%": { opacity: 0 },
+        },
+      },
       colors: {
         primary: "#F9CE41",
         secondary: "#3f3f3f",
-        background: "#FFF",
+        background: "#D9D9D9",
       },
       fontFamily: {
         primary: ["Titillium Web", "sans-serif"],
@@ -40,7 +56,7 @@ export default {
           colors: {
             primary: "#F9CE41",
             secondary: "#3f3f3f",
-            background: "#FFF",
+            background: "#D9D9D9",
             focus: "transparent",
             //! Esto no va, pero era la unica forma de sacar los outline de las cosas de nextui
           },
@@ -49,7 +65,7 @@ export default {
           colors: {
             primary: "#F9CE41",
             secondary: "#3f3f3f",
-            background: "#FFF",
+            background: "#D9D9D9",
             focus: "transparent",
             //! Esto no va, pero era la unica forma de sacar los outline de las cosas de nextui
           },
