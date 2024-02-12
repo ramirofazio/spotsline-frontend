@@ -29,7 +29,14 @@ export const publicRoutesPaths = [
     ),
     errorElement: <DefaultError />,
     children: [
-      { path: "/", element: <Landing />, index: true },
+      {
+        path: "/",
+        element: <Landing />,
+        index: true,
+        loader: async () => {
+          return await APISpot.getCategories();
+        },
+      },
       { path: "/empresa", element: <Company /> },
       { path: "/rrhh", element: <RecursosHumanos /> },
       { path: "/contacto", element: <AboutUs /> },

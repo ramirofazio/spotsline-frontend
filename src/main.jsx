@@ -5,6 +5,7 @@ import { Routes } from "pages/routes";
 import { NextUIProvider } from "@nextui-org/react";
 import { Provider } from "react-redux";
 import { store } from "./redux";
+import "swiper/css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
