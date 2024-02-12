@@ -32,7 +32,7 @@ export default function FirstSection() {
           disableSkeleton
           className="absolute -left-10 bottom-20 w-28 md:-left-20 md:w-52 xl:-left-24 xl:w-60 "
         />
-        <h3 className="white-neon absolute bottom-10 text-center tracking-wider xl:text-xl">
+        <h3 className="white-neon absolute bottom-10 text-center tracking-wider xl:text-2xl">
           LO QUE HACEMOS ILUMINA <br />
           POR CÓMO LO HACEMOS <br />
           <strong className="yellow-neon">DESDE EL PRIMER DÍA.</strong>

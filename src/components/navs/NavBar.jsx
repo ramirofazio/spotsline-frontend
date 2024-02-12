@@ -70,7 +70,7 @@ export function NavBar() {
             <i className="ri-arrow-down-s-line text-lg font-bold text-primary transition group-hover:animate-pulse"></i>
             {name === "productos" ? (
               <Dropdown className="border-1 border-primary bg-secondary">
-                <DropdownTrigger className="text-secondary hover:cursor-pointer">PRODUCTOS</DropdownTrigger>
+                <DropdownTrigger className="text-secondary hover:cursor-pointer xl:text-xl">PRODUCTOS</DropdownTrigger>
                 <DropdownMenu variant="solid" aria-label="Dropdown menu with icons" color="primary">
                   <DropdownItem
                     key={index}
@@ -99,7 +99,7 @@ export function NavBar() {
               </Dropdown>
             ) : (
               <Link
-                className={`text-md w-full uppercase text-secondary ${pathname === path && "!text-primary"}`}
+                className={`text-md w-full uppercase text-secondary xl:text-xl ${pathname === path && "!text-primary"}`}
                 to={path}
               >
                 {name}

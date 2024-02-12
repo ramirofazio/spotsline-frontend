@@ -6,7 +6,7 @@ export default function SecondSection() {
   return (
     <section
       id="landing-first"
-      className="bg-contan bg-landingbg  grid h-screen w-screen place-items-center bg-cover bg-no-repeat"
+      className="bg-contan grid  h-screen w-screen place-items-center bg-landingbg bg-cover bg-center bg-no-repeat"
     >
       {/* <div className="grid h-full w-full place-content-center place-items-center backdrop-blur-sm">
         <Image
