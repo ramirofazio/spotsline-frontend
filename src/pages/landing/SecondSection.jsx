@@ -3,7 +3,6 @@ import light from "assets/light.png";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import { useLoaderData, useNavigate } from "react-router-dom";
-import logo from "assets/logo.png";
 
 export default function SecondSection() {
   const categories = useLoaderData();
@@ -39,13 +38,13 @@ export default function SecondSection() {
         }}
       >
         {categories.map((c, index) => (
-          <SwiperSlide key={index} className="hover:scale-12ssssssssssssss5 !flex !justify-center transition">
+          <SwiperSlide key={index} className="!flex !justify-center ">
             <div className="grid aspect-square w-24 place-items-center rounded-full bg-background bg-gradient-to-b from-primary/10 to-primary p-2 shadow-xl md:w-32">
               <Button
                 isIconOnly
                 variant="solid"
                 radius="full"
-                className="relative h-full w-full overflow-hidden text-center text-xs font-bold uppercase text-black/70"
+                className="relative h-full w-full overflow-hidden text-center text-xs font-bold uppercase text-black/70 transition hover:scale-125"
                 onClick={() => navigate(`/products/cat/${c}`)}
               >
                 <Image
