@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import FirstSection from "./FirstSection";
-import SecondSection from "./SecondSection";
+import CategoriesCarrousel from "./CategoriesCarrousel";
+import FeaturedProducts from "./FeaturedProducts";
 
 export function Landing() {
   useEffect(() => {
@@ -11,7 +12,8 @@ export function Landing() {
   return (
     <section className="grid w-full place-content-center">
       <FirstSection />
-      <SecondSection />
+      <CategoriesCarrousel />
+      <FeaturedProducts />
     </section>
   );
 }
