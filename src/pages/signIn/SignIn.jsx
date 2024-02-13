@@ -45,7 +45,7 @@ export function SignIn() {
     <section className="bg-white">
       <div className="mx-auto w-[65%] border-2">
         <h1 className="mx-auto">ACCEDER</h1>
-        <form onSubmit={(e) => handleSignIn(e)} className="data-invalid:bg-yellow my-5 flex flex-col gap-4 px-2">
+        <form onSubmit={(e) => handleSignIn(e)} className="data-invalid:bg-primary my-5 flex flex-col gap-4 px-2">
           <Input
             name="email"
             className="mx-auto w-1/2 min-w-fit "

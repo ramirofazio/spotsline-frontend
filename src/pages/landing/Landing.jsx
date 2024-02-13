@@ -1,9 +1,17 @@
-import { Pagination } from "@nextui-org/react";
+import { useEffect } from "react";
+import FirstSection from "./FirstSection";
+import SecondSection from "./SecondSection";
 
 export function Landing() {
+  useEffect(() => {
+    document.title = "SPOTSLINE - Iluminación Profesional";
+    //? Una boludez, pero queda lindo y mas dinamico
+  }, []);
+
   return (
-    <main>
-      <p className="text-lg font-bold uppercase tracking-wider">Landing</p>
-    </main>
+    <section className="grid w-full place-content-center">
+      <FirstSection />
+      <SecondSection />
+    </section>
   );
 }

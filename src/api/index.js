@@ -1,7 +1,7 @@
 import { BASE_API } from "./baseApi";
 
 const route = {
-  PRODUCT: "products",
+  PRODUCTS: "products",
   AUTH: "auth",
   USER: "users",
   CART: "shoppingCart",
@@ -9,14 +9,14 @@ const route = {
 };
 
 export const APISpot = {
-
-//TODO acomodar estos 3 pedidos igual que el auth, metidos en un objeto `products`
+  //TODO acomodar estos 3 pedidos igual que el auth, metidos en un objeto `products`
   getPaginatedProducts: async (take, skip) => {
-    const res = await BASE_API.get(`/${route.PRODUCT}/pag?take=${take}&&skip=${skip}`);
+    const res = await BASE_API.get(`/${route.PRODUCTS}/pag?take=${take}&&skip=${skip}`);
     return res.data;
   },
-  getCategories: () => {
-    return BASE_API.get(`/`);
+  getCategories: async () => {
+    const res = await BASE_API.get(`/${route.PRODUCTS}/categories`);
+    return res.data;
   },
   loginByJWT: ({ accessToken }) => {
     return BASE_API.post(`/${route.AUTH}/jwtAutoLogin`, { accessToken });
