@@ -23,7 +23,7 @@ export default function FeaturedProducts() {
   return (
     <section
       id="landing-featured-products"
-      className="relative grid place-content-center gap-6 px-4 py-6 sm:px-6 xl:px-20"
+      className="to-seoc relative grid place-content-center gap-6 bg-gradient-to-b from-background px-4 py-6 sm:px-6 xl:px-20"
     >
       <div className="absolute inset-x-0 top-0 z-20 h-2 !w-screen bg-secondary" />
       <div className="absolute top-0  grid w-full place-content-center">
@@ -64,7 +64,7 @@ ${index === 1 && "md:row-span-2"}
       <article className="flex items-center justify-around md:mx-20 xl:mx-auto xl:w-[40%]">
         {featuredFooter.map(({ icon, text }, index) => (
           <div key={index} className="flex flex-grow flex-col items-center">
-            <i className={`${icon} text-4xl text-primary drop-shadow-lg md:text-6xl`} />
+            <i className={`${icon} text-4xl text-primary drop-shadow-xl md:text-6xl`} />
             <p className="-mt-1 font-secondary text-xs uppercase text-black md:m-0 md:text-sm">{text}</p>
           </div>
         ))}

@@ -4,7 +4,7 @@ import { DefaultError } from "pages/error/DefaultError";
 import { APISpot } from "src/api/index.js";
 import Layout from "../Layout";
 //? Imp en lazy, mapeo componentes a default para que funcionen que el suspense
-const NavBar = lazy(() => import("components/navs/NavBar.jsx").then((module) => ({ default: module.NavBar })));
+const NavBar = lazy(() => import("components/navs/NavBar.jsx"));
 const Landing = lazy(() => import("pages/landing/Landing.jsx").then((module) => ({ default: module.Landing })));
 const AboutUs = lazy(() => import("pages/aboutUs/AboutUs.jsx").then((module) => ({ default: module.AboutUs })));
 const Company = lazy(() => import("pages/company/Company.jsx").then((module) => ({ default: module.Company })));

@@ -18,7 +18,7 @@ import logo from "assets/logo.png";
 
 const mockCategories = ["luz 1", "luz 2", "luz 3", "luz 4", "luz 5", "luz 6", "luz 8", "luz 9"];
 
-export function NavBar() {
+export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [blur, setBlur] = React.useState(false);
 
