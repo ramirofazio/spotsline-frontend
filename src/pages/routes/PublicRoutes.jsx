@@ -4,6 +4,7 @@ import { DefaultError } from "pages/error/DefaultError";
 import { APISpot } from "src/api/index.js";
 import Layout from "../Layout";
 //? Imp en lazy, mapeo componentes a default para que funcionen que el suspense
+const Footer = lazy(() => import("components/navs/Footer.jsx"));
 const NavBar = lazy(() => import("components/navs/NavBar.jsx"));
 const Landing = lazy(() => import("pages/landing/Landing.jsx").then((module) => ({ default: module.Landing })));
 const AboutUs = lazy(() => import("pages/aboutUs/AboutUs.jsx").then((module) => ({ default: module.AboutUs })));
@@ -25,6 +26,7 @@ export const publicRoutesPaths = [
       <Layout>
         <NavBar />
         <PublicRoot />
+        <Footer />
       </Layout>
     ),
     errorElement: <DefaultError />,

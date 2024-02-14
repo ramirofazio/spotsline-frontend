@@ -45,7 +45,7 @@ ${index === 1 && "md:row-span-2"}
             onPress={() => navigate(`/products/detail/${id}`)}
           >
             <div className="absolute h-full w-full bg-black/70" />
-            <Image src={img} className={`${index === 2 && "w-[60%] md:w-auto "} mx-auto xl:w-[60%] `} />
+            <Image src={img} className={`${index === 2 && "w-[60%] md:w-auto "} mx-auto xl:w-[60%] `} isZoomed />
           </Button>
         ))}
       </article>
