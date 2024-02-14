@@ -7,12 +7,12 @@ export function Products() {
 
   return (
     <main className="grid w-full place-items-center bg-[#D9D9D9] p-10">
-      <PaginationComponent qty={products.length} />
       <section className="space-y-3">
         {products.map((p, index) => (
           <ProductCard {...p} key={index} />
         ))}
       </section>
+      <PaginationComponent qty={products.length} />
     </main>
   );
 }
