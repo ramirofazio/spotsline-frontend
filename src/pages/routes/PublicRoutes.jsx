@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
 import { APISpot } from "src/api/index.js";
 import Layout from "../Layout";
+import { DetailProduct } from "../products/DetailProduct";
 //? Imp en lazy, mapeo componentes a default para que funcionen que el suspense
 const NavBar = lazy(() => import("components/navs/NavBar.jsx").then((module) => ({ default: module.NavBar })));
 const Landing = lazy(() => import("pages/landing/Landing.jsx").then((module) => ({ default: module.Landing })));
@@ -48,6 +49,8 @@ export const publicRoutesPaths = [
         loader: async ({ params }) => {
           return await APISpot.getPaginatedProducts(20, params.page);
         },
+      },
+      { path: "/producto/:id", element: <DetailProduct />,
       },
     ],
   },
