@@ -5,7 +5,8 @@ import { APISpot } from "src/api/index.js";
 import Layout from "../Layout";
 import { DetailProduct } from "../products/DetailProduct";
 //? Imp en lazy, mapeo componentes a default para que funcionen que el suspense
-const NavBar = lazy(() => import("components/navs/NavBar.jsx").then((module) => ({ default: module.NavBar })));
+const Footer = lazy(() => import("components/navs/Footer.jsx"));
+const NavBar = lazy(() => import("components/navs/NavBar.jsx"));
 const Landing = lazy(() => import("pages/landing/Landing.jsx").then((module) => ({ default: module.Landing })));
 const AboutUs = lazy(() => import("pages/aboutUs/AboutUs.jsx").then((module) => ({ default: module.AboutUs })));
 const Company = lazy(() => import("pages/company/Company.jsx").then((module) => ({ default: module.Company })));
@@ -26,17 +27,23 @@ export const publicRoutesPaths = [
       <Layout>
         <NavBar />
         <PublicRoot />
+        <Footer />
       </Layout>
     ),
+    loader: async () => {
+      try {
+        return await APISpot.getCategories();
+      } catch (e) {
+        console.log("Db no conectada");
+        return null;
+      }
+    },
     errorElement: <DefaultError />,
     children: [
       {
         path: "/",
         element: <Landing />,
         index: true,
-        loader: async () => {
-          return await APISpot.getCategories();
-        },
       },
       { path: "/empresa", element: <Company /> },
       { path: "/rrhh", element: <RecursosHumanos /> },
