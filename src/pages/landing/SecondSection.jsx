@@ -21,8 +21,7 @@ export default function SecondSection() {
         </h2>
         <Button
           variant="solid"
-          color="primary"
-          className="mx-20 font-semibold shadow-xl md:!p-6 md:text-xl xl:mx-auto xl:w-[30%]"
+          className="white-neon mx-20 bg-primary font-semibold  shadow-xl transition hover:scale-110 md:!p-6 md:text-xl xl:mx-auto xl:w-[30%]"
           radius="full"
           onPress={() => navigate("/empresa")}
         >

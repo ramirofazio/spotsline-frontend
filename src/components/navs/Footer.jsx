@@ -69,15 +69,16 @@ export default function Footer() {
               <Image src={isotipoBlanco} width={80} />
               <p className="text-lg font-semibold">SPOTSLINE</p>
             </div>
-            <spapn className="mt-4 w-40  text-center font-secondary text-xs">
+            <span className="mt-4 w-40  text-center font-secondary text-xs">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
               dolore magna aliqua. Ut enim ad minim veniam.
-            </spapn>
+            </span>
           </div>
           <div className="flex flex-col">
             <p className="mx-auto mb-4 text-lg font-semibold">MENÚ</p>
-            {links.map(({ name, path }) => (
+            {links.map(({ name, path }, index) => (
               <div
+                key={index}
                 className="group -mt-1 flex items-center gap-3 transition hover:scale-125 hover:cursor-pointer"
                 onClick={() => navigate(path)}
               >
@@ -88,8 +89,9 @@ export default function Footer() {
           </div>
           <div className="flex flex-col">
             <p className="mx-auto mb-4 text-lg font-semibold">CONTACTO</p>
-            {socialNetworksIcons.map(({ icon, link, text }) => (
+            {socialNetworksIcons.map(({ icon, link, text }, index) => (
               <div
+                key={index}
                 className="group -mt-1 flex items-center gap-3 transition hover:scale-125 hover:cursor-pointer"
                 onClick={() => window.open(link)}
               >

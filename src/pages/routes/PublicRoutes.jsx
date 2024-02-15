@@ -29,15 +29,20 @@ export const publicRoutesPaths = [
         <Footer />
       </Layout>
     ),
+    loader: async () => {
+      try {
+        return await APISpot.getCategories();
+      } catch (e) {
+        console.log("Db no conectada");
+        return null;
+      }
+    },
     errorElement: <DefaultError />,
     children: [
       {
         path: "/",
         element: <Landing />,
         index: true,
-        loader: async () => {
-          return await APISpot.getCategories();
-        },
       },
       { path: "/empresa", element: <Company /> },
       { path: "/rrhh", element: <RecursosHumanos /> },

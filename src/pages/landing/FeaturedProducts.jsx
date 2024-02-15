@@ -51,12 +51,12 @@ ${index === 1 && "md:row-span-2"}
       </article>
 
       <Button
-        variant="ghost"
         color="primary"
         size="lg"
-        className="text-md font-bold text-secondary md:mx-20 xl:mx-auto xl:w-fit xl:p-6 xl:text-xl"
+        className="text-md white-neon font-bold hover:scale-110 hover:text-white md:mx-20 xl:mx-auto xl:w-fit xl:p-6 xl:text-xl"
         radius="full"
         startContent={<i className="ri-shopping-bag-2-line" />}
+        onPress={() => navigate("/productos/0")}
       >
         VER TODOS LOS PRODUCTOS
       </Button>

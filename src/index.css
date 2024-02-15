@@ -17,7 +17,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply rounded-md;
+    @apply rounded-md bg-primary;
   }
 
   input[type="number"]::-webkit-inner-spin-button,

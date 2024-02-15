@@ -19,11 +19,10 @@ export default function FirstSection() {
         <h1 className="text-5xl md:mt-12 md:text-6xl xl:text-7xl">SPOTSLINE</h1>
         <p className="font-slogan text-2xl font-semibold text-black md:text-3xl xl:text-4xl">Se ve bien.</p>
         <Button
-          color="primary"
           variant="solid"
           radius="full"
           size="lg"
-          className="my-4 font-semibold tracking-wide text-white xl:my-8 xl:text-lg"
+          className="white-neon my-4 bg-primary font-semibold tracking-wide hover:scale-110 hover:text-white xl:my-8 xl:text-lg"
         >
           LISTA DE PRECIOS NUEVA
         </Button>

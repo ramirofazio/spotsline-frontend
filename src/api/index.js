@@ -1,3 +1,4 @@
+import { saveInStorage } from "src/utils/localStorage";
 import { BASE_API } from "./baseApi";
 
 const route = {
@@ -16,6 +17,8 @@ export const APISpot = {
   },
   getCategories: async () => {
     const res = await BASE_API.get(`/${route.PRODUCTS}/categories`);
+    saveInStorage("categories", res.data);
+
     return res.data;
   },
   loginByJWT: ({ accessToken }) => {

@@ -3,9 +3,10 @@ import light from "assets/light.png";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import { useLoaderData, useNavigate } from "react-router-dom";
+import { getOfStorage } from "src/utils/localStorage";
 
 export default function CategoriesCarrousel() {
-  const categories = useLoaderData();
+  const categories = getOfStorage("categories") || useLoaderData();
 
   const navigate = useNavigate();
 
