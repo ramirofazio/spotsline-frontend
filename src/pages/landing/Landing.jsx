@@ -15,6 +15,7 @@ export function Landing() {
       duration: 5000,
       icon: <i class="ri-thumb-up-line"></i>,
     });
+    //? Docu: https://sonner.emilkowal.ski/toast
   }, []);
 
   return (
