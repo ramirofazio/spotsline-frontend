@@ -46,12 +46,8 @@ export const publicRoutesPaths = [
       {
         path: "/productos/:page",
         element: <Products />,
-        loader: async ({ params }) => {
-          return await APISpot.getPaginatedProducts(20, params.page);
-        },
       },
-      { path: "/producto/:id", element: <DetailProduct />,
-      },
+      { path: "/producto/:id", element: <DetailProduct /> },
     ],
   },
 ];
