@@ -1,5 +1,3 @@
-export { NavBar } from "./NavBar";
-
 export const links = [
   { name: "inicio", path: "/",  },
   { name: "empresa", path: "/empresa" },

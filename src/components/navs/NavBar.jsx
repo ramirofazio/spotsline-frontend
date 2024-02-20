@@ -13,17 +13,19 @@ import {
   DropdownItem,
 } from "@nextui-org/react";
 import { links } from ".";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import logo from "assets/logo.png";
+import { getOfStorage } from "src/utils/localStorage";
 
 const mockCategories = ["luz 1", "luz 2", "luz 3", "luz 4", "luz 5", "luz 6", "luz 8", "luz 9"];
 
-export function NavBar() {
+export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [blur, setBlur] = React.useState(false);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const categories = getOfStorage("categories") || useLoaderData();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -63,18 +65,21 @@ export function NavBar() {
         {links.map(({ name, path }, index) => (
           <NavbarItem
             key={index}
-            className={`group flex h-full items-center gap-2 border-b-4 border-transparent px-2 ${
+            className={`group flex h-full items-center gap-2 border-b-4 border-transparent  px-2 ${
               name === "inicio" && "hidden"
             } ${pathname === path && " border-primary"}`}
           >
-            <i className="ri-arrow-down-s-line text-lg font-bold text-primary transition group-hover:animate-pulse"></i>
+            <i className="ri-arrow-down-s-line yellow-neon text-xl font-bold transition group-hover:scale-125"></i>
             {name === "productos" ? (
-              <Dropdown className="border-1 border-primary bg-secondary">
-                <DropdownTrigger className="text-secondary hover:cursor-pointer xl:text-xl">PRODUCTOS</DropdownTrigger>
-                <DropdownMenu variant="solid" aria-label="Dropdown menu with icons" color="primary">
+              <Dropdown className="bg-transparent shadow-none backdrop-blur-xl" key={index}>
+                <DropdownTrigger className="white-neon hover:cursor-pointer xl:text-xl">PRODUCTOS</DropdownTrigger>
+                <DropdownMenu
+                  variant="solid"
+                  aria-label="Dropdown menu with icons"
+                  className="max-h-[50vh] overflow-scroll"
+                >
                   <DropdownItem
-                    key={index}
-                    className="group my-[1px] transition hover:opacity-90"
+                    className="group my-[1px]  bg-gradient-to-tl from-primary to-background uppercase transition"
                     startContent={
                       <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
                     }
@@ -82,26 +87,23 @@ export function NavBar() {
                   >
                     Todos
                   </DropdownItem>
-                  {mockCategories.map((text, index) => (
+                  {categories.map((c, index) => (
                     <DropdownItem
-                      className="group my-[1px] transition hover:opacity-90"
                       key={index}
+                      className="group my-[1px] bg-gradient-to-tl  from-primary to-background uppercase transition"
                       startContent={
                         <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
                       }
-                      onClick={() => navigate(`/productos/${text}`)}
+                      onClick={() => navigate(`/productos/${c}`)}
                       //? Algo asi habria que hacer aca para filtrar automaticamente por categoria
                     >
-                      {text}
+                      {c}
                     </DropdownItem>
                   ))}
                 </DropdownMenu>
               </Dropdown>
             ) : (
-              <Link
-                className={`text-md w-full uppercase text-secondary xl:text-xl ${pathname === path && "!text-primary"}`}
-                to={path}
-              >
+              <Link className={`text-md white-neon w-full uppercase xl:text-xl`} to={path}>
                 {name}
               </Link>
             )}
@@ -112,7 +114,7 @@ export function NavBar() {
         <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className="ml-20" />
       </NavbarContent>
 
-      <NavbarMenu className="gap-4 bg-gradient-to-br from-primary to-white/20">
+      <NavbarMenu className="gap-4 overflow-x-hidden bg-gradient-to-br from-primary to-white/20">
         <Image
           src={logo}
           hidden={isMenuOpen ? false : true}
@@ -120,23 +122,29 @@ export function NavBar() {
           className="absolute -right-24 -top-10 rotate-12"
         />
         {links.map(({ name, path }, index) => (
-          <Button
-            key={index}
-            variant=""
-            className="w-52 justify-start rounded-none border-b-2 border-secondary  font-bold uppercase text-white"
-            startContent={<i className="ri-arrow-right-s-line text-md text-secondary"></i>}
-            onClick={() => navigate(path)}
-          >
-            {name}
-          </Button>
+          <div className="relative -ml-6" key={index}>
+            <Button
+              variant=""
+              className="white-neon w-52 justify-start rounded-none border-secondary font-bold uppercase drop-shadow-xl"
+              startContent={<i className="ri-arrow-right-s-line text-md !text-secondary"></i>}
+              onClick={() => navigate(path)}
+            >
+              {name}
+            </Button>
+            <div className="absolute left-0 h-[1px] w-40 rounded-r-full bg-white/60" />
+          </div>
         ))}
         <div className="mt-10 flex items-center justify-evenly ">
-          <Button className="bg-white" size="lg" isIconOnly>
+          <Button size="lg" isIconOnly className="bg-gradient-to-tl  from-primary to-background shadow-xl">
             <i className="ri-shopping-cart-2-fill text-2xl" />
           </Button>
-          <Button className="bg-white" size="lg" isIconOnly>
+          <Button className="bg-gradient-to-tl from-primary to-background shadow-xl" size="lg" isIconOnly>
             <i className="ri-user-fill text-2xl" />
           </Button>
+        </div>
+        <div className="f bottom-0 mx-auto mt-10 text-center">
+          <h1 className="text-3xl">SPOTSLINE</h1>
+          <p className="-mt-2 font-slogan text-2xl">Se ve bien.</p>
         </div>
       </NavbarMenu>
 
