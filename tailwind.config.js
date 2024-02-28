@@ -39,6 +39,7 @@ export default {
       },
       backgroundImage: {
         empresaScaled: `url(https://www.spotsline.com.ar/wp-content/uploads/2021/05/empresa-scaled.jpg)`,
+        empresa2: `url("/empresa2.png")`,
         landingbg: `url("assets/landingbg.jpg")`,
         light: `url("assets/light.png")`,
         //! Esto tiene que volar!

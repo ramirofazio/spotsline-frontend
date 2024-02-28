@@ -15,7 +15,6 @@ const SignIn = lazy(() => import("pages/signIn/SignIn").then((module) => ({ defa
 const RecursosHumanos = lazy(() =>
   import("pages/recursosHumanos/RecursosHumanos").then((module) => ({ default: module.RecursosHumanos }))
 );
-
 const ChangePassword = lazy(() =>
   import("pages/signIn/ChangePassword").then((module) => ({ default: module.ChangePassword }))
 );
@@ -57,8 +56,7 @@ export const publicRoutesPaths = [
           return await APISpot.getPaginatedProducts(20, params.page);
         },
       },
-      { path: "/producto/:id", element: <DetailProduct />,
-      },
+      { path: "/producto/:id", element: <DetailProduct /> },
     ],
   },
 ];
