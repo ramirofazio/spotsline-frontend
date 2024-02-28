@@ -25,6 +25,7 @@ export default {
       colors: {
         primary: "#F9CE41",
         secondary: "#3f3f3f",
+        dark: "#1E1E1E",
         background: "#D9D9D9",
       },
       fontFamily: {

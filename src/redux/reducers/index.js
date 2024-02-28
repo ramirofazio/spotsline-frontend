@@ -1,7 +1,7 @@
 export { authRdr } from "./auth.js";
-import { setToken } from "./auth.js";
+import { setAccessToken } from "./auth.js";
 export const actionsAuth = {
-  setToken,
+  setAccessToken,
 };
 
 export { userRdr } from "./user.js";

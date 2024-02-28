@@ -21,13 +21,11 @@ export const APISpot = {
 
     return res.data;
   },
-  loginByJWT: ({ accessToken }) => {
-    return BASE_API.post(`/${route.AUTH}/jwtAutoLogin`, { accessToken });
-  },
+
   //? Rutas al backend POST, GET, PUT, etc...
   auth: {
-    loginByJWT: ({ accessToken }) => {
-      return BASE_API.post(`/${route.AUTH}/jwtAutoLogin`, { accessToken });
+    jwtAutoSignIn: (body) => {
+      return BASE_API.post(`/${route.AUTH}/jwt-auto-sign-in`, body);
     },
     signIn: (body) => {
       return BASE_API.post(`/${route.AUTH}/sign-in`, body);

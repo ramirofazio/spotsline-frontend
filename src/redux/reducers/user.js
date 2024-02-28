@@ -1,19 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { saveInStorage } from "src/utils/localStorage";
 //import { deleteOfStorage, getOfStorage, saveInStorage } from "../../utils/localStorage";
 
 const user = createSlice({
   name: "user",
   initialState: {
-    email: null,
     id: null,
+    email: null,
+    firstSignIn: null,
   },
   reducers: {
     setUser: (state, action) => {
-      const { email, id } = action.payload;
+      saveInStorage("user", action.payload);
+
       return {
         ...state,
-        email,
-        id,
+        ...action.payload,
       };
     },
   },
