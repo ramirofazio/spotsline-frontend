@@ -42,6 +42,7 @@ export default {
         empresa2: `url("/empresa2.png")`,
         landingbg: `url("assets/landingbg.jpg")`,
         light: `url("assets/light.png")`,
+        signIn: `url("/sign-in.png")`,
         //! Esto tiene que volar!
       },
       transitionDuration: {

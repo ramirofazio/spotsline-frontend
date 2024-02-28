@@ -143,7 +143,15 @@ export default function NavBar() {
           <Button size="lg" isIconOnly className="bg-gradient-to-tl  from-primary to-background shadow-xl">
             <i className="ri-shopping-cart-2-fill text-2xl" />
           </Button>
-          <Button className="bg-gradient-to-tl from-primary to-background shadow-xl" size="lg" isIconOnly>
+          <Button
+            className="bg-gradient-to-tl from-primary to-background shadow-xl"
+            size="lg"
+            isIconOnly
+            onPress={() => {
+              navigate("sign-in");
+              setIsMenuOpen(false);
+            }}
+          >
             <i className="ri-user-fill text-2xl" />
           </Button>
         </div>
@@ -155,9 +163,12 @@ export default function NavBar() {
 
       <NavbarContent justify="end" className="hidden sm:flex">
         <Button
-          className="bg-gradient-to-br from-primary to-background transition hover:scale-110"
+          className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
+            pathname === "/sign-in" && "white-neon"
+          }`}
           size="md"
           isIconOnly
+          onPress={() => navigate("sign-in")}
         >
           <i className="ri-user-fill text-2xl" />
         </Button>
