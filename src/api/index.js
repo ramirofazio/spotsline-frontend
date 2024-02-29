@@ -71,3 +71,15 @@ export function addAuthWithToken(token) {
     }
   );
 }
+
+export function removeAuthWithToken() {
+  BASE_API.interceptors.request.use(
+    (config) => {
+      config.headers.Authorization = "";
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+}

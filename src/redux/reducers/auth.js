@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { saveInStorage } from "src/utils/localStorage";
+import { deleteOfStorage, saveInStorage } from "src/utils/localStorage";
 
 const auth = createSlice({
   name: "auth",
@@ -7,6 +7,12 @@ const auth = createSlice({
     access_token: "",
   },
   reducers: {
+    cleanAuth: () => {
+      deleteOfStorage("access_token");
+      return {
+        access_token: "",
+      };
+    },
     setAccessToken: (state, action) => {
       saveInStorage("access_token", action.payload);
       state.access_token = action.payload;
@@ -15,4 +21,4 @@ const auth = createSlice({
 });
 
 export const authRdr = auth.reducer;
-export const { setAccessToken } = auth.actions;
+export const { setAccessToken, cleanAuth } = auth.actions;

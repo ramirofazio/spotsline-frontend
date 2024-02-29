@@ -1,21 +1,22 @@
 import { Button, Input, useDisclosure } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
-import { APISpot } from "src/api";
+import { APISpot, removeAuthWithToken } from "src/api";
 import { DarkModal } from "src/components";
-import { deleteOfStorage } from "src/utils/localStorage";
+import { actionsAuth, actionsUser } from "src/redux/reducers";
 
 const inputFields = [
   { name: "newPassword", label: "Nueva contraseña" },
   { name: "newPasswordConfirm", label: "Confirmar nueva contraseña" },
 ];
 
-export function FirstSignInModal() {
+export function FirstSignInModal({ navigate }) {
+  const dispatch = useDispatch();
+
   const { firstSignIn, email } = useSelector((state) => state.user);
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const [data, setData] = useState({
     newPassword: "",
@@ -43,14 +44,14 @@ export function FirstSignInModal() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      console.log({ ...data, email: email });
       const res = await APISpot.auth.firstTimePassword({ ...data, email: email });
-      if (res.status === 200) {
-        window.location.replace("/");
+      if (res === 200) {
+        toast.success("Contraseña actualizada con exito.");
+        navigate("/");
+        onClose();
       }
-      //TODO
     } catch (e) {
-      toast.error("Hubo un error al actualizar la contraseña.");
+      toast.error("Hubo un error al actualizar la contraseña.", { description: e.response.data.message });
       console.log(e);
     } finally {
       setIsLoading(false);
@@ -58,9 +59,11 @@ export function FirstSignInModal() {
   };
 
   const handleLogOut = () => {
-    deleteOfStorage("user");
-    deleteOfStorage("access_token");
-    window.location.replace("/");
+    onClose();
+    removeAuthWithToken();
+    dispatch(actionsUser.cleanUser());
+    dispatch(actionsAuth.cleanAuth());
+    navigate("/");
   };
 
   return (
@@ -89,6 +92,7 @@ export function FirstSignInModal() {
             labelPlacement="outside"
             isInvalid={Boolean(errs[name])}
             errorMessage={errs[name]}
+            startContent={<i className="ri-key-fill text-xl" />}
             endContent={
               <i
                 className={`${
@@ -106,7 +110,7 @@ export function FirstSignInModal() {
           type="submit"
           variant="solid"
           color={"primary"}
-          className="w-40 rounded-full font-bold tracking-widest text-white"
+          className="w-40 rounded-full font-bold tracking-widest text-dark"
           isLoading={isLoading}
         >
           ACTUALIZAR

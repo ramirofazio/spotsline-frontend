@@ -1,4 +1,4 @@
-import { startTransition, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { isValidSignIn } from "../../utils/validation";
@@ -36,9 +36,9 @@ export function SignIn() {
         dispatch(actionsAuth.setAccessToken(access_token));
         dispatch(actionsUser.setUser(user));
       }
-    } catch (error) {
-      toast.error("Hubo un error al iniciar la sesion.");
-      console.log(error);
+    } catch (e) {
+      toast.error("Hubo un error al iniciar la sesion.", { description: e.response.data.message });
+      console.log(e);
     } finally {
       setIsLoading(false);
     }
@@ -74,6 +74,7 @@ export function SignIn() {
               radius="full"
               isInvalid={Boolean(errs.email)}
               errorMessage={errs.email}
+              startContent={<i className="ri-mail-fill text-xl text-secondary" />}
               onChange={handleChange}
             />
             <Input
@@ -89,6 +90,7 @@ export function SignIn() {
               labelPlacement="outside"
               isInvalid={Boolean(errs.password)}
               errorMessage={errs.password}
+              startContent={<i className="ri-key-fill text-xl text-secondary" />}
               endContent={
                 <i
                   className={`${
@@ -105,7 +107,7 @@ export function SignIn() {
               type="submit"
               variant="solid"
               color={"primary"}
-              className="w-40 rounded-full font-bold tracking-widest text-white"
+              className="w-40 rounded-full font-bold tracking-widest text-dark"
               isLoading={isLoading}
             >
               INGRESAR
@@ -129,7 +131,7 @@ export function SignIn() {
         </section>
       </div>
 
-      <InitChangePasswordModal isOpen={isOpen} onOpenChange={onOpenChange} navigate={navigate} />
+      <InitChangePasswordModal isOpen={isOpen} onOpenChange={onOpenChange} />
     </main>
   );
 }

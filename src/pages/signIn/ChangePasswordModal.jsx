@@ -1,15 +1,19 @@
 import { Button, Input } from "@nextui-org/react";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { toast } from "sonner";
-import { APISpot } from "src/api";
+import { APISpot, addAuthWithToken } from "src/api";
 import { DarkModal } from "src/components";
+import { actionsAuth, actionsUser } from "src/redux/reducers";
 
 const inputFields = [
   { name: "newPassword", label: "Nueva contraseña" },
   { name: "newPasswordConfirm", label: "Confirmar nueva contraseña" },
 ];
 
-export function ChangePasswordModal({ isOpen, onOpenChange, navigate, email }) {
+export function ChangePasswordModal({ isOpen, onOpenChange, navigate, email, onClose }) {
+  const dispatch = useDispatch();
+
   const [data, setData] = useState({
     newPassword: "",
     newPasswordConfirm: "",
@@ -30,14 +34,17 @@ export function ChangePasswordModal({ isOpen, onOpenChange, navigate, email }) {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const res = await APISpot.auth.confirmPasswordReset({ ...data, email: email });
-      if (res) {
-        //! CHEQUEAR ESTA LOGICA
+      //? Esta ruta me devuelve lo mismo que al hacer un login si sale todo OK
+      const { access_token, user } = await APISpot.auth.confirmPasswordReset({ ...data, email: email });
+      if (access_token && user) {
+        addAuthWithToken(access_token);
+        dispatch(actionsAuth.setAccessToken(access_token));
+        dispatch(actionsUser.setUser(user));
+
+        onClose();
         toast.success("Contraseña actualizada con exito.");
         navigate("/");
-        //! TODO Hacer auto login
       }
-      console.log(res);
     } catch (e) {
       toast.error("Hubo un error al actualizar la contraseña.");
       console.log(e);
@@ -71,6 +78,7 @@ export function ChangePasswordModal({ isOpen, onOpenChange, navigate, email }) {
             labelPlacement="outside"
             isInvalid={Boolean(errs[name])}
             errorMessage={errs[name]}
+            startContent={<i className="ri-key-fill text-xl" />}
             endContent={
               <i
                 className={`${
@@ -88,7 +96,7 @@ export function ChangePasswordModal({ isOpen, onOpenChange, navigate, email }) {
           type="submit"
           variant="solid"
           color={"primary"}
-          className="w-40 rounded-full font-bold tracking-widest text-white"
+          className="w-40 rounded-full font-bold tracking-widest text-dark"
           isLoading={isLoading}
         >
           ACTUALIZAR
