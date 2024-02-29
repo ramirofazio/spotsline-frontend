@@ -15,11 +15,14 @@ export function Profile() {
     <main>
       <Button
         onPress={() => {
-          removeAuthWithToken();
-          dispatch(actionsUser.cleanUser());
-          dispatch(actionsAuth.cleanAuth());
           navigate("/");
           toast.info("Sesión cerrada con exito", { description: "¡Esperamos verte pronto!" });
+          setTimeout(() => {
+            //? Para evitar salto y que aparezca el errorBundler
+            removeAuthWithToken();
+            dispatch(actionsUser.cleanUser());
+            dispatch(actionsAuth.cleanAuth());
+          }, 1000);
         }}
       >
         Log Out
