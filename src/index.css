@@ -38,3 +38,15 @@
   color: #f9ce41;
   text-shadow: 0 0 5px #f9ce41;
 }
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-primary;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-secondary;
+}

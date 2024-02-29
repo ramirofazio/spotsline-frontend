@@ -21,7 +21,7 @@ export default function CategoriesCarrousel() {
         }}
         spaceBetween={20}
         slidesPerView={3}
-        loop={true}
+        loop={categories.legnth > 6}
         className="mySwiper !overflow-visible"
         breakpoints={{
           640: {
