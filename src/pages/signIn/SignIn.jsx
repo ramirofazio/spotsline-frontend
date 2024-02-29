@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { startTransition, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { isValidSignIn } from "../../utils/validation";
@@ -23,29 +23,26 @@ export function SignIn() {
       return newData;
     });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const {
-        data: { access_token, user },
-      } = await APISpot.auth.signIn(signInData);
+      const { access_token, user } = await APISpot.auth.signIn(signInData);
       if (access_token && user) {
         addAuthWithToken(access_token);
         dispatch(actionsAuth.setAccessToken(access_token));
         dispatch(actionsUser.setUser(user));
       }
-    } catch (e) {
+    } catch (error) {
       toast.error("Hubo un error al iniciar la sesion.");
-      console.log(e);
+      console.log(error);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <main className="bg-signIn relative h-screen bg-cover bg-center bg-no-repeat">
+    <main className="relative h-screen bg-signIn bg-cover bg-center bg-no-repeat">
       <div className="grid h-full w-full place-content-center place-items-center bg-black/30 backdrop-blur-md">
         <div className="icons absolute left-4 top-4 flex items-center" onClick={() => navigate("/")}>
           <i className="ri-arrow-left-s-line yellow-neon  animate-pulse text-4xl" />

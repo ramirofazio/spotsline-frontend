@@ -6,16 +6,15 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { addAuthWithToken, APISpot } from "src/api";
 import { setUser } from "src/redux/reducers/user";
-import { FirstSignInModal } from "../signIn";
 
 export function Routes() {
   const dispatch = useDispatch();
 
   const getUserFromDb = async (access_token, email) => {
-    const { data } = await APISpot.auth.jwtAutoSignIn({ jwt: access_token, email });
+    const { user } = await APISpot.auth.jwtAutoSignIn({ jwt: access_token, email });
 
-    if (data.user) {
-      dispatch(setUser(data.user));
+    if (user) {
+      dispatch(setUser(user));
     }
   };
 
@@ -34,8 +33,6 @@ export function Routes() {
 
   return (
     <>
-      {/* //? Para mostrar el modal en todos lados */}
-      <FirstSignInModal />
       <RouterProvider router={router} />;
     </>
   );

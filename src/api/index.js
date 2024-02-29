@@ -24,20 +24,25 @@ export const APISpot = {
 
   //? Rutas al backend POST, GET, PUT, etc...
   auth: {
-    jwtAutoSignIn: (body) => {
-      return BASE_API.post(`/${route.AUTH}/jwt-auto-sign-in`, body);
+    jwtAutoSignIn: async (body) => {
+      const res = await BASE_API.post(`/${route.AUTH}/jwt-auto-sign-in`, body);
+      return res.data;
     },
-    signIn: (body) => {
-      return BASE_API.post(`/${route.AUTH}/sign-in`, body);
+    signIn: async (body) => {
+      const res = await BASE_API.post(`/${route.AUTH}/sign-in`, body);
+      return res.data;
     },
-    firstTimePassword: (body) => {
-      return BASE_API.patch(`/${route.AUTH}/first-time-password`, body);
+    firstTimePassword: async (body) => {
+      const res = await BASE_API.patch(`/${route.AUTH}/first-time-password`, body);
+      return res.data;
     },
-    initPasswordReset: (email) => {
-      return BASE_API.patch(`/${route.AUTH}/init-password-reset`, { email });
+    initPasswordReset: async (email) => {
+      const res = await BASE_API.patch(`/${route.AUTH}/init-password-reset`, { email });
+      return res.data;
     },
-    confirmPasswordReset: ({ body }) => {
-      return BASE_API.patch(`/${route.AUTH}/confirm-password-reset`, body);
+    confirmPasswordReset: async ({ body }) => {
+      const res = await BASE_API.patch(`/${route.AUTH}/confirm-password-reset`, body);
+      return res.data;
     },
   },
   product: {

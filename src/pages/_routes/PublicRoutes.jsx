@@ -58,7 +58,15 @@ export const publicRoutesPaths = [
       { path: "/producto/:id", element: <DetailProduct /> },
     ],
   },
-  { path: "/sign-in", element: <SignIn />, errorElement: <DefaultError /> },
+  {
+    path: "/sign-in",
+    element: (
+      <Layout>
+        <SignIn />
+      </Layout>
+    ),
+    errorElement: <DefaultError />,
+  },
 ];
 
 export function PublicRoot() {
