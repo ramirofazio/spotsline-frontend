@@ -4,12 +4,15 @@ import { useDispatch } from "react-redux";
 import { isValidSignIn } from "../../utils/validation";
 import { APISpot, addAuthWithToken } from "../../api";
 import { actionsAuth, actionsUser } from "../../redux/reducers";
-import { Button, Divider, Image, Input } from "@nextui-org/react";
+import { Button, Divider, Image, Input, useDisclosure } from "@nextui-org/react";
 import { toast } from "sonner";
+import { InitChangePasswordModal } from "./InitChangePasswordModal";
 
 export function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { onOpen, onOpenChange, isOpen } = useDisclosure();
 
   const [signInData, setSignInData] = useState(false);
   const [errs, setErrs] = useState({});
@@ -59,6 +62,7 @@ export function SignIn() {
           </div>
           <form onSubmit={handleSubmit} className="z-20 flex flex-col items-center gap-4 md:w-full">
             <Input
+              classNames={{ label: "text-white" }}
               color="secondary"
               name="email"
               isRequired
@@ -73,6 +77,7 @@ export function SignIn() {
               onChange={handleChange}
             />
             <Input
+              classNames={{ label: "text-white" }}
               color="secondary"
               name="password"
               isRequired
@@ -112,7 +117,7 @@ export function SignIn() {
             <strong
               className="yellow-neon icons underline"
               onClick={() => {
-                /* //todo: Abrir modal? */
+                onOpen();
               }}
             >
               RECUPERALA
@@ -123,6 +128,8 @@ export function SignIn() {
           </div>
         </section>
       </div>
+
+      <InitChangePasswordModal isOpen={isOpen} onOpenChange={onOpenChange} navigate={navigate} />
     </main>
   );
 }

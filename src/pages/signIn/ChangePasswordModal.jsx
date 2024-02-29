@@ -1,22 +1,15 @@
-import { Button, Input, useDisclosure } from "@nextui-org/react";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Button, Input } from "@nextui-org/react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
 import { DarkModal } from "src/components";
-import { deleteOfStorage } from "src/utils/localStorage";
 
 const inputFields = [
   { name: "newPassword", label: "Nueva contraseña" },
   { name: "newPasswordConfirm", label: "Confirmar nueva contraseña" },
 ];
 
-export function FirstSignInModal() {
-  const { firstSignIn, email } = useSelector((state) => state.user);
-
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
+export function ChangePasswordModal({ isOpen, onOpenChange, navigate, email }) {
   const [data, setData] = useState({
     newPassword: "",
     newPasswordConfirm: "",
@@ -24,12 +17,6 @@ export function FirstSignInModal() {
   const [errs, setErrs] = useState({});
   const [revealPasswordInput, setRevealPasswordInput] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (firstSignIn) {
-      onOpen();
-    }
-  }, [firstSignIn]);
 
   const handleChange = ({ target: { name, value } }) => {
     setData((prev) => {
@@ -43,12 +30,14 @@ export function FirstSignInModal() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      console.log({ ...data, email: email });
-      const res = await APISpot.auth.firstTimePassword({ ...data, email: email });
-      if (res.status === 200) {
-        window.location.replace("/");
+      const res = await APISpot.auth.confirmPasswordReset({ ...data, email: email });
+      if (res) {
+        //! CHEQUEAR ESTA LOGICA
+        toast.success("Contraseña actualizada con exito.");
+        navigate("/");
+        //! TODO Hacer auto login
       }
-      //TODO
+      console.log(res);
     } catch (e) {
       toast.error("Hubo un error al actualizar la contraseña.");
       console.log(e);
@@ -57,21 +46,14 @@ export function FirstSignInModal() {
     }
   };
 
-  const handleLogOut = () => {
-    deleteOfStorage("user");
-    deleteOfStorage("access_token");
-    window.location.replace("/");
-  };
-
   return (
     <DarkModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       isDismissable={false}
-      title={"¿PRIMERA VEZ?"}
+      title={"ACTUALIZA TU CONTRASEÑA"}
       description={"¡Actualicemos tu contraseña!"}
     >
-      <i className="ri-logout-circle-line icons absolute left-0 top-0 text-xl text-red-500" onClick={handleLogOut} />
       <form className="mb-20 flex flex-col items-center justify-start gap-4" onSubmit={(e) => handleSubmit(e)}>
         {inputFields.map(({ name, label }, index) => (
           <Input

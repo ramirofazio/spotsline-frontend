@@ -37,10 +37,10 @@ export const APISpot = {
       return res.data;
     },
     initPasswordReset: async (email) => {
-      const res = await BASE_API.patch(`/${route.AUTH}/init-password-reset`, { email });
+      const res = await BASE_API.post(`/${route.AUTH}/init-password-reset`, { email });
       return res.data;
     },
-    confirmPasswordReset: async ({ body }) => {
+    confirmPasswordReset: async (body) => {
       const res = await BASE_API.patch(`/${route.AUTH}/confirm-password-reset`, body);
       return res.data;
     },
