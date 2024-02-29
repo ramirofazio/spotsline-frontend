@@ -35,6 +35,12 @@ export function SignIn() {
         addAuthWithToken(access_token);
         dispatch(actionsAuth.setAccessToken(access_token));
         dispatch(actionsUser.setUser(user));
+        if (!user.firstSignIn) {
+          toast.info(`Bienvenido de nuevo ${user.email.split("@")[0]}`, {
+            description: "¡Estamos contentos de que hayas vuelto a nuestra web!",
+          });
+          navigate("/");
+        }
       }
     } catch (e) {
       toast.error("Hubo un error al iniciar la sesion.", { description: e.response.data.message });

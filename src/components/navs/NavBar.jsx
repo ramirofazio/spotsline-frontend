@@ -16,8 +16,11 @@ import { links } from ".";
 import { Link, useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import logo from "assets/logo.png";
 import { getOfStorage } from "src/utils/localStorage";
+import { useSelector } from "react-redux";
 
 export default function NavBar() {
+  const { id } = useSelector((state) => state.user);
+
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [blur, setBlur] = React.useState(false);
 
@@ -148,7 +151,7 @@ export default function NavBar() {
             size="lg"
             isIconOnly
             onPress={() => {
-              navigate("sign-in");
+              navigate(id ? `user/profile/${id}` : "sign-in");
               setIsMenuOpen(false);
             }}
           >
@@ -168,7 +171,7 @@ export default function NavBar() {
           }`}
           size="md"
           isIconOnly
-          onPress={() => navigate("sign-in")}
+          onPress={() => navigate(id ? `user/profile/${id}` : "sign-in")}
         >
           <i className="ri-user-fill text-2xl" />
         </Button>
