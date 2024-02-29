@@ -39,6 +39,7 @@
   text-shadow: 0 0 5px #f9ce41;
 }
 
+/* ! HAY 2 SCROLL BARS EN LA LANDING NO SE POR QUE */
 ::-webkit-scrollbar {
   width: 5px;
 }
