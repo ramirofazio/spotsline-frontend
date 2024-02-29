@@ -1,6 +1,7 @@
 import { Button, Image } from "@nextui-org/react";
 import light2 from "assets/light2.png";
 import { useNavigate } from "react-router-dom";
+import { DefaultButton } from "src/components";
 
 const featuredFooter = [
   { icon: "ri-tools-fill", text: "fabricantes" },
@@ -50,16 +51,13 @@ ${index === 1 && "md:row-span-2"}
         ))}
       </article>
 
-      <Button
-        color="primary"
-        size="lg"
-        className="text-md white-neon font-bold hover:scale-110 hover:text-white md:mx-20 xl:mx-auto xl:w-fit xl:p-6 xl:text-xl"
-        radius="full"
+      <DefaultButton
+        className="mx-auto w-max"
         startContent={<i className="ri-shopping-bag-2-line" />}
         onPress={() => navigate("/productos/0")}
       >
         VER TODOS LOS PRODUCTOS
-      </Button>
+      </DefaultButton>
 
       <article className="flex items-center justify-around md:mx-20 xl:mx-auto xl:w-[40%]">
         {featuredFooter.map(({ icon, text }, index) => (

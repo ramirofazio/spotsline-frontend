@@ -1,9 +1,8 @@
-import { Button, Input } from "@nextui-org/react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import { APISpot, addAuthWithToken } from "src/api";
-import { DarkModal } from "src/components";
+import { DarkModal, DefaultButton, PasswordInput } from "src/components";
 import { actionsAuth, actionsUser } from "src/redux/reducers";
 
 const inputFields = [
@@ -19,7 +18,6 @@ export function ChangePasswordModal({ isOpen, onOpenChange, navigate, email, onC
     newPasswordConfirm: "",
   });
   const [errs, setErrs] = useState({});
-  const [revealPasswordInput, setRevealPasswordInput] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = ({ target: { name, value } }) => {
@@ -63,44 +61,19 @@ export function ChangePasswordModal({ isOpen, onOpenChange, navigate, email, onC
     >
       <form className="mb-20 flex flex-col items-center justify-start gap-4" onSubmit={(e) => handleSubmit(e)}>
         {inputFields.map(({ name, label }, index) => (
-          <Input
-            classNames={{ label: "text-white" }}
+          <PasswordInput
             key={index}
-            color="secondary"
-            className="!text-white"
             name={name}
-            isRequired
-            size="lg"
-            radius="full"
-            type={revealPasswordInput ? "text" : "password"}
             label={label}
-            variant="bordered"
-            labelPlacement="outside"
             isInvalid={Boolean(errs[name])}
             errorMessage={errs[name]}
-            startContent={<i className="ri-key-fill text-xl" />}
-            endContent={
-              <i
-                className={`${
-                  revealPasswordInput ? "ri-lightbulb-fill text-primary" : "ri-lightbulb-line"
-                }  icons text-xl `}
-                onClick={() => setRevealPasswordInput(!revealPasswordInput)}
-              />
-            }
             onChange={handleChange}
           />
         ))}
 
-        <Button
-          isDisabled={!Object.values(data)?.length}
-          type="submit"
-          variant="solid"
-          color={"primary"}
-          className="w-40 rounded-full font-bold tracking-widest text-dark"
-          isLoading={isLoading}
-        >
+        <DefaultButton isDisabled={!Object.values(data)?.length} type="submit" isLoading={isLoading}>
           ACTUALIZAR
-        </Button>
+        </DefaultButton>
       </form>
     </DarkModal>
   );

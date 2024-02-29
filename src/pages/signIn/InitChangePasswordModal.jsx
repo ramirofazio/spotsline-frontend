@@ -1,8 +1,7 @@
-import { Button, Input } from "@nextui-org/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
-import { DarkModal } from "src/components";
+import { BasicInput, DarkModal, DefaultButton } from "src/components";
 
 export function InitChangePasswordModal({ isOpen, onOpenChange }) {
   const [email, setEmail] = useState("");
@@ -38,34 +37,19 @@ export function InitChangePasswordModal({ isOpen, onOpenChange }) {
         className={`${flag && "hidden"} mb-20 flex flex-col items-center justify-start gap-4`}
         onSubmit={(e) => handleSubmit(e)}
       >
-        <Input
-          classNames={{ label: "text-white" }}
-          color="secondary"
-          className="!text-white"
+        <BasicInput
           name="email"
-          isRequired
-          size="lg"
-          radius="full"
-          type={"email"}
+          type="email"
           label="Correo electrónico"
-          variant="bordered"
-          labelPlacement="outside"
           isInvalid={Boolean(errs)}
           errorMessage={errs}
-          startContent={<i className="ri-mail-fill" />}
+          startContentIcon={"ri-mail-fill text-xl"}
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <Button
-          isDisabled={!email}
-          type="submit"
-          variant="solid"
-          color={"primary"}
-          className="w-40 rounded-full font-bold tracking-widest text-dark"
-          isLoading={isLoading}
-        >
+        <DefaultButton isDisabled={!email} type="submit" isLoading={isLoading}>
           ENVIAR
-        </Button>
+        </DefaultButton>
       </form>
 
       <section className={`${!flag && "hidden"} mb-20 grid place-items-center gap-4`}>

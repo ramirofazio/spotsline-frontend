@@ -4,9 +4,10 @@ import { useDispatch } from "react-redux";
 import { isValidSignIn } from "../../utils/validation";
 import { APISpot, addAuthWithToken } from "../../api";
 import { actionsAuth, actionsUser } from "../../redux/reducers";
-import { Button, Divider, Image, Input, useDisclosure } from "@nextui-org/react";
+import { Divider, Image, useDisclosure } from "@nextui-org/react";
 import { toast } from "sonner";
 import { InitChangePasswordModal } from "./InitChangePasswordModal";
+import { BasicInput, PasswordInput, DefaultButton } from "src/components/index";
 
 export function SignIn() {
   const dispatch = useDispatch();
@@ -16,7 +17,6 @@ export function SignIn() {
 
   const [signInData, setSignInData] = useState(false);
   const [errs, setErrs] = useState({});
-  const [revealPasswordInput, setRevealPasswordInput] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = ({ target: { name, value } }) => {
@@ -67,57 +67,29 @@ export function SignIn() {
             <p className="font-slogan text-xs md:text-sm">Se ve bien.</p>
           </div>
           <form onSubmit={handleSubmit} className="z-20 flex flex-col items-center gap-4 md:w-full">
-            <Input
-              classNames={{ label: "text-white" }}
-              color="secondary"
+            <BasicInput
               name="email"
-              isRequired
-              size="lg"
               type="email"
               label="Correo electrónico"
-              variant="bordered"
-              labelPlacement="outside"
-              radius="full"
+              startContentIcon="ri-mail-fill text-xl text-secondary"
               isInvalid={Boolean(errs.email)}
               errorMessage={errs.email}
-              startContent={<i className="ri-mail-fill text-xl text-secondary" />}
               onChange={handleChange}
             />
-            <Input
-              classNames={{ label: "text-white" }}
-              color="secondary"
+            <PasswordInput
               name="password"
-              isRequired
-              size="lg"
-              radius="full"
-              type={revealPasswordInput ? "text" : "password"}
               label="Contraseña"
-              variant="bordered"
-              labelPlacement="outside"
               isInvalid={Boolean(errs.password)}
               errorMessage={errs.password}
-              startContent={<i className="ri-key-fill text-xl text-secondary" />}
-              endContent={
-                <i
-                  className={`${
-                    revealPasswordInput ? "ri-lightbulb-fill text-primary" : "ri-lightbulb-line"
-                  }  icons text-xl `}
-                  onClick={() => setRevealPasswordInput(!revealPasswordInput)}
-                />
-              }
               onChange={handleChange}
             />
-
-            <Button
+            <DefaultButton
               isDisabled={Object.values(errs)?.length || !Object.values(signInData)?.length ? true : false}
-              type="submit"
-              variant="solid"
-              color={"primary"}
-              className="w-40 rounded-full font-bold tracking-widest text-dark"
               isLoading={isLoading}
+              type="submit"
             >
               INGRESAR
-            </Button>
+            </DefaultButton>
           </form>
           <Divider className="my-4 bg-background" />
           <p className="text-xs font-thin text-white md:text-sm">
