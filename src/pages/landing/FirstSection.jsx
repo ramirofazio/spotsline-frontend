@@ -1,4 +1,4 @@
-import { Button, Image } from "@nextui-org/react";
+import { Image } from "@nextui-org/react";
 import hole7 from "assets/hole7.png";
 import cinema3 from "assets/cinema3.png";
 import { DefaultButton } from "src/components";
@@ -23,7 +23,7 @@ export default function FirstSection() {
         <Image
           src={cinema3}
           disableSkeleton
-          className="absolute -left-10 bottom-20 w-28 md:-left-20 md:w-52 xl:-left-24 xl:w-60 "
+          className="absolute -left-10 bottom-20 w-28 md:-left-20 md:w-52 xl:-left-24 xl:w-60"
         />
         <h3 className="white-neon absolute bottom-10 text-center font-secondary tracking-wider xl:text-2xl">
           LO QUE HACEMOS ILUMINA <br />

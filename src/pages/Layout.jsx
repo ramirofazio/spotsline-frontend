@@ -51,7 +51,13 @@ export default function Layout({ children }) {
 
   return (
     <Suspense fallback={<Loader />}>
-      <ChangePasswordModal isOpen={isOpen} onOpenChange={onOpenChange} navigate={navigate} email={query_email} onClose={onClose}/>
+      <ChangePasswordModal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        navigate={navigate}
+        email={query_email}
+        onClose={onClose}
+      />
       <FirstSignInModal navigate={navigate} />
       {children}
     </Suspense>
