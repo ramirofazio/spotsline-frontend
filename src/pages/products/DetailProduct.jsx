@@ -2,5 +2,5 @@ import { useParams } from "react-router-dom";
 
 export function DetailProduct() {
   const { id } = useParams();
-  return <div>product: {id}</div>;
+  return <div className="min-h-[500px] mt-52">product: {id}</div>;
 }
