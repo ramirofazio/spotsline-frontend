@@ -1,24 +1,59 @@
 import { Input, Button, Divider, Image } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { APISpot } from "src/api";
 import { DefaultButton } from "src/components";
+import { actionsShoppingCart } from "src/redux/reducers";
+import { formatPrices } from "src/utils";
 
-const mockCart = [
-  { img: "/logo.png", name: "Art. Spotsline", price: 9999, qty: 1 },
-  { img: "/logo.png", name: "Art. Spotsline", price: 9999, qty: 2 },
-  { img: "/logo.png", name: "Art. Spotsline", price: 9999, qty: 1 },
-  { img: "/logo.png", name: "Art. Spotsline", price: 9999, qty: 5 },
-];
+//? Faltan utilidades para los tipos de administradores y vendedores. Ideas en NOTION!
 
 export default function ShoppingCart() {
-  const [discountCode, setDiscountCode] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.user);
+  const { items, total, subtotal, discount } = useSelector((state) => state.cart);
 
-  const handleSubmitCheckout = () => {
-    console.log("checkout");
+  const [discountCode, setDiscountCode] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleCreateC = async () => {
+    setLoading(true);
+    try {
+      const body = {
+        userId: user.id,
+        discount: discount,
+        items: items.map(({ id, quantity }) => {
+          return { id: id, qty: quantity };
+        }),
+      };
+      const res = await APISpot.checkout.create(body);
+      if (res) {
+        window.open(res);
+      }
+    } catch (e) {
+      console.log(e);
+      toast.error("Hubo un error al aplicar el cupon", { description: e.response.data.message });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleApplyDiscount = () => {
-    console.log("apply discount");
+  const handleApplyDiscount = async () => {
+    try {
+      setLoading(true);
+      const res = await APISpot.cart.validateCoupon(discountCode);
+      if (res) {
+        dispatch(actionsShoppingCart.applyDiscount(20));
+      }
+    } catch (e) {
+      console.log(e);
+      toast.error("Hubo un error al aplicar el cupon", { description: e.response.data.message });
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -39,7 +74,7 @@ export default function ShoppingCart() {
       </section>
       <Divider className="h-1 bg-primary" />
 
-      <section className="relative grid place-items-center gap-6  p-6">
+      <section className="relative grid place-items-center gap-6 p-6">
         <div className="absolute -left-40 top-20">
           <Image src="logo.png" alt="logo" width={350} height={350} className="rotate-12" />
         </div>
@@ -47,29 +82,49 @@ export default function ShoppingCart() {
           <Image src="logo.png" alt="logo" width={350} height={350} className="-rotate-12" />
         </div>
 
-        {mockCart.map(({ img, name, price, qty }, index) => (
+        {items.length === 0 && (
+          <DefaultButton className={"w-full"} onPress={() => navigate("/productos/0")}>
+            VER PRODUCTOS
+          </DefaultButton>
+        )}
+        {items.map(({ img, name, price, quantity, id }, index) => (
           <article key={index} className="z-10 flex min-w-[80vw] items-center gap-6 rounded-xl bg-white p-6">
             <Image src={img} width={150} height={150} alt={`${name} img`} className="shadow-inner" />
             <div className="flex w-full flex-col items-start gap-4">
               <div className="w-full space-y-2 text-left text-lg">
                 <h4 className="line-clamp-1 w-40 font-bold">{name}</h4>
-                <p className="font-bold tracking-wider text-primary">
-                  {price.toLocaleString("es-AR", {
-                    style: "currency",
-                    currency: "ARS",
-                  })}
-                </p>
+                <p className="font-bold tracking-wider text-primary">{formatPrices(price)}</p>
               </div>
-              <div className="flex w-full items-center justify-between gap-4 text-xl">
-                <Button isIconOnly radius="full" className="flex bg-dark text-xl  text-primary ">
+              <div className="w -full    flex items-center justify-between gap-4 text-xl">
+                <Button
+                  isIconOnly
+                  radius="full"
+                  className="flex bg-dark text-xl  text-primary"
+                  onPress={() => dispatch(actionsShoppingCart.removeItemFromCart(id))}
+                >
                   <i className="ri-delete-bin-line icons text-xl text-primary" />
                 </Button>
                 <div className="flex items-center gap-3 font-secondary font-bold">
-                  <Button isIconOnly radius="full" className="flex bg-dark text-xl font-bold text-primary ">
+                  <Button
+                    isIconOnly
+                    radius="full"
+                    className="flex bg-dark text-xl font-bold text-primary"
+                    onPress={() =>
+                      dispatch(actionsShoppingCart.updateCartItemQuantity({ id: id, quantity: quantity - 1 }))
+                    }
+                  >
                     <i className="ri-subtract-line" />
                   </Button>
-                  <p>{qty}</p>
-                  <Button isIconOnly radius="full" className="flex bg-dark text-xl font-bold text-primary ">
+                  <p>{quantity}</p>
+                  <Button
+                    isIconOnly
+                    radius="full"
+                    className="flex bg-dark text-xl font-bold text-primary"
+                    onPress={() =>
+                      dispatch(actionsShoppingCart.updateCartItemQuantity({ id: id, quantity: quantity + 1 }))
+                    }
+                    isDisabled={quantity >= 100}
+                  >
                     <i className="ri-add-line" />
                   </Button>
                 </div>
@@ -86,20 +141,26 @@ export default function ShoppingCart() {
         <h2 className="yellow-neon text-xl font-extrabold">RESUMEN</h2>
         <div className="z-10 flex w-full items-center justify-between border-b-1 border-dotted border-primary/40">
           <h3>SUBTOTAL</h3>
-          <h3 className="font-bold text-primary">$99.5</h3>
+          <h3 className="font-bold text-primary">{formatPrices(subtotal)}</h3>
         </div>
-        <div className="z-10 flex w-full items-center justify-between border-b-1 border-dotted border-primary/40">
-          <h3>ENVIO</h3>
-          <h3 className="font-bold text-primary">$80</h3>
-        </div>
+        {discount !== 0 && (
+          <div className="relative z-10 flex w-full items-center justify-between border-b-1 border-dotted border-primary/40">
+            <h3>DESCUENTO</h3>
+            <h3 className="mr-6 font-bold text-primary">{discount} %</h3>
+            <i
+              className="ri-delete-bin-line icons absolute right-0 text-sm text-dark"
+              onClick={() => dispatch(actionsShoppingCart.removeDiscount())}
+            />
+          </div>
+        )}
         <div className="z-10 flex w-full items-center justify-between border-b-1 border-dotted border-primary/40">
           <h3>TOTAL A PAGAR</h3>
-          <h3 className="font-bold text-primary">$120.5</h3>
+          <h3 className="font-bold text-primary">{formatPrices(total)}</h3>
         </div>
         <div className="mx-auto flex w-full flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div className="flex flex-col">
             <p className="mx-auto text-left font-thin lg:mx-0">Tengo un código promocional</p>
-            <form className="mx-auto flex items-center justify-center rounded-xl md:w-80">
+            <form className="z-20 mx-auto flex items-center justify-center rounded-xl md:w-80">
               <Input
                 type="text"
                 radius="none"
@@ -117,12 +178,18 @@ export default function ShoppingCart() {
               <Button
                 onPress={handleApplyDiscount}
                 className="icons h-10 rounded-none rounded-br-xl rounded-tr-xl bg-background from-background to-primary font-bold text-black transition hover:bg-gradient-to-r"
+                isDisabled={items.length === 0}
               >
                 APLICAR
               </Button>
             </form>
           </div>
-          <DefaultButton onPress={handleSubmitCheckout} className={"mx-auto lg:mx-0"}>
+          <DefaultButton
+            onPress={handleCreateC}
+            className={"mx-auto lg:mx-0"}
+            isLoading={loading}
+            isDisabled={items.length === 0}
+          >
             PAGAR COMPRA
           </DefaultButton>
         </div>

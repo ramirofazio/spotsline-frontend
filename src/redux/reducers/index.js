@@ -11,3 +11,23 @@ export const actionsUser = {
   setUser,
   cleanUser,
 };
+
+export { shoppingCartRdr } from "./shoppingCart.js";
+import {
+  addItemToCart,
+  applyDiscount,
+  clearCart,
+  loadCart,
+  removeItemFromCart,
+  updateCartItemQuantity,
+  removeDiscount,
+} from "./shoppingCart.js";
+export const actionsShoppingCart = {
+  addItemToCart,
+  applyDiscount,
+  clearCart,
+  loadCart,
+  removeItemFromCart,
+  updateCartItemQuantity,
+  removeDiscount,
+};
