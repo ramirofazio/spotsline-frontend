@@ -1,6 +1,7 @@
 import { Button, Image } from "@nextui-org/react";
 import hole7 from "assets/hole7.png";
 import cinema3 from "assets/cinema3.png";
+import { DefaultButton } from "src/components";
 
 export default function FirstSection() {
   return (
@@ -18,14 +19,7 @@ export default function FirstSection() {
         <div className="top-50  absolute -z-10 h-80 w-[35%] animate-glow rounded-tl-full rounded-tr-full bg-[#FEFFC4] blur-3xl xl:flex" />
         <h1 className="text-5xl md:mt-12 md:text-6xl xl:text-7xl">SPOTSLINE</h1>
         <p className="font-slogan text-2xl font-semibold text-black md:text-3xl xl:text-4xl">Se ve bien.</p>
-        <Button
-          variant="solid"
-          radius="full"
-          size="lg"
-          className="white-neon my-4 bg-primary font-semibold tracking-wide hover:scale-110 hover:text-white xl:my-8 xl:text-lg"
-        >
-          LISTA DE PRECIOS NUEVA
-        </Button>
+        <DefaultButton className="my-4 w-max xl:my-8">LISTA DE PRECIOS NUEVA</DefaultButton>
         <Image
           src={cinema3}
           disableSkeleton

@@ -21,25 +21,28 @@ export const APISpot = {
 
     return res.data;
   },
-  loginByJWT: ({ accessToken }) => {
-    return BASE_API.post(`/${route.AUTH}/jwtAutoLogin`, { accessToken });
-  },
+
   //? Rutas al backend POST, GET, PUT, etc...
   auth: {
-    loginByJWT: ({ accessToken }) => {
-      return BASE_API.post(`/${route.AUTH}/jwtAutoLogin`, { accessToken });
+    jwtAutoSignIn: async (body) => {
+      const res = await BASE_API.post(`/${route.AUTH}/jwt-auto-sign-in`, body);
+      return res.data;
     },
-    signIn: (body) => {
-      return BASE_API.post(`/${route.AUTH}/sign-in`, body);
+    signIn: async (body) => {
+      const res = await BASE_API.post(`/${route.AUTH}/sign-in`, body);
+      return res.data;
     },
-    firstTimePassword: (body) => {
-      return BASE_API.patch(`/${route.AUTH}/first-time-password`, body);
+    firstTimePassword: async (body) => {
+      const res = await BASE_API.patch(`/${route.AUTH}/first-time-password`, body);
+      return res.data;
     },
-    initPasswordReset: (email) => {
-      return BASE_API.patch(`/${route.AUTH}/init-password-reset`, { email });
+    initPasswordReset: async (email) => {
+      const res = await BASE_API.post(`/${route.AUTH}/init-password-reset`, { email });
+      return res.data;
     },
-    confirmPasswordReset: ({ body }) => {
-      return BASE_API.patch(`/${route.AUTH}/confirm-password-reset`, body);
+    confirmPasswordReset: async (body) => {
+      const res = await BASE_API.patch(`/${route.AUTH}/confirm-password-reset`, body);
+      return res.data;
     },
   },
   product: {
@@ -61,6 +64,18 @@ export function addAuthWithToken(token) {
   BASE_API.interceptors.request.use(
     (config) => {
       config.headers.Authorization = `Bearer ${token}`;
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+}
+
+export function removeAuthWithToken() {
+  BASE_API.interceptors.request.use(
+    (config) => {
+      config.headers.Authorization = "";
       return config;
     },
     (error) => {

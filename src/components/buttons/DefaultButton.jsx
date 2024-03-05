@@ -1,10 +1,18 @@
-export function DefaultButton({ text, className, ...props }) {
+import { Button } from "@nextui-org/react";
+
+export function DefaultButton({ children, isDisabled, type = "button", className, isLoading, onPress, startContent }) {
   return (
-    <button
-      {...props}
-      className={`w-fit cursor-pointer rounded-xl bg-yellow px-3 py-2 font-secondary font-bold hover:bg-gray hover:text-white hover:transition-all disabled:pointer-events-none  disabled:bg-black disabled:opacity-40 ${className} `}
+    <Button
+      isDisabled={isDisabled}
+      type={type}
+      variant="solid"
+      color={"primary"}
+      className={`w-40 rounded-full p-6 font-bold tracking-widest text-dark hover:scale-110 ${className}`}
+      isLoading={isLoading}
+      onPress={onPress}
+      startContent={startContent}
     >
-      {text}
-    </button>
+      {children}
+    </Button>
   );
 }

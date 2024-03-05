@@ -9,13 +9,6 @@ export function Landing() {
   useEffect(() => {
     document.title = "SPOTSLINE - Iluminación Profesional";
     //? Una boludez, pero queda lindo y mas dinamico
-
-    toast("Ya tenemos toasts!", {
-      description: "Estan buenos, usemoslos. Ej en Landing.jsx ;)",
-      duration: 5000,
-      icon: <i class="ri-thumb-up-line"></i>,
-    });
-    //? Docu: https://sonner.emilkowal.ski/toast
   }, []);
 
   return (
