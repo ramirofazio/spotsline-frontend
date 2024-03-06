@@ -3,7 +3,7 @@ import axios from "axios";
 export const BASE_API = axios.create({
   maxBodyLength: 750000000,
   baseURL: import.meta.env.VITE_API_URL,
-  //timeout: 1000,
+  timeout: 2000,
 });
 
 BASE_API.interceptors.response.use(

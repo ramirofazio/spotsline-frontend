@@ -1,5 +1,6 @@
 import { Button, Image } from "@nextui-org/react";
 import { useEffect } from "react";
+import { DefaultButton } from "src/components";
 import { Autoplay } from "swiper/modules";
 import { SwiperSlide, Swiper } from "swiper/react";
 
@@ -22,7 +23,7 @@ export function Company() {
       >
         {/* //? CAMBIAR FOTOS Y PONER LAS QUE VAN UNA VEZ SUBIDAS A AWS */}
         <SwiperSlide>
-          <picture className="bg-empresa2 grid min-h-[40vh] w-screen place-items-center  bg-cover bg-left-top bg-no-repeat xl:min-h-[50vh]">
+          <picture className="grid min-h-[40vh] w-screen place-items-center bg-empresa2  bg-cover bg-left-top bg-no-repeat xl:min-h-[50vh]">
             <div className="grid h-full w-full place-items-center bg-black/60 px-6 text-white">
               <div className="mx-10 w-full xl:pl-40 xl:tracking-wider">
                 <h2 className="text-xl md:text-3xl xl:text-5xl xl:font-semibold">ACTUALIDAD</h2>
@@ -35,7 +36,7 @@ export function Company() {
           </picture>
         </SwiperSlide>
         <SwiperSlide>
-          <picture className="bg-empresa2 relative grid min-h-[40vh] w-screen  place-items-center bg-cover bg-left-top bg-no-repeat xl:min-h-[50vh]">
+          <picture className="relative grid min-h-[40vh] w-screen place-items-center  bg-empresa2 bg-cover bg-left-top bg-no-repeat xl:min-h-[50vh]">
             <div className="grid h-full w-full place-items-center bg-black/60 px-6 text-white">
               <div className="absolute bottom-10 right-5 text-center text-white xl:bottom-32  xl:right-20">
                 <Image src="/isotipoblanco.png" alt="isotipo-blanco" className="w-40 xl:w-80" />
@@ -48,7 +49,7 @@ export function Company() {
           </picture>
         </SwiperSlide>
         <SwiperSlide>
-          <picture className="bg-empresa2 grid min-h-[40vh] w-screen place-items-center  bg-cover bg-left-top bg-no-repeat xl:min-h-[50vh]">
+          <picture className="grid min-h-[40vh] w-screen place-items-center bg-empresa2  bg-cover bg-left-top bg-no-repeat xl:min-h-[50vh]">
             <div className="grid h-full w-full place-items-center bg-black/60 px-6 text-white">
               <div className="mx-10 w-full xl:pl-40 xl:tracking-wider">
                 <h2 className="text-xl md:text-3xl xl:text-5xl xl:font-semibold">CREYENDO</h2>
@@ -139,13 +140,7 @@ export function Company() {
             <strong>satisfacer</strong> todas vuestras necesidades y permita una <strong>mayor conexión</strong> entre
             ustedes y nuestra gente. Gracias por contar con nosotros.
           </p>
-          <Button
-            variant="solid"
-            radius="full"
-            className="w-80 bg-primary font-semibold tracking-wide hover:scale-110 hover:text-white "
-          >
-            POLÍTICA DE CAMBIO Y DEVOLUCIÓN
-          </Button>
+          <DefaultButton className="w-max shadow-xl">POLÍTICA DE CAMBIO Y DEVOLUCIÓN</DefaultButton>
         </div>
         <div className="absolute -bottom-20 -right-60">
           <Image src="/logo.png" alt="logo" className="w-[30vw] -rotate-12" />
@@ -159,13 +154,7 @@ export function Company() {
         <div className="absolute -left-28 -top-20">
           <Image src="/logo.png" alt="logo" className="w-60 rotate-45" />
         </div>
-        <Button
-          variant="solid"
-          radius="full"
-          className="mx-10 bg-primary text-xs font-semibold tracking-wide shadow-xl hover:scale-110 hover:text-white"
-        >
-          POLÍTICA DE CAMBIO Y DEVOLUCIÓN
-        </Button>
+        <DefaultButton className="mx-auto w-max text-sm shadow-xl">POLÍTICA DE CAMBIO Y DEVOLUCIÓN</DefaultButton>
       </section>
     </main>
   );

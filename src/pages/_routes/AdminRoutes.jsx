@@ -1,6 +1,8 @@
 import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
 import Layout from "../Layout";
+import { useSelector } from "react-redux";
+import Dashboard from "../admin/Dashboard";
 
 export const adminRoutesPaths = [
   {
@@ -17,7 +19,7 @@ export const adminRoutesPaths = [
         children: [
           {
             path: "/admin/dashboard",
-            element: <h1>Dashboard</h1>,
+            element: <Dashboard />,
             index: true,
           },
         ],
@@ -27,5 +29,14 @@ export const adminRoutesPaths = [
 ];
 
 export function AdminRoot() {
+  const { access_token } = useSelector((state) => state.auth);
+  const { email, id, web_role } = useSelector((state) => state.user);
+
+  if (!access_token && !email && !id && web_role !== import.meta.env.VITE_ADMIN_ROLE) {
+    return <DefaultError />;
+  }
   return <Outlet />;
 }
+
+//TODO Crear los input reciclables en un componente
+//TODO Crear los botones reciclables en un componente

@@ -33,7 +33,7 @@ export const publicRoutesPaths = [
       try {
         return await APISpot.getCategories();
       } catch (e) {
-        console.log("Db no conectada");
+        console.log("Db no conectada", e);
         return null;
       }
     },
@@ -47,7 +47,6 @@ export const publicRoutesPaths = [
       { path: "/empresa", element: <Company /> },
       { path: "/rrhh", element: <RecursosHumanos /> },
       { path: "/contacto", element: <AboutUs /> },
-      { path: "/sign-in", element: <SignIn /> },
       { path: "/change-password", element: <ChangePassword /> },
       {
         path: "/productos/:page",
@@ -55,6 +54,15 @@ export const publicRoutesPaths = [
       },
       { path: "/producto/:id", element: <DetailProduct /> },
     ],
+  },
+  {
+    path: "/sign-in",
+    element: (
+      <Layout>
+        <SignIn />
+      </Layout>
+    ),
+    errorElement: <DefaultError />,
   },
 ];
 
