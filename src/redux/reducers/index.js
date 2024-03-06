@@ -9,3 +9,7 @@ import { setUser } from "./user.js";
 export const actionsUser = {
   setUser,
 };
+
+export { productRdr } from "./product.js";
+
+export * as actionProducts from "./product.js";

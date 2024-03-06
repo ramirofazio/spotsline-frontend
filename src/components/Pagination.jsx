@@ -62,7 +62,7 @@ export function PaginationComponent({ qty = 10, page, setCurrentPage }) {
       disableCursorAnimation
       showControls
       total={qty}
-      initialPage={1}
+      initialPage={page}
       className="my-5 gap-2"
       radius="full"
       renderItem={renderItem}
