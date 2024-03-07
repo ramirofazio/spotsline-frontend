@@ -11,3 +11,7 @@ export const actionsUser = {
   setUser,
   cleanUser,
 };
+
+export { productRdr } from "./product.js";
+
+export * as actionProducts from "./product.js";

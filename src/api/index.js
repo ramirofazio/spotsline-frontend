@@ -10,10 +10,17 @@ const route = {
 };
 
 export const APISpot = {
+  product: {
+    getAll: ({ take, page, search = null }) => {
+      return BASE_API.get(`/${route.PRODUCTS}?take=${take}&&page=${page}&&search=${search}`);
+    },
+    getOne: ({ id }) => {
+      return BASE_API.get(`/${route.PRODUCTS}/detail/${id}`);
+    },
+  },
   //TODO acomodar estos 3 pedidos igual que el auth, metidos en un objeto `products`
-  getPaginatedProducts: async (take, skip) => {
-    const res = await BASE_API.get(`/${route.PRODUCTS}/pag?take=${take}&&skip=${skip}`);
-    return res.data;
+  getPaginatedProducts: (take, skip) => {
+    return BASE_API.get(`/${route.PRODUCTS}/pag?take=${take}&&skip=${skip}`);
   },
   getCategories: async () => {
     const res = await BASE_API.get(`/${route.PRODUCTS}/categories`);
@@ -44,9 +51,6 @@ export const APISpot = {
       const res = await BASE_API.patch(`/${route.AUTH}/confirm-password-reset`, body);
       return res.data;
     },
-  },
-  product: {
-    _route: "product",
   },
   user: {
     _route: "user",
