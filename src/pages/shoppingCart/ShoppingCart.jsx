@@ -75,13 +75,6 @@ export default function ShoppingCart() {
       <Divider className="h-1 bg-primary" />
 
       <section className="relative grid place-items-center gap-6 p-6">
-        <div className="absolute -left-40 top-20">
-          <Image src="logo.png" alt="logo" width={350} height={350} className="rotate-12" />
-        </div>
-        <div className="absolute -right-40 bottom-20">
-          <Image src="logo.png" alt="logo" width={350} height={350} className="-rotate-12" />
-        </div>
-
         {items.length === 0 && (
           <DefaultButton className={"w-full"} onPress={() => navigate("/productos/0")}>
             VER PRODUCTOS
@@ -134,10 +127,7 @@ export default function ShoppingCart() {
         ))}
       </section>
       <Divider className="h-1 bg-primary" />
-      <div className="absolute -left-40">
-        <Image src="logo.png" alt="logo" width={350} height={350} className="-rotate-12" />
-      </div>
-      <section className="relative m-6 mx-auto flex max-w-[80vw] flex-col  items-start gap-6 rounded-xl border-2 border-primary/50 bg-dark/60 p-6 font-secondary font-bold text-white">
+      <section className="relative m-6 mx-auto flex max-w-[80vw] flex-col  items-start gap-6 rounded-xl border-2 border-primary/50 bg-dark/50 p-6 font-secondary font-bold text-white">
         <h2 className="yellow-neon text-xl font-extrabold">RESUMEN</h2>
         <div className="z-10 flex w-full items-center justify-between border-b-1 border-dotted border-primary/40">
           <h3>SUBTOTAL</h3>
