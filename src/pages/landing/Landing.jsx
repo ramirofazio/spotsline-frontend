@@ -24,7 +24,7 @@ export function Landing() {
   const getPaymentModal = () => {
     if (mobbex_payment_type && mobbex_transaction_id && id && access_token) {
       if (mobbex_status === "200") {
-        return <PaymentOk transactionId={mobbex_transaction_id} />;
+        return <PaymentOk transactionId={mobbex_transaction_id} type={mobbex_payment_type} />;
       } else if (mobbex_status === "0") {
         return <PaymentFailed />;
       }

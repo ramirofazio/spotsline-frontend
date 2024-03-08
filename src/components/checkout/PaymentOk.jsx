@@ -5,9 +5,11 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { APISpot } from "src/api";
 import { toast } from "sonner";
+import { getOfStorage } from "src/utils/localStorage";
 
 export function PaymentOk({ transactionId, type }) {
   const { id } = useSelector((state) => state.user);
+  const orderBody = getOfStorage("orderBody");
 
   const { onOpen, isOpen, onOpenChange, onClose } = useDisclosure();
 
@@ -17,14 +19,13 @@ export function PaymentOk({ transactionId, type }) {
     setLoading(true);
 
     try {
-      //! Mergear `develop` !!
-      //? Crear la orden, conectar BE y DB, hacer post a Db con datos, recupear del Localstorage o redux los datos de la orden. En BE crear rutas y crear service para los datos
-      //   const res = await APISpot.user.createNewOrder({
-      //     /* ????? */
-      //     if(res) {
-      //       toast.success("Orden de compra creada con exito", { description: "¡Gracias por comprar en Spotsline!" });
-      //     },
-      //   });
+      if (orderBody) {
+        //? Crear la orden, conectar BE y DB, hacer post a Db con datos, recupear del Localstorage o redux los datos de la orden. En BE crear rutas y crear service para los datos
+        const res = await APISpot.user.createOrder({ ...orderBody, transactionId, type });
+        if (res) {
+          toast.success("Orden de compra creada con exito", { description: "¡Gracias por comprar en Spotsline!" });
+        }
+      }
     } catch (e) {
       console.log(e);
     } finally {

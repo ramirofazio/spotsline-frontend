@@ -64,6 +64,13 @@ export const APISpot = {
       return res.data;
     },
   },
+
+  user: {
+    createOrder: async (body) => {
+      const res = await BASE_API.post(`/${route.USER}/create-order`, body);
+      return res.data;
+    },
+  },
 };
 
 //? JWT DATA FLOW

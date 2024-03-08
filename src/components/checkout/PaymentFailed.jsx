@@ -1,10 +1,9 @@
-import { useSelector } from "react-redux";
 import { DarkModal, DefaultButton } from "..";
 import { useDisclosure } from "@nextui-org/react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
-export function PaymentFailed({ transactionId }) {
+export function PaymentFailed() {
   const { onOpen, isOpen, onOpenChange, onClose } = useDisclosure();
 
   useEffect(() => {

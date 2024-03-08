@@ -7,6 +7,7 @@ import { APISpot } from "src/api";
 import { DefaultButton } from "src/components";
 import { actionsShoppingCart } from "src/redux/reducers";
 import { formatPrices } from "src/utils";
+import { saveInStorage } from "src/utils/localStorage";
 
 //? Faltan utilidades para los tipos de administradores y vendedores. Ideas en NOTION!
 
@@ -29,6 +30,9 @@ export default function ShoppingCart() {
           return { id: id, qty: quantity };
         }),
       };
+
+      //? Guardo para recuperar en `PaymentOK.jsx`
+      saveInStorage("orderBody", body);
       const res = await APISpot.checkout.create(body);
       if (res) {
         window.open(res);

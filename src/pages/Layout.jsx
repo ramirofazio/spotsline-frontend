@@ -1,10 +1,9 @@
-import { Suspense } from "react";
+import { useEffect, Suspense } from "react";
 import Loader from "src/components/Loader";
 import { FirstSignInModal } from "./signIn";
 import { getOfStorage } from "src/utils/localStorage";
 import { setAccessToken } from "src/redux/reducers/auth";
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
 import { addAuthWithToken, APISpot } from "src/api";
 import { setUser } from "src/redux/reducers/user";
 import { ChangePasswordModal } from "./signIn/ChangePasswordModal";
@@ -62,16 +61,16 @@ export default function Layout({ children }) {
       }
     });
 
-    //! BORRAR
-    // dispatch(
-    //   actionsShoppingCart.addItemToCart({
-    //     id: 12,
-    //     name: "Articulo SPT.",
-    //     img: "/logo.png",
-    //     price: 12831.43,
-    //     quantity: 1,
-    //   })
-    // );
+    // !BORRAR;
+    dispatch(
+      actionsShoppingCart.addItemToCart({
+        id: 12,
+        name: "Articulo SPT.",
+        img: "/logo.png",
+        price: 12831.43,
+        quantity: 1,
+      })
+    );
   }, [document]);
 
   return (
