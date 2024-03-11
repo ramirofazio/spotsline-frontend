@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import FirstSection from "./FirstSection";
 import CategoriesCarrousel from "./CategoriesCarrousel";
 import FeaturedProducts from "./FeaturedProducts";
@@ -16,28 +15,17 @@ export function Landing() {
   const mobbex_payment_type = params.get("type");
   const mobbex_transaction_id = params.get("transactionId");
 
-  useEffect(() => {
-    document.title = "SPOTSLINE - Iluminación Profesional";
-    //? SEO !!!!
-  }, []);
-
-  const getPaymentModal = () => {
-    if (mobbex_payment_type && mobbex_transaction_id && id && access_token) {
-      if (mobbex_status === "200") {
-        return <PaymentOk transactionId={mobbex_transaction_id} type={mobbex_payment_type} />;
-      } else if (mobbex_status === "0") {
-        return <PaymentFailed />;
-      }
-    }
-  };
-
   return (
     <section className="grid w-full place-content-center">
       <FirstSection />
       <CategoriesCarrousel />
       <FeaturedProducts />
       <SecondSection />
-      {getPaymentModal()}
+      {mobbex_payment_type && mobbex_transaction_id && id && access_token && mobbex_status === "200" ? (
+        <PaymentOk transactionId={mobbex_transaction_id} type={mobbex_payment_type} />
+      ) : (
+        mobbex_status === "0" && <PaymentFailed />
+      )}
     </section>
   );
 }

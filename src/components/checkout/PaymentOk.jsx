@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { APISpot } from "src/api";
 import { toast } from "sonner";
-import { getOfStorage } from "src/utils/localStorage";
+import { deleteOfStorage, getOfStorage } from "src/utils/localStorage";
 
 export function PaymentOk({ transactionId, type }) {
   const { id } = useSelector((state) => state.user);
@@ -15,27 +15,32 @@ export function PaymentOk({ transactionId, type }) {
 
   const [loading, setLoading] = useState(false);
 
-  const createOrder = async () => {
-    setLoading(true);
-
-    try {
-      if (orderBody) {
-        //? Crear la orden, conectar BE y DB, hacer post a Db con datos, recupear del Localstorage o redux los datos de la orden. En BE crear rutas y crear service para los datos
-        const res = await APISpot.user.createOrder({ ...orderBody, transactionId, type });
-        if (res) {
-          toast.success("Orden de compra creada con exito", { description: "¡Gracias por comprar en Spotsline!" });
-        }
-      }
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     onOpen();
-    createOrder();
+
+    return () => {
+      setLoading(true);
+
+      try {
+        if (orderBody) {
+          console.log("orden");
+          APISpot.user.createOrder({ ...orderBody, transactionId, type }).then((res) => {
+            if (res) {
+              toast.success("Orden de compra creada con exito", { description: "¡Gracias por comprar en Spotsline!" });
+            }
+          });
+        } else {
+          toast.info("Faltan datos para crear la orden");
+        }
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoading(false);
+      }
+
+      deleteOfStorage("orderBody");
+      deleteOfStorage("shoppingCart");
+    };
   }, []);
 
   return (
