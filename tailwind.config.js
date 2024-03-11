@@ -25,6 +25,7 @@ export default {
       colors: {
         primary: "#F9CE41",
         secondary: "#3f3f3f",
+        dark: "#1E1E1E",
         background: "#D9D9D9",
       },
       fontFamily: {
@@ -39,8 +40,10 @@ export default {
       },
       backgroundImage: {
         empresaScaled: `url(https://www.spotsline.com.ar/wp-content/uploads/2021/05/empresa-scaled.jpg)`,
+        empresa2: `url("/empresa2.png")`,
         landingbg: `url("assets/landingbg.jpg")`,
         light: `url("assets/light.png")`,
+        signIn: `url("/sign-in.png")`,
         //! Esto tiene que volar!
       },
       transitionDuration: {

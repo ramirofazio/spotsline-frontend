@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
 import { APISpot } from "src/api/index.js";
 import Layout from "../Layout";
-import { DetailProduct } from "../products/DetailProduct";
+import { DetailProduct } from "../products/detail/DetailProduct";
 //? Imp en lazy, mapeo componentes a default para que funcionen que el suspense
 const Footer = lazy(() => import("components/navs/Footer.jsx"));
 const NavBar = lazy(() => import("components/navs/NavBar.jsx"));
@@ -15,10 +15,11 @@ const SignIn = lazy(() => import("pages/signIn/SignIn").then((module) => ({ defa
 const RecursosHumanos = lazy(() =>
   import("pages/recursosHumanos/RecursosHumanos").then((module) => ({ default: module.RecursosHumanos }))
 );
-
 const ChangePassword = lazy(() =>
   import("pages/signIn/ChangePassword").then((module) => ({ default: module.ChangePassword }))
 );
+
+const ShoppingCart = lazy(() => import("pages/shoppingCart/ShoppingCart.jsx"));
 
 export const publicRoutesPaths = [
   {
@@ -34,7 +35,7 @@ export const publicRoutesPaths = [
       try {
         return await APISpot.getCategories();
       } catch (e) {
-        console.log("Db no conectada");
+        console.log("Db no conectada", e);
         return null;
       }
     },
@@ -48,18 +49,23 @@ export const publicRoutesPaths = [
       { path: "/empresa", element: <Company /> },
       { path: "/rrhh", element: <RecursosHumanos /> },
       { path: "/contacto", element: <AboutUs /> },
-      { path: "/sign-in", element: <SignIn /> },
       { path: "/change-password", element: <ChangePassword /> },
       {
         path: "/productos/:page",
         element: <Products />,
-        loader: async ({ params }) => {
-          return await APISpot.getPaginatedProducts(20, params.page);
-        },
       },
-      { path: "/producto/:id", element: <DetailProduct />,
-      },
+      { path: "/producto/:id", element: <DetailProduct /> },
+      { path: "/carrito", element: <ShoppingCart /> },
     ],
+  },
+  {
+    path: "/sign-in",
+    element: (
+      <Layout>
+        <SignIn />
+      </Layout>
+    ),
+    errorElement: <DefaultError />,
   },
 ];
 

@@ -16,10 +16,11 @@ import { links } from ".";
 import { Link, useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import logo from "assets/logo.png";
 import { getOfStorage } from "src/utils/localStorage";
-
-const mockCategories = ["luz 1", "luz 2", "luz 3", "luz 4", "luz 5", "luz 6", "luz 8", "luz 9"];
+import { useSelector } from "react-redux";
 
 export default function NavBar() {
+  const { id } = useSelector((state) => state.user);
+
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [blur, setBlur] = React.useState(false);
 
@@ -30,7 +31,7 @@ export default function NavBar() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      if (scrollY > 350) {
+      if (scrollY > 250 || isMenuOpen || (window.innerWidth > 700 && window.innerWidth < 1000)) {
         setBlur(true);
       } else {
         setBlur(false);
@@ -42,19 +43,22 @@ export default function NavBar() {
     return () => {
       document.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [isMenuOpen, pathname]);
+
   return (
     <Navbar
       shouldHideOnScroll
-      className="fixed bg-transparent md:py-4"
-      isBlurred={isMenuOpen ? true : blur ? true : window.innerWidth > 700 && window.innerWidth < 1000 ? true : false}
+      className={`xl:rounded-bl-2xl xl:rounded-br-2xl ${
+        pathname !== "/" ? "bg-dark/30 shadow-xl" : "bg-transparent"
+      }  md:py-4 ${pathname === "/carrito" ? "block" : "fixed"}`}
+      isBlurred={blur}
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
       maxWidth="full"
     >
       <NavbarContent justify="start">
         <Image
-          src={logo}
+          src="/isotipoblanco.png"
           hidden={isMenuOpen ? true : false}
           className="mr-20 w-20 transition hover:scale-110 hover:animate-pulse hover:cursor-pointer sm:w-24 md:w-32"
           onClick={() => navigate("/")}
@@ -72,7 +76,7 @@ export default function NavBar() {
             <i className="ri-arrow-down-s-line yellow-neon text-xl font-bold transition group-hover:scale-125"></i>
             {name === "productos" ? (
               <Dropdown className="bg-transparent shadow-none backdrop-blur-xl" key={index}>
-                <DropdownTrigger className="white-neon hover:cursor-pointer xl:text-xl">PRODUCTOS</DropdownTrigger>
+                <DropdownTrigger className="text-background hover:cursor-pointer xl:text-xl">PRODUCTOS</DropdownTrigger>
                 <DropdownMenu
                   variant="solid"
                   aria-label="Dropdown menu with icons"
@@ -103,7 +107,7 @@ export default function NavBar() {
                 </DropdownMenu>
               </Dropdown>
             ) : (
-              <Link className={`text-md white-neon w-full uppercase xl:text-xl`} to={path}>
+              <Link className={`text-md w-full  uppercase text-background xl:text-xl`} to={path}>
                 {name}
               </Link>
             )}
@@ -111,7 +115,7 @@ export default function NavBar() {
         ))}
       </NavbarContent>
       <NavbarContent justify="end" className="sm:hidden">
-        <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className="ml-20" />
+        <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className={`ml-20 text-background`} />
       </NavbarContent>
 
       <NavbarMenu className="gap-4 overflow-x-hidden bg-gradient-to-br from-primary to-white/20">
@@ -127,7 +131,10 @@ export default function NavBar() {
               variant=""
               className="white-neon w-52 justify-start rounded-none border-secondary font-bold uppercase drop-shadow-xl"
               startContent={<i className="ri-arrow-right-s-line text-md !text-secondary"></i>}
-              onClick={() => navigate(path)}
+              onClick={() => {
+                navigate(path);
+                setIsMenuOpen(false);
+              }}
             >
               {name}
             </Button>
@@ -135,10 +142,26 @@ export default function NavBar() {
           </div>
         ))}
         <div className="mt-10 flex items-center justify-evenly ">
-          <Button size="lg" isIconOnly className="bg-gradient-to-tl  from-primary to-background shadow-xl">
+          <Button
+            size="lg"
+            isIconOnly
+            className="bg-gradient-to-tl  from-primary to-background shadow-xl"
+            onPress={() => {
+              navigate("/carrito");
+              setIsMenuOpen(false);
+            }}
+          >
             <i className="ri-shopping-cart-2-fill text-2xl" />
           </Button>
-          <Button className="bg-gradient-to-tl from-primary to-background shadow-xl" size="lg" isIconOnly>
+          <Button
+            className="bg-gradient-to-tl from-primary to-background shadow-xl"
+            size="lg"
+            isIconOnly
+            onPress={() => {
+              navigate(id ? `user/profile/${id}` : "sign-in");
+              setIsMenuOpen(false);
+            }}
+          >
             <i className="ri-user-fill text-2xl" />
           </Button>
         </div>
@@ -150,9 +173,12 @@ export default function NavBar() {
 
       <NavbarContent justify="end" className="hidden sm:flex">
         <Button
-          className="bg-gradient-to-br from-primary to-background transition hover:scale-110"
+          className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
+            pathname === "/sign-in" && "white-neon"
+          }`}
           size="md"
           isIconOnly
+          onPress={() => navigate(id ? `user/profile/${id}` : "sign-in")}
         >
           <i className="ri-user-fill text-2xl" />
         </Button>
@@ -160,6 +186,10 @@ export default function NavBar() {
           className="bg-gradient-to-br from-primary to-background transition hover:scale-110"
           size="md"
           isIconOnly
+          onPress={() => {
+            navigate("/carrito");
+            setIsMenuOpen(false);
+          }}
         >
           <i className="ri-shopping-cart-2-fill text-2xl" />
         </Button>

@@ -5,19 +5,7 @@
 @layer base {
   body,
   html {
-    @apply m-0 box-border p-0 font-primary;
-  }
-
-  ::-webkit-scrollbar {
-    @apply h-1 w-1 xl:w-2;
-  }
-
-  ::-webkit-scrollbar-corner {
-    @apply hidden;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply rounded-md bg-primary;
+    @apply m-0 box-border overflow-x-hidden bg-background p-0 font-primary;
   }
 
   input[type="number"]::-webkit-inner-spin-button,
@@ -49,4 +37,17 @@
 .yellow-neon {
   color: #f9ce41;
   text-shadow: 0 0 5px #f9ce41;
+}
+
+/* ! HAY 2 SCROLL BARS EN LA LANDING NO SE POR QUE */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-primary;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-secondary;
 }

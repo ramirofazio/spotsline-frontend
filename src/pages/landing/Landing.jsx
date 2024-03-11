@@ -1,22 +1,19 @@
-import { useEffect } from "react";
 import FirstSection from "./FirstSection";
 import CategoriesCarrousel from "./CategoriesCarrousel";
 import FeaturedProducts from "./FeaturedProducts";
 import SecondSection from "./SecondSection";
-import { toast } from "sonner";
+import { PaymentOk } from "src/components";
+import { useSelector } from "react-redux";
+import { PaymentFailed } from "src/components/checkout/PaymentFailed";
 
 export function Landing() {
-  useEffect(() => {
-    document.title = "SPOTSLINE - Iluminación Profesional";
-    //? Una boludez, pero queda lindo y mas dinamico
+  const { id } = useSelector((state) => state.user);
+  const { access_token } = useSelector((state) => state.auth);
 
-    toast("Ya tenemos toasts!", {
-      description: "Estan buenos, usemoslos. Ej en Landing.jsx ;)",
-      duration: 5000,
-      icon: <i class="ri-thumb-up-line"></i>,
-    });
-    //? Docu: https://sonner.emilkowal.ski/toast
-  }, []);
+  const params = new URLSearchParams(document.location.search);
+  const mobbex_status = params.get("status");
+  const mobbex_payment_type = params.get("type");
+  const mobbex_transaction_id = params.get("transactionId");
 
   return (
     <section className="grid w-full place-content-center">
@@ -24,6 +21,11 @@ export function Landing() {
       <CategoriesCarrousel />
       <FeaturedProducts />
       <SecondSection />
+      {mobbex_payment_type && mobbex_transaction_id && id && access_token && mobbex_status === "200" ? (
+        <PaymentOk transactionId={mobbex_transaction_id} type={mobbex_payment_type} />
+      ) : (
+        mobbex_status === "0" && <PaymentFailed />
+      )}
     </section>
   );
 }

@@ -6,14 +6,21 @@ const route = {
   AUTH: "auth",
   USER: "users",
   CART: "shoppingCart",
-  CHECKOUT: "checkout",
+  CHECKOUT: "mobbex",
 };
 
 export const APISpot = {
+  product: {
+    getAll: ({ take, page, search = null }) => {
+      return BASE_API.get(`/${route.PRODUCTS}?take=${take}&&page=${page}&&search=${search}`);
+    },
+    getOne: ({ id }) => {
+      return BASE_API.get(`/${route.PRODUCTS}/detail/${id}`);
+    },
+  },
   //TODO acomodar estos 3 pedidos igual que el auth, metidos en un objeto `products`
-  getPaginatedProducts: async (take, skip) => {
-    const res = await BASE_API.get(`/${route.PRODUCTS}/pag?take=${take}&&skip=${skip}`);
-    return res.data;
+  getPaginatedProducts: (take, skip) => {
+    return BASE_API.get(`/${route.PRODUCTS}/pag?take=${take}&&skip=${skip}`);
   },
   getCategories: async () => {
     const res = await BASE_API.get(`/${route.PRODUCTS}/categories`);
@@ -21,38 +28,48 @@ export const APISpot = {
 
     return res.data;
   },
-  loginByJWT: ({ accessToken }) => {
-    return BASE_API.post(`/${route.AUTH}/jwtAutoLogin`, { accessToken });
-  },
+
   //? Rutas al backend POST, GET, PUT, etc...
   auth: {
-    loginByJWT: ({ accessToken }) => {
-      return BASE_API.post(`/${route.AUTH}/jwtAutoLogin`, { accessToken });
+    jwtAutoSignIn: async (body) => {
+      const res = await BASE_API.post(`/${route.AUTH}/jwt-auto-sign-in`, body);
+      return res.data;
     },
-    signIn: (body) => {
-      return BASE_API.post(`/${route.AUTH}/sign-in`, body);
+    signIn: async (body) => {
+      const res = await BASE_API.post(`/${route.AUTH}/sign-in`, body);
+      return res.data;
     },
-    firstTimePassword: (body) => {
-      return BASE_API.patch(`/${route.AUTH}/first-time-password`, body);
+    firstTimePassword: async (body) => {
+      const res = await BASE_API.patch(`/${route.AUTH}/first-time-password`, body);
+      return res.data;
     },
-    initPasswordReset: (email) => {
-      return BASE_API.patch(`/${route.AUTH}/init-password-reset`, { email });
+    initPasswordReset: async (email) => {
+      const res = await BASE_API.post(`/${route.AUTH}/init-password-reset`, { email });
+      return res.data;
     },
-    confirmPasswordReset: ({ body }) => {
-      return BASE_API.patch(`/${route.AUTH}/confirm-password-reset`, body);
+    confirmPasswordReset: async (body) => {
+      const res = await BASE_API.patch(`/${route.AUTH}/confirm-password-reset`, body);
+      return res.data;
     },
-  },
-  product: {
-    _route: "product",
-  },
-  user: {
-    _route: "user",
   },
   cart: {
-    _route: "shoppingCart",
+    validateCoupon: async (coupon) => {
+      const res = await BASE_API.get(`/${route.CART}/validate-coupon`, { coupon });
+      return res.data;
+    },
   },
   checkout: {
-    _route: "checkout",
+    create: async (body) => {
+      const res = await BASE_API.post(`/${route.CHECKOUT}/checkout`, body);
+      return res.data;
+    },
+  },
+
+  user: {
+    createOrder: async (body) => {
+      const res = await BASE_API.post(`/${route.USER}/create-order`, body);
+      return res.data;
+    },
   },
 };
 
@@ -61,6 +78,18 @@ export function addAuthWithToken(token) {
   BASE_API.interceptors.request.use(
     (config) => {
       config.headers.Authorization = `Bearer ${token}`;
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+}
+
+export function removeAuthWithToken() {
+  BASE_API.interceptors.request.use(
+    (config) => {
+      config.headers.Authorization = "";
       return config;
     },
     (error) => {

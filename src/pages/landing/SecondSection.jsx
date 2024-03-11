@@ -1,6 +1,7 @@
 import { Button, Image } from "@nextui-org/react";
 import light3 from "assets/light3.png";
 import { useNavigate } from "react-router-dom";
+import { DefaultButton } from "src/components";
 
 export default function SecondSection() {
   const navigate = useNavigate();
@@ -19,14 +20,9 @@ export default function SecondSection() {
         <h2 className="mx-auto font-secondary font-bold text-secondary md:text-xl xl:w-[50%] xl:text-3xl">
           EVOLUCIONANDO Y DESARROLLANDO NUEVOS DISEÑOS HACIÉNDOLE HONOR A NUESTRA TRAYECTORIA.
         </h2>
-        <Button
-          variant="solid"
-          className="white-neon mx-20 bg-primary font-semibold  shadow-xl transition hover:scale-110 md:!p-6 md:text-xl xl:mx-auto xl:w-[30%]"
-          radius="full"
-          onPress={() => navigate("/empresa")}
-        >
+        <DefaultButton className="mx-auto w-max shadow-xl" onPress={() => navigate("/empresa")}>
           CONOCENOS
-        </Button>
+        </DefaultButton>
       </div>
     </section>
   );
