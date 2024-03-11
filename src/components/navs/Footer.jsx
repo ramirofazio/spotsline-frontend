@@ -1,5 +1,4 @@
 import { Button, Image } from "@nextui-org/react";
-import logo from "assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import { links } from ".";
 import isotipoBlanco from "assets/isotipoBlanco.png";
@@ -32,7 +31,7 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="grid h-40 gap-10 bg-gradient-to-b from-primary to-background pt-10 lg:hidden">
+      <footer className="grid gap-10 bg-gradient-to-b from-primary to-background pt-10 lg:hidden">
         <div className="mx-auto grid w-[80%] gap-2">
           <h1 className="mx-auto text-xl tracking-wider">SPOTSLINE</h1>
           <p className="mx-auto -mt-4 font-slogan text-lg font-bold">Se ve bien.</p>
