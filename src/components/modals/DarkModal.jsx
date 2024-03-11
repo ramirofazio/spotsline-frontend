@@ -16,7 +16,7 @@ export function DarkModal({
     <Modal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      className={`rounded-md border-2 border-primary/60 bg-dark p-4 ${modalClassName}`}
+      className={`rounded-md border-2 border-primary/60 bg-dark p-4 ${modalClassName} text-center`}
       hideCloseButton
       isDismissable={isDismissable}
       placement={placement}

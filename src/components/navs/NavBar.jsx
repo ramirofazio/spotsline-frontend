@@ -48,7 +48,9 @@ export default function NavBar() {
   return (
     <Navbar
       shouldHideOnScroll
-      className="fixed bg-transparent md:py-4 "
+      className={`xl:rounded-bl-2xl xl:rounded-br-2xl ${
+        pathname !== "/" ? "bg-dark/30 shadow-xl" : "bg-transparent"
+      }  md:py-4 ${pathname === "/carrito" ? "block" : "fixed"}`}
       isBlurred={blur}
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
@@ -113,10 +115,7 @@ export default function NavBar() {
         ))}
       </NavbarContent>
       <NavbarContent justify="end" className="sm:hidden">
-        <NavbarMenuToggle
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          className={`ml-20 ${pathname !== "/" && "text-background"} `}
-        />
+        <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className={`ml-20 text-background`} />
       </NavbarContent>
 
       <NavbarMenu className="gap-4 overflow-x-hidden bg-gradient-to-br from-primary to-white/20">
@@ -143,7 +142,15 @@ export default function NavBar() {
           </div>
         ))}
         <div className="mt-10 flex items-center justify-evenly ">
-          <Button size="lg" isIconOnly className="bg-gradient-to-tl  from-primary to-background shadow-xl">
+          <Button
+            size="lg"
+            isIconOnly
+            className="bg-gradient-to-tl  from-primary to-background shadow-xl"
+            onPress={() => {
+              navigate("/carrito");
+              setIsMenuOpen(false);
+            }}
+          >
             <i className="ri-shopping-cart-2-fill text-2xl" />
           </Button>
           <Button
@@ -179,6 +186,10 @@ export default function NavBar() {
           className="bg-gradient-to-br from-primary to-background transition hover:scale-110"
           size="md"
           isIconOnly
+          onPress={() => {
+            navigate("/carrito");
+            setIsMenuOpen(false);
+          }}
         >
           <i className="ri-shopping-cart-2-fill text-2xl" />
         </Button>

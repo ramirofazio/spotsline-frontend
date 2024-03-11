@@ -19,6 +19,8 @@ const ChangePassword = lazy(() =>
   import("pages/signIn/ChangePassword").then((module) => ({ default: module.ChangePassword }))
 );
 
+const ShoppingCart = lazy(() => import("pages/shoppingCart/ShoppingCart.jsx"));
+
 export const publicRoutesPaths = [
   {
     path: "/",
@@ -53,6 +55,7 @@ export const publicRoutesPaths = [
         element: <Products />,
       },
       { path: "/producto/:id", element: <DetailProduct /> },
+      { path: "/carrito", element: <ShoppingCart /> },
     ],
   },
   {

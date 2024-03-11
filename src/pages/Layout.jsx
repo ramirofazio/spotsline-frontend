@@ -1,15 +1,15 @@
-import { Suspense } from "react";
+import { useEffect, Suspense } from "react";
 import Loader from "src/components/Loader";
 import { FirstSignInModal } from "./signIn";
 import { getOfStorage } from "src/utils/localStorage";
 import { setAccessToken } from "src/redux/reducers/auth";
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
 import { addAuthWithToken, APISpot } from "src/api";
 import { setUser } from "src/redux/reducers/user";
 import { ChangePasswordModal } from "./signIn/ChangePasswordModal";
 import { useDisclosure } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
+import { actionsShoppingCart } from "src/redux/reducers";
 
 export default function Layout({ children }) {
   const dispatch = useDispatch();
@@ -47,11 +47,41 @@ export default function Layout({ children }) {
       dispatch(setAccessToken(access_token));
       getUserFromDb(access_token, user.email);
     }
+
+    //? Shopping Cart
+    const shoppingCart = getOfStorage("shoppingCart");
+
+    if (shoppingCart) {
+      dispatch(actionsShoppingCart.loadCart(shoppingCart));
+    }
+
+    window.addEventListener("beforeunload", () => {
+      if (access_token && user && shoppingCart) {
+        //? Logica guardar carrito en DB `CREO`
+      }
+    });
+
+    // !BORRAR;
+    dispatch(
+      actionsShoppingCart.addItemToCart({
+        id: 12,
+        name: "Articulo SPT.",
+        img: "/logo.png",
+        price: 12831.43,
+        quantity: 1,
+      })
+    );
   }, [document]);
 
   return (
     <Suspense fallback={<Loader />}>
-      <ChangePasswordModal isOpen={isOpen} onOpenChange={onOpenChange} navigate={navigate} email={query_email} onClose={onClose}/>
+      <ChangePasswordModal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        navigate={navigate}
+        email={query_email}
+        onClose={onClose}
+      />
       <FirstSignInModal navigate={navigate} />
       {children}
     </Suspense>
