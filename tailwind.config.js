@@ -1,3 +1,4 @@
+import { assets } from "./src/assets/index";
 import defaultTheme from "tailwindcss/defaultTheme";
 const { nextui } = require("@nextui-org/react");
 
@@ -39,11 +40,11 @@ export default {
         ...defaultTheme,
       },
       backgroundImage: {
-        empresaScaled: `url(https://www.spotsline.com.ar/wp-content/uploads/2021/05/empresa-scaled.jpg)`,
-        empresa2: `url("/empresa2.png")`,
-        landingbg: `url("assets/landingbg.jpg")`,
-        light: `url("assets/light.png")`,
-        signIn: `url("/sign-in.png")`,
+        empresaScaled: `url(${assets.backgrounds[2]})`,
+        empresa2: `url(${assets.backgrounds[2]})`,
+        landingbg: `url(${assets.backgrounds[1]})`,
+        light: `url(${assets.lights.light})`,
+        signIn: `url(${assets.backgrounds[5]})`,
         //! Esto tiene que volar!
       },
       transitionDuration: {

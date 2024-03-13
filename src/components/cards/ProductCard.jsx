@@ -1,5 +1,6 @@
 import { Button, Card, CardBody, CardFooter, Image } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
+import { assets } from "src/assets";
 
 export function ProductCard({ description, id }) {
   const navigate = useNavigate();
@@ -12,8 +13,8 @@ export function ProductCard({ description, id }) {
           width={200}
           height={150}
           alt={description}
-          className="bg-white object-cover p-7"
-          src={"https://www.spotsline.com.ar/wp-content/uploads/2021/06/1004-neg.png"}
+          className="bg-white object-cover px-6 pb-10"
+          src={assets.lights.light2}
         />
       </CardBody>
       <CardFooter className="flex flex-col items-start space-y-2 overflow-visible bg-transparent font-secondary">

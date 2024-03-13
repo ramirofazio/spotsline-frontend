@@ -1,7 +1,7 @@
-import { Button, Image } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { links } from ".";
-import isotipoBlanco from "assets/isotipoBlanco.png";
+import AwsImage from "../images/AwsImage";
 
 const socialNetworksIcons = [
   {
@@ -65,7 +65,7 @@ export default function Footer() {
         <section className="flex w-full items-start justify-between gap-4  px-20">
           <div className="flex flex-col items-center">
             <div className="flex items-center">
-              <Image src={isotipoBlanco} width={80} />
+              <AwsImage type="logos" identify="logoWhite" width={80} />
               <p className="text-lg font-semibold">SPOTSLINE</p>
             </div>
             <span className="mt-4 w-40  text-center font-secondary text-xs">

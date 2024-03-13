@@ -1,4 +1,5 @@
-import { Image, Modal, ModalContent, ModalHeader, ModalBody } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody } from "@nextui-org/react";
+import AwsImage from "../images/AwsImage";
 
 export function DarkModal({
   children, //! REQUIRED
@@ -32,7 +33,7 @@ export function DarkModal({
             </ModalHeader>
             <ModalBody>{children}</ModalBody>
             <div className="absolute -bottom-20 -left-24">
-              <Image src="/isotipoblanco.png" alt="logo" className="w-64 -rotate-12" />
+              <AwsImage type="logos" identify="logoWhite" className="w-64 -rotate-12" />
             </div>
           </main>
         )}

@@ -1,5 +1,5 @@
 import { useRouteError, Link } from "react-router-dom";
-import { Image } from "@nextui-org/react";
+import AwsImage from "src/components/images/AwsImage";
 
 export function DefaultError() {
   console.log(useRouteError());
@@ -27,10 +27,10 @@ export function DefaultError() {
           </Link>
         </p>
         <div className="absolute -bottom-20 -left-20">
-          <Image src="/logo.png" className="w-72 rotate-12" />
+          <AwsImage type="logos" identify="logoBlack" className="w-72 rotate-12" />
         </div>
         <div className="absolute -right-20 -top-10">
-          <Image src="/isotipoblanco.png" className="w-72 -rotate-45" />
+          <AwsImage type="logos" identify="logoWhite" className="w-72 -rotate-45" />
         </div>
       </section>
     </main>

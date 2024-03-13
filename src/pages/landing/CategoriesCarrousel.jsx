@@ -1,9 +1,9 @@
-import { Button, Image } from "@nextui-org/react";
-import light from "assets/light.png";
+import { Button } from "@nextui-org/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { getOfStorage } from "src/utils/localStorage";
+import AwsImage from "src/components/images/AwsImage";
 
 export default function CategoriesCarrousel() {
   const categories = getOfStorage("categories") || useLoaderData();
@@ -45,16 +45,12 @@ export default function CategoriesCarrousel() {
                 isIconOnly
                 variant="solid"
                 radius="full"
-                className="relative h-full w-full overflow-hidden text-center text-xs font-bold uppercase text-black/70 shadow shadow-black  transition hover:scale-125"
+                className="group-[]: relative h-full w-full overflow-hidden text-center text-xs font-bold uppercase text-black/70 shadow shadow-black  transition hover:scale-125"
                 onClick={() => navigate(`/products/cat/${c}`)}
               >
-                <Image
-                  src={light}
-                  className="absolute inset-x-auto top-0 -z-10 w-full bg-secondary/30"
-                  disableSkeleton
-                />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="md:text-md w-[80%] whitespace-normal break-words font-secondary font-extrabold">
+                <AwsImage type="lights" identify={"light"} className="-z-10 w-full bg-secondary/30" />
+                <div className="absolute inset-0 flex items-center justify-center transition hover:backdrop-blur-sm">
+                  <span className="md:text-md w-[80%] whitespace-normal break-words font-secondary font-extrabold group-hover:text-dark">
                     {c}
                   </span>
                 </div>

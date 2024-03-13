@@ -6,7 +6,6 @@ import {
   NavbarMenu,
   NavbarItem,
   Button,
-  Image,
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
@@ -14,9 +13,9 @@ import {
 } from "@nextui-org/react";
 import { links } from ".";
 import { Link, useLoaderData, useLocation, useNavigate } from "react-router-dom";
-import logo from "assets/logo.png";
 import { getOfStorage } from "src/utils/localStorage";
 import { useSelector } from "react-redux";
+import AwsImage from "../images/AwsImage";
 
 export default function NavBar() {
   const { id } = useSelector((state) => state.user);
@@ -57,10 +56,11 @@ export default function NavBar() {
       maxWidth="full"
     >
       <NavbarContent justify="start">
-        <Image
-          src="/isotipoblanco.png"
-          hidden={isMenuOpen ? true : false}
+        <AwsImage
+          type="logos"
+          identify="logoWhite"
           className="mr-20 w-20 transition hover:scale-110 hover:animate-pulse hover:cursor-pointer sm:w-24 md:w-32"
+          hidden={isMenuOpen ? true : false}
           onClick={() => navigate("/")}
         />
       </NavbarContent>
@@ -119,12 +119,9 @@ export default function NavBar() {
       </NavbarContent>
 
       <NavbarMenu className="gap-4 overflow-x-hidden bg-gradient-to-br from-primary to-white/20">
-        <Image
-          src={logo}
-          hidden={isMenuOpen ? false : true}
-          disableSkeleton
-          className="absolute -right-24 -top-10 rotate-12"
-        />
+        <div className="absolute -right-24 -top-10 ">
+          <AwsImage type="logos" identify="logoBlack" hidden={isMenuOpen ? false : true} className="rotate-12" />
+        </div>
         {links.map(({ name, path }, index) => (
           <div className="relative -ml-6" key={index}>
             <Button

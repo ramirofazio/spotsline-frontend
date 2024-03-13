@@ -1,6 +1,6 @@
-import { Button, Image } from "@nextui-org/react";
 import { useEffect } from "react";
 import { DefaultButton } from "src/components";
+import AwsImage from "src/components/images/AwsImage";
 import { Autoplay } from "swiper/modules";
 import { SwiperSlide, Swiper } from "swiper/react";
 
@@ -21,7 +21,6 @@ export function Company() {
         loop={true}
         className="mySwiper"
       >
-        {/* //? CAMBIAR FOTOS Y PONER LAS QUE VAN UNA VEZ SUBIDAS A AWS */}
         <SwiperSlide>
           <picture className="grid min-h-[40vh] w-screen place-items-center bg-empresa2  bg-cover bg-left-top bg-no-repeat xl:min-h-[50vh]">
             <div className="grid h-full w-full place-items-center bg-black/60 px-6 text-white">
@@ -39,7 +38,7 @@ export function Company() {
           <picture className="relative grid min-h-[40vh] w-screen place-items-center  bg-empresa2 bg-cover bg-left-top bg-no-repeat xl:min-h-[50vh]">
             <div className="grid h-full w-full place-items-center bg-black/60 px-6 text-white">
               <div className="absolute bottom-10 right-5 text-center text-white xl:bottom-32  xl:right-20">
-                <Image src="/isotipoblanco.png" alt="isotipo-blanco" className="w-40 xl:w-80" />
+                <AwsImage type="backgrounds" identify="logoWhite" className="w-40 xl:w-80" />
                 <h2 className="-mt-6 text-2xl font-thin tracking-widest xl:-mt-10 xl:text-5xl xl:font-semibold">
                   SPOTSLINE
                 </h2>
@@ -64,17 +63,13 @@ export function Company() {
 
       <section className="relative flex flex-col gap-6 p-6 md:gap-10 xl:hidden">
         <div className="absolute -right-14 -top-6">
-          <Image src="/logo.png" alt="logo" className="w-48 -rotate-12" />
+          <AwsImage type="logos" identify="logoBlack" className="w-48 -rotate-12" />
         </div>
         <h2 className="text-4xl font-bold tracking-wider text-black drop-shadow-xl md:text-5xl">
           LA <br className="md:hidden" /> <span className="text-primary">EMPRESA</span>
         </h2>
         <div className="flex items-start justify-between gap-6 md:items-center md:gap-10">
-          <Image
-            src="/empresa-trabajador.jpg"
-            alt="trabajador"
-            className="w-32 max-w-[700px] flex-1 shadow-xl md:w-60"
-          />
+          <AwsImage type="backgrounds" identify="3" className="w-32 max-w-[700px] flex-1 shadow-xl md:w-60" />
           <p className="flex-1 text-justify text-[10px] leading-[12px] md:text-sm">
             Desde <strong>1986</strong> nos dedicamos al <strong>diseño</strong>, <strong>produción</strong> y{" "}
             <strong>comercialización</strong> de luminarias para el área industrial, comercial y del hogar.{" "}
@@ -93,10 +88,10 @@ export function Company() {
             en las áreas antes mencionadas, le brindarán la <strong>solución adecuada</strong> a todos sus problemas e
             inquietudes lumínicas.
           </p>
-          <Image src="/empresa-trabajador.jpg" alt="trabajador" className="w-32 flex-1 shadow-xl md:w-60" />
+          <AwsImage type="backgrounds" identify="3" className="w-32 max-w-[700px] flex-1 shadow-xl md:w-60" />{" "}
         </div>
         <div className="flex items-start justify-between gap-6 md:items-center md:gap-10">
-          <Image src="/empresa-trabajador.jpg" alt="trabajador" className="w-32 flex-1 shadow-xl md:w-60" />
+          <AwsImage type="backgrounds" identify="3" className="w-32 flex-1 shadow-xl md:w-60" />
           <p className="flex-1 text-justify text-[10px] leading-[12px]  md:text-sm">
             Como hemos mencionado anteriormente, somos una empresa nacional que desde el día de su fundación, ha crecido
             con <strong>honestidad</strong> y <strong>esfuerzo</strong>. Es nuestro objetivo que este sitio web pueda
@@ -109,10 +104,10 @@ export function Company() {
       <section className="relative hidden grid-cols-2 gap-6 p-6 pb-[20vh] md:gap-10 xl:grid">
         <div className="!z-20 grid grid-cols-3 gap-4">
           <div className="col-span-2 row-span-2 flex items-center">
-            <Image src="/empresa-trabajador.jpg" alt="trabajador" isZoomed />
+            <AwsImage type="backgrounds" identify={"3"} isZoomed />
           </div>
-          <Image src="/empresa-trabajador.jpg" alt="trabajador" isZoomed />
-          <Image src="/empresa-trabajador.jpg" alt="trabajador" isZoomed />
+          <AwsImage type="backgrounds" identify={"3"} isZoomed />
+          <AwsImage type="backgrounds" identify={"3"} isZoomed />
         </div>
         <div className="flex flex-col gap-6 text-center text-lg">
           <h2 className="text-6xl font-bold tracking-wider text-black drop-shadow-xl">
@@ -143,16 +138,16 @@ export function Company() {
           <DefaultButton className="w-max shadow-xl">POLÍTICA DE CAMBIO Y DEVOLUCIÓN</DefaultButton>
         </div>
         <div className="absolute -bottom-20 -right-60">
-          <Image src="/logo.png" alt="logo" className="w-[30vw] -rotate-12" />
+          <AwsImage type="logos" identify="logoBlack" className="w-[30vw] -rotate-12" />
         </div>
         <div className="absolute -bottom-20 -left-64">
-          <Image src="/logo.png" alt="logo" className="w-[30vw] rotate-12" />
+          <AwsImage type="logos" identify="logoBlack" className="w-[30vw] rotate-12" />
         </div>
       </section>
 
       <section className="relative my-10 flex flex-col p-6 xl:hidden">
         <div className="absolute -left-28 -top-20">
-          <Image src="/logo.png" alt="logo" className="w-60 rotate-45" />
+          <AwsImage type="logos" identify="logoBlack" className="w-60 rotate-45" />
         </div>
         <DefaultButton className="mx-auto w-max text-sm shadow-xl">POLÍTICA DE CAMBIO Y DEVOLUCIÓN</DefaultButton>
       </section>

@@ -1,7 +1,8 @@
-import { Button, Image } from "@nextui-org/react";
-import light2 from "assets/light2.png";
+import { Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { DefaultButton } from "src/components";
+import AwsImage from "src/components/images/AwsImage";
+import FloatingLogos from "src/components/images/FloatingLogos";
 
 const featuredFooter = [
   { icon: "ri-tools-fill", text: "fabricantes" },
@@ -10,11 +11,11 @@ const featuredFooter = [
 ];
 
 const mockFeaturedProducts = [
-  { id: 241, img: light2 },
-  { id: 241, img: light2 },
-  { id: 241, img: light2 },
-  { id: 241, img: light2 },
-  { id: 241, img: light2 },
+  { id: 241, img: "light2" },
+  { id: 241, img: "light2" },
+  { id: 241, img: "light2" },
+  { id: 241, img: "light2" },
+  { id: 241, img: "light2" },
 ];
 //! UPDATEAR MOCK
 
@@ -24,11 +25,12 @@ export default function FeaturedProducts() {
   return (
     <section
       id="landing-featured-products"
-      className="to-seoc relative grid place-content-center gap-6 bg-gradient-to-b from-background px-4 py-6 sm:px-6 xl:px-20"
+      className="to-seoc relative grid place-content-center gap-6 overflow-hidden bg-gradient-to-b from-background px-4 py-6 sm:px-6 xl:px-20"
     >
+      <FloatingLogos positions={["-top-20 -right-40", "-top-32 -left-40", "-bottom-20 -right-40"]} qty={3} />
       <div className="absolute inset-x-0 top-0 z-20 h-2 !w-screen bg-secondary" />
       <div className="absolute top-0  grid w-full place-content-center">
-        <Image src={light2} className="mx-auto w-[35%] sm:w-[30%]" />
+        <AwsImage type={"lights"} identify={"light2"} className="mx-auto w-[35%] sm:w-[30%]" />
       </div>
       <h1 className="text-xl font-bold sm:mt-4 sm:text-4xl">
         PRODUCTOS <br /> DESTACADOS
@@ -46,7 +48,11 @@ ${index === 1 && "md:row-span-2"}
             onPress={() => navigate(`/products/detail/${id}`)}
           >
             <div className="absolute h-full w-full bg-black/70" />
-            <Image src={img} className={`${index === 2 && "w-[60%] md:w-auto "} mx-auto xl:w-[60%] `} />
+            <AwsImage
+              type={"lights"}
+              identify={img}
+              className={`${index === 2 && "w-[60%] md:w-auto "} mx-auto xl:w-[60%] `}
+            />
           </Button>
         ))}
       </article>

@@ -34,10 +34,7 @@ export function Products() {
 
   return (
     <>
-      <header
-        style={{ backgroundImage: 'url("../src/assets/header-product-page.png")' }}
-        className="relative hidden min-h-[400px] flex-col items-center justify-center gap-2 bg-cover bg-bottom pt-16 text-white shadow-medium before:absolute before:inset-0 before:z-10 before:bg-black/50  before:content-[''] sm:flex"
-      >
+      <header className="relative hidden min-h-[400px] flex-col items-center justify-center gap-2 bg-signIn bg-contain bg-cover bg-bottom pt-16 text-white shadow-medium before:absolute before:inset-0 before:z-10 before:bg-black/50  before:content-[''] sm:flex">
         <h1 className="z-20 font-primary text-5xl font-bold uppercase ">Productos</h1>
         <p className="z-20 font-secondary text-3xl">Encontra todo lo que necesites...</p>
       </header>

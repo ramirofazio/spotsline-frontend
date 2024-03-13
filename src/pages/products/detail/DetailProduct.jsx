@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
+import { assets } from "src/assets";
 
 export function DetailProduct() {
   const { id } = useParams();
@@ -32,7 +33,7 @@ export function DetailProduct() {
         height={350}
         alt={id}
         className="aspect-square w-full bg-white object-cover p-6"
-        src={"https://www.spotsline.com.ar/wp-content/uploads/2021/06/1004-neg.png"}
+        src={assets.lights.light}
       />
       <h1>{product.description}</h1>
     </main>

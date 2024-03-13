@@ -8,6 +8,7 @@ import { Divider, Image, useDisclosure } from "@nextui-org/react";
 import { toast } from "sonner";
 import { InitChangePasswordModal } from "./InitChangePasswordModal";
 import { BasicInput, PasswordInput, DefaultButton } from "src/components/index";
+import AwsImage from "src/components/images/AwsImage";
 
 export function SignIn() {
   const dispatch = useDispatch();
@@ -51,18 +52,18 @@ export function SignIn() {
   };
 
   return (
-    <main className="relative h-screen bg-signIn bg-cover bg-center bg-no-repeat">
-      <div className="grid h-full w-full place-content-center place-items-center bg-black/30 backdrop-blur-md">
+    <main className="relative h-screen overflow-hidden bg-signIn bg-cover bg-center bg-no-repeat">
+      <div className="grid h-full w-full place-content-center place-items-center bg-black/30 backdrop-blur-md ">
         <div className="icons absolute left-4 top-4 flex items-center" onClick={() => navigate("/")}>
           <i className="ri-arrow-left-s-line yellow-neon  animate-pulse text-4xl" />
           <p className="white-neon font-secondary">VOLVER</p>
         </div>
         <section className="relative flex min-h-[60vh] min-w-[60vw] flex-col items-center gap-4 overflow-hidden rounded-xl bg-black/10 p-12  shadow-md">
           <div className="absolute -right-40 -top-14 -z-10 xl:-right-60 xl:-top-20">
-            <Image src="/logo.png" alt="logo" className="w-80 rotate-12 xl:w-[30vw]" />
+            <AwsImage type="logos" identify="logoBlack" className="!-z-10 w-80 rotate-12 !opacity-50 xl:w-[30vw]" />
           </div>
           <div className="grid place-items-center text-center md:-mt-8">
-            <Image src="/isotipoAmarillo.png" alt="logo-yellow" className="w-16 md:w-32" />
+            <AwsImage type="logos" identify="logoYellow" className="w-16 md:w-32" />
             <h5 className="-my-2 md:text-xl md:font-semibold">SPOTSLINE</h5>
             <p className="font-slogan text-xs md:text-sm">Se ve bien.</p>
           </div>
@@ -104,7 +105,7 @@ export function SignIn() {
             </strong>
           </p>
           <div className="absolute -bottom-14 -left-40 -z-10 xl:-bottom-32 xl:-left-64">
-            <Image src="/logo.png" alt="logo" className="w-80 -rotate-12 xl:w-[30vw]" />
+            <AwsImage type="logos" identify="logoBlack" className="!-z-10 w-80 -rotate-12 !opacity-50 xl:w-[30vw]" />
           </div>
         </section>
       </div>
