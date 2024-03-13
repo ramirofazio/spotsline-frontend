@@ -1,7 +1,8 @@
-import { Button } from "@nextui-org/react";
+import { Button, Divider } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { links } from ".";
 import AwsImage from "../images/AwsImage";
+import FloatingLogos from "../images/FloatingLogos";
 
 const socialNetworksIcons = [
   {
@@ -31,6 +32,7 @@ export default function Footer() {
 
   return (
     <>
+      {/* MOBILE */}
       <footer className="grid gap-10 bg-gradient-to-b from-primary to-background pt-10 lg:hidden">
         <div className="mx-auto grid w-[80%] gap-2">
           <h1 className="mx-auto text-xl tracking-wider">SPOTSLINE</h1>
@@ -61,16 +63,18 @@ export default function Footer() {
           © Copyright {new Date().getFullYear()} Spotsline - Todos los Derechos Reservados
         </p>
       </footer>
+      {/* DESKTOP */}
       <footer className="relative hidden gap-10 bg-gradient-to-b  from-primary to-background pt-10 lg:grid">
+        <FloatingLogos qty={1} positions={["-top-40 -right-60"]} size={"w-[50vw]"} />
         <section className="flex w-full items-start justify-between gap-4  px-20">
           <div className="flex flex-col items-center">
             <div className="flex items-center">
-              <AwsImage type="logos" identify="logoWhite" width={80} />
-              <p className="text-lg font-semibold">SPOTSLINE</p>
+              <AwsImage type="logos" identify="logoBlack" width={80} />
+              <p className="mr-2 text-lg font-semibold">SPOTSLINE</p>
             </div>
-            <span className="mt-4 w-40  text-center font-secondary text-xs">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam.
+            <span className="mt-2 w-40  text-center font-secondary text-xs">
+              Es una empresa argentina que hace 33 años se dedica al diseño, producción y comercialización de luminarias
+              para el área industrial, comercial y del hogar.
             </span>
           </div>
           <div className="flex flex-col">
@@ -114,7 +118,7 @@ export default function Footer() {
             <h1 className="font-slogan text-4xl font-bold drop-shadow-xl">Se ve bien.</h1>
           </div>
         </section>
-
+        <Divider />
         <p className="self-end px-4 pb-1 text-center font-secondary text-sm text-secondary drop-shadow-2xl">
           © Copyright {new Date().getFullYear()} Spotsline - Todos los Derechos Reservados
         </p>
