@@ -155,7 +155,7 @@ export default function NavBar() {
             size="lg"
             isIconOnly
             onPress={() => {
-              navigate(id ? `user/profile/${id}` : "sign-in");
+              navigate(id ? `user/profile` : "sign-in");
               setIsMenuOpen(false);
             }}
           >
@@ -175,7 +175,7 @@ export default function NavBar() {
           }`}
           size="md"
           isIconOnly
-          onPress={() => navigate(id ? `user/profile/${id}` : "sign-in")}
+          onPress={() => navigate(id ? `user/profile` : "sign-in")}
         >
           <i className="ri-user-fill text-2xl" />
         </Button>

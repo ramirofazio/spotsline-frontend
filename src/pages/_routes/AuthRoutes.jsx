@@ -3,6 +3,8 @@ import { DefaultError } from "pages/error/DefaultError";
 import { Profile } from "pages/user/Profile.jsx";
 import Layout from "../Layout";
 import { useSelector } from "react-redux";
+import NavBar from "src/components/navs/NavBar";
+import { APISpot } from "src/api";
 
 export const authRoutesPaths = [
   {
@@ -10,6 +12,7 @@ export const authRoutesPaths = [
     errorElement: <DefaultError />,
     element: (
       <Layout>
+        <NavBar />
         <AuthRoot />
       </Layout>
     ),
@@ -17,13 +20,16 @@ export const authRoutesPaths = [
     children: [
       {
         path: "/user/profile",
-        children: [
-          {
-            path: "/user/profile/:userId",
-            element: <Profile />,
-            index: true,
-          },
-        ],
+        element: <Profile />,
+        index: true,
+        loader: async () => {
+          try {
+            return await APISpot.user.getProfile();
+          } catch (e) {
+            console.log(e.message);
+            return null;
+          }
+        },
       },
     ],
   },

@@ -58,7 +58,7 @@ export function PaymentOk({ transactionId, type }) {
 
         <i className="ri-checkbox-circle-fill mx-auto animate-pulse text-7xl text-green-600" />
 
-        <Link to={`/user/profile/${id}`}>
+        <Link to={`/user/profile`}>
           <DefaultButton isLoading={loading}>VER EN MI PERFIL</DefaultButton>
         </Link>
       </main>

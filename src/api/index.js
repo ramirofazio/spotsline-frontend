@@ -1,4 +1,4 @@
-import { saveInStorage } from "src/utils/localStorage";
+import { getOfStorage, saveInStorage } from "src/utils/localStorage";
 import { BASE_API } from "./baseApi";
 
 const route = {
@@ -68,6 +68,11 @@ export const APISpot = {
   user: {
     createOrder: async (body) => {
       const res = await BASE_API.post(`/${route.USER}/create-order`, body);
+      return res.data;
+    },
+    getProfile: async () => {
+      addAuthWithToken(getOfStorage("access_token"));
+      const res = await BASE_API.get(`/${route.USER}/profile`);
       return res.data;
     },
   },
