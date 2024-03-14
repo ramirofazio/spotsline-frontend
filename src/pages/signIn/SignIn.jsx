@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { isValidSignIn } from "../../utils/validation";
 import { APISpot, addAuthWithToken } from "../../api";
@@ -54,10 +54,10 @@ export function SignIn() {
   return (
     <main className="relative h-screen overflow-hidden bg-signIn bg-cover bg-center bg-no-repeat">
       <div className="grid h-full w-full place-content-center place-items-center bg-black/30 backdrop-blur-md ">
-        <div className="icons absolute left-4 top-4 flex items-center" onClick={() => navigate("/")}>
+        <NavLink to="/" className="icons absolute left-4 top-4 flex items-center">
           <i className="ri-arrow-left-s-line yellow-neon  animate-pulse text-4xl" />
           <p className="white-neon font-secondary">VOLVER</p>
-        </div>
+        </NavLink>
         <section className="relative flex min-h-[60vh] min-w-[60vw] flex-col items-center gap-4 overflow-hidden rounded-xl bg-black/10 p-12  shadow-md">
           <div className="absolute -right-40 -top-14 -z-10 xl:-right-60 xl:-top-20">
             <AwsImage type="logos" identify="logoBlack" className="!-z-10 w-80 rotate-12 !opacity-50 xl:w-[30vw]" />

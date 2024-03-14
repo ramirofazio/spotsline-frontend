@@ -1,7 +1,7 @@
 import { Input, Button, Divider, Image } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
 import { DefaultButton } from "src/components";
@@ -14,7 +14,6 @@ import { saveInStorage } from "src/utils/localStorage";
 
 export default function ShoppingCart() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const { items, total, subtotal, discount } = useSelector((state) => state.cart);
 
@@ -70,7 +69,7 @@ export default function ShoppingCart() {
       <section className="grid place-items-center gap-2 p-6">
         <h3 className="text-xl font-bold">INFORMACIÓN IMPORTANTE</h3>
         <p className="px-4 font-secondary text-sm">
-          Para guardar tu carrito, es necesario <strong className="font-bold">iniciar a tu cuenta</strong> dentro de
+          Para guardar tu carrito, es necesario <strong className="font-bold">ingresar a tu cuenta</strong> dentro de
           Spotsline. Si aún no lo has hecho, no pierdas tu carrito e{" "}
           <Link to="/sign-in" className="icons font-bold">
             inicia sesión
@@ -81,9 +80,9 @@ export default function ShoppingCart() {
 
       <section className="relative grid place-items-center gap-6 p-6">
         {items.length === 0 && (
-          <DefaultButton className={"w-full"} onPress={() => navigate("/productos/0")}>
-            VER PRODUCTOS
-          </DefaultButton>
+          <Link to="/productos/0">
+            <DefaultButton className={"w-full"}>VER PRODUCTOS</DefaultButton>
+          </Link>
         )}
         {items.map(({ img, name, price, quantity, id }, index) => (
           <article key={index} className="z-10 flex min-w-[80vw] items-center gap-6 rounded-xl bg-white p-6">
