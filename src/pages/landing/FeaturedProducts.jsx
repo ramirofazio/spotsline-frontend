@@ -1,5 +1,5 @@
 import { Button } from "@nextui-org/react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { DefaultButton } from "src/components";
 import AwsImage from "src/components/images/AwsImage";
 import FloatingLogos from "src/components/images/FloatingLogos";
@@ -20,8 +20,6 @@ const mockFeaturedProducts = [
 //! UPDATEAR MOCK
 
 export default function FeaturedProducts() {
-  const navigate = useNavigate();
-
   return (
     <section
       id="landing-featured-products"
@@ -42,28 +40,25 @@ export default function FeaturedProducts() {
             key={index}
             className={`grid h-auto !place-items-start bg-landingbg bg-cover bg-center pb-10 ${
               index === 2 && "col-span-2 md:col-span-1"
-            }
-${index === 1 && "md:row-span-2"}
-`}
-            onPress={() => navigate(`/products/detail/${id}`)}
+            }${index === 1 && "md:row-span-2"}`}
           >
             <div className="absolute h-full w-full bg-black/70" />
-            <AwsImage
-              type={"lights"}
-              identify={img}
-              className={`${index === 2 && "w-[60%] md:w-auto "} mx-auto xl:w-[60%] `}
-            />
+            <Link to={`/products/detail/${id}`}>
+              <AwsImage
+                type={"lights"}
+                identify={img}
+                className={`${index === 2 && "w-[60%] md:w-auto "} mx-auto xl:w-[60%] `}
+              />
+            </Link>
           </Button>
         ))}
       </article>
 
-      <DefaultButton
-        className="mx-auto w-max"
-        startContent={<i className="ri-shopping-bag-2-line" />}
-        onPress={() => navigate("/productos/0")}
-      >
-        VER TODOS LOS PRODUCTOS
-      </DefaultButton>
+      <Link to="/productos/0">
+        <DefaultButton className="mx-auto w-max" startContent={<i className="ri-shopping-bag-2-line" />}>
+          VER TODOS LOS PRODUCTOS
+        </DefaultButton>
+      </Link>
 
       <article className="flex items-center justify-around md:mx-20 xl:mx-auto xl:w-[40%]">
         {featuredFooter.map(({ icon, text }, index) => (

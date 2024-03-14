@@ -1,10 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { DefaultButton } from "src/components";
 import AwsImage from "src/components/images/AwsImage";
 
 export default function SecondSection() {
-  const navigate = useNavigate();
-
   return (
     <section className="relative grid w-full place-items-center bg-gradient-to-b from-background to-primary  px-4  sm:px-6 md:px-20">
       <div className="absolute inset-x-0 top-0 z-20 h-2 !w-screen bg-secondary" />
@@ -19,9 +17,9 @@ export default function SecondSection() {
         <h2 className="mx-auto font-secondary font-bold text-secondary md:text-xl xl:w-[50%] xl:text-3xl">
           EVOLUCIONANDO Y DESARROLLANDO NUEVOS DISEÑOS HACIÉNDOLE HONOR A NUESTRA TRAYECTORIA.
         </h2>
-        <DefaultButton className="mx-auto w-max min-w-[20vw] shadow-xl" onPress={() => navigate("/empresa")}>
-          CONOCENOS
-        </DefaultButton>
+        <NavLink className="mx-auto w-fit" to="/empresa">
+          <DefaultButton className="mx-auto w-max min-w-[20vw] shadow-xl">CONOCENOS</DefaultButton>
+        </NavLink>
       </div>
     </section>
   );

@@ -12,7 +12,7 @@ import {
   DropdownItem,
 } from "@nextui-org/react";
 import { links } from ".";
-import { Link, useLoaderData, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLoaderData, useLocation } from "react-router-dom";
 import { getOfStorage } from "src/utils/localStorage";
 import { useSelector } from "react-redux";
 import AwsImage from "../images/AwsImage";
@@ -24,7 +24,6 @@ export default function NavBar() {
   const [blur, setBlur] = React.useState(false);
 
   const { pathname } = useLocation();
-  const navigate = useNavigate();
   const categories = getOfStorage("categories") || useLoaderData();
 
   useEffect(() => {
@@ -56,13 +55,14 @@ export default function NavBar() {
       maxWidth="full"
     >
       <NavbarContent justify="start">
-        <AwsImage
-          type="logos"
-          identify="logoWhite"
-          className="mr-20 w-20 transition hover:scale-110 hover:animate-pulse hover:cursor-pointer sm:w-24 md:w-32"
-          hidden={isMenuOpen ? true : false}
-          onClick={() => navigate("/")}
-        />
+        <Link to="/">
+          <AwsImage
+            type="logos"
+            identify="logoWhite"
+            className="mr-20 w-20  transition hover:scale-110 hover:animate-pulse hover:cursor-pointer sm:w-24 md:w-32"
+            hidden={isMenuOpen ? true : false}
+          />
+        </Link>
       </NavbarContent>
 
       <NavbarContent className="hidden gap-4 sm:flex xl:gap-24 " justify="center">
@@ -83,26 +83,27 @@ export default function NavBar() {
                   className="max-h-[50vh] overflow-scroll"
                 >
                   <DropdownItem
-                    className="group my-[1px]  bg-gradient-to-tl from-primary to-background uppercase transition"
+                    className="group my-[1px]  bg-gradient-to-tl  from-primary to-background p-0 uppercase transition"
                     startContent={
-                      <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
+                      <NavLink className="flex w-full items-center gap-2 p-1.5 " to="/productos/0">
+                        <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
+                        <p>todos</p>
+                      </NavLink>
                     }
-                    onClick={() => navigate("/productos/0")}
-                  >
-                    Todos
-                  </DropdownItem>
+                  ></DropdownItem>
+
                   {categories.map((c, index) => (
                     <DropdownItem
                       key={index}
-                      className="group my-[1px] bg-gradient-to-tl  from-primary to-background uppercase transition"
+                      className="group my-[1px] bg-gradient-to-tl from-primary  to-background p-0 uppercase transition"
                       startContent={
-                        <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
+                        <NavLink className="flex w-full items-center gap-2 p-1.5 " to={`/productos/${c}`}>
+                          <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
+                          <p>{c}</p>
+                        </NavLink>
                       }
-                      onClick={() => navigate(`/productos/${c}`)}
                       //? Algo asi habria que hacer aca para filtrar automaticamente por categoria
-                    >
-                      {c}
-                    </DropdownItem>
+                    ></DropdownItem>
                   ))}
                 </DropdownMenu>
               </Dropdown>
@@ -123,44 +124,27 @@ export default function NavBar() {
           <AwsImage type="logos" identify="logoBlack" hidden={isMenuOpen ? false : true} className="rotate-12" />
         </div>
         {links.map(({ name, path }, index) => (
-          <div className="relative -ml-6" key={index}>
+          <NavLink className="  relative -ml-6" key={index} onClick={() => setIsMenuOpen(false)} to={path}>
             <Button
               variant=""
-              className="white-neon w-52 justify-start rounded-none border-secondary font-bold uppercase drop-shadow-xl"
+              className="white-neon w-52 justify-start rounded-none border-b-2  border-secondary font-bold uppercase drop-shadow-xl"
               startContent={<i className="ri-arrow-right-s-line text-md !text-secondary"></i>}
-              onClick={() => {
-                navigate(path);
-                setIsMenuOpen(false);
-              }}
             >
               {name}
             </Button>
-            <div className="absolute left-0 h-[1px] w-40 rounded-r-full bg-white/60" />
-          </div>
+          </NavLink>
         ))}
         <div className="mt-10 flex items-center justify-evenly ">
-          <Button
-            size="lg"
-            isIconOnly
-            className="bg-gradient-to-tl  from-primary to-background shadow-xl"
-            onPress={() => {
-              navigate("/carrito");
-              setIsMenuOpen(false);
-            }}
-          >
-            <i className="ri-shopping-cart-2-fill text-2xl" />
-          </Button>
-          <Button
-            className="bg-gradient-to-tl from-primary to-background shadow-xl"
-            size="lg"
-            isIconOnly
-            onPress={() => {
-              navigate(id ? `user/profile` : "sign-in");
-              setIsMenuOpen(false);
-            }}
-          >
-            <i className="ri-user-fill text-2xl" />
-          </Button>
+          <Link onClick={() => setIsMenuOpen(false)} to="/carrito">
+            <Button size="lg" isIconOnly className="bg-gradient-to-tl  from-primary to-background shadow-xl">
+              <i className="ri-shopping-cart-2-fill text-2xl" />
+            </Button>
+          </Link>
+          <Link onClick={() => setIsMenuOpen(false)} to={id ? `user/profile` : "sign-in"}>
+            <Button className="bg-gradient-to-tl from-primary to-background shadow-xl" size="lg" isIconOnly>
+              <i className="ri-user-fill text-2xl" />
+            </Button>
+          </Link>
         </div>
         <div className="f bottom-0 mx-auto mt-10 text-center">
           <h1 className="text-3xl">SPOTSLINE</h1>
@@ -169,27 +153,26 @@ export default function NavBar() {
       </NavbarMenu>
 
       <NavbarContent justify="end" className="hidden sm:flex">
-        <Button
-          className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
-            pathname === "/sign-in" && "white-neon"
-          }`}
-          size="md"
-          isIconOnly
-          onPress={() => navigate(id ? `user/profile` : "sign-in")}
-        >
-          <i className="ri-user-fill text-2xl" />
-        </Button>
-        <Button
-          className="bg-gradient-to-br from-primary to-background transition hover:scale-110"
-          size="md"
-          isIconOnly
-          onPress={() => {
-            navigate("/carrito");
-            setIsMenuOpen(false);
-          }}
-        >
-          <i className="ri-shopping-cart-2-fill text-2xl" />
-        </Button>
+        <Link onClick={() => setIsMenuOpen(false)} to={id ? `user/profile` : "sign-in"}>
+          <Button
+            className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
+              pathname === "/sign-in" && "white-neon"
+            }`}
+            size="md"
+            isIconOnly
+          >
+            <i className="ri-user-fill text-2xl" />
+          </Button>
+        </Link>
+        <Link onClick={() => setIsMenuOpen(false)} to="/carrito">
+          <Button
+            className="bg-gradient-to-br from-primary to-background transition hover:scale-110"
+            size="md"
+            isIconOnly
+          >
+            <i className="ri-shopping-cart-2-fill text-2xl" />
+          </Button>
+        </Link>
       </NavbarContent>
     </Navbar>
   );
