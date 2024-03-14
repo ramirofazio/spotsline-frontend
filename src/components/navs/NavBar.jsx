@@ -12,7 +12,7 @@ import {
   DropdownItem,
 } from "@nextui-org/react";
 import { links } from ".";
-import { Link, NavLink, useLoaderData, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLoaderData, useLocation } from "react-router-dom";
 import { getOfStorage } from "src/utils/localStorage";
 import { useSelector } from "react-redux";
 import AwsImage from "../images/AwsImage";
@@ -24,7 +24,6 @@ export default function NavBar() {
   const [blur, setBlur] = React.useState(false);
 
   const { pathname } = useLocation();
-  const navigate = useNavigate();
   const categories = getOfStorage("categories") || useLoaderData();
 
   useEffect(() => {
@@ -125,44 +124,27 @@ export default function NavBar() {
           <AwsImage type="logos" identify="logoBlack" hidden={isMenuOpen ? false : true} className="rotate-12" />
         </div>
         {links.map(({ name, path }, index) => (
-          <div className="relative -ml-6" key={index}>
+          <NavLink className="  relative -ml-6" key={index} onClick={() => setIsMenuOpen(false)} to={path}>
             <Button
               variant=""
-              className="white-neon w-52 justify-start rounded-none border-secondary font-bold uppercase drop-shadow-xl"
+              className="white-neon w-52 justify-start rounded-none border-b-2  border-secondary font-bold uppercase drop-shadow-xl"
               startContent={<i className="ri-arrow-right-s-line text-md !text-secondary"></i>}
-              onClick={() => {
-                navigate(path);
-                setIsMenuOpen(false);
-              }}
             >
               {name}
             </Button>
-            <div className="absolute left-0 h-[1px] w-40 rounded-r-full bg-white/60" />
-          </div>
+          </NavLink>
         ))}
         <div className="mt-10 flex items-center justify-evenly ">
-          <Button
-            size="lg"
-            isIconOnly
-            className="bg-gradient-to-tl  from-primary to-background shadow-xl"
-            onPress={() => {
-              navigate("/carrito");
-              setIsMenuOpen(false);
-            }}
-          >
-            <i className="ri-shopping-cart-2-fill text-2xl" />
-          </Button>
-          <Button
-            className="bg-gradient-to-tl from-primary to-background shadow-xl"
-            size="lg"
-            isIconOnly
-            onPress={() => {
-              navigate(id ? `user/profile` : "sign-in");
-              setIsMenuOpen(false);
-            }}
-          >
-            <i className="ri-user-fill text-2xl" />
-          </Button>
+          <Link onClick={() => setIsMenuOpen(false)} to="/carrito">
+            <Button size="lg" isIconOnly className="bg-gradient-to-tl  from-primary to-background shadow-xl">
+              <i className="ri-shopping-cart-2-fill text-2xl" />
+            </Button>
+          </Link>
+          <Link onClick={() => setIsMenuOpen(false)} to={id ? `user/profile` : "sign-in"}>
+            <Button className="bg-gradient-to-tl from-primary to-background shadow-xl" size="lg" isIconOnly>
+              <i className="ri-user-fill text-2xl" />
+            </Button>
+          </Link>
         </div>
         <div className="f bottom-0 mx-auto mt-10 text-center">
           <h1 className="text-3xl">SPOTSLINE</h1>
@@ -171,27 +153,26 @@ export default function NavBar() {
       </NavbarMenu>
 
       <NavbarContent justify="end" className="hidden sm:flex">
-        <Button
-          className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
-            pathname === "/sign-in" && "white-neon"
-          }`}
-          size="md"
-          isIconOnly
-          onPress={() => navigate(id ? `user/profile` : "sign-in")}
-        >
-          <i className="ri-user-fill text-2xl" />
-        </Button>
-        <Button
-          className="bg-gradient-to-br from-primary to-background transition hover:scale-110"
-          size="md"
-          isIconOnly
-          onPress={() => {
-            navigate("/carrito");
-            setIsMenuOpen(false);
-          }}
-        >
-          <i className="ri-shopping-cart-2-fill text-2xl" />
-        </Button>
+        <Link onClick={() => setIsMenuOpen(false)} to={id ? `user/profile` : "sign-in"}>
+          <Button
+            className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
+              pathname === "/sign-in" && "white-neon"
+            }`}
+            size="md"
+            isIconOnly
+          >
+            <i className="ri-user-fill text-2xl" />
+          </Button>
+        </Link>
+        <Link onClick={() => setIsMenuOpen(false)} to="/carrito">
+          <Button
+            className="bg-gradient-to-br from-primary to-background transition hover:scale-110"
+            size="md"
+            isIconOnly
+          >
+            <i className="ri-shopping-cart-2-fill text-2xl" />
+          </Button>
+        </Link>
       </NavbarContent>
     </Navbar>
   );
