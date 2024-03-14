@@ -12,7 +12,7 @@ import {
   DropdownItem,
 } from "@nextui-org/react";
 import { links } from ".";
-import { Link, useLoaderData, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import { getOfStorage } from "src/utils/localStorage";
 import { useSelector } from "react-redux";
 import AwsImage from "../images/AwsImage";
@@ -56,13 +56,14 @@ export default function NavBar() {
       maxWidth="full"
     >
       <NavbarContent justify="start">
-        <AwsImage
-          type="logos"
-          identify="logoWhite"
-          className="mr-20 w-20 transition hover:scale-110 hover:animate-pulse hover:cursor-pointer sm:w-24 md:w-32"
-          hidden={isMenuOpen ? true : false}
-          onClick={() => navigate("/")}
-        />
+        <Link to="/">
+          <AwsImage
+            type="logos"
+            identify="logoWhite"
+            className="mr-20 w-20  transition hover:scale-110 hover:animate-pulse hover:cursor-pointer sm:w-24 md:w-32"
+            hidden={isMenuOpen ? true : false}
+          />
+        </Link>
       </NavbarContent>
 
       <NavbarContent className="hidden gap-4 sm:flex xl:gap-24 " justify="center">
@@ -83,26 +84,27 @@ export default function NavBar() {
                   className="max-h-[50vh] overflow-scroll"
                 >
                   <DropdownItem
-                    className="group my-[1px]  bg-gradient-to-tl from-primary to-background uppercase transition"
+                    className="group my-[1px]  bg-gradient-to-tl  from-primary to-background p-0 uppercase transition"
                     startContent={
-                      <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
+                      <NavLink className="flex w-full items-center gap-2 p-1.5 " to="/productos/0">
+                        <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
+                        <p>todos</p>
+                      </NavLink>
                     }
-                    onClick={() => navigate("/productos/0")}
-                  >
-                    Todos
-                  </DropdownItem>
+                  ></DropdownItem>
+
                   {categories.map((c, index) => (
                     <DropdownItem
                       key={index}
-                      className="group my-[1px] bg-gradient-to-tl  from-primary to-background uppercase transition"
+                      className="group my-[1px] bg-gradient-to-tl from-primary  to-background p-0 uppercase transition"
                       startContent={
-                        <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
+                        <NavLink className="flex w-full items-center gap-2 p-1.5 " to={`/productos/${c}`}>
+                          <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
+                          <p>{c}</p>
+                        </NavLink>
                       }
-                      onClick={() => navigate(`/productos/${c}`)}
                       //? Algo asi habria que hacer aca para filtrar automaticamente por categoria
-                    >
-                      {c}
-                    </DropdownItem>
+                    ></DropdownItem>
                   ))}
                 </DropdownMenu>
               </Dropdown>
