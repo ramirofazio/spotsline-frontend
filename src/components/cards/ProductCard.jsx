@@ -1,11 +1,10 @@
 import { Button, Card, CardBody, CardFooter, Image } from "@nextui-org/react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { assets } from "src/assets";
 
 export function ProductCard({ description, id }) {
-  const navigate = useNavigate();
   return (
-    <Card className="w-[200px] overflow-visible bg-transparent shadow-none">
+    <Card className=" w-[200px] overflow-visible bg-transparent shadow-none">
       <CardBody className="overflow-visible p-0">
         <Image
           shadow="sm"
@@ -19,13 +18,14 @@ export function ProductCard({ description, id }) {
       </CardBody>
       <CardFooter className="flex flex-col items-start space-y-2 overflow-visible bg-transparent font-secondary">
         <p className="line-clamp-2 h-12">{description}</p>
-        <Button
-          radius="full"
-          className="bg-secondary px-6 text-[13px] uppercase text-primary shadow-xl hover:bg-primary hover:text-secondary"
-          onPress={() => navigate("/producto/" + id)}
-        >
-          <b>Ver más</b>
-        </Button>
+        <Link to={`/producto/${id}`}>
+          <Button
+            radius="full"
+            className="bg-secondary px-6 text-[13px] uppercase text-primary shadow-xl hover:bg-primary hover:text-secondary"
+          >
+            <b>Ver más</b>
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );

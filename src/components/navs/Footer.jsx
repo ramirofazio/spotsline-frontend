@@ -1,5 +1,5 @@
 import { Button, Divider } from "@nextui-org/react";
-import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { links } from ".";
 import AwsImage from "../images/AwsImage";
 import FloatingLogos from "../images/FloatingLogos";
@@ -28,8 +28,6 @@ const socialNetworksIcons = [
 ];
 
 export default function Footer() {
-  const navigate = useNavigate();
-
   return (
     <>
       {/* MOBILE */}
@@ -77,17 +75,17 @@ export default function Footer() {
               para el área industrial, comercial y del hogar.
             </span>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col ">
             <p className="mx-auto mb-4 text-lg font-semibold">MENÚ</p>
             {links.map(({ name, path }, index) => (
-              <div
+              <NavLink
+                to={path}
                 key={index}
                 className="group -mt-1 flex items-center gap-3 transition hover:scale-125 hover:cursor-pointer"
-                onClick={() => navigate(path)}
               >
                 <i className="ri-lightbulb-line tranisiton bg-gradient-to-tl from-secondary to-background bg-clip-text text-xl font-bold text-transparent  transition  group-hover:animate-glow group-hover:text-white" />
                 <span className="font-secondary  capitalize group-hover:drop-shadow-xl">{name}</span>
-              </div>
+              </NavLink>
             ))}
           </div>
           <div className="flex flex-col">
