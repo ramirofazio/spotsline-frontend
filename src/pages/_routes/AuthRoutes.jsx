@@ -5,6 +5,8 @@ import Layout from "../Layout";
 import { useSelector } from "react-redux";
 import NavBar from "src/components/navs/NavBar";
 import { APISpot } from "src/api";
+import { getOfStorage } from "src/utils/localStorage";
+import OrderDetail from "../user/OrderDetail";
 
 export const authRoutesPaths = [
   {
@@ -21,14 +23,25 @@ export const authRoutesPaths = [
       {
         path: "/user/profile",
         element: <Profile />,
-        index: true,
         loader: async () => {
           try {
-            //TODO TRAERSE LAS ORDENES ACA
             const userData = await APISpot.user.getProfile();
-            return { userData };
+            const userOrders = await APISpot.user.getOrders(Number(getOfStorage("user").id));
+            return { userData, userOrders };
           } catch (e) {
-            console.log(e.message);
+            console.log(e);
+            return null;
+          }
+        },
+      },
+      {
+        path: "/user/profile/:order_id",
+        element: <OrderDetail />,
+        loader: async ({ params }) => {
+          try {
+            return await APISpot.user.getOrder(params.order_id);
+          } catch (e) {
+            console.log(e);
             return null;
           }
         },

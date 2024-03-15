@@ -1,7 +1,10 @@
+import { useDisclosure } from "@nextui-org/react";
 import { useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { BasicInput, DefaultButton } from "src/components";
+import { ChangePasswordModal } from "../signIn/ChangePasswordModal";
+import { APISpot } from "src/api";
 
 const inputFields = [
   { name: "username", startIcon: "ri-user-fill", label: "NOMBRE COMPLETO" },
@@ -14,12 +17,14 @@ const inputFields = [
 //TODO TRAERSE LAS ORDENES
 export default function ProfileData() {
   const { userData } = useLoaderData();
+  const navigate = useNavigate();
+  const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure();
 
-  console.log(userData);
-
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
+    id: userData.id,
     username: userData.fantasyName,
-    cuit: userData.cuit || "xx.xxx.xxx.xxx.x",
+    cuit: userData.cuit || "xxxxxxxxxxxx",
     email: userData.email,
     password: "***********",
   });
@@ -31,37 +36,39 @@ export default function ProfileData() {
     });
   };
 
-  const handleEdit = (name) => {
-    console.log(name);
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       console.log(e);
-      //TODO await APISPOT.user.updateProfile(data)
+      await APISpot.user.updateData(data).then((res) => {
+        if (res === 200) {
+          toast.success("Datos modificados con exito!");
+          navigate();
+        }
+      });
     } catch (e) {
-      console.log(e.message);
+      console.log(e);
       toast.info("Hubo un error al guardar tus datos", { description: e.message });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <main className="relative flex flex-col items-center gap-6 py-10 text-center">
-      <div>
+      <header>
         <h2 className="text-xl font-bold">DATOS PERSONALES</h2>
-        <p className="text-xs">Edita los datos de tu perfil de usuario</p>
-      </div>
+        <p className="text-xs">Edita los datos de tu perfil de usuario.</p>
+      </header>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         {inputFields.map(({ name, startIcon, label, pencil }) => (
           <div key={name} className="relative">
             <BasicInput
               name={name}
               startContentIcon={startIcon}
-              endContent={
-                pencil && <i className="ri-pencil-line icons text-xl text-dark" onClick={() => handleEdit(name)} />
-              }
+              endContent={pencil && <i className="ri-pencil-line icons text-xl text-dark" onClick={() => onOpen()} />}
               label={label}
               onChange={handleOnChange}
               value={data[name]}
@@ -74,10 +81,18 @@ export default function ProfileData() {
             )}
           </div>
         ))}
-        <DefaultButton type="submit" className={"mt-6"}>
+        <DefaultButton type="submit" className={"mt-6"} isLoading={loading}>
           GUARDAR CAMBIOS
         </DefaultButton>
       </form>
+      <ChangePasswordModal
+        isDismissable={true}
+        isOpen={isOpen}
+        navigate={navigate}
+        onClose={onClose}
+        onOpenChange={onOpenChange}
+        email={userData.email}
+      />
     </main>
   );
 }
