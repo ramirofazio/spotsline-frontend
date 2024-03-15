@@ -1,28 +1,47 @@
-import { Avatar, Button } from "@nextui-org/react";
+import { Avatar, Button, Divider } from "@nextui-org/react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { removeAuthWithToken } from "src/api";
 import { DefaultButton } from "src/components";
+import FloatingLogos from "src/components/images/FloatingLogos";
 import { actionsAuth, actionsUser } from "src/redux/reducers";
+import ProfileData from "./ProfileData";
+import ProfileOrders from "./ProfileOrders";
+
+const selectButtonsData = [
+  { name: "MI PERFIL", startIcon: "user", component: <ProfileData /> },
+  { name: "MIS COMPRAS", startIcon: "shopping-cart-2", component: <ProfileOrders /> },
+];
 
 export function Profile() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const userData = useLoaderData();
-  console.log(userData);
+  const { userData } = useLoaderData();
+
+  const [selectedSection, setSelectedSection] = useState({
+    name: "MI PERFIL",
+    startIcon: "user",
+    component: <ProfileData />,
+  });
+
+  const handleSelect = (data) => {
+    setSelectedSection(data);
+  };
 
   return (
-    <main className="relative h-screen pt-16">
-      <section className="flex flex-col items-center justify-center gap-2 p-4">
+    <main className="pt-16">
+      <section className="relative flex flex-col items-center justify-center gap-2 p-4">
+        <FloatingLogos />
         <Avatar
           src={userData.avatar}
           name={userData.fantasyName}
           className="mx-auto mb-10 h-28 w-28 p-2"
           classNames={{ base: "bg-white" }}
         />
-        <div className="flex w-full items-center justify-center gap-2">
+        <div className="items-cente r flex w-full justify-center gap-2">
           <h1 className="underliner  rounded-full bg-primary p-2 px-4 font-bold">{userData.fantasyName}</h1>
           <Button
             isIconOnly
@@ -50,8 +69,30 @@ export function Profile() {
             Editar foto
           </DefaultButton>
         </div>
+        <div className="mt-10 flex flex-col items-center justify-around gap-3">
+          {selectButtonsData.map(({ name, startIcon, component }) => (
+            <Button
+              key={name}
+              onPress={() => handleSelect({ name, startIcon, component })}
+              startContent={<i className={`ri-${startIcon}-fill text-xl text-dark transition`} />}
+              endContent={
+                <i
+                  className={`ri-arrow-right-s-line text-xl text-dark transition ${
+                    selectedSection.name === name && "rotate-90"
+                  }`}
+                />
+              }
+              className={`flex w-60 justify-between bg-gradient-to-r from-primary to-yellow-200 py-8 text-lg font-bold transition ${
+                selectedSection.name === name && "from-dark/20 to-dark/20"
+              }`}
+            >
+              {name}
+            </Button>
+          ))}
+        </div>
+        <Divider className="mt-10 h-[3px] w-[60vw] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
       </section>
-      <section></section>
+      <section>{selectedSection.component}</section>
     </main>
   );
 }

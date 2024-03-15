@@ -9,10 +9,16 @@ export function BasicInput({
   onChange,
   isInvalid,
   errorMessage,
+  labelClass = "text-white",
+  inputWrapperClass = "bg-primary/30 rounded-full",
+  ...props
 }) {
   return (
     <Input
-      classNames={{ label: "text-white", inputWrapper: "bg-primary/30 rounded-full" }}
+      classNames={{
+        label: labelClass,
+        inputWrapper: inputWrapperClass,
+      }}
       color="secondary"
       name={name}
       isRequired={isRequired}
@@ -26,6 +32,7 @@ export function BasicInput({
       errorMessage={errorMessage}
       startContent={<i className={startContentIcon} />}
       onChange={onChange}
+      {...props}
     />
   );
 }

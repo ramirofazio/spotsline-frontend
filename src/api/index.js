@@ -75,6 +75,11 @@ export const APISpot = {
       const res = await BASE_API.get(`/${route.USER}/profile`);
       return res.data;
     },
+    getOrders: async (body) => {
+      //TODO VER ESTO
+      const res = await BASE_API.get(`/${route.USER}/orders`, body);
+      return res.data;
+    },
   },
 };
 

@@ -124,7 +124,7 @@ export default function NavBar() {
           <AwsImage type="logos" identify="logoBlack" hidden={isMenuOpen ? false : true} className="rotate-12" />
         </div>
         {links.map(({ name, path }, index) => (
-          <NavLink className="  relative -ml-6" key={index} onClick={() => setIsMenuOpen(false)} to={path}>
+          <NavLink className="relative -ml-6" key={index} onClick={() => setIsMenuOpen(false)} to={path}>
             <Button
               variant=""
               className="white-neon w-52 justify-start rounded-none border-b-2  border-secondary font-bold uppercase drop-shadow-xl"
@@ -140,7 +140,7 @@ export default function NavBar() {
               <i className="ri-shopping-cart-2-fill text-2xl" />
             </Button>
           </Link>
-          <Link onClick={() => setIsMenuOpen(false)} to={id ? `user/profile` : "sign-in"}>
+          <Link onClick={() => setIsMenuOpen(false)} to={id ? `/user/profile` : "/sign-in"}>
             <Button className="bg-gradient-to-tl from-primary to-background shadow-xl" size="lg" isIconOnly>
               <i className="ri-user-fill text-2xl" />
             </Button>
@@ -153,7 +153,7 @@ export default function NavBar() {
       </NavbarMenu>
 
       <NavbarContent justify="end" className="hidden sm:flex">
-        <Link onClick={() => setIsMenuOpen(false)} to={id ? `user/profile` : "sign-in"}>
+        <Link onClick={() => setIsMenuOpen(false)} to={id ? `/user/profile` : "/sign-in"}>
           <Button
             className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
               pathname === "/sign-in" && "white-neon"

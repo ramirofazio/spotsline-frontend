@@ -24,7 +24,9 @@ export const authRoutesPaths = [
         index: true,
         loader: async () => {
           try {
-            return await APISpot.user.getProfile();
+            //TODO TRAERSE LAS ORDENES ACA
+            const userData = await APISpot.user.getProfile();
+            return { userData };
           } catch (e) {
             console.log(e.message);
             return null;
