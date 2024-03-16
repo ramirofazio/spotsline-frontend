@@ -65,7 +65,7 @@ export default function NavBar() {
         </Link>
       </NavbarContent>
 
-      <NavbarContent className="hidden gap-4 sm:flex xl:gap-24 " justify="center">
+      <NavbarContent className="hidden gap-4 border-2 border-red-500 sm:flex xl:gap-24 " justify="center">
         {links.map(({ name, path }, index) => (
           <NavbarItem
             key={index}
@@ -119,21 +119,30 @@ export default function NavBar() {
         <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className={`ml-20 text-background`} />
       </NavbarContent>
 
-      <NavbarMenu className="gap-4 overflow-x-hidden bg-gradient-to-br from-primary to-white/20">
+      <NavbarMenu className="gap-4 overflow-x-hidden border-2 border-green-500 bg-gradient-to-br from-primary to-white/20">
         <div className="absolute -right-24 -top-10 ">
           <AwsImage type="logos" identify="logoBlack" hidden={isMenuOpen ? false : true} className="rotate-12" />
         </div>
-        {links.map(({ name, path }, index) => (
-          <NavLink className="  relative -ml-6" key={index} onClick={() => setIsMenuOpen(false)} to={path}>
-            <Button
-              variant=""
-              className="white-neon w-52 justify-start rounded-none border-b-2  border-secondary font-bold uppercase drop-shadow-xl"
-              startContent={<i className="ri-arrow-right-s-line text-md !text-secondary"></i>}
-            >
-              {name}
-            </Button>
-          </NavLink>
-        ))}
+        <NavbarContent justify="center">
+          {links.map(({ name, path }, i, index) => (
+            <NavbarItem className="border-2 border-black" key={i}>
+              <i className="ri-arrow-right-s-line text-md !text-secondary"></i>
+              <Link onClick={() => console.log("seee")} to={path}>
+                <p>{name}</p>
+              </Link>
+              {/* <NavLink className="bg-red-500  relative -ml-6" key={index} onClick={() => setIsMenuOpen(false)} to={path}>
+                <h1 className="border-2">{name}</h1>
+                <Button
+                  variant=""
+                  className="white-neon w-52 justify-start rounded-none border-b-2  border-secondary font-bold uppercase drop-shadow-xl"
+                  startContent={<i className="ri-arrow-right-s-line text-md !text-secondary"></i>}
+                >
+                  {name}
+                </Button>
+              </NavLink> */}
+            </NavbarItem>
+          ))}
+        </NavbarContent>
         <div className="mt-10 flex items-center justify-evenly ">
           <Link onClick={() => setIsMenuOpen(false)} to="/carrito">
             <Button size="lg" isIconOnly className="bg-gradient-to-tl  from-primary to-background shadow-xl">
