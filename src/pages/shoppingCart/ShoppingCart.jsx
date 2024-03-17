@@ -80,9 +80,9 @@ export default function ShoppingCart() {
 
       <section className="relative grid place-items-center gap-6 p-6">
         {items.length === 0 && (
-          <Link to="/productos/0">
-            <DefaultButton className={"w-full"}>VER PRODUCTOS</DefaultButton>
-          </Link>
+          <DefaultButton className={"w-fit"}>
+            <Link to="/productos/0">VER PRODUCTOS</Link>
+          </DefaultButton>
         )}
         {items.map(({ img, name, price, quantity, id }, index) => (
           <article key={index} className="z-10 flex min-w-[80vw] items-center gap-6 rounded-xl bg-white p-6">

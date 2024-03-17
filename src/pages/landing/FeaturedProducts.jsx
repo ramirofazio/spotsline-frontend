@@ -54,11 +54,15 @@ export default function FeaturedProducts() {
         ))}
       </article>
 
-      <Link to="/productos/0">
-        <DefaultButton className="mx-auto w-max" startContent={<i className="ri-shopping-bag-2-line" />}>
-          VER TODOS LOS PRODUCTOS
-        </DefaultButton>
-      </Link>
+      <DefaultButton
+        className="mx-auto "
+        startContent={
+          <Link to="/productos/0 px-2">
+            <i className="ri-shopping-bag-2-line mx-1" />
+            VER TODOS LOS PRODUCTOS
+          </Link>
+        }
+      ></DefaultButton>
 
       <article className="flex items-center justify-around md:mx-20 xl:mx-auto xl:w-[40%]">
         {featuredFooter.map(({ icon, text }, index) => (
