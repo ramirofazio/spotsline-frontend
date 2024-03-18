@@ -48,7 +48,7 @@ export const publicRoutesPaths = [
           try {
             const products = (await APISpot.product.getFeaturedProducts({ take: 5 })).data;
             let featuredAssets = Object.keys(assets.lights);
-            return products.map((p, i) => {
+            return products.map((p, i) => { // ? fotos mockup hasta conectar con s3
               return {
                 ...p,
                 identify: featuredAssets[i],
