@@ -17,9 +17,11 @@ export default function SecondSection() {
         <h2 className="mx-auto font-secondary font-bold text-secondary md:text-xl xl:w-[50%] xl:text-3xl">
           EVOLUCIONANDO Y DESARROLLANDO NUEVOS DISEÑOS HACIÉNDOLE HONOR A NUESTRA TRAYECTORIA.
         </h2>
-        <NavLink className="mx-auto w-fit" to="/empresa">
-          <DefaultButton className="mx-auto w-max min-w-[20vw] shadow-xl">CONOCENOS</DefaultButton>
-        </NavLink>
+        <DefaultButton className="mx-auto w-max min-w-[20vw] shadow-xl">
+          <NavLink className="mx-auto w-fit" to="/empresa">
+            CONOCENOS
+          </NavLink>
+        </DefaultButton>
       </div>
     </section>
   );
