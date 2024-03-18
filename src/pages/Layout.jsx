@@ -35,7 +35,6 @@ export default function Layout({ children }) {
     //? change password logic
     if (reset && query_access_token && query_email) {
       addAuthWithToken(query_access_token);
-
       onOpen();
     }
 

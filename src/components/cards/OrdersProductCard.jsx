@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import AwsImage from "../images/AwsImage";
 import FloatingLogos from "../images/FloatingLogos";
 
-export default function BorderedWhiteCard({ title, description, text, link, type }) {
+export default function OrderProduct({ title, image, link, type }) {
   return (
     <div className="relative flex aspect-square w-[60vw]  flex-col items-center gap-4 overflow-hidden rounded-md border-3 border-primary bg-white shadow-xl">
       <FloatingLogos qty={1} positions={["-top-20 -right-40"]} size={"scale-[70%]"} />

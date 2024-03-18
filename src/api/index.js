@@ -87,7 +87,6 @@ export const APISpot = {
     updateData: async (body) => {
       addAuthWithToken(getOfStorage("access_token"));
       const res = await BASE_API.post(`/${route.USER}/update-data`, body);
-      console.log(res);
       return res.data;
     },
   },

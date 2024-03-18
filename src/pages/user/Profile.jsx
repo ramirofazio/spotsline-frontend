@@ -21,6 +21,7 @@ export function Profile() {
 
   const { userData } = useLoaderData();
 
+  //TODO poner identificador en localStorage o URL para que quede guardado el selectedSection
   const [selectedSection, setSelectedSection] = useState({
     name: "MI PERFIL",
     startIcon: "user",
@@ -93,6 +94,7 @@ export function Profile() {
         <Divider className="mt-10 h-[3px] w-[60vw] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
       </section>
       <section>{selectedSection.component}</section>
+      <Divider className="mx-auto mb-10 h-[3px] w-[60vw] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
     </main>
   );
 }

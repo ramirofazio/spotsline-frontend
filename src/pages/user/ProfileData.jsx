@@ -14,7 +14,6 @@ const inputFields = [
 ];
 
 //TODO Alerta cuando navegan hacia atras para avisar que sus datos no se guardaran o algo asi, puede ser un modal con un boton para que los
-//TODO TRAERSE LAS ORDENES
 export default function ProfileData() {
   const { userData } = useLoaderData();
   const navigate = useNavigate();
@@ -77,7 +76,7 @@ export default function ProfileData() {
               inputWrapperClass="bg-white border-none"
             />
             {name === "email" && (
-              <p className="absolute right-0 mt-1 text-right text-[8px]">Esta información no puede editarse.</p>
+              <p className="absolute right-0 mt-1 text-right text-[9px]">*Esta información no puede editarse.</p>
             )}
           </div>
         ))}

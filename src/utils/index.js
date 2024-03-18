@@ -12,3 +12,12 @@ export function convertISOToDate(isoDate) {
 
   return `${month}/${day}/${year}`;
 }
+
+export function copyToClipboard(text) {
+  navigator.clipboard
+    .writeText(text)
+
+    .catch((e) => {
+      console.log(e);
+    });
+}
