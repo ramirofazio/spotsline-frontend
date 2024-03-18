@@ -1,5 +1,5 @@
 import { Button } from "@nextui-org/react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { DefaultButton } from "src/components";
 import AwsImage from "src/components/images/AwsImage";
 import FloatingLogos from "src/components/images/FloatingLogos";
@@ -10,14 +10,6 @@ const featuredFooter = [
   { icon: "ri-box-3-fill", text: "mayoristas" },
 ];
 
-const mockFeaturedProducts = [
-  { id: 241, img: "light2" },
-  { id: 241, img: "light2" },
-  { id: 241, img: "light2" },
-  { id: 241, img: "light2" },
-  { id: 241, img: "light2" },
-];
-//! UPDATEAR MOCK
 
 export default function FeaturedProducts({ products }) {
   return (
@@ -42,14 +34,13 @@ export default function FeaturedProducts({ products }) {
               index === 2 && "col-span-2 md:col-span-1"
             }${index === 1 && "md:row-span-2"}`}
           >
-            <div className="absolute h-full w-full bg-black/70" />
-            <Link to={`/products/detail/${id}`}>
-              <AwsImage
-                type={"lights"}
-                identify={identify}
-                className={`${index === 2 && "w-[60%] md:w-auto "} border-2 border-red-500 mx-auto xl:w-[60%] `}
-              />
-            </Link>
+            <NavLink className="absolute h-full w-full bg-black/70 " to={`/producto/${id}`}>
+            </NavLink>
+            <AwsImage
+              type={"lights"}
+              identify={identify}
+              className={`${index === 2 && "w-[60%] md:w-auto "} mx-auto  xl:w-[60%] `}
+            />
           </Button>
         ))}
       </article>
