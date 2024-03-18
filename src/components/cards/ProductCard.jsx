@@ -18,14 +18,14 @@ export function ProductCard({ description, id }) {
       </CardBody>
       <CardFooter className="flex flex-col items-start space-y-2 overflow-visible bg-transparent font-secondary">
         <p className="line-clamp-2 h-12">{description}</p>
-        <Link to={`/producto/${id}`}>
-          <Button
-            radius="full"
-            className="bg-secondary px-6 text-[13px] uppercase text-primary shadow-xl hover:bg-primary hover:text-secondary"
-          >
+        <Button
+          radius="full"
+          className="bg-secondary px-6 text-[13px] uppercase text-primary shadow-xl hover:bg-primary hover:text-secondary"
+        >
+          <Link to={`/producto/${id}`}>
             <b>Ver más</b>
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </CardFooter>
     </Card>
   );
