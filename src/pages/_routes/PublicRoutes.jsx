@@ -55,7 +55,6 @@ export const publicRoutesPaths = [
               };
             });
           } catch (e) {
-            console.log("fail featured", e);
             return null;
           }
         },
