@@ -21,17 +21,17 @@ export function isValidSignIn({ email, password }) {
 }
 
 export function validatePassword(password) {
-  if (!password) return "ingrese una contraseña";
-  //else if (password.length < 8 || password.length < 16) return "debe tener entre 8 y 16 caracteres";
-  /* else if (!regex.containUppercase.test(password)) return "debe tener al menos una letra en mayuscula";
+  if (!password || !password.length) return "ingrese una contraseña";
+  else if (password.length < 8 || password.length > 20) return "debe tener entre 8 y 20 caracteres";
+  else if (!regex.containUppercase.test(password)) return "debe tener al menos una letra en mayuscula";
   else if (!regex.containNumber.test(password)) return "debe tener al menos un numero";
-  else if (regex.containSpace.test(password)) return "no puede tener espacios"; */
+  else if (regex.containSpace.test(password)) return "no puede tener espacios";
   return false;
 }
 
 export function isValidPasswords({ newPassword, newPasswordConfirm }) {
   const errs = {};
-
+  console.log("llego", newPassword, newPasswordConfirm);
   if (newPassword) {
     const getErr = validatePassword(newPassword);
     getErr ? (errs.newPassword = getErr) : null;
@@ -45,6 +45,6 @@ export function isValidPasswords({ newPassword, newPasswordConfirm }) {
   if (newPassword !== newPasswordConfirm) {
     errs.submit = "las contraseñas no coinciden";
   }
-
+  console.log("envio:", errs);
   return errs;
 }

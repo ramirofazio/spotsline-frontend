@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { APISpot, removeAuthWithToken } from "src/api";
 import { DarkModal, DefaultButton, PasswordInput } from "src/components";
 import { actionsAuth, actionsUser } from "src/redux/reducers";
+import { isValidPasswords } from "src/utils/validation";
 
 const inputFields = [
   { name: "newPassword", label: "Nueva contraseña" },
@@ -34,7 +35,8 @@ export function FirstSignInModal({ navigate }) {
   const handleChange = ({ target: { name, value } }) => {
     setData((prev) => {
       const newData = { ...prev, [name]: value };
-      //todo: setErrs(isValidSignIn(newData));
+      console.log(newData);
+      setErrs(isValidPasswords(newData));
       return newData;
     });
   };
