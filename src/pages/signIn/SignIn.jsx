@@ -23,7 +23,7 @@ export function SignIn() {
   const handleChange = ({ target: { name, value } }) => {
     setSignInData((prev) => {
       const newData = { ...prev, [name]: value };
-      setErrs(isValidSignIn(newData));
+      //setErrs(isValidSignIn(newData));
       return newData;
     });
   };

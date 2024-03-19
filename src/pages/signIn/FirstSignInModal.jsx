@@ -88,7 +88,7 @@ export function FirstSignInModal({ navigate }) {
           />
         ))}
 
-        <DefaultButton isDisabled={!Object.values(data)?.length} type="submit" isLoading={isLoading}>
+        <DefaultButton isDisabled={!data?.newPassword.length || !data?.newPasswordConfirm.length || Object.values(errs).length && true} type="submit" isLoading={isLoading}>
           ACTUALIZAR
         </DefaultButton>
       </form>

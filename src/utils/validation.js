@@ -1,7 +1,7 @@
 export const regex = {
   isValidEmail: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|gob|com\.ar|gob\.ar)$/,
   containNumber: /\d/,
-  containSpace: /\s/,
+  containSpace: /^\S+$/,
   containUppercase: /^(?=.*[a-z])(?=.*[A-Z]).+$/,
   containLetter: /[a-zA-Z]/,
 };
@@ -20,9 +20,17 @@ export function isValidSignIn({ email, password }) {
   return errs;
 }
 
+export function isValidEmail(email) {
+  if (!email) return "ingrese un email";
+  else if (!regex.isValidEmail.test(email)) return "ingrese un email valido";
+  else if (!regex.containSpace.test(email)) return "borre los espacios";
+  else if (email.length > 45) return "email demasiado largo";
+  return false;
+}
+
 export function validatePassword(password) {
   if (!password || !password.length) return "ingrese una contraseña";
-  else if (password.length < 8 || password.length > 20) return "debe tener entre 8 y 20 caracteres";
+  else if (password.length < 8 || password.length > 24) return "debe tener entre 8 y 24 caracteres";
   else if (!regex.containUppercase.test(password)) return "debe tener al menos una letra en mayuscula";
   else if (!regex.containNumber.test(password)) return "debe tener al menos un numero";
   else if (regex.containSpace.test(password)) return "no puede tener espacios";
