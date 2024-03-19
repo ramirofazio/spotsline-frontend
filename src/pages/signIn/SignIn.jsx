@@ -85,7 +85,7 @@ export function SignIn() {
               onChange={handleChange}
             />
             <DefaultButton
-              isDisabled={Object.values(errs)?.length || !Object.values(signInData)?.length ? true : false}
+              isDisabled={!signInData?.email?.length || !signInData?.password?.length && true}
               isLoading={isLoading}
               type="submit"
             >
