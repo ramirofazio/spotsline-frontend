@@ -78,6 +78,20 @@ export const APISpot = {
       const res = await BASE_API.get(`/${route.USER}/profile`);
       return res.data;
     },
+    getOrders: async (id) => {
+      const res = await BASE_API.get(`/${route.USER}/orders/${id}`);
+      return res.data;
+    },
+    getOrder: async (id) => {
+      addAuthWithToken(getOfStorage("access_token"));
+      const res = await BASE_API.get(`/${route.USER}/order/${id}`);
+      return res.data;
+    },
+    updateData: async (body) => {
+      addAuthWithToken(getOfStorage("access_token"));
+      const res = await BASE_API.post(`/${route.USER}/update-data`, body);
+      return res.data;
+    },
   },
 };
 
