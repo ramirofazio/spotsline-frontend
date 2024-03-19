@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
 import { DefaultButton } from "src/components";
-import FloatingLogos from "src/components/images/FloatingLogos";
 import { actionsShoppingCart } from "src/redux/reducers";
 import { formatPrices } from "src/utils";
 import { saveInStorage } from "src/utils/localStorage";
@@ -20,7 +19,7 @@ export default function ShoppingCart() {
   const [discountCode, setDiscountCode] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleCreateC = async () => {
+  const handleCreateCheckout = async () => {
     setLoading(true);
     try {
       const body = {
@@ -50,6 +49,7 @@ export default function ShoppingCart() {
       setLoading(true);
       const res = await APISpot.cart.validateCoupon(discountCode);
       if (res) {
+        //TODO CORREGIR COUPONS
         dispatch(actionsShoppingCart.applyDiscount(20));
       }
     } catch (e) {
@@ -179,7 +179,7 @@ export default function ShoppingCart() {
             </form>
           </div>
           <DefaultButton
-            onPress={handleCreateC}
+            onPress={handleCreateCheckout}
             className={"mx-auto lg:mx-0"}
             isLoading={loading}
             isDisabled={items.length === 0}

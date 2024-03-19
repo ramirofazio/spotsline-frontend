@@ -63,6 +63,7 @@ export default function Layout({ children }) {
     });
 
     // !BORRAR;
+    //dispatch(actionsShoppingCart.applyDiscount(20));
     dispatch(
       actionsShoppingCart.addItemToCart({
         id: 12,

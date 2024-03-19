@@ -31,9 +31,7 @@ export default function FeaturedProducts({ products }) {
             className={`grid h-auto !place-items-start  bg-landingbg bg-cover bg-center pb-10 md:row-span-2 ${
               index === 2
                 ? "col-span-2 md:col-span-1  md:row-span-2"
-                : index === 1
-                  ? "md:grid-rows-subgrid md:col-span-2 md:row-span-4"
-                  : ""
+                : index === 1 && "md:grid-rows-subgrid md:col-span-2 md:row-span-4"
             }`}
           >
             <div className="absolute h-full w-full bg-black/70 "></div>
@@ -41,7 +39,7 @@ export default function FeaturedProducts({ products }) {
             <AwsImage
               type={"lights"}
               identify={identify}
-              className={`${index === 2 && "w-[60%] md:w-auto "} mx-auto  xl:w-[60%] `}
+              className={`${index === 2 && "w-[60%] md:w-auto "} mx-auto xl:w-[60%]`}
             />
           </Button>
         ))}

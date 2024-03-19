@@ -43,8 +43,6 @@ const shoppingCartSlice = createSlice({
       saveInStorage("shoppingCart", state);
     },
     updateCartItemQuantity(state, action) {
-      console.log(action.payload);
-
       const { id, quantity } = action.payload;
       const updatedItems = state.items.map((item) => {
         if (item.id === id) {
