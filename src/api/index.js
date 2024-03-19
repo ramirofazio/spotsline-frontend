@@ -17,6 +17,9 @@ export const APISpot = {
     getOne: ({ id }) => {
       return BASE_API.get(`/${route.PRODUCTS}/detail/${id}`);
     },
+    getFeaturedProducts: ({ take }) => {
+      return BASE_API.get(`/${route.PRODUCTS}/featured?take=${take}`);
+    },
   },
   //TODO acomodar estos 3 pedidos igual que el auth, metidos en un objeto `products`
   getPaginatedProducts: (take, skip) => {
