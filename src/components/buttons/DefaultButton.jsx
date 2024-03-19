@@ -1,6 +1,15 @@
 import { Button } from "@nextui-org/react";
 
-export function DefaultButton({ children, isDisabled, type = "button", className, isLoading, onPress, startContent }) {
+export function DefaultButton({
+  children,
+  isDisabled,
+  type = "button",
+  className,
+  isLoading,
+  onPress,
+  startContent,
+  endContent,
+}) {
   return (
     <Button
       isDisabled={isDisabled}
@@ -11,6 +20,7 @@ export function DefaultButton({ children, isDisabled, type = "button", className
       isLoading={isLoading}
       onPress={onPress}
       startContent={startContent}
+      endContent={endContent}
     >
       {children}
     </Button>

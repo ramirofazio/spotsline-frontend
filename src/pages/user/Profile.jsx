@@ -4,11 +4,11 @@ import { useDispatch } from "react-redux";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { removeAuthWithToken } from "src/api";
-import { DefaultButton } from "src/components";
-import FloatingLogos from "src/components/images/FloatingLogos";
 import { actionsAuth, actionsUser } from "src/redux/reducers";
 import ProfileData from "./ProfileData";
 import ProfileOrders from "./ProfileOrders";
+import { DefaultButton } from "src/components";
+import { getOfStorage, saveInStorage } from "src/utils/localStorage";
 
 const selectButtonsData = [
   { name: "MI PERFIL", startIcon: "user", component: <ProfileData /> },
@@ -19,82 +19,96 @@ export function Profile() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  //TODO crear avatar en tabla CLIENTE
   const { userData } = useLoaderData();
 
-  //TODO poner identificador en localStorage o URL para que quede guardado el selectedSection
-  const [selectedSection, setSelectedSection] = useState({
-    name: "MI PERFIL",
-    startIcon: "user",
-    component: <ProfileData />,
+  const [selectedSection, setSelectedSection] = useState(() => {
+    const local = getOfStorage("selectedSection");
+    if (local) {
+      return local;
+    }
+
+    return "MI PERFIL";
   });
 
-  const handleSelect = (data) => {
-    setSelectedSection(data);
+  const handleSelect = (name) => {
+    setSelectedSection(name);
+    saveInStorage("selectedSection", name);
   };
 
   return (
-    <main className="pt-16">
-      <section className="relative flex flex-col items-center justify-center gap-2 p-4">
-        <FloatingLogos />
-        <Avatar
-          src={userData.avatar}
-          name={userData.fantasyName}
-          className="mx-auto mb-10 h-28 w-28 p-2"
-          classNames={{ base: "bg-white" }}
-        />
-        <div className="items-cente r flex w-full justify-center gap-2">
-          <h1 className="underliner  rounded-full bg-primary p-2 px-4 font-bold">{userData.fantasyName}</h1>
-          <Button
-            isIconOnly
-            color="primary"
-            radius="full"
-            onPress={() => {
-              navigate("/");
-              toast.info("Sesión cerrada con exito", { description: "¡Esperamos verte pronto!" });
-              setTimeout(() => {
-                //? Para evitar salto y que aparezca el errorBundler
-                removeAuthWithToken();
-                dispatch(actionsUser.cleanUser());
-                dispatch(actionsAuth.cleanAuth());
-              }, 1000);
-            }}
-          >
-            <i className="ri-logout-circle-line icons text-xl font-bold text-black" />
-          </Button>
-        </div>
-        <div className="flex items-center justify-center gap-2">
-          <DefaultButton
-            className="font-bold text-black"
-            startContent={<i className="ri-pencil-line icons text-xl font-bold text-black" />}
-          >
-            Editar foto
-          </DefaultButton>
-        </div>
-        <div className="mt-10 flex flex-col items-center justify-around gap-3">
-          {selectButtonsData.map(({ name, startIcon, component }) => (
+    <main className="pt-16 md:pt-20">
+      <header className="relative hidden flex-col items-center justify-center md:flex md:h-40">
+        <h1 className="text-2xl font-bold lg:text-3xl">MI CUENTA</h1>
+        <DefaultButton
+          className="absolute right-10 bg-gradient-to-r from-primary to-yellow-200 font-bold"
+          radius="full"
+          endContent={<i className="ri-logout-circle-line icons text-xl font-bold text-black" />}
+          onPress={() => {
+            navigate("/");
+            toast.info("Sesión cerrada con exito", { description: "¡Esperamos verte pronto!" });
+            setTimeout(() => {
+              //? Para evitar salto y que aparezca el errorBundler
+              //TODO ANALIZAR ESTO
+              removeAuthWithToken();
+              dispatch(actionsUser.cleanUser());
+              dispatch(actionsAuth.cleanAuth());
+            }, 1000);
+          }}
+        >
+          CERRAR SESIÓN
+        </DefaultButton>
+        <Divider className="absolute bottom-0 mx-auto h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
+      </header>
+      <div className="md:grid md:grid-cols-2">
+        <section className="flex flex-col items-center justify-start gap-2 p-10 pt-10">
+          <div className="relative">
+            <Avatar
+              src={userData.avatar}
+              name={userData.fantasyName}
+              className="mx-auto mb-10 h-28 w-28 p-2 md:h-40 md:w-40"
+              classNames={{ base: "bg-white" }}
+            />
             <Button
-              key={name}
-              onPress={() => handleSelect({ name, startIcon, component })}
-              startContent={<i className={`ri-${startIcon}-fill text-xl text-dark transition`} />}
-              endContent={
-                <i
-                  className={`ri-arrow-right-s-line text-xl text-dark transition ${
-                    selectedSection.name === name && "rotate-90"
-                  }`}
-                />
-              }
-              className={`flex w-60 justify-between bg-gradient-to-r from-primary to-yellow-200 py-8 text-lg font-bold transition ${
-                selectedSection.name === name && "from-dark/20 to-dark/20"
-              }`}
-            >
-              {name}
-            </Button>
+              isIconOnly
+              className="-right-20 -top-20 rounded-full bg-gradient-to-r from-primary to-yellow-200 font-bold text-black md:-right-28 md:flex"
+              startContent={<i className="ri-pencil-line icons text-xl font-bold text-black" />}
+            />
+          </div>
+          <h1 className="underliner -mt-10 rounded-full bg-gradient-to-r from-primary to-yellow-200 p-2 px-4 text-center font-bold md:text-xl lg:w-80">
+            {userData.fantasyName}
+          </h1>
+
+          <div className="mt-10 flex flex-col items-center justify-around gap-3">
+            {selectButtonsData.map(({ name, startIcon }) => (
+              <Button
+                key={name}
+                onPress={() => handleSelect(name)}
+                startContent={<i className={`ri-${startIcon}-fill text-xl text-dark transition`} />}
+                endContent={
+                  <i
+                    className={`ri-arrow-right-s-line text-xl text-dark transition ${
+                      selectedSection === name && "rotate-90"
+                    }`}
+                  />
+                }
+                className={`flex w-60 justify-between bg-gradient-to-r from-primary to-yellow-200 py-8 text-lg font-bold transition lg:w-80 lg:text-xl ${
+                  selectedSection === name && "from-dark/20 to-dark/20"
+                }`}
+              >
+                {name}
+              </Button>
+            ))}
+          </div>
+          <Divider className="mt-10 h-[3px] w-[60vw] rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:hidden" />
+        </section>
+        <section className="md:col-start-2">
+          {selectButtonsData.map(({ name, component }, index) => (
+            <div key={index}>{name === selectedSection && component}</div>
           ))}
-        </div>
-        <Divider className="mt-10 h-[3px] w-[60vw] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
-      </section>
-      <section>{selectedSection.component}</section>
-      <Divider className="mx-auto mb-10 h-[3px] w-[60vw] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
+        </section>
+        <Divider className="mx-auto mb-10 h-[3px] w-[60vw] rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:hidden" />
+      </div>
     </main>
   );
 }

@@ -1,4 +1,4 @@
-import { useDisclosure } from "@nextui-org/react";
+import { Divider, useDisclosure } from "@nextui-org/react";
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -40,7 +40,6 @@ export default function ProfileData() {
     setLoading(true);
 
     try {
-      console.log(e);
       await APISpot.user.updateData(data).then((res) => {
         if (res === 200) {
           toast.success("Datos modificados con exito!");
@@ -57,11 +56,12 @@ export default function ProfileData() {
 
   return (
     <main className="relative flex flex-col items-center gap-6 py-10 text-center">
-      <header>
+      <header className="md:w-full md:text-left">
         <h2 className="text-xl font-bold">DATOS PERSONALES</h2>
+        <Divider className="my-2 hidden h-[2px] rounded-xl bg-dark md:flex lg:w-80" />
         <p className="text-xs">Edita los datos de tu perfil de usuario.</p>
       </header>
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+      <form className="flex flex-col gap-4 lg:w-[80%] lg:self-start lg:pr-10" onSubmit={handleSubmit}>
         {inputFields.map(({ name, startIcon, label, pencil }) => (
           <div key={name} className="relative">
             <BasicInput
@@ -80,7 +80,7 @@ export default function ProfileData() {
             )}
           </div>
         ))}
-        <DefaultButton type="submit" className={"mt-6"} isLoading={loading}>
+        <DefaultButton type="submit" className={"mt-6 font-bold lg:mx-auto"} isLoading={loading}>
           GUARDAR CAMBIOS
         </DefaultButton>
       </form>
