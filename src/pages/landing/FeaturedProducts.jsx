@@ -28,7 +28,7 @@ export default function FeaturedProducts({ products }) {
         {products?.map(({ id, identify }, index) => (
           <Button
             key={index}
-            className={`grid h-auto !place-items-start border-2 border-green-500 bg-landingbg bg-cover bg-center pb-10 md:row-span-2 ${
+            className={`grid h-auto !place-items-start  bg-landingbg bg-cover bg-center pb-10 md:row-span-2 ${
               index === 2
                 ? "col-span-2 md:col-span-1  md:row-span-2"
                 : index === 1
@@ -36,7 +36,8 @@ export default function FeaturedProducts({ products }) {
                   : ""
             }`}
           >
-            <NavLink className="absolute h-full w-full bg-black/70 " to={`/producto/${id}`}></NavLink>
+            <div className="absolute h-full w-full bg-black/70 "></div>
+            <NavLink className="absolute z-50 h-full w-full " to={`/producto/${id}`}></NavLink>
             <AwsImage
               type={"lights"}
               identify={identify}
