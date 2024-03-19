@@ -10,7 +10,6 @@ const featuredFooter = [
   { icon: "ri-box-3-fill", text: "mayoristas" },
 ];
 
-
 export default function FeaturedProducts({ products }) {
   return (
     <section
@@ -25,17 +24,19 @@ export default function FeaturedProducts({ products }) {
       <h1 className="text-xl font-bold sm:mt-4 sm:text-4xl">
         PRODUCTOS <br /> DESTACADOS
       </h1>
-
-      <article className="mt-10 grid grid-cols-2 grid-rows-3 sm:mt-14 md:grid-flow-row md:grid-cols-3 md:grid-rows-2">
+      <article className="mt-10 grid grid-cols-2 grid-rows-3 sm:mt-14 md:grid-flow-row md:grid-cols-4 md:grid-rows-4">
         {products?.map(({ id, identify }, index) => (
           <Button
             key={index}
-            className={`grid h-auto !place-items-start bg-landingbg bg-cover bg-center pb-10 ${
-              index === 2 && "col-span-2 md:col-span-1"
-            }${index === 1 && "md:row-span-2"}`}
+            className={`grid h-auto !place-items-start border-2 border-green-500 bg-landingbg bg-cover bg-center pb-10 md:row-span-2 ${
+              index === 2
+                ? "col-span-2 md:col-span-1  md:row-span-2"
+                : index === 1
+                  ? "md:grid-rows-subgrid md:col-span-2 md:row-span-4"
+                  : ""
+            }`}
           >
-            <NavLink className="absolute h-full w-full bg-black/70 " to={`/producto/${id}`}>
-            </NavLink>
+            <NavLink className="absolute h-full w-full bg-black/70 " to={`/producto/${id}`}></NavLink>
             <AwsImage
               type={"lights"}
               identify={identify}
