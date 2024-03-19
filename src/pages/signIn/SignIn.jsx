@@ -23,7 +23,7 @@ export function SignIn() {
   const handleChange = ({ target: { name, value } }) => {
     setSignInData((prev) => {
       const newData = { ...prev, [name]: value };
-      setErrs(isValidSignIn(newData));
+      //setErrs(isValidSignIn(newData));
       return newData;
     });
   };
@@ -85,7 +85,7 @@ export function SignIn() {
               onChange={handleChange}
             />
             <DefaultButton
-              isDisabled={Object.values(errs)?.length || !Object.values(signInData)?.length ? true : false}
+              isDisabled={!signInData?.email?.length || !signInData?.password?.length && true}
               isLoading={isLoading}
               type="submit"
             >
