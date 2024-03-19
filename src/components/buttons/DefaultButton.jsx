@@ -1,16 +1,26 @@
 import { Button } from "@nextui-org/react";
 
-export function DefaultButton({ children, isDisabled, type = "button", className, isLoading, onPress, startContent }) {
+export function DefaultButton({
+  children,
+  isDisabled,
+  type = "button",
+  className,
+  isLoading,
+  onPress,
+  startContent,
+  endContent,
+}) {
   return (
     <Button
       isDisabled={isDisabled}
       type={type}
       variant="solid"
       color={"primary"}
-      className={`w-60 rounded-full bg-primary p-6 font-bold tracking-widest text-dark hover:scale-110 disabled:opacity-20 ${className}`}
+      className={`w-60 rounded-full bg-gradient-to-r from-primary to-yellow-200 p-6 font-bold tracking-widest text-dark hover:scale-110 ${className}`}
       isLoading={isLoading}
       onPress={onPress}
       startContent={startContent}
+      endContent={endContent}
     >
       {children}
     </Button>

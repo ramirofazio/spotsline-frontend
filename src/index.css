@@ -5,7 +5,23 @@
 @layer base {
   body,
   html {
-    @apply m-0 box-border overflow-x-hidden bg-background p-0 font-primary;
+    @apply m-0 box-border overflow-x-hidden scroll-smooth bg-background p-0 font-primary;
+  }
+
+  h1,
+  h2 {
+    @apply font-primary;
+  }
+
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  strong,
+  span,
+  bold {
+    @apply font-secondary;
   }
 
   input[type="number"]::-webkit-inner-spin-button,
@@ -19,27 +35,30 @@
   .icons {
     @apply transition hover:cursor-pointer hover:opacity-50;
   }
+
+  .swiper-pagination-bullet {
+    @apply !mr-3 h-3 w-3 bg-primary/50;
+  }
+
+  .swiper-pagination-bullet-active {
+    @apply bg-primary;
+  }
+
+  .white-neon {
+    color: #fff;
+    text-shadow: 0 0 5px #fff;
+  }
+
+  .yellow-neon {
+    color: #f9ce41;
+    text-shadow: 0 0 5px #f9ce41;
+  }
+
+  .yellowGradient {
+    @apply bg-gradient-to-r from-primary to-yellow-600 bg-clip-text font-bold uppercase text-transparent;
+  }
 }
 
-.swiper-pagination-bullet {
-  @apply !mr-3 h-3 w-3 bg-primary/50;
-}
-
-.swiper-pagination-bullet-active {
-  @apply bg-primary;
-}
-
-.white-neon {
-  color: #fff;
-  text-shadow: 0 0 5px #fff;
-}
-
-.yellow-neon {
-  color: #f9ce41;
-  text-shadow: 0 0 5px #f9ce41;
-}
-
-/* ! HAY 2 SCROLL BARS EN LA LANDING NO SE POR QUE */
 ::-webkit-scrollbar {
   width: 5px;
 }

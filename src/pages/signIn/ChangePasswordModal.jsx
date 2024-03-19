@@ -11,7 +11,7 @@ const inputFields = [
   { name: "newPasswordConfirm", label: "Confirmar nueva contraseña" },
 ];
 
-export function ChangePasswordModal({ isOpen, onOpenChange, navigate, email, onClose }) {
+export function ChangePasswordModal({ isOpen, onOpenChange, navigate, email, onClose, isDismissable = false }) {
   const dispatch = useDispatch();
 
   const [data, setData] = useState({
@@ -56,7 +56,7 @@ export function ChangePasswordModal({ isOpen, onOpenChange, navigate, email, onC
     <DarkModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      isDismissable={false}
+      isDismissable={isDismissable}
       title={"ACTUALIZA TU CONTRASEÑA"}
       description={"¡Actualicemos tu contraseña!"}
     >
