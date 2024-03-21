@@ -33,7 +33,7 @@ export function validatePassword(password) {
   else if (password.length < 8 || password.length > 24) return "debe tener entre 8 y 24 caracteres";
   else if (!regex.containUppercase.test(password)) return "debe tener al menos una letra en mayuscula";
   else if (!regex.containNumber.test(password)) return "debe tener al menos un numero";
-  else if (regex.containSpace.test(password)) return "no puede tener espacios";
+  else if (!regex.containSpace.test(password)) return "no puede tener espacios";
   return false;
 }
 
