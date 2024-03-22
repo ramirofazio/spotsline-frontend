@@ -8,10 +8,10 @@ import { PaymentFailed } from "src/components/checkout/PaymentFailed";
 import { useLoaderData } from "react-router-dom";
 
 export function Landing() {
+  const _featuredProducts = useLoaderData();
+
   const { id } = useSelector((state) => state.user);
   const { access_token } = useSelector((state) => state.auth);
-  const _featuredProducts = useLoaderData();
-  console.log(_featuredProducts);
 
   const params = new URLSearchParams(document.location.search);
   const mobbex_status = params.get("status");

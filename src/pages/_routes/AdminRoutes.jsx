@@ -15,14 +15,9 @@ export const adminRoutesPaths = [
     ),
     children: [
       {
-        path: "/admin",
-        children: [
-          {
-            path: "/admin/dashboard",
-            element: <Dashboard />,
-            index: true,
-          },
-        ],
+        path: "/dashboard",
+        element: <Dashboard />,
+        index: true,
       },
     ],
   },
@@ -37,6 +32,3 @@ export function AdminRoot() {
   }
   return <Outlet />;
 }
-
-//TODO Crear los input reciclables en un componente
-//TODO Crear los botones reciclables en un componente
