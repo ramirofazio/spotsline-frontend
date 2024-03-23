@@ -22,19 +22,20 @@ const categories = [
 export function Products() {
   const navigate = useNavigate();
   const { page } = useParams();
-  const [totalPages, setTotalPages] = useState(1);
+  const { totalPages } = useSelector((state) => state.product);
 
-  function setPage(page) {
+  useEffect(() => {
+    if (!parseInt(page)) navigate("/productos/1");
+  }, [page]);
+
+  function handleChangePage(page) {
+    console.log(page);
     navigate("/productos/" + page);
   }
 
-  useEffect(() => {
-    if (!page) navigate("/productos/1");
-  }, [page]);
-
   return (
     <>
-      <header className="relative hidden min-h-[400px] flex-col items-center justify-center gap-2 bg-signIn bg-contain bg-cover bg-bottom pt-16 text-white shadow-medium before:absolute before:inset-0 before:z-10 before:bg-black/50  before:content-[''] sm:flex">
+      <header className="relative hidden min-h-[400px] flex-col items-center justify-center gap-2 bg-signIn bg-contain bg-bottom pt-16 text-white shadow-medium before:absolute before:inset-0 before:z-10 before:bg-black/50  before:content-[''] sm:flex">
         <h1 className="z-20 font-primary text-5xl font-bold uppercase ">Productos</h1>
         <p className="z-20 font-secondary text-3xl">Encontra todo lo que necesites...</p>
       </header>
@@ -49,9 +50,9 @@ export function Products() {
         </article>
         <section className="my-10 grid flex-1 grid-cols-1 place-items-center gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           <Heading />
-          <ProductsView setTotalPages={setTotalPages} />
+          <ProductsView />
           <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4">
-            <PaginationComponent qty={totalPages} page={parseInt(page)} setCurrentPage={setPage} />
+            <PaginationComponent qty={totalPages} page={parseInt(page)} onChange={handleChangePage} />
           </div>
         </section>
       </main>
@@ -59,7 +60,7 @@ export function Products() {
   );
 }
 
-function ProductsView({ setTotalPages }) {
+function ProductsView() {
   const dispatch = useDispatch();
   const { page } = useParams();
   const [loading, setLoading] = useState(false);
@@ -72,7 +73,7 @@ function ProductsView({ setTotalPages }) {
       APISpot.product
         .getAll({ page, take: TAKE_PRODUCTS, search: !search.length ? null : search })
         .then(({ data }) => {
-          setTotalPages(data.metadata.total_pages);
+          dispatch(actionProducts.setTotalPages(data.metadata.total_pages));
           console.log(data.metadata);
           dispatch(actionProducts.setPageProducts({ page, products: data.rows }));
           setLoading(false);
