@@ -47,8 +47,11 @@ export default function ShoppingCart() {
   const handleApplyDiscount = async () => {
     try {
       setLoading(true);
+      if (currentCoupons[discountCode]) {
+        return toast.error("ya esta usando este cupon");
+      }
+
       const coupon = await APISpot.cart.validateCoupon(discountCode);
-      console.log(coupon);
       if (coupon) {
         dispatch(actionsShoppingCart.applyDiscount(coupon));
         toast.success(`Descuento de ${coupon.discountPercentaje}% aplicado!`);
@@ -150,7 +153,7 @@ export default function ShoppingCart() {
               <h3 className="mr-6 font-bold text-primary">{coupon.discountPercentaje} %</h3>
               <i
                 className="ri-delete-bin-line icons absolute right-0 text-sm text-dark"
-                onClick={() => dispatch(actionsShoppingCart.removeDiscount(coupon.name))}
+                onClick={() => dispatch(actionsShoppingCart.removeDiscount(coupon))}
               />
             </div>
           ))}
