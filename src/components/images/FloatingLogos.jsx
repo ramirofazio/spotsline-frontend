@@ -26,7 +26,7 @@ export default function FloatingLogos({
     logos.push(
       <div key={i} className={`pointer-events-none absolute ${positions[i]}`}>
         <AwsImage
-          identify={`logo${logoColour}`}
+          identify={`logo${Array.isArray(logoColour) ? logoColour[i] : logoColour}`}
           type="logos"
           className={`${rotationIndexes[i]} w-80 !opacity-50 lg:w-[40vw] ${size}`}
         />
@@ -34,5 +34,5 @@ export default function FloatingLogos({
     );
   }
 
-  return <div>{logos}</div>;
+  return <>{logos}</>;
 }

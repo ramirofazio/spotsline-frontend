@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
 import Layout from "../Layout";
 import { useSelector } from "react-redux";
-import Dashboard from "../admin/Dashboard";
+import Dashboard from "../dashboard/Dashboard";
 
 export const adminRoutesPaths = [
   {

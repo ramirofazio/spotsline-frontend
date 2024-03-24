@@ -9,6 +9,7 @@ export function DefaultButton({
   onPress,
   startContent,
   endContent,
+  props,
 }) {
   return (
     <Button
@@ -21,6 +22,7 @@ export function DefaultButton({
       onPress={onPress}
       startContent={startContent}
       endContent={endContent}
+      {...props}
     >
       {children}
     </Button>
