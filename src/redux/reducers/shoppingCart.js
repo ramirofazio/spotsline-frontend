@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import { saveInStorage } from "src/utils/localStorage";
 
 const initialState = {
@@ -6,6 +6,7 @@ const initialState = {
   discount: 0,
   total: 0,
   subtotal: 0,
+  currentCoupons: {},
 };
 
 const calculateSubtotal = (items) => {
@@ -57,12 +58,19 @@ const shoppingCartSlice = createSlice({
       saveInStorage("shoppingCart", state);
     },
     applyDiscount(state, action) {
-      state.discount = action.payload;
+      const coupon = action.payload;
+      state.discount = state.discount + coupon.discountPercentaje;
+      state.currentCoupons = state.currentCoupons = {
+        ...state.currentCoupons,
+        [coupon.name]: coupon,
+      };
       state.total = calculateTotal(state.subtotal, state.discount);
       saveInStorage("shoppingCart", state);
     },
-    removeDiscount(state) {
-      state.discount = 0;
+    removeDiscount(state, action) {
+      const coupon = action.payload;
+      state.discount = state.discount - coupon.discountPercentaje;
+      delete state.currentCoupons[coupon.name];
       state.total = calculateTotal(state.subtotal, state.discount);
       saveInStorage("shoppingCart", state);
     },
