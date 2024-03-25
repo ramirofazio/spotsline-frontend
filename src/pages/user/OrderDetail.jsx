@@ -2,10 +2,12 @@ import { Divider, Image } from "@nextui-org/react";
 import { NavLink, useLoaderData } from "react-router-dom";
 import { assets } from "src/assets";
 import { convertISOToDate, copyToClipboard, formatPrices } from "src/utils";
+import { calculateTotal } from "src/redux/reducers/shoppingCart";
 
 export default function OrderDetail() {
   const order = useLoaderData();
-  const { id, date, discount, mobbexId, total, type, products } = order;
+  console.log(order);
+  const { id, date, coupon, mobbexId, total, type, products } = order;
 
   return (
     <main className="relative flex flex-col items-center gap-6 py-10 pt-20 text-center">
@@ -17,7 +19,8 @@ export default function OrderDetail() {
         type={true}
       />
       <Divider className="h-[3px] w-[60vw] rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:hidden" />
-      <ProductsSection products={products} discount={discount} total={total} />
+
+      <ProductsSection products={products} coupon={coupon} total={total} />
       <Divider className="h-[3px] w-[60vw] rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:hidden" />
       <PaymentDetailSection type={type} total={total} date={convertISOToDate(date)} mobbexId={mobbexId} />
     </main>
@@ -48,9 +51,7 @@ function Header({ type = false, title, subTitle, id, date }) {
   );
 }
 
-function ProductsSection({ products, discount, total }) {
-  const { couponName = "Spotsline", discountPercentaje = 20, totalDiscount = 5000 } = discount; //TODO FORMATO DE DISCOUNT ARMAR EN DBE
- //
+function ProductsSection({ products, coupon, total }) {
   return (
     <section className="gap-10 md:grid md:grid-cols-2 md:place-items-center">
       {products.map(({ description, quantity, total, image }, index) => (
@@ -76,19 +77,28 @@ function ProductsSection({ products, discount, total }) {
           </div>
         </article>
       ))}
-      {/* TODO validar que exista un descuento para mostrar esta seccion */}
-      <section className="mt-10 flex w-[70vw] flex-col items-center gap-4 rounded-md border-3 border-primary p-4 shadow-md md:col-start-2 md:mt-0 md:w-full">
-        <div className="flex w-full items-start justify-between text-left">
-          <p className="text-xs">
-            Cúpon <strong>{couponName}</strong> aplicado <br />%{discountPercentaje} OFF
-          </p>
-          <p className="line-through">{formatPrices(totalDiscount)}</p>
-        </div>
-        <div className="flex  w-full items-center justify-between bg-background text-left text-xl font-bold tracking-wider  md:text-2xl">
-          <p className="yellowGradient from-yellow-500 to-yellow-700 drop-shadow-lg">TOTAL</p>
-          <p className="yellowGradient from-yellow-500 to-yellow-700 drop-shadow-lg">{formatPrices(total)}</p>
-        </div>
-      </section>
+      {coupon && <DiscountDetail coupon={coupon} total={total} />}
+    </section>
+  );
+}
+
+function DiscountDetail({ total, coupon }) {
+  const { name, discountPercentaje } = coupon;
+  const totalDiscount = calculateTotal(total, discountPercentaje);
+  return (
+    <section className="mt-10 flex w-[70vw] flex-col items-center gap-4 rounded-md border-3 border-primary p-4 shadow-md md:col-start-2 md:mt-0 md:w-full">
+      (
+      <div className="flex w-full items-start justify-between text-left">
+        <p className="text-xs">
+          Cúpon <strong>{name}</strong> aplicado <br />%{discountPercentaje} OFF
+        </p>
+        <p className="line-through">{formatPrices(totalDiscount)}</p>
+      </div>
+      )
+      <div className="flex  w-full items-center justify-between bg-background text-left text-xl font-bold tracking-wider  md:text-2xl">
+        <p className="yellowGradient from-yellow-500 to-yellow-700 drop-shadow-lg">TOTAL</p>
+        <p className="yellowGradient from-yellow-500 to-yellow-700 drop-shadow-lg">{formatPrices(total)}</p>
+      </div>
     </section>
   );
 }

@@ -13,7 +13,7 @@ const calculateSubtotal = (items) => {
   return items.reduce((acc, item) => acc + item.price * item.quantity, 0);
 };
 
-const calculateTotal = (subtotal, discount) => {
+export const calculateTotal = (subtotal, discount) => {
   return subtotal * (1 - discount / 100);
 };
 
