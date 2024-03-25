@@ -1,4 +1,4 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { saveInStorage } from "src/utils/localStorage";
 
 const initialState = {
@@ -59,11 +59,13 @@ const shoppingCartSlice = createSlice({
     },
     applyDiscount(state, action) {
       const coupon = action.payload;
+
       state.discount = state.discount + coupon.discountPercentaje;
-      state.currentCoupons = state.currentCoupons = {
+      state.currentCoupons = {
         ...state.currentCoupons,
         [coupon.name]: coupon,
       };
+
       state.total = calculateTotal(state.subtotal, state.discount);
       saveInStorage("shoppingCart", state);
     },
@@ -71,6 +73,8 @@ const shoppingCartSlice = createSlice({
       const coupon = action.payload;
       state.discount = state.discount - coupon.discountPercentaje;
       delete state.currentCoupons[coupon.name];
+      if (!state.currentCoupons) state.currentCoupons = {};
+
       state.total = calculateTotal(state.subtotal, state.discount);
       saveInStorage("shoppingCart", state);
     },
@@ -80,6 +84,7 @@ const shoppingCartSlice = createSlice({
       state.subtotal = 0;
       state.total = 0;
       state.discount = 0;
+      state.currentCoupons = {};
       saveInStorage("shoppingCart", state);
     },
     loadCart(state, action) {
@@ -87,6 +92,7 @@ const shoppingCartSlice = createSlice({
       state.subtotal = calculateSubtotal(state.items);
       state.total = calculateTotal(state.subtotal, state.discount);
       state.discount = action.payload.discount || 0;
+      state.currentCoupons = action.payload.currentCoupons;
     },
   },
 });

@@ -22,6 +22,7 @@ export default function ShoppingCart() {
   const handleCreateCheckout = async () => {
     setLoading(true);
     try {
+      console.log(user);
       const body = {
         userId: user.id,
         discount: discount,
