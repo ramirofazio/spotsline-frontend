@@ -5,6 +5,7 @@ import { Coupons, Orders, Products, Users } from "./index";
 import { Button, Divider } from "@nextui-org/react";
 import { getOfStorage, saveInStorage } from "src/utils/localStorage";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 const selectButtonsData = [
   { name: "PRODUCTOS", startIcon: "image-2", component: <Products /> },
@@ -12,7 +13,14 @@ const selectButtonsData = [
   { name: "ORDENES", startIcon: "shopping-cart-2", component: <Orders /> },
   { name: "USUARIOS", startIcon: "user-3", component: <Users /> },
 ];
+
+const sidebarVariants = {
+  hidden: { width: "0%", opacity: 0, position: "absolute" },
+  visible: { width: "100%", opacity: 1 },
+};
+
 export default function Dashboard() {
+  const [hide, setHide] = useState(false);
   const [selectedSection, setSelectedSection] = useState(() => {
     const local = getOfStorage("selectedSection");
     if (local) {
@@ -24,34 +32,29 @@ export default function Dashboard() {
 
   return (
     <main>
-      <DashboardNavBar />
-      <section className="grid grid-cols-1 lg:h-screen lg:grid-cols-3">
-        <div className="flex flex-col items-center gap-2 p-6 text-center lg:col-span-1 lg:p-20">
+      <DashboardNavBar hide={hide} setHide={setHide} />
+      <section className="grid grid-cols-1 lg:grid-cols-4">
+        <motion.div
+          className="flex flex-col items-center gap-2 p-6 text-center lg:col-span-1 lg:p-20"
+          initial={hide ? "hidden" : "visible"}
+          animate={hide ? "hidden" : "visible"}
+          exit="hidden"
+          variants={sidebarVariants}
+        >
           <SelectButtons selectedSection={selectedSection} setSelectedSection={setSelectedSection} />
-        </div>
+        </motion.div>
         <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600 lg:hidden" />
-        <div className="p-6 lg:col-span-2 lg:p-20">
+        <motion.div className={`px-2 pt-6 lg:pt-20 ${hide ? "lg:col-span-4" : "lg:col-span-3"}`}>
           {selectButtonsData.map(({ name, component }, index) => (
             <div key={index}>{name === selectedSection && component}</div>
           ))}
-        </div>
+        </motion.div>
       </section>
-      <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
-      <div className="flex flex-col items-center p-6">
-        <Button
-          isIconOnly
-          className="rounded-full bg-gradient-to-t from-primary to-yellow-200  p-6 shadow-xl hover:scale-110"
-          onPress={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        >
-          <i className="ri-arrow-up-s-line text-4xl  text-secondary" />
-        </Button>
-        <h1 className="font-slogan text-2xl font-bold drop-shadow-xl">Se ve bien.</h1>
-      </div>
     </main>
   );
 }
 
-export function DashboardNavBar() {
+export function DashboardNavBar({ hide, setHide }) {
   const navigate = useNavigate();
 
   return (
@@ -78,7 +81,15 @@ export function DashboardNavBar() {
         </section>
       </nav>
       <section className="w-full  bg-background p-6 lg:p-10">
-        <h1 className="text-center text-xl font-bold text-secondary lg:text-2xl">PANEL DE ADMINISTRADOR</h1>
+        <Button
+          className="absolute hidden w-40 rounded-full bg-gradient-to-r from-primary to-yellow-200 font-semibold lg:flex"
+          size="lg"
+          onPress={() => setHide(!hide)}
+        >
+          <i className={`ri-arrow-left-double-line text-2xl transition ${hide && "rotate-180"}`} />
+          {hide ? "MOSTRAR" : "OCULTAR"}
+        </Button>
+        <h1 className="text-center text-xl font-bold text-secondary lg:text-2xl xl:text-4xl">PANEL DE ADMINISTRADOR</h1>
       </section>
       <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
     </>
