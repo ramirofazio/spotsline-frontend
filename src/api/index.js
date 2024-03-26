@@ -7,6 +7,7 @@ const route = {
   USER: "users",
   CART: "shoppingCart",
   CHECKOUT: "mobbex",
+  COUPON: "coupon"
 };
 
 export const APISpot = {
@@ -57,7 +58,7 @@ export const APISpot = {
   },
   cart: {
     validateCoupon: async (coupon) => {
-      const res = await BASE_API.get(`/${route.CART}/validate-coupon`, { coupon });
+      const res = await BASE_API.get(`/${route.COUPON}/validate/${coupon}`, );
       return res.data;
     },
   },
