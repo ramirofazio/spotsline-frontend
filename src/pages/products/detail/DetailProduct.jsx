@@ -7,6 +7,7 @@ import { assets } from "src/assets";
 import { SkeletonDetail } from "./SkeletonDetail";
 import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart } from "src/redux/reducers/shoppingCart";
+import { PreviewImage } from "./PreviewImage";
 
 export function DetailProduct() {
   const { id } = useParams();
@@ -15,6 +16,7 @@ export function DetailProduct() {
   const { email } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [current, setCurrent] = useState();
 
   useEffect(() => {
     document.title = "SPOTSLINE - Cargando...";
@@ -23,6 +25,7 @@ export function DetailProduct() {
       .then(({ data }) => {
         console.log(data);
         setProduct(data);
+        setCurrent(data.variants[0]);
         document.title = "SPOTSLINE - " + data.description;
       })
       .catch((err) => {
@@ -37,7 +40,21 @@ export function DetailProduct() {
   }, [id]);
 
   function addProductToShoppingCart() {
-    dispatch(addItemToCart({ id: id, name: "", img: assets.lights.light2, price: 9999, quantity: 2 }));
+    dispatch(
+      addItemToCart({
+        id: current.id,
+        name: current.description,
+        img: current.pathImage || assets.lights.light2,
+        price: current.precio1,
+        quantity: 1,
+      })
+    );
+    toast("Producto Agregado", {
+      action: {
+        label: "Ver Carrito",
+        onClick: () => navigate("/carrito"),
+      },
+    });
   }
 
   if (isLoading) return <SkeletonDetail />;
@@ -45,12 +62,17 @@ export function DetailProduct() {
 
   return (
     <main className="mt-24 min-h-[500px] max-w-7xl gap-16 px-6 md:mt-32  md:flex md:px-12 lg:mx-auto">
-      <VariantsProduct variants={product.variants} />
+      <VariantsProduct variants={product.variants} current={{ set: setCurrent, values: current }} />
       <section className="my-10 space-y-10 md:my-0 md:w-1/2">
         <h1 className="font-primary text-3xl font-semibold">
           {product.variants[0].category + " " + product?.description}
         </h1>
 
+        {email && (
+          <>
+            <p className="text-xl ">{"$ " + current.precio1}</p>
+          </>
+        )}
         <Button
           color="primary"
           radius="full"
@@ -76,23 +98,18 @@ export function DetailProduct() {
   );
 }
 
-function VariantsProduct({ variants }) {
-  const [current, setCurrent] = useState(variants[0]);
+function VariantsProduct({ variants, current }) {
+  const { id, description, pathImage } = current.values;
   return (
     <div className="mb-4 grid grid-cols-6 place-content-start gap-y-3 md:w-1/2">
-      <img
-        className="col-span-6 aspect-[10/6] w-full overflow-hidden rounded-xl bg-gray-100 object-contain p-3"
-        title={current.description}
-        alt={current.description}
-        src={current.pathImage || assets.lights.light2}
-      />
-      {variants.map(({ description, pathImage, id }, i) => (
+      <PreviewImage description={description} pathImage={pathImage || assets.lights.light2} />
+      {variants.map(({ description, pathImage, ...variant }, i) => (
         <div key={"variants" + i} className="col-span-1 aspect-[10/6]">
           <Image
-            className={`${current.id !== id && "brightness-75 hover:brightness-100"}`}
+            className={`${id !== variant.id && "brightness-75 hover:brightness-100"}`}
             src={pathImage || assets.lights.light2}
             alt={description}
-            onClick={() => setCurrent({ description, pathImage, id })}
+            onClick={() => current.set({ description, pathImage, ...variant })}
           />
         </div>
       ))}

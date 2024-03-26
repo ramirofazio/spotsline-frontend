@@ -74,7 +74,6 @@ function ProductsView() {
         .getAll({ page, take: TAKE_PRODUCTS, search: !search.length ? null : search })
         .then(({ data }) => {
           dispatch(actionProducts.setTotalPages(data.metadata.total_pages));
-          console.log(data.metadata);
           dispatch(actionProducts.setPageProducts({ page, products: data.rows }));
           setLoading(false);
         })
