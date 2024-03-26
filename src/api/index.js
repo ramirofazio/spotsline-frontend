@@ -88,7 +88,7 @@ export const APISpot = {
   },
   cart: {
     validateCoupon: async (coupon) => {
-      const res = await BASE_API.get(`/${route.CART}/validate-coupon`, { coupon });
+      const res = await BASE_API.get(`/${route.COUPON}/validate/${coupon}`, );
       return res.data;
     },
   },
