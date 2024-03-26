@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
 import { DefaultButton } from "src/components";
-import FloatingLogos from "src/components/images/FloatingLogos";
 import { actionsShoppingCart } from "src/redux/reducers";
 import { formatPrices } from "src/utils";
 import { saveInStorage } from "src/utils/localStorage";
@@ -15,17 +14,18 @@ import { saveInStorage } from "src/utils/localStorage";
 export default function ShoppingCart() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const { items, total, subtotal, discount } = useSelector((state) => state.cart);
+  const { items, total, subtotal, discount, currentCoupons } = useSelector((state) => state.cart);
 
   const [discountCode, setDiscountCode] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleCreateC = async () => {
+  const handleCreateCheckout = async () => {
     setLoading(true);
     try {
       const body = {
         userId: user.id,
-        discount: discount,
+        discount,
+        coupon: Object.values(currentCoupons)[0]?.id || false,
         items: items.map(({ id, quantity }) => {
           return { id: id, qty: quantity };
         }),
@@ -48,13 +48,19 @@ export default function ShoppingCart() {
   const handleApplyDiscount = async () => {
     try {
       setLoading(true);
-      const res = await APISpot.cart.validateCoupon(discountCode);
-      if (res) {
-        dispatch(actionsShoppingCart.applyDiscount(20));
+      if (currentCoupons[discountCode]) {
+        return toast.error("ya esta usando este cupon");
+      }
+
+      const coupon = await APISpot.cart.validateCoupon(discountCode);
+      if (coupon) {
+        dispatch(actionsShoppingCart.applyDiscount(coupon));
+        toast.success(`Descuento de ${coupon.discountPercentaje}% aplicado!`);
       }
     } catch (e) {
-      console.log(e);
-      toast.error("Hubo un error al aplicar el cupon", { description: e.response.data.message });
+      const backErr = e?.response?.data;
+
+      toast.error("Hubo un error al aplicar el cupon", { description: backErr ? backErr?.message : e.message });
     } finally {
       setLoading(false);
     }
@@ -137,16 +143,21 @@ export default function ShoppingCart() {
           <h3>SUBTOTAL</h3>
           <h3 className="font-bold text-primary">{formatPrices(subtotal)}</h3>
         </div>
-        {discount !== 0 && (
-          <div className="relative z-10 flex w-full items-center justify-between border-b-1 border-dotted border-primary/40">
-            <h3>DESCUENTO</h3>
-            <h3 className="mr-6 font-bold text-primary">{discount} %</h3>
-            <i
-              className="ri-delete-bin-line icons absolute right-0 text-sm text-dark"
-              onClick={() => dispatch(actionsShoppingCart.removeDiscount())}
-            />
-          </div>
-        )}
+        {discount !== 0 &&
+          Object.keys(currentCoupons)?.length &&
+          Object.values(currentCoupons).map((coupon, i) => (
+            <div
+              key={i}
+              className="relative z-10 flex w-full items-center justify-between border-b-1 border-dotted border-primary/40"
+            >
+              <h3>DESCUENTO</h3>
+              <h3 className="mr-6 font-bold text-primary">{coupon.discountPercentaje} %</h3>
+              <i
+                className="ri-delete-bin-line icons absolute right-0 text-sm text-dark"
+                onClick={() => dispatch(actionsShoppingCart.removeDiscount(coupon))}
+              />
+            </div>
+          ))}
         <div className="z-10 flex w-full items-center justify-between border-b-1 border-dotted border-primary/40">
           <h3>TOTAL A PAGAR</h3>
           <h3 className="font-bold text-primary">{formatPrices(total)}</h3>
@@ -179,7 +190,7 @@ export default function ShoppingCart() {
             </form>
           </div>
           <DefaultButton
-            onPress={handleCreateC}
+            onPress={handleCreateCheckout}
             className={"mx-auto lg:mx-0"}
             isLoading={loading}
             isDisabled={items.length === 0}

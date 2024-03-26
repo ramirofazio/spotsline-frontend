@@ -2,18 +2,26 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
 import { BasicInput, DarkModal, DefaultButton } from "src/components";
+import { isValidEmail } from "src/utils/validation";
 
 export function InitChangePasswordModal({ isOpen, onOpenChange }) {
   const [email, setEmail] = useState("");
-  const [errs, setErrs] = useState("");
+  const [errs, setErrs] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [flag, setFlag] = useState(false);
+
+  const handleChange = ({ target }) => {
+    setEmail((prev) => {
+      setErrs(isValidEmail(target.value));
+      return target.value;
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const res = await APISpot.auth.initPasswordReset(email);
+      const res = await APISpot.auth.initPasswordReset(email.trim());
 
       if (res === 200) {
         setFlag(true);
@@ -44,10 +52,10 @@ export function InitChangePasswordModal({ isOpen, onOpenChange }) {
           isInvalid={Boolean(errs)}
           errorMessage={errs}
           startContentIcon={"ri-mail-fill text-xl"}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleChange}
         />
 
-        <DefaultButton isDisabled={!email} type="submit" isLoading={isLoading}>
+        <DefaultButton isDisabled={errs} type="submit" isLoading={isLoading}>
           ENVIAR
         </DefaultButton>
       </form>

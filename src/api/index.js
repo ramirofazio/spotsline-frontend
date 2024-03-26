@@ -7,6 +7,7 @@ const route = {
   USER: "users",
   CART: "shoppingCart",
   CHECKOUT: "mobbex",
+  COUPON: "coupon"
 };
 
 export const APISpot = {
@@ -16,6 +17,9 @@ export const APISpot = {
     },
     getOne: ({ id }) => {
       return BASE_API.get(`/${route.PRODUCTS}/detail/${id}`);
+    },
+    getFeaturedProducts: ({ take }) => {
+      return BASE_API.get(`/${route.PRODUCTS}/featured?take=${take}`);
     },
   },
   //TODO acomodar estos 3 pedidos igual que el auth, metidos en un objeto `products`
@@ -54,7 +58,7 @@ export const APISpot = {
   },
   cart: {
     validateCoupon: async (coupon) => {
-      const res = await BASE_API.get(`/${route.CART}/validate-coupon`, { coupon });
+      const res = await BASE_API.get(`/${route.COUPON}/validate/${coupon}`, );
       return res.data;
     },
   },
@@ -73,6 +77,20 @@ export const APISpot = {
     getProfile: async () => {
       addAuthWithToken(getOfStorage("access_token"));
       const res = await BASE_API.get(`/${route.USER}/profile`);
+      return res.data;
+    },
+    getOrders: async (id) => {
+      const res = await BASE_API.get(`/${route.USER}/orders/${id}`);
+      return res.data;
+    },
+    getOrder: async (id) => {
+      addAuthWithToken(getOfStorage("access_token"));
+      const res = await BASE_API.get(`/${route.USER}/order/${id}`);
+      return res.data;
+    },
+    updateData: async (body) => {
+      addAuthWithToken(getOfStorage("access_token"));
+      const res = await BASE_API.post(`/${route.USER}/update-data`, body);
       return res.data;
     },
   },

@@ -15,12 +15,13 @@ export default function CategoriesCarrousel() {
         modules={[Autoplay]}
         autoplay={{
           delay: 2500,
-          disableOnInteraction: true,
+          disableOnInteraction: false,
+          pauseOnMouseEnter: true,
         }}
         spaceBetween={20}
         slidesPerView={3}
         loop={categories.legnth > 6}
-        className="mySwiper !overflow-visible"
+        className="mySwiper !overflow-visible hover:cursor-grab"
         breakpoints={{
           640: {
             slidesPerView: 2,

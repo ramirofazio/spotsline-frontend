@@ -15,16 +15,22 @@ import {
 import { links } from ".";
 import { Link, NavLink, useLoaderData, useLocation } from "react-router-dom";
 import { getOfStorage } from "src/utils/localStorage";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AwsImage from "../images/AwsImage";
+import { toast } from "sonner";
+import { removeAuthWithToken } from "src/api";
+import { actionsAuth, actionsUser } from "src/redux/reducers";
 
 export default function NavBar() {
+  const dispatch = useDispatch();
+  const { pathname } = useLocation();
+
+  const { access_token } = useSelector((state) => state.auth);
   const { id } = useSelector((state) => state.user);
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [blur, setBlur] = React.useState(false);
 
-  const { pathname } = useLocation();
   const categories = getOfStorage("categories") || useLoaderData();
 
   useEffect(() => {
@@ -121,7 +127,7 @@ export default function NavBar() {
       </NavbarContent>
 
       <NavbarMenu className="gap-4 overflow-x-hidden bg-gradient-to-br from-primary to-white/20">
-        <div className="absolute -right-24 -top-10 -z-40 ">
+        <div className="absolute -right-48 -top-10 -z-40 opacity-50">
           <AwsImage type="logos" identify="logoBlack" hidden={isMenuOpen ? false : true} className="rotate-12" />
         </div>
 
@@ -129,7 +135,7 @@ export default function NavBar() {
           <NavbarMenuItem onClick={() => setIsMenuOpen(false)} className="w-fit " key={i}>
             <NavLink className="flex h-full w-[12rem] items-center gap-1.5  border-b-2 p-1" to={path}>
               <i className="ri-arrow-right-s-line text-md  !text-secondary"></i>
-              <p className="w-full font-primary text-lg text-white">{name}</p>
+              <p className="w-full font-primary text-lg uppercase text-white">{name}</p>
             </NavLink>
           </NavbarMenuItem>
         ))}
@@ -150,6 +156,27 @@ export default function NavBar() {
               <i className="ri-user-fill text-2xl" />
             </Link>
           </Button>
+          {id && access_token && (
+            <Button
+              className="bg-gradient-to-tl from-primary to-background shadow-xl"
+              size="lg"
+              isIconOnly
+              onPress={() => {
+                toast.info("Sesión cerrada con exito", { description: "¡Esperamos verte pronto!" });
+                setTimeout(() => {
+                  //? Para evitar salto y que aparezca el errorBundler
+                  //TODO ANALIZAR ESTO
+                  removeAuthWithToken();
+                  dispatch(actionsUser.cleanUser());
+                  dispatch(actionsAuth.cleanAuth());
+                }, 1000);
+              }}
+            >
+              <Link onClick={() => setIsMenuOpen(false)} to={"/"}>
+                <i className="ri-logout-circle-line text-2xl" />
+              </Link>
+            </Button>
+          )}
         </div>
         <div className="f bottom-0 mx-auto mt-10 text-center">
           <h1 className="text-3xl">SPOTSLINE</h1>

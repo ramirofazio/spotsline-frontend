@@ -4,13 +4,14 @@ import { toast } from "sonner";
 import { APISpot, addAuthWithToken } from "src/api";
 import { DarkModal, DefaultButton, PasswordInput } from "src/components";
 import { actionsAuth, actionsUser } from "src/redux/reducers";
+import { isValidPasswords } from "src/utils/validation";
 
 const inputFields = [
   { name: "newPassword", label: "Nueva contraseña" },
   { name: "newPasswordConfirm", label: "Confirmar nueva contraseña" },
 ];
 
-export function ChangePasswordModal({ isOpen, onOpenChange, navigate, email, onClose }) {
+export function ChangePasswordModal({ isOpen, onOpenChange, navigate, email, onClose, isDismissable = false }) {
   const dispatch = useDispatch();
 
   const [data, setData] = useState({
@@ -23,7 +24,7 @@ export function ChangePasswordModal({ isOpen, onOpenChange, navigate, email, onC
   const handleChange = ({ target: { name, value } }) => {
     setData((prev) => {
       const newData = { ...prev, [name]: value };
-      //todo: setErrs(isValidSignIn(newData));
+      setErrs(isValidPasswords(newData));
       return newData;
     });
   };
@@ -55,7 +56,7 @@ export function ChangePasswordModal({ isOpen, onOpenChange, navigate, email, onC
     <DarkModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      isDismissable={false}
+      isDismissable={isDismissable}
       title={"ACTUALIZA TU CONTRASEÑA"}
       description={"¡Actualicemos tu contraseña!"}
     >
@@ -71,7 +72,11 @@ export function ChangePasswordModal({ isOpen, onOpenChange, navigate, email, onC
           />
         ))}
 
-        <DefaultButton isDisabled={!Object.values(data)?.length} type="submit" isLoading={isLoading}>
+        <DefaultButton
+          isDisabled={!data?.newPassword.length || !data?.newPasswordConfirm.length || Object.values(errs).length && true}
+          type="submit"
+          isLoading={isLoading}
+        >
           ACTUALIZAR
         </DefaultButton>
       </form>

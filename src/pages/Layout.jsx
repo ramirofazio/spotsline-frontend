@@ -35,7 +35,6 @@ export default function Layout({ children }) {
     //? change password logic
     if (reset && query_access_token && query_email) {
       addAuthWithToken(query_access_token);
-
       onOpen();
     }
 
@@ -63,6 +62,7 @@ export default function Layout({ children }) {
     });
 
     // !BORRAR;
+    //dispatch(actionsShoppingCart.applyDiscount(20));
     dispatch(
       actionsShoppingCart.addItemToCart({
         id: 12,
