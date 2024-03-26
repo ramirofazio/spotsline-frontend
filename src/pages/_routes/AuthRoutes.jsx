@@ -52,9 +52,24 @@ export const authRoutesPaths = [
 
 export function AuthRoot() {
   const { access_token } = useSelector((state) => state.auth);
-  const { email, id } = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user);
 
-  if (!access_token && !email && !id) {
+  const validate = () => {
+    const localAccess_token = getOfStorage("access_token");
+    if (localAccess_token === access_token) {
+      //? el token es valido, sigo
+      const localUser = getOfStorage("user");
+      if (localUser === user) {
+        //? es valido, sigo. Ambos existen asi que esta logged
+        return true;
+      }
+    }
+
+    //? No cumplio las condiciones
+    return false;
+  };
+
+  if (validate()) {
     return <DefaultError />;
   }
 

@@ -73,7 +73,9 @@ export function ChangePasswordModal({ isOpen, onOpenChange, navigate, email, onC
         ))}
 
         <DefaultButton
-          isDisabled={!data?.newPassword.length || !data?.newPasswordConfirm.length || Object.values(errs).length && true}
+          isDisabled={
+            !data?.newPassword.length || !data?.newPasswordConfirm.length || (Object.values(errs).length && true)
+          }
           type="submit"
           isLoading={isLoading}
         >

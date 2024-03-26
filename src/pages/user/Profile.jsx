@@ -23,7 +23,7 @@ export function Profile() {
   const { userData } = useLoaderData();
 
   const [selectedSection, setSelectedSection] = useState(() => {
-    const local = getOfStorage("selectedSection");
+    const local = getOfStorage("profileSelectedSection");
     if (local) {
       return local;
     }
@@ -33,7 +33,7 @@ export function Profile() {
 
   const handleSelect = (name) => {
     setSelectedSection(name);
-    saveInStorage("selectedSection", name);
+    saveInStorage("profileSelectedSection", name);
   };
 
   return (

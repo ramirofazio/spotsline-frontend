@@ -7,11 +7,41 @@ const route = {
   USER: "users",
   CART: "shoppingCart",
   CHECKOUT: "mobbex",
-  COUPON: "coupon"
+  COUPON: "coupon",
 };
 
 export const APISpot = {
+  dashboard: {
+    toggleFeaturedProduct: (product_id) => {
+      //TODO ARMAR RUTA
+      return BASE_API.patch(`/${route.PRODUCTS}/toggleFeatured`, { product_id });
+    },
+    toggleIncluidoProduct: (product_id) => {
+      //TODO ARMAR RUTA
+      return BASE_API.patch(`/${route.PRODUCTS}/toggleIncluido`, { product_id });
+    },
+    updateProductImages: (body) => {
+      //TODO ARMAR RUTA
+      return BASE_API.patch(`/${route.PRODUCTS}/updateProductImages`, body);
+    },
+    createCoupon: (body) => {
+      //TODO validar esto
+      return BASE_API.post(`/${route.COUPON}/create`, body);
+    },
+    removeCoupon: (coupon_id) => {
+      //TODO validar esto
+      return BASE_API.delete(`/${route.COUPON}/delete/${coupon_id}`);
+    },
+    toggleStateCoupon: (coupon_id) => {
+      //TODO validar esto
+      return BASE_API.patch(`/${route.COUPON}/change_state`, { coupon_id });
+    },
+  },
+
   product: {
+    getDashboardProducts: (signal) => {
+      return BASE_API.get(`/${route.PRODUCTS}`, { signal: signal });
+    },
     getAll: ({ take, page, search = null }) => {
       return BASE_API.get(`/${route.PRODUCTS}?take=${take}&&page=${page}&&search=${search}`);
     },

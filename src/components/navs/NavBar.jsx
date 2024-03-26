@@ -26,7 +26,7 @@ export default function NavBar() {
   const { pathname } = useLocation();
 
   const { access_token } = useSelector((state) => state.auth);
-  const { id } = useSelector((state) => state.user);
+  const { id, web_role } = useSelector((state) => state.user);
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [blur, setBlur] = React.useState(false);
@@ -126,6 +126,7 @@ export default function NavBar() {
         <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className={`ml-20 text-background`} />
       </NavbarContent>
 
+      {/* MOBILE */}
       <NavbarMenu className="gap-4 overflow-x-hidden bg-gradient-to-br from-primary to-white/20">
         <div className="absolute -right-48 -top-10 -z-40 opacity-50">
           <AwsImage type="logos" identify="logoBlack" hidden={isMenuOpen ? false : true} className="rotate-12" />
@@ -141,19 +142,41 @@ export default function NavBar() {
         ))}
 
         <div className="mt-10 flex items-center justify-evenly ">
+          {web_role === Number(import.meta.env.VITE_ADMIN_ROLE) && (
+            <Button
+              className={`bg-gradient-to-tl from-primary to-background shadow-xl ${
+                pathname === "/dashboard" && "pointer-events-none from-background"
+              }`}
+              size="lg"
+              isIconOnly
+            >
+              <Link onClick={() => setIsMenuOpen(false)} to={"/dashboard"}>
+                <i className="ri-dashboard-fill text-2xl" />
+              </Link>
+            </Button>
+          )}
+
           <Button
+            className={`bg-gradient-to-tl from-primary to-background shadow-xl ${
+              (pathname === "/sign-in" || pathname === "/user/profile") && "pointer-events-none from-background"
+            }`}
+            size="lg"
+            isIconOnly
+          >
+            <Link onClick={() => setIsMenuOpen(false)} to={id ? `user/profile` : "sign-in"}>
+              <i className="ri-user-fill text-2xl" />
+            </Link>
+          </Button>
+          <Button
+            className={`bg-gradient-to-tl  from-primary to-background shadow-xl ${
+              pathname === "/carrito" && "pointer-events-none from-background"
+            }`}
             onClick={() => setIsMenuOpen(false)}
             size="lg"
             isIconOnly
-            className="bg-gradient-to-tl  from-primary to-background shadow-xl"
           >
             <Link to="/carrito">
               <i className="ri-shopping-cart-2-fill text-2xl" />
-            </Link>
-          </Button>
-          <Button className="bg-gradient-to-tl from-primary to-background shadow-xl" size="lg" isIconOnly>
-            <Link onClick={() => setIsMenuOpen(false)} to={id ? `user/profile` : "sign-in"}>
-              <i className="ri-user-fill text-2xl" />
             </Link>
           </Button>
           {id && access_token && (
@@ -184,24 +207,40 @@ export default function NavBar() {
         </div>
       </NavbarMenu>
 
+      {/* DESKTOP */}
       <NavbarContent justify="end" className="hidden sm:flex">
+        {web_role === Number(import.meta.env.VITE_ADMIN_ROLE) && (
+          <Button
+            className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
+              pathname === "/dashboard" && "pointer-events-none from-background"
+            }`}
+            size="md"
+            isIconOnly
+          >
+            <Link to={"/dashboard"}>
+              <i className="ri-dashboard-fill text-2xl" />
+            </Link>
+          </Button>
+        )}
         <Button
           className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
-            pathname === "/sign-in" && "white-neon"
+            (pathname === "/sign-in" || pathname === "/user/profile") && "pointer-events-none from-background"
           }`}
           size="md"
           isIconOnly
         >
-          <Link onClick={() => setIsMenuOpen(false)} to={id ? `user/profile` : "sign-in"}>
+          <Link to={id ? `/user/profile` : "/sign-in"}>
             <i className="ri-user-fill text-2xl" />
           </Link>
         </Button>
         <Button
-          className="bg-gradient-to-br from-primary to-background transition hover:scale-110"
+          className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
+            pathname === "/carrito" && "pointer-events-none from-background"
+          }`}
           size="md"
           isIconOnly
         >
-          <Link onClick={() => setIsMenuOpen(false)} to="/carrito">
+          <Link to="/carrito">
             <i className="ri-shopping-cart-2-fill text-2xl" />
           </Link>
         </Button>
