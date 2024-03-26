@@ -22,18 +22,28 @@ const sidebarVariants = {
 export default function Dashboard() {
   const [hide, setHide] = useState(false);
   const [selectedSection, setSelectedSection] = useState(() => {
-    const local = getOfStorage("selectedSection");
+    const local = getOfStorage("dashboardSelectedSection");
     if (local) {
       return local;
     }
 
-    return "MI PERFIL";
+    return "PRODUCTOS";
   });
 
   return (
     <main>
       <DashboardNavBar hide={hide} setHide={setHide} />
-      <section className="grid grid-cols-1 lg:grid-cols-4">
+      <section className="relative grid grid-cols-1 overflow-hidden lg:grid-cols-4">
+        <FloatingLogos
+          qty={4}
+          positions={[
+            "-left-40 -top-20 -rotate-45",
+            "-right-40 -top-40 rotate-45",
+            "-left-40 -bottom-32 rotate-180",
+            "-right-40 -bottom-40",
+          ]}
+          size={"w-80 lg:w-[30vw]"}
+        />
         <motion.div
           className="flex flex-col items-center gap-2 p-6 text-center lg:col-span-1 lg:p-20"
           initial={hide ? "hidden" : "visible"}
@@ -44,7 +54,7 @@ export default function Dashboard() {
           <SelectButtons selectedSection={selectedSection} setSelectedSection={setSelectedSection} />
         </motion.div>
         <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600 lg:hidden" />
-        <motion.div className={`px-2 pt-6 lg:pt-20 ${hide ? "lg:col-span-4" : "lg:col-span-3"}`}>
+        <motion.div className={`px-2 pt-6 lg:h-screen lg:pt-20 ${hide ? "lg:col-span-4" : "lg:col-span-3"}`}>
           {selectButtonsData.map(({ name, component }, index) => (
             <div key={index}>{name === selectedSection && component}</div>
           ))}
@@ -99,7 +109,7 @@ export function DashboardNavBar({ hide, setHide }) {
 function SelectButtons({ selectedSection, setSelectedSection }) {
   const handleSelect = (name) => {
     setSelectedSection(name);
-    saveInStorage("selectedSection", name);
+    saveInStorage("dashboardSelectedSection", name);
   };
 
   return selectButtonsData.map(({ name, startIcon }) => (

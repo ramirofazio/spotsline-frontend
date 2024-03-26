@@ -10,7 +10,25 @@ const route = {
 };
 
 export const APISpot = {
+  dashboard: {
+    toggleFeaturedProduct: (product_id) => {
+      //TODO ARMAR RUTA
+      return BASE_API.patch(`/${route.PRODUCTS}/toggleFeatured`, { product_id });
+    },
+    toggleIncluidoProduct: (product_id) => {
+      //TODO ARMAR RUTA
+      return BASE_API.patch(`/${route.PRODUCTS}/toggleIncluido`, { product_id });
+    },
+    updateProductImages: (body) => {
+      //TODO ARMAR RUTA
+      return BASE_API.patch(`/${route.PRODUCTS}/updateProductImages`, body);
+    },
+  },
+
   product: {
+    getDashboardProducts: (signal) => {
+      return BASE_API.get(`/${route.PRODUCTS}`, { signal: signal });
+    },
     getAll: ({ take, page, search = null }) => {
       return BASE_API.get(`/${route.PRODUCTS}?take=${take}&&page=${page}&&search=${search}`);
     },

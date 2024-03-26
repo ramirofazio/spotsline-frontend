@@ -5,4 +5,3 @@ export { BasicInput } from "./form/BasicInput";
 export { PasswordInput } from "./form/PasswordInput";
 export { DefaultButton } from "./buttons/DefaultButton";
 export { PaymentOk } from "./checkout/PaymentOk";
-export { TableComponent } from "./tables/TableComponent";
