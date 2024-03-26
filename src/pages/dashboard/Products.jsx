@@ -20,6 +20,7 @@ import { APISpot } from "src/api";
 import { toast } from "sonner";
 import { DarkModal, DefaultButton } from "src/components";
 import Loader from "src/components/Loader";
+import { useNavigate } from "react-router-dom";
 
 const mockItems = [
   {
@@ -34,7 +35,7 @@ const mockItems = [
     stock: 20,
     featured: true,
     images:
-      "https://spotsline-bucket.s3.amazonaws.com/logoBlack.png - https://spotsline-bucket.s3.amazonaws.com/logoYellow.png - https://spotsline-bucket.s3.amazonaws.com/logoWhite.png",
+      "https://spotsline-bucket.s3.amazonaws.com/Cinema3.png - https://spotsline-bucket.s3.amazonaws.com/light2.png - https://spotsline-bucket.s3.amazonaws.com/logoWhite.png",
     incluido: true,
   },
 ];
@@ -59,6 +60,8 @@ const priceColumns = ["price1", "price2", "price3", "price4", "price5", "price6"
 export function Products() {
   //todo Usememo para los productos y poder actualizarlos en realTime??
   //TODO Cuando este la data de la api usar laoders y asyncList de NextUI para mejor UX, tambien ver de agregar una searchbar y poner X productos para que vayan cargando de a poco
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState();
 
@@ -79,6 +82,7 @@ export function Products() {
       });
     } finally {
       setLoading(false);
+      navigate(); //? Para refrescar la data
     }
   };
 
@@ -97,6 +101,7 @@ export function Products() {
       });
     } finally {
       setLoading(false);
+      navigate(); //? Para refrescar la data
     }
   };
 
@@ -197,7 +202,7 @@ export function Products() {
         isHeaderSticky
         classNames={{
           th: "bg-primary",
-          base: "overflow-y-scroll rounded-md max-h-[800px]",
+          base: "overflow-y-scroll rounded-md max-h-[800px] backdrop-blur-sm",
         }}
       >
         <TableHeader columns={columns}>
@@ -221,108 +226,115 @@ export function Products() {
           )}
         </TableBody>
       </Table>
-      <ImagesModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} product={selectedProduct} />
+      {isOpen && (
+        <ImagesModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} product={selectedProduct} />
+      )}
     </>
   );
 }
 
 function ImagesModal({ isOpen, onOpenChange, onClose, product }) {
-  if (product) {
-    const [loading, setLoading] = useState(false);
-    const [thisImages, setThisImages] = useState(product.images);
+  //TODO VALIDAR MAXIMO DE FOTOS, CREO QUE 6 ESTARIA BIEN
 
-    const handleUpdateImages = async () => {
-      try {
-        setLoading(true);
-        const res = await APISpot.dashboard.updateProductImages({ product_id: product.id, images: thisImages });
-        if (res) {
-          toast.success("Imagenes cargadas con exito");
-        }
-      } catch (e) {
-        console.log(e);
-        toast.error("Hubo un error al cargar las imagenes", {
-          description: e.message || "Por favor, intentalo nuevamente",
-        });
-      } finally {
-        setLoading(false);
-        onClose();
+  const [loading, setLoading] = useState(false);
+  const [thisImages, setThisImages] = useState(product.images);
+
+  const handleUpdateImages = async () => {
+    //? Logica para actualizar la propiedad `images` de un producto
+    try {
+      setLoading(true);
+      const res = await APISpot.dashboard.updateProductImages({ product_id: product.id, images: thisImages });
+      if (res) {
+        toast.success("Imagenes cargadas con exito");
       }
-    };
-
-    const handleRemoveImage = (image) => {
-      //? Logica para borrar una imagen
-      let newImages = "";
-
-      //? Este codigo raro es por como se almacenan en la DB.
-      thisImages.split(" - ").map((_image) => {
-        if (_image !== image) {
-          if (newImages !== "") {
-            newImages += ` - ${_image}`;
-          } else {
-            newImages += `${_image}`;
-          }
-        }
+    } catch (e) {
+      console.log(e);
+      toast.error("Hubo un error al cargar las imagenes", {
+        description: e.message || "Por favor, intentalo nuevamente",
       });
+    } finally {
+      setLoading(false);
+      onClose();
+      navigate(); //? Para refrescar la data
+    }
+  };
 
-      setThisImages(newImages);
-    };
+  const handleRemoveImage = (image) => {
+    //? Logica para borrar una imagen
+    let newImages = "";
 
-    return (
-      <DarkModal
-        isDismissable={false}
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        title={`GESTIONA LAS IMAGENES DE ${product.name.toUpperCase()}`}
-        size="4xl"
-        description={"En esta pantalla podras agregar o eliminar fotos de cada producto"}
-      >
-        <main className="flex w-full flex-col items-center justify-between">
-          <section className="grid h-full w-full grid-rows-3">
-            <div className="row-span-2 flex flex-wrap items-center justify-center gap-3 p-6">
-              {thisImages === "" ? (
-                <p className="text-background">Este producto no tiene imagenes</p>
-              ) : (
-                thisImages.split(" - ").map((image) => (
-                  <div className="relative flex aspect-square h-[150px] items-center justify-center rounded-xl bg-background/50">
-                    <Tooltip content="Eliminar esta imagen" delay={1000} color="primary">
-                      <Chip
-                        className="text-md icons absolute right-2 top-1 z-20 flex aspect-square h-8 w-8 items-center justify-center rounded-full bg-primary text-dark"
-                        onClick={() => handleRemoveImage(image)}
-                      >
-                        <i className="ri-close-fill text-xl" />
-                      </Chip>
-                    </Tooltip>
-                    <Image src={image} width={200} height={200} alt={product?.name + " " + image} />
-                  </div>
-                ))
-              )}
-            </div>
-            <div className="relative row-span-1 flex items-center justify-center p-6">
-              <Divider className="absolute inset-x-0 top-0 h-[3px] rounded-full bg-gradient-to-r from-primary to-yellow-200" />
-              <input type="file" className="text-white" />
-            </div>
-          </section>
+    //? Este codigo raro es por como se almacenan en la DB.
+    thisImages.split(" - ").map((_image) => {
+      if (_image !== image) {
+        if (newImages !== "") {
+          newImages += ` - ${_image}`;
+        } else {
+          newImages += `${_image}`;
+        }
+      }
+    });
 
-          <div className="flex items-center justify-center gap-1">
-            <DefaultButton
-              onPress={handleUpdateImages}
-              endContent={<i className="ri-image-add-line text-xl" />}
-              className={"hover:scale-100"}
-              isLoading={loading}
-            >
-              GUARDAR
-            </DefaultButton>
-            <Tooltip
-              content="Los cambios no se aplicaran hasta que presione GUARDAR"
-              delay={200}
-              color="primary"
-              placement="right"
-            >
-              <i className="ri-information-line yellowGradient icons text-xl" />
-            </Tooltip>
+    setThisImages(newImages);
+  };
+
+  return (
+    <DarkModal
+      isDismissable={false}
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      title={`GESTIONA LAS IMAGENES DE ${product.name.toUpperCase()}`}
+      size="4xl"
+      description={"En esta pantalla podras agregar o eliminar fotos de cada producto"}
+    >
+      <main className="flex w-full flex-col items-center justify-between">
+        <section className="grid h-full w-full grid-rows-3">
+          <div className="row-span-2 flex flex-wrap items-center justify-center gap-3 p-6">
+            {thisImages === "" ? (
+              <p className="text-background">Este producto no tiene imagenes</p>
+            ) : (
+              thisImages.split(" - ").map((image, index) => (
+                <div
+                  key={index}
+                  className="relative flex aspect-square h-[150px] items-center justify-center rounded-xl bg-background/50"
+                >
+                  <Tooltip content="Eliminar esta imagen" delay={1000} color="primary">
+                    <Chip
+                      className="text-md icons absolute right-2 top-1 z-20 flex aspect-square h-8 w-8 items-center justify-center rounded-full bg-primary text-dark"
+                      onClick={() => handleRemoveImage(image)}
+                    >
+                      <i className="ri-close-fill text-xl" />
+                    </Chip>
+                  </Tooltip>
+                  <Image src={image} width={200} height={200} alt={product?.name + " " + image} />
+                </div>
+              ))
+            )}
           </div>
-        </main>
-      </DarkModal>
-    );
-  }
+          <div className="relative row-span-1 flex items-center justify-center p-6">
+            <Divider className="absolute inset-x-0 top-0 h-[3px] rounded-full bg-gradient-to-r from-primary to-yellow-200" />
+            <input type="file" className="text-white" />
+          </div>
+        </section>
+
+        <div className="flex items-center justify-center gap-1">
+          <DefaultButton
+            onPress={handleUpdateImages}
+            endContent={<i className="ri-image-add-line text-xl" />}
+            className={"hover:scale-100"}
+            isLoading={loading}
+          >
+            GUARDAR
+          </DefaultButton>
+          <Tooltip
+            content="Los cambios no se aplicaran hasta que presione GUARDAR"
+            delay={200}
+            color="primary"
+            placement="right"
+          >
+            <i className="ri-information-line yellowGradient icons text-xl hover:cursor-help" />
+          </Tooltip>
+        </div>
+      </main>
+    </DarkModal>
+  );
 }

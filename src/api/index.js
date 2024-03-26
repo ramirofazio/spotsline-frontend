@@ -7,6 +7,7 @@ const route = {
   USER: "users",
   CART: "shoppingCart",
   CHECKOUT: "mobbex",
+  COUPON: "coupon",
 };
 
 export const APISpot = {
@@ -22,6 +23,18 @@ export const APISpot = {
     updateProductImages: (body) => {
       //TODO ARMAR RUTA
       return BASE_API.patch(`/${route.PRODUCTS}/updateProductImages`, body);
+    },
+    createCoupon: (body) => {
+      //TODO validar esto
+      return BASE_API.post(`/${route.COUPON}/create`, body);
+    },
+    removeCoupon: (coupon_id) => {
+      //TODO validar esto
+      return BASE_API.delete(`/${route.COUPON}/delete/${coupon_id}`);
+    },
+    toggleStateCoupon: (coupon_id) => {
+      //TODO validar esto
+      return BASE_API.patch(`/${route.COUPON}/change_state`, { coupon_id });
     },
   },
 
