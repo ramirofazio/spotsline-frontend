@@ -1,10 +1,15 @@
+import React, { Suspense, lazy } from "react";
 import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
 import { useSelector } from "react-redux";
 import Dashboard from "../dashboard/Dashboard";
+const Products = lazy(() => import("../dashboard/Products").then((module) => ({ default: module.Products })));
+const Coupons = lazy(() => import("../dashboard/Coupons").then((module) => ({ default: module.Coupons })));
+const Users = lazy(() => import("../dashboard/Users").then((module) => ({ default: module.Users })));
+const Orders = lazy(() => import("../dashboard/Orders").then((module) => ({ default: module.Orders })));
 import { getOfStorage } from "src/utils/localStorage";
-import { Coupons, Orders, Products, Users } from "../dashboard";
-import { APISpot, addAuthWithToken } from "src/api";
+import { APISpot } from "src/api";
+import { Spinner } from "@nextui-org/react";
 
 export const adminRoutesPaths = [
   {
@@ -70,7 +75,9 @@ export function AdminRoot() {
 
   return (
     <Dashboard>
-      <Outlet />
+      <Suspense fallback={<Spinner color="secondary" className="absolute inset-0 !z-50 text-xl" />}>
+        <Outlet />
+      </Suspense>
     </Dashboard>
   );
 }

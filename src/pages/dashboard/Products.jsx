@@ -20,12 +20,14 @@ import { toast } from "sonner";
 import { DarkModal, DefaultButton } from "src/components";
 import { useNavigate } from "react-router-dom";
 import { useAsyncList } from "@react-stately/data";
-import Loader from "src/components/Loader";
 
 const columns = [
   { label: "código", key: "id" },
   { label: "nombre", key: "description" },
-  { label: "cant. variantes", key: "variants qty" },
+  { label: "variantes", key: "variants qty" },
+  { label: "destacado", key: "featured" },
+  { label: "visiblidad", key: "incluido" },
+  { label: "imágenes", key: "images" },
   //TODO VER COMO ACOMODAR ESTA DATA. ESTO ESTA EN LAS `variants`
   //   { label: "precio 1", key: "price1" },
   //   { label: "precio 2", key: "price2" },
@@ -34,9 +36,6 @@ const columns = [
   //   { label: "precio 5", key: "price5" },
   //   { label: "precio 6", key: "price6" },
   //   { label: "stock", key: "stock" },
-  //   { label: "destacado", key: "featured" },
-  //{ label: "incluido", key: "incluido" },
-  //{ label: "imágenes", key: "images" },
 ];
 
 const priceColumns = ["price1", "price2", "price3", "price4", "price5", "price6"];
@@ -46,6 +45,7 @@ export function Products() {
 
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [modalType, setModalType] = useState();
   const [selectedProduct, setSelectedProduct] = useState();
 
   const { onOpen, onOpenChange, isOpen, onClose } = useDisclosure();
@@ -94,34 +94,18 @@ export function Products() {
     }
   };
 
-  const handleToggleIncluido = async (product_id) => {
-    //? Logica para alternar la propiedad `incluido` de un productos
-    try {
-      setLoading(true);
-      const res = await APISpot.dashboard.toggleIncluidoProduct(product_id);
-      if (res) {
-        toast.success("Producto editado con exito");
-      }
-    } catch (e) {
-      console.log(e);
-      toast.error("Hubo un error al editar el producto", {
-        description: e.message || "Por favor, intentalo nuevamente",
-      });
-    } finally {
-      setLoading(false);
-      navigate(); //? Para refrescar la data
-    }
-  };
-
-  const handleClickImages = (item) => {
+  const handleModal = (product, type) => {
     onOpen();
-    setSelectedProduct(item);
+    setSelectedProduct(product);
+    setModalType(type);
   };
 
   const renderCell = useCallback((item, columnKey) => {
     //TODO ACA HAY QUE ARMAR LAS LOGICAS PARA LAS VARIANTES CREO
     //? item.variants en el array de variantes, se puede jugar con eso
     const cellValue = item[columnKey];
+    const variantsQty = item.variants.length;
+    const includedVariantsQty = item.variants.filter((v) => v.incluido === true).length;
 
     if (priceColumns.includes(columnKey)) {
       return formatPrices(cellValue);
@@ -131,10 +115,24 @@ export function Products() {
       case "variants qty":
         return item.variants.length;
       case "id":
+        const color = includedVariantsQty === 0 ? "bg-red-500" : "bg-green-500";
         return (
-          <p className="bg-gradient-to-r from-dark to-yellow-600 bg-clip-text font-bold text-transparent">
-            {cellValue}
-          </p>
+          <div className="flex items-center gap-2">
+            <Tooltip
+              color="primary"
+              delay={200}
+              content={
+                includedVariantsQty === 0
+                  ? "Este producto NO se esta mostrando en la web"
+                  : "Este producto se esta mostrando en la web"
+              }
+            >
+              <div className={`h-2 w-2 rounded-full shadow-xl ${color}`} />
+            </Tooltip>
+            <p className="bg-gradient-to-r from-dark to-yellow-600 bg-clip-text font-bold text-transparent">
+              {cellValue}
+            </p>
+          </div>
         );
       case "featured":
         return (
@@ -157,31 +155,32 @@ export function Products() {
         );
       case "incluido":
         return (
-          <div className="flex justify-center">
-            <Tooltip
-              content={cellValue ? "Dejar de mostrar en la web" : "Mostrar en la web"}
-              delay={1000}
-              color="primary"
+          <Tooltip content={"Gestionar visiblidad de variantes"} delay={1000} color="primary">
+            <div
+              className="icons flex items-center justify-center gap-2 font-bold"
+              onClick={() => handleModal(item, "variants")}
             >
+              <p>{`${includedVariantsQty}/${variantsQty}`}</p>
               <i
-                onClick={() => handleToggleIncluido(item.id)}
                 className={`${
-                  cellValue
+                  includedVariantsQty !== 0
                     ? "ri-eye-line bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-transparent"
                     : "ri-eye-close-line bg-gradient-to-r from-dark to-yellow-600 bg-clip-text text-transparent"
-                } icons text-xl font-bold`}
+                } text-xl font-bold`}
               />
-            </Tooltip>
-          </div>
+            </div>
+          </Tooltip>
         );
       case "images":
+        const imageQty = item.images ? item.images.split(" - ").length : 0;
+
         return (
           <Tooltip content="Agregar imagenes al producto" delay={1000} color="primary">
             <div
               className="icons flex items-center justify-center gap-2 font-bold"
-              onClick={() => handleClickImages(item)}
+              onClick={() => handleModal(item.variants[0], "images")}
             >
-              <p>{cellValue.split(" - ").length}</p>
+              <p>{imageQty}</p>
               <i className="ri-image-line  bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-xl text-transparent" />
             </div>
           </Tooltip>
@@ -247,8 +246,12 @@ export function Products() {
           CARGAR MAS
         </DefaultButton>
       )}
-      {isOpen && (
+      {isOpen && modalType === "images" && (
         <ImagesModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} product={selectedProduct} />
+      )}
+
+      {isOpen && modalType === "variants" && (
+        <VariantsModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} product={selectedProduct} />
       )}
     </main>
   );
@@ -258,7 +261,7 @@ function ImagesModal({ isOpen, onOpenChange, onClose, product }) {
   //TODO VALIDAR MAXIMO DE FOTOS, CREO QUE 6 ESTARIA BIEN
 
   const [loading, setLoading] = useState(false);
-  const [thisImages, setThisImages] = useState(product.images);
+  const [thisImages, setThisImages] = useState(product.pathImage);
 
   const handleUpdateImages = async () => {
     //? Logica para actualizar la propiedad `images` de un producto
@@ -303,7 +306,7 @@ function ImagesModal({ isOpen, onOpenChange, onClose, product }) {
       isDismissable={false}
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={`GESTIONA LAS IMAGENES DE ${product.name.toUpperCase()}`}
+      title={`GESTIONA LAS IMAGENES DE ${product.description.toUpperCase()}`}
       size="4xl"
       description={"En esta pantalla podras agregar o eliminar fotos de cada producto"}
     >
@@ -355,6 +358,26 @@ function ImagesModal({ isOpen, onOpenChange, onClose, product }) {
             <i className="ri-information-line yellowGradient icons text-xl hover:cursor-help" />
           </Tooltip>
         </div>
+      </main>
+    </DarkModal>
+  );
+}
+
+function VariantsModal({ isOpen, onOpenChange, onClose, product }) {
+  const [loading, setLoading] = useState(false);
+
+  return (
+    <DarkModal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      title={`GESTIONA LAS VARIANTES DE ${product.description.toUpperCase()}`}
+      size="4xl"
+      description={"En esta pantalla podras agregar o eliminar fotos de cada producto"}
+    >
+      <main className="flex w-full flex-col items-center justify-between">
+        {product.variants.map((v) => (
+          <div>{v.description}</div>
+        ))}
       </main>
     </DarkModal>
   );
