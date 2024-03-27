@@ -80,7 +80,11 @@ function ProductsView() {
           dispatch(actionProducts.setPageProducts({ page, products: data.rows }));
           setLoading(false);
         })
-        .catch((err) => console.log(err));
+        .catch(({ response }) => {
+          setLoading(false);
+          dispatch(actionProducts.setSearch(""));
+          toast.error(response.data.message);
+        });
     }
   }, [page, search]);
 
@@ -104,6 +108,10 @@ function Heading() {
   const navigate = useNavigate();
   const [_search, set_Search] = useState("");
   const { search } = useSelector((state) => state.product);
+
+  useEffect(() => {
+    set_Search(search);
+  }, [search]);
 
   function handleChange({ target }) {
     let value = target.value.trimStart();
@@ -139,12 +147,14 @@ function Heading() {
           labelPlacement=""
           onClear={onClear}
           onBlur={() => {
-            setTimeout(() => {
-              if (_search.length && search !== _search) {
-                toast.info('Presiona "Enter" para buscar');
-                console.log(_search);
-              }
-            }, 1000);
+            if (_search.length && search !== _search) {
+              toast.info('Presiona "Enter" para buscar');
+            }
+            console.log(_search, search);
+            if (!_search.length && search !== _search) {
+              dispatch(actionProducts.resetPageProducts());
+              dispatch(actionProducts.setSearch(""));
+            }
           }}
           placeholder="Buscar producto"
           startContent={<i className="ri-search-line scale-125"></i>}
