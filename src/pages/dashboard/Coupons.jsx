@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -14,43 +14,29 @@ import {
 import { APISpot } from "src/api";
 import { toast } from "sonner";
 import { BasicInput, DarkModal, DefaultButton } from "src/components";
-import { useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { copyToClipboard } from "src/utils";
-
-const mockItems = [
-  {
-    id: 6121,
-    name: "MI CUPON",
-    discountPercentaje: 15,
-    enable: true,
-  },
-  {
-    id: 5122,
-    name: "MI OTRO CUPON",
-    discountPercentaje: 25,
-    enable: true,
-  },
-  {
-    id: 385182,
-    name: "MI CUPON DESACTIVADO",
-    discountPercentaje: 30,
-    enable: false,
-  },
-];
 
 const columns = [
   { label: "codigo", key: "name" },
   { label: "descuento", key: "discountPercentaje" },
-  { label: "estado", key: "enable" },
+  { label: "estado", key: "enabled" },
   { label: "eliminar", key: "eliminar" },
 ];
 
 export function Coupons() {
+  const coupons = useLoaderData();
+
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
 
   const { onOpen, onOpenChange, isOpen, onClose } = useDisclosure();
+
+  useEffect(() => {
+    //? Para que se actualicen luego de crearlos
+    navigate();
+  }, [onOpenChange]);
 
   const renderCell = useCallback((item, columnKey) => {
     const cellValue = item[columnKey];
@@ -68,7 +54,7 @@ export function Coupons() {
             </Tooltip>
           </div>
         );
-      case "enable":
+      case "enabled":
         return (
           <div className="flex justify-center">
             <Tooltip content={cellValue ? "Desactivar cupon" : "Activar cupon"} delay={1000} color="primary">
@@ -86,14 +72,18 @@ export function Coupons() {
       case "discountPercentaje":
         return <p className="font-bold">{`${cellValue}%`}</p>;
       case "name":
+        const color = item.enabled ? "bg-green-500" : "bg-red-500";
         return (
-          <p className="font-semibold">
-            {`${cellValue}`}
-            <i
-              className="ri-file-copy-line icons ml-4 bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-xl text-transparent"
-              onClick={() => copyToClipboard(cellValue)}
-            />
-          </p>
+          <div className="flex items-center gap-2 font-semibold">
+            <div className={`h-2 w-2 rounded-full shadow-xl ${color}`} />
+            <p>
+              {`${cellValue}`}
+              <i
+                className="ri-file-copy-line icons ml-4 bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-xl text-transparent"
+                onClick={() => copyToClipboard(cellValue)}
+              />
+            </p>
+          </div>
         );
 
       default:
@@ -105,7 +95,7 @@ export function Coupons() {
     switch (key) {
       case "eliminar":
         return <p className="text-center">{label}</p>;
-      case "enable":
+      case "enabled":
         return <p className="text-center">{label}</p>;
       default:
         return <p>{label}</p>;
@@ -179,7 +169,7 @@ export function Coupons() {
           )}
         </TableHeader>
         <TableBody
-          items={mockItems}
+          items={coupons}
           isLoading={loading}
           loadingContent={
             <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
@@ -208,7 +198,10 @@ function CreateNewCouponModal({ isOpen, onOpenChange, onClose }) {
     setLoading(true);
 
     try {
-      const res = await APISpot.dashboard.createCoupon(thisCoupon);
+      const res = await APISpot.dashboard.createCoupon({
+        ...thisCoupon,
+        discountPercentaje: Number(thisCoupon.discountPercentaje),
+      });
       if (res) {
         toast.success("Cupon creado con exito");
       }
@@ -220,7 +213,6 @@ function CreateNewCouponModal({ isOpen, onOpenChange, onClose }) {
     } finally {
       setLoading(false);
       onClose();
-      navigate(); //? Para refrescar la data
     }
   };
 

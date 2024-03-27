@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import Dashboard from "../dashboard/Dashboard";
 import { getOfStorage } from "src/utils/localStorage";
 import { Coupons, Orders, Products, Users } from "../dashboard";
+import { APISpot, addAuthWithToken } from "src/api";
 
 export const adminRoutesPaths = [
   {
@@ -19,6 +20,14 @@ export const adminRoutesPaths = [
       {
         path: "/dashboard/cupones",
         element: <Coupons />,
+        loader: async () => {
+          try {
+            return await APISpot.dashboard.getCoupons();
+          } catch (e) {
+            console.log(e);
+            return null;
+          }
+        },
       },
       {
         path: "/dashboard/usuarios",

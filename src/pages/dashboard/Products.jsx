@@ -20,20 +20,23 @@ import { toast } from "sonner";
 import { DarkModal, DefaultButton } from "src/components";
 import { useNavigate } from "react-router-dom";
 import { useAsyncList } from "@react-stately/data";
+import Loader from "src/components/Loader";
 
 const columns = [
   { label: "código", key: "id" },
-  { label: "nombre", key: "name" },
-  { label: "precio 1", key: "price1" },
-  { label: "precio 2", key: "price2" },
-  { label: "precio 3", key: "price3" },
-  { label: "precio 4", key: "price4" },
-  { label: "precio 5", key: "price5" },
-  { label: "precio 6", key: "price6" },
-  { label: "stock", key: "stock" },
-  { label: "destacado", key: "featured" },
-  { label: "incluido", key: "incluido" },
-  { label: "imágenes", key: "images" },
+  { label: "nombre", key: "description" },
+  { label: "cant. variantes", key: "variants qty" },
+  //TODO VER COMO ACOMODAR ESTA DATA. ESTO ESTA EN LAS `variants`
+  //   { label: "precio 1", key: "price1" },
+  //   { label: "precio 2", key: "price2" },
+  //   { label: "precio 3", key: "price3" },
+  //   { label: "precio 4", key: "price4" },
+  //   { label: "precio 5", key: "price5" },
+  //   { label: "precio 6", key: "price6" },
+  //   { label: "stock", key: "stock" },
+  //   { label: "destacado", key: "featured" },
+  //{ label: "incluido", key: "incluido" },
+  //{ label: "imágenes", key: "images" },
 ];
 
 const priceColumns = ["price1", "price2", "price3", "price4", "price5", "price6"];
@@ -47,6 +50,10 @@ export function Products() {
 
   const { onOpen, onOpenChange, isOpen, onClose } = useDisclosure();
 
+  const hasMore = page < 6;
+  if (!hasMore) {
+    toast.info("No hay mas productos por cargar");
+  }
   const list = useAsyncList({
     async load({ signal }) {
       setLoading(true);
@@ -62,13 +69,11 @@ export function Products() {
       console.log(res.data);
 
       return {
-        items: [] || res.data,
+        items: res.data,
         cursor: page,
       };
     },
   });
-
-  const hasMore = page < 6;
 
   const handleToggleFeatured = async (product_id) => {
     //? Logica para alternar la propiedad `featured` de un productos
@@ -114,6 +119,8 @@ export function Products() {
   };
 
   const renderCell = useCallback((item, columnKey) => {
+    //TODO ACA HAY QUE ARMAR LAS LOGICAS PARA LAS VARIANTES CREO
+    //? item.variants en el array de variantes, se puede jugar con eso
     const cellValue = item[columnKey];
 
     if (priceColumns.includes(columnKey)) {
@@ -121,6 +128,8 @@ export function Products() {
     }
 
     switch (columnKey) {
+      case "variants qty":
+        return item.variants.length;
       case "id":
         return (
           <p className="bg-gradient-to-r from-dark to-yellow-600 bg-clip-text font-bold text-transparent">
@@ -197,7 +206,7 @@ export function Products() {
   }, []);
 
   return (
-    <>
+    <main className="flex flex-col items-center">
       <Table
         aria-label="Example table with custom cells"
         isStriped
@@ -205,20 +214,8 @@ export function Products() {
         isHeaderSticky
         classNames={{
           th: "bg-primary",
-          base: "overflow-y-scroll rounded-md max-h-[800px] backdrop-blur-sm",
+          base: "overflow-y-scroll rounded-md min-h-[600px] max-h-[600px] backdrop-blur-sm",
         }}
-        bottomContent={
-          hasMore && (
-            <DefaultButton
-              isDisabled={list.isLoading}
-              onPress={list.loadMore}
-              endContent={<i className="ri-refresh-line" />}
-              className={"mx-auto mt-10"}
-            >
-              CARGAR MAS
-            </DefaultButton>
-          )
-        }
       >
         <TableHeader columns={columns}>
           {(column) => (
@@ -227,7 +224,11 @@ export function Products() {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={list.items} isLoading={loading} loadingContent={<Spinner color="secondary" />}>
+        <TableBody
+          items={list.items}
+          isLoading={loading}
+          loadingContent={<Spinner color="secondary" className="text-2xl" />}
+        >
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => <TableCell className="relative">{renderCell(item, columnKey)}</TableCell>}
@@ -235,10 +236,21 @@ export function Products() {
           )}
         </TableBody>
       </Table>
+      {hasMore && (
+        <DefaultButton
+          isDisabled={list.isLoading}
+          isLoading={loading}
+          onPress={list.loadMore}
+          endContent={<i className="ri-refresh-line" />}
+          className={"mx-auto mt-10"}
+        >
+          CARGAR MAS
+        </DefaultButton>
+      )}
       {isOpen && (
         <ImagesModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} product={selectedProduct} />
       )}
-    </>
+    </main>
   );
 }
 

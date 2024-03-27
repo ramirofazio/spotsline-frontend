@@ -27,17 +27,20 @@ export const APISpot = {
       //TODO ARMAR RUTA
       return BASE_API.patch(`/${route.PRODUCTS}/updateProductImages`, body);
     },
+    getCoupons: async () => {
+      addAuthWithToken(getOfStorage("access_token"));
+      const res = await BASE_API.get(`/${route.COUPON}`);
+      return res.data;
+    },
     createCoupon: (body) => {
       //TODO validar esto
       return BASE_API.post(`/${route.COUPON}/create`, body);
     },
     removeCoupon: (coupon_id) => {
-      //TODO validar esto
       return BASE_API.delete(`/${route.COUPON}/delete/${coupon_id}`);
     },
     toggleStateCoupon: (coupon_id) => {
-      //TODO validar esto
-      return BASE_API.patch(`/${route.COUPON}/change_state`, { coupon_id });
+      return BASE_API.patch(`/${route.COUPON}/change_state`, { id: coupon_id });
     },
   },
 

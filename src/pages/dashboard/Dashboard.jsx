@@ -1,8 +1,8 @@
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { DefaultButton } from "src/components";
 import FloatingLogos from "src/components/images/FloatingLogos";
-import { Button, Divider } from "@nextui-org/react";
-import { useState } from "react";
+import { Button, Divider, Spinner } from "@nextui-org/react";
+import { Suspense, useState } from "react";
 import { motion } from "framer-motion";
 
 const selectButtonsData = [
@@ -19,6 +19,7 @@ const sidebarVariants = {
 
 export default function Dashboard({ children }) {
   const [hide, setHide] = useState(false);
+  //TODO VER EL TEMA DE SUSPENSE Y LOADERS EN LAS DISINTAS RUTAS
 
   return (
     <main>
@@ -44,7 +45,11 @@ export default function Dashboard({ children }) {
           <SelectButtons />
         </motion.div>
         <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600 lg:hidden" />
-        <div className={`px-2 pt-6 lg:h-screen lg:pt-20 ${hide ? "lg:col-span-4" : "lg:col-span-3"}`}>{children}</div>
+        <div className={`px-2 pt-6 lg:h-screen lg:pt-20 ${hide ? "lg:col-span-4" : "lg:col-span-3"}`}>
+          <Suspense key={children} fallback={<Spinner color="secondary" className="text-xl" />}>
+            {children}
+          </Suspense>
+        </div>
       </section>
     </main>
   );
