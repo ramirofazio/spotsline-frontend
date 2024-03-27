@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { SkeletonCard } from "src/components/cards/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import { actionProducts } from "src/redux/reducers";
+import { toast } from "sonner";
 const TAKE_PRODUCTS = 28;
 const categories = [
   "Accesorios",
@@ -51,9 +52,11 @@ export function Products() {
         <section className="my-10 grid flex-1 grid-cols-1 place-items-center gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           <Heading />
           <ProductsView />
-          <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4">
-            <PaginationComponent qty={totalPages} page={parseInt(page)} onChange={handleChangePage} />
-          </div>
+          {totalPages !== 1 && (
+            <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4">
+              <PaginationComponent qty={totalPages} page={parseInt(page)} onChange={handleChangePage} />
+            </div>
+          )}
         </section>
       </main>
     </>
@@ -100,29 +103,32 @@ function Heading() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [_search, set_Search] = useState("");
+  const { search } = useSelector((state) => state.product);
 
   function handleChange({ target }) {
-    let value = target.value;
-
-    if (!value.length) {
-      dispatch(actionProducts.setSearch(""));
-      dispatch(actionProducts.resetPageProducts());
-      navigate("/productos/1");
-    }
+    let value = target.value.trimStart();
     set_Search(value);
   }
 
   function handleSearch({ code }) {
-    if (code === "Enter") {
+    if (code === "Enter" && _search.length) {
       dispatch(actionProducts.setSearch(_search));
       dispatch(actionProducts.resetPageProducts());
       navigate("/productos/1");
     }
   }
 
+  function onClear() {
+    if (search !== "") {
+      dispatch(actionProducts.setSearch(""));
+      dispatch(actionProducts.resetPageProducts());
+      navigate("/productos/1");
+    }
+    set_Search("");
+  }
   return (
     <>
-      <div className=" mb-5 flex w-full items-center gap-1 sm:col-span-2 md:w-10/12 lg:col-span-3 xl:col-span-4">
+      <div d className=" mb-5 flex w-full items-center gap-1 sm:col-span-2 md:w-10/12 lg:col-span-3 xl:col-span-4">
         <Input
           value={_search}
           onChange={handleChange}
@@ -131,6 +137,15 @@ function Heading() {
           radius="full"
           className=""
           labelPlacement=""
+          onClear={onClear}
+          onBlur={() => {
+            setTimeout(() => {
+              if (_search.length && search !== _search) {
+                toast.info('Presiona "Enter" para buscar');
+                console.log(_search);
+              }
+            }, 1000);
+          }}
           placeholder="Buscar producto"
           startContent={<i className="ri-search-line scale-125"></i>}
         />

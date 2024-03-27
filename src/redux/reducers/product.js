@@ -6,7 +6,7 @@ const product = createSlice({
   initialState: {
     products: {},
     search: "",
-    totalPages: 2,
+    totalPages: 0,
   },
   reducers: {
     setPageProducts: function (state, action) {
