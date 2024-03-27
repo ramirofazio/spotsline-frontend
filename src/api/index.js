@@ -12,6 +12,9 @@ const route = {
 
 export const APISpot = {
   dashboard: {
+    getDashboardProducts: (page, signal) => {
+      return BASE_API.get(`/${route.PRODUCTS}/dashboard-products?page=${page}`, { signal: signal });
+    },
     toggleFeaturedProduct: (product_id) => {
       //TODO ARMAR RUTA
       return BASE_API.patch(`/${route.PRODUCTS}/toggleFeatured`, { product_id });
@@ -39,9 +42,6 @@ export const APISpot = {
   },
 
   product: {
-    getDashboardProducts: (signal) => {
-      return BASE_API.get(`/${route.PRODUCTS}`, { signal: signal });
-    },
     getAll: ({ take, page, search = null }) => {
       return BASE_API.get(`/${route.PRODUCTS}?take=${take}&&page=${page}&&search=${search}`);
     },
@@ -88,7 +88,7 @@ export const APISpot = {
   },
   cart: {
     validateCoupon: async (coupon) => {
-      const res = await BASE_API.get(`/${route.COUPON}/validate/${coupon}`, );
+      const res = await BASE_API.get(`/${route.COUPON}/validate/${coupon}`);
       return res.data;
     },
   },

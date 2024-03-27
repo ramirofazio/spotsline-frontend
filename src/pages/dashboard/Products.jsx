@@ -10,7 +10,6 @@ import {
   Tooltip,
   Spinner,
   useDisclosure,
-  Input,
   Image,
   Divider,
   Chip,
@@ -19,26 +18,8 @@ import { formatPrices } from "src/utils";
 import { APISpot } from "src/api";
 import { toast } from "sonner";
 import { DarkModal, DefaultButton } from "src/components";
-import Loader from "src/components/Loader";
 import { useNavigate } from "react-router-dom";
-
-const mockItems = [
-  {
-    id: 9999,
-    name: "Articulo Spotsline",
-    price1: 9999,
-    price2: 9221,
-    price3: 9129,
-    price4: 5615,
-    price5: 129,
-    price6: 52511,
-    stock: 20,
-    featured: true,
-    images:
-      "https://spotsline-bucket.s3.amazonaws.com/Cinema3.png - https://spotsline-bucket.s3.amazonaws.com/light2.png - https://spotsline-bucket.s3.amazonaws.com/logoWhite.png",
-    incluido: true,
-  },
-];
+import { useAsyncList } from "@react-stately/data";
 
 const columns = [
   { label: "código", key: "id" },
@@ -58,14 +39,36 @@ const columns = [
 const priceColumns = ["price1", "price2", "price3", "price4", "price5", "price6"];
 
 export function Products() {
-  //todo Usememo para los productos y poder actualizarlos en realTime??
-  //TODO Cuando este la data de la api usar laoders y asyncList de NextUI para mejor UX, tambien ver de agregar una searchbar y poner X productos para que vayan cargando de a poco
   const navigate = useNavigate();
 
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState();
 
   const { onOpen, onOpenChange, isOpen, onClose } = useDisclosure();
+
+  const list = useAsyncList({
+    async load({ signal }) {
+      setLoading(true);
+      const res = await APISpot.dashboard.getDashboardProducts(page, signal);
+
+      if (!res.data) {
+        throw new Error("Error al cargar los productos");
+      }
+
+      setLoading(false);
+      setPage(page + 1);
+
+      console.log(res.data);
+
+      return {
+        items: [] || res.data,
+        cursor: page,
+      };
+    },
+  });
+
+  const hasMore = page < 6;
 
   const handleToggleFeatured = async (product_id) => {
     //? Logica para alternar la propiedad `featured` de un productos
@@ -204,6 +207,18 @@ export function Products() {
           th: "bg-primary",
           base: "overflow-y-scroll rounded-md max-h-[800px] backdrop-blur-sm",
         }}
+        bottomContent={
+          hasMore && (
+            <DefaultButton
+              isDisabled={list.isLoading}
+              onPress={list.loadMore}
+              endContent={<i className="ri-refresh-line" />}
+              className={"mx-auto mt-10"}
+            >
+              CARGAR MAS
+            </DefaultButton>
+          )
+        }
       >
         <TableHeader columns={columns}>
           {(column) => (
@@ -212,13 +227,7 @@ export function Products() {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody
-          items={mockItems}
-          isLoading={loading}
-          loadingContent={
-            <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
-          }
-        >
+        <TableBody items={list.items} isLoading={loading} loadingContent={<Spinner color="secondary" />}>
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => <TableCell className="relative">{renderCell(item, columnKey)}</TableCell>}

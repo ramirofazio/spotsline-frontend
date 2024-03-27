@@ -9,6 +9,8 @@ export function DefaultButton({
   onPress,
   startContent,
   endContent,
+  as,
+  to,
   props,
 }) {
   return (
@@ -22,6 +24,8 @@ export function DefaultButton({
       onPress={onPress}
       startContent={startContent}
       endContent={endContent}
+      as={as}
+      to={to}
       {...props}
     >
       {children}

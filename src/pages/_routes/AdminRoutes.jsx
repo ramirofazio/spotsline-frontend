@@ -1,24 +1,32 @@
 import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
-import Layout from "../Layout";
 import { useSelector } from "react-redux";
 import Dashboard from "../dashboard/Dashboard";
 import { getOfStorage } from "src/utils/localStorage";
+import { Coupons, Orders, Products, Users } from "../dashboard";
 
 export const adminRoutesPaths = [
   {
-    path: "/",
+    path: "/dashboard",
     errorElement: <DefaultError />,
-    element: (
-      <Layout>
-        <AdminRoot />
-      </Layout>
-    ),
+    element: <AdminRoot />,
     children: [
       {
-        path: "/dashboard",
-        element: <Dashboard />,
+        path: "/dashboard/productos",
+        element: <Products />,
         index: true,
+      },
+      {
+        path: "/dashboard/cupones",
+        element: <Coupons />,
+      },
+      {
+        path: "/dashboard/usuarios",
+        element: <Users />,
+      },
+      {
+        path: "/dashboard/ordenes",
+        element: <Orders />,
       },
     ],
   },
@@ -51,6 +59,9 @@ export function AdminRoot() {
     return <DefaultError />;
   }
 
-
-  return <Outlet />;
+  return (
+    <Dashboard>
+      <Outlet />
+    </Dashboard>
+  );
 }
