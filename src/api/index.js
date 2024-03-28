@@ -19,9 +19,9 @@ export const APISpot = {
       //TODO ARMAR RUTA
       return BASE_API.patch(`/${route.PRODUCTS}/toggleFeatured`, { product_id });
     },
-    toggleIncluidoProduct: (product_id) => {
+    toggleIncluidoVariant: (variant_id) => {
       //TODO ARMAR RUTA
-      return BASE_API.patch(`/${route.PRODUCTS}/toggleIncluido`, { product_id });
+      return BASE_API.patch(`/${route.PRODUCTS}/toggleIncluido/${variant_id}`);
     },
     updateProductImages: (body) => {
       //TODO ARMAR RUTA
