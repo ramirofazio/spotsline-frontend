@@ -51,6 +51,9 @@ export default function ShoppingCart() {
       if (currentCoupons[discountCode]) {
         return toast.error("ya esta usando este cupon");
       }
+      if (discount || Object.keys(currentCoupons).length) {
+        return toast.error("ya tiene un cupon en uso");
+      }
 
       const coupon = await APISpot.cart.validateCoupon(discountCode);
       if (coupon) {
