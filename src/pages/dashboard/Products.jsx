@@ -254,6 +254,8 @@ const variants_columns = [
 ];
 
 function VariantsModal({ isOpen, onOpenChange, onClose, product, setGeneralLoading }) {
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState(false);
 
@@ -293,11 +295,11 @@ function VariantsModal({ isOpen, onOpenChange, onClose, product, setGeneralLoadi
     setSelectedVariant(variant);
   };
 
-  const handleToggleInluido = async (variant_id) => {
+  const handleToggleInluido = async (productCode) => {
     //? Logica para alternar la propiedad `incluido` de una variante
     try {
       setLoading(true);
-      const res = await APISpot.dashboard.toggleIncluidoVariant(variant_id);
+      const res = await APISpot.dashboard.toggleIncluidoVariant(productCode);
       if (res) {
         toast.success("Variante editada con exito");
       }
@@ -365,7 +367,7 @@ function VariantsModal({ isOpen, onOpenChange, onClose, product, setGeneralLoadi
                   ? "ri-eye-line bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-transparent"
                   : "ri-eye-close-line bg-gradient-to-r from-dark to-yellow-600 bg-clip-text text-transparent"
               } icons mx-auto text-xl font-bold`}
-              onClick={() => handleToggleInluido(item.id)}
+              onClick={() => handleToggleInluido(item.productCode)}
             />
           </Tooltip>
         );
@@ -426,7 +428,9 @@ function VariantsModal({ isOpen, onOpenChange, onClose, product, setGeneralLoadi
           <TableBody
             items={product.variants}
             isLoading={loading}
-            loadingContent={<Spinner color="secondary" className="text-2xl" />}
+            loadingContent={
+              <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
+            }
           >
             {(item) => (
               <TableRow key={item.id}>

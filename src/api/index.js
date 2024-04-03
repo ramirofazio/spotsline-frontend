@@ -16,12 +16,12 @@ export const APISpot = {
       return BASE_API.get(`/${route.PRODUCTS}/dashboard-products?page=${page}`, { signal: signal });
     },
     toggleFeaturedProduct: (product_id) => {
-      //TODO ARMAR RUTA
+      //TODO VALIDAR RUTA
       return BASE_API.patch(`/${route.PRODUCTS}/toggleFeatured`, { product_id });
     },
-    toggleIncluidoVariant: (variant_id) => {
-      //TODO ARMAR RUTA
-      return BASE_API.patch(`/${route.PRODUCTS}/toggleIncluido/${variant_id}`);
+    toggleIncluidoVariant: (productCode) => {
+      addAuthWithToken(getOfStorage("access_token"));
+      return BASE_API.patch(`/${route.PRODUCTS}/toggleIncluido?productCode=${productCode}`);
     },
     updateProductImages: (body) => {
       //TODO ARMAR RUTA
@@ -33,7 +33,6 @@ export const APISpot = {
       return res.data;
     },
     createCoupon: (body) => {
-      //TODO validar esto
       return BASE_API.post(`/${route.COUPON}/create`, body);
     },
     removeCoupon: (coupon_id) => {
