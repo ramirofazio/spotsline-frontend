@@ -5,7 +5,7 @@ const route = {
   PRODUCTS: "products",
   AUTH: "auth",
   USER: "users",
-  CART: "shoppingCart",
+  CART: "shopping-cart",
   CHECKOUT: "mobbex",
   COUPON: "coupon",
 };
@@ -92,6 +92,10 @@ export const APISpot = {
   cart: {
     validateCoupon: async (coupon) => {
       const res = await BASE_API.get(`/${route.COUPON}/validate/${coupon}`);
+      return res.data;
+    },
+    createCart: async (shoppingCart) => {
+      const res = await BASE_API.post(`/${route.CART}`, shoppingCart);
       return res.data;
     },
   },

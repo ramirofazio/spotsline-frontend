@@ -23,6 +23,7 @@ export function PaymentOk({ transactionId, type }) {
 
       try {
         if (orderBody) {
+          
           console.log("orden");
           APISpot.user.createOrder({ ...orderBody, transactionId, type }).then((res) => {
             if (res) {
@@ -37,7 +38,7 @@ export function PaymentOk({ transactionId, type }) {
       } finally {
         setLoading(false);
       }
-
+      // reset shoppingCart
       deleteOfStorage("orderBody");
       deleteOfStorage("shoppingCart");
     };

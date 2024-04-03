@@ -14,7 +14,7 @@ import { saveInStorage } from "src/utils/localStorage";
 export default function ShoppingCart() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const { items, total, subtotal, discount, currentCoupons } = useSelector((state) => state.cart);
+  const { items, total, subtotal, discount, currentCoupon } = useSelector((state) => state.cart);
 
   const [discountCode, setDiscountCode] = useState("");
   const [loading, setLoading] = useState(false);
@@ -25,13 +25,18 @@ export default function ShoppingCart() {
       const body = {
         userId: user.id,
         discount,
-        coupon: Object.values(currentCoupons)[0]?.id || false,
+        coupon: currentCoupon || false,
         items: items.map(({ id, quantity }) => {
           return { id: id, qty: quantity };
         }),
       };
 
       //? Guardo para recuperar en `PaymentOK.jsx`
+      const createCart = await APISpot.cart.createCart({
+        ...body,
+        couponId: currentCoupon.id,
+      });
+      console.lof(createCart);
       saveInStorage("orderBody", body);
       const res = await APISpot.checkout.create(body);
       if (res) {
@@ -48,7 +53,7 @@ export default function ShoppingCart() {
   const handleApplyDiscount = async () => {
     try {
       setLoading(true);
-      if (currentCoupons[discountCode]) {
+      if (currentCoupon[discountCode]) {
         return toast.error("ya esta usando este cupon");
       }
 
@@ -144,8 +149,8 @@ export default function ShoppingCart() {
           <h3 className="font-bold text-primary">{formatPrices(subtotal)}</h3>
         </div>
         {discount !== 0 &&
-          Object.keys(currentCoupons)?.length &&
-          Object.values(currentCoupons).map((coupon, i) => (
+          Object.keys(currentCoupon)?.length &&
+          Object.values(currentCoupon).map((coupon, i) => (
             <div
               key={i}
               className="relative z-10 flex w-full items-center justify-between border-b-1 border-dotted border-primary/40"
