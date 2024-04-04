@@ -6,7 +6,7 @@ const initialState = {
   discount: 0,
   total: 0,
   subtotal: 0,
-  currentCoupon: {},
+  currentCoupon: false,
 };
 
 const calculateSubtotal = (items) => {
@@ -69,7 +69,7 @@ const shoppingCartSlice = createSlice({
     removeDiscount(state, action) {
       const coupon = action.payload;
       state.discount = state.discount - coupon.discountPercentaje;
-      state.currentCoupon = {};
+      state.currentCoupon = false;
 
       state.total = calculateTotal(state.subtotal, state.discount);
       saveInStorage("shoppingCart", state);
@@ -80,7 +80,7 @@ const shoppingCartSlice = createSlice({
       state.subtotal = 0;
       state.total = 0;
       state.discount = 0;
-      state.currentCoupon = {};
+      state.currentCoupon = false;
       saveInStorage("shoppingCart", state);
     },
     loadCart(state, action) {

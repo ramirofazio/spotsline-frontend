@@ -31,20 +31,25 @@ export default function ShoppingCart() {
         }),
       };
 
-      //? Guardo para recuperar en `PaymentOK.jsx`
-      const createCart = await APISpot.cart.createCart({
-        ...body,
-        couponId: currentCoupon.id,
-      });
-      console.lof(createCart);
-      saveInStorage("orderBody", body);
-      const res = await APISpot.checkout.create(body);
-      if (res) {
-        window.open(res);
+      if (items?.length) {
+        const createCart = await APISpot.cart.createCart({
+          ...body,
+          items,
+          total,
+          subtotal,
+        });
+        console.log(createCart);
       }
+
+      //? Guardo para recuperar en `PaymentOK.jsx`
+      saveInStorage("orderBody", body);
+      // const res = await APISpot.checkout.create(body);
+      // if (res) {
+      //   window.open(res);
+      // }
     } catch (e) {
       console.log(e);
-      toast.error("Hubo un error al aplicar el cupon", { description: e.response.data.message });
+      toast.error("Hubo un error al aplicar el cupon", { description: e.response.data.message || e });
     } finally {
       setLoading(false);
     }
@@ -148,21 +153,16 @@ export default function ShoppingCart() {
           <h3>SUBTOTAL</h3>
           <h3 className="font-bold text-primary">{formatPrices(subtotal)}</h3>
         </div>
-        {discount !== 0 &&
-          Object.keys(currentCoupon)?.length &&
-          Object.values(currentCoupon).map((coupon, i) => (
-            <div
-              key={i}
-              className="relative z-10 flex w-full items-center justify-between border-b-1 border-dotted border-primary/40"
-            >
-              <h3>DESCUENTO</h3>
-              <h3 className="mr-6 font-bold text-primary">{coupon.discountPercentaje} %</h3>
-              <i
-                className="ri-delete-bin-line icons absolute right-0 text-sm text-dark"
-                onClick={() => dispatch(actionsShoppingCart.removeDiscount(coupon))}
-              />
-            </div>
-          ))}
+        {discount !== 0 && currentCoupon && Object.keys(currentCoupon)?.length && (
+          <div className="relative z-10 flex w-full items-center justify-between border-b-1 border-dotted border-primary/40">
+            <h3>DESCUENTO</h3>
+            <h3 className="mr-6 font-bold text-primary">{currentCoupon.discountPercentaje} %</h3>
+            <i
+              className="ri-delete-bin-line icons absolute right-0 text-sm text-dark"
+              onClick={() => dispatch(actionsShoppingCart.removeDiscount(currentCoupon))}
+            />
+          </div>
+        )}
         <div className="z-10 flex w-full items-center justify-between border-b-1 border-dotted border-primary/40">
           <h3>TOTAL A PAGAR</h3>
           <h3 className="font-bold text-primary">{formatPrices(total)}</h3>
