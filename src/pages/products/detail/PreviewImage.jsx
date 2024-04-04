@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, ModalContent, useDisclosure } from "@nextui-org/react";
+import { Image, Modal, ModalBody, ModalContent, useDisclosure } from "@nextui-org/react";
 
 export function PreviewImage({ description, pathImage }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -13,9 +13,20 @@ export function PreviewImage({ description, pathImage }) {
         src={pathImage}
         onClick={() => onOpen()}
       />
-      <Modal className="bg-black/50 " size="full" isOpen={isOpen} onClose={onClose}>
-        <ModalContent className="grid place-content-center">
-          {() => <div className="rounded-md bg-background p-4">{description}</div>}
+      <Modal
+        size="full"
+        placement="center"
+        backdrop="blur"
+        className="bg-transparent"
+        isOpen={isOpen}
+        onClose={onClose}
+      >
+        <ModalContent>
+          {() => (
+            <ModalBody className="grid place-content-center">
+              <Image src={pathImage} shadow="sm" className="bg-background/50" isZoomed />
+            </ModalBody>
+          )}
         </ModalContent>
       </Modal>
     </>

@@ -8,6 +8,7 @@ import { SkeletonCard } from "src/components/cards/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import { actionProducts } from "src/redux/reducers";
 import { toast } from "sonner";
+import { FilterProducts } from "./FilterProducts";
 const TAKE_PRODUCTS = 28;
 const categories = [
   "Accesorios",
@@ -159,9 +160,7 @@ function Heading() {
           placeholder="Buscar producto"
           startContent={<i className="ri-search-line scale-125"></i>}
         />
-        <Button className="bg-transparent hover:bg-secondary hover:text-white" isIconOnly aria-label="Like">
-          <i className="ri-equalizer-line scale-125"></i>
-        </Button>
+        <FilterProducts categories={categories} />
       </div>
     </>
   );
