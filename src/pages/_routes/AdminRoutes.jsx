@@ -1,24 +1,46 @@
+import React, { Suspense, lazy } from "react";
 import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
-import Layout from "../Layout";
 import { useSelector } from "react-redux";
 import Dashboard from "../dashboard/Dashboard";
+const Products = lazy(() => import("../dashboard/Products").then((module) => ({ default: module.Products })));
+const Coupons = lazy(() => import("../dashboard/Coupons").then((module) => ({ default: module.Coupons })));
+const Users = lazy(() => import("../dashboard/Users").then((module) => ({ default: module.Users })));
+const Orders = lazy(() => import("../dashboard/Orders").then((module) => ({ default: module.Orders })));
 import { getOfStorage } from "src/utils/localStorage";
+import { APISpot } from "src/api";
+import { Spinner } from "@nextui-org/react";
 
 export const adminRoutesPaths = [
   {
-    path: "/",
+    path: "/dashboard",
     errorElement: <DefaultError />,
-    element: (
-      <Layout>
-        <AdminRoot />
-      </Layout>
-    ),
+    element: <AdminRoot />,
     children: [
       {
-        path: "/dashboard",
-        element: <Dashboard />,
+        path: "/dashboard/productos",
+        element: <Products />,
         index: true,
+      },
+      {
+        path: "/dashboard/cupones",
+        element: <Coupons />,
+        loader: async () => {
+          try {
+            return await APISpot.dashboard.getCoupons();
+          } catch (e) {
+            console.log(e);
+            return null;
+          }
+        },
+      },
+      {
+        path: "/dashboard/usuarios",
+        element: <Users />,
+      },
+      {
+        path: "/dashboard/ordenes",
+        element: <Orders />,
       },
     ],
   },
@@ -51,6 +73,11 @@ export function AdminRoot() {
     return <DefaultError />;
   }
 
-
-  return <Outlet />;
+  return (
+    <Dashboard>
+      <Suspense fallback={<Spinner color="secondary" className="absolute inset-0 !z-50 text-xl" />}>
+        <Outlet />
+      </Suspense>
+    </Dashboard>
+  );
 }

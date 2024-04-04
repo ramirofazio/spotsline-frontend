@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -10,62 +10,57 @@ import {
   Tooltip,
   Spinner,
   useDisclosure,
-  Input,
   Image,
   Divider,
   Chip,
 } from "@nextui-org/react";
-import { formatPrices } from "src/utils";
 import { APISpot } from "src/api";
 import { toast } from "sonner";
 import { DarkModal, DefaultButton } from "src/components";
-import Loader from "src/components/Loader";
 import { useNavigate } from "react-router-dom";
+import { useAsyncList } from "@react-stately/data";
+import { formatPrices } from "src/utils";
 
-const mockItems = [
-  {
-    id: 9999,
-    name: "Articulo Spotsline",
-    price1: 9999,
-    price2: 9221,
-    price3: 9129,
-    price4: 5615,
-    price5: 129,
-    price6: 52511,
-    stock: 20,
-    featured: true,
-    images:
-      "https://spotsline-bucket.s3.amazonaws.com/Cinema3.png - https://spotsline-bucket.s3.amazonaws.com/light2.png - https://spotsline-bucket.s3.amazonaws.com/logoWhite.png",
-    incluido: true,
-  },
-];
-
-const columns = [
+const marcas_columns = [
   { label: "código", key: "id" },
-  { label: "nombre", key: "name" },
-  { label: "precio 1", key: "price1" },
-  { label: "precio 2", key: "price2" },
-  { label: "precio 3", key: "price3" },
-  { label: "precio 4", key: "price4" },
-  { label: "precio 5", key: "price5" },
-  { label: "precio 6", key: "price6" },
-  { label: "stock", key: "stock" },
+  { label: "nombre", key: "description" },
   { label: "destacado", key: "featured" },
-  { label: "incluido", key: "incluido" },
-  { label: "imágenes", key: "images" },
+  { label: "variantes", key: "variants" },
 ];
-
-const priceColumns = ["price1", "price2", "price3", "price4", "price5", "price6"];
 
 export function Products() {
-  //todo Usememo para los productos y poder actualizarlos en realTime??
-  //TODO Cuando este la data de la api usar laoders y asyncList de NextUI para mejor UX, tambien ver de agregar una searchbar y poner X productos para que vayan cargando de a poco
   const navigate = useNavigate();
 
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState();
 
   const { onOpen, onOpenChange, isOpen, onClose } = useDisclosure();
+
+  const hasMore = page < 6;
+  if (!hasMore) {
+    toast.info("No hay mas productos por cargar");
+  }
+  const list = useAsyncList({
+    async load({ signal }) {
+      setLoading(true);
+      const res = await APISpot.dashboard.getDashboardProducts(page, signal);
+
+      if (!res.data) {
+        throw new Error("Error al cargar los productos");
+      }
+
+      setLoading(false);
+      setPage(page + 1);
+
+      console.log(res.data);
+
+      return {
+        items: res.data,
+        cursor: page,
+      };
+    },
+  });
 
   const handleToggleFeatured = async (product_id) => {
     //? Logica para alternar la propiedad `featured` de un productos
@@ -86,43 +81,38 @@ export function Products() {
     }
   };
 
-  const handleToggleIncluido = async (product_id) => {
-    //? Logica para alternar la propiedad `incluido` de un productos
-    try {
-      setLoading(true);
-      const res = await APISpot.dashboard.toggleIncluidoProduct(product_id);
-      if (res) {
-        toast.success("Producto editado con exito");
-      }
-    } catch (e) {
-      console.log(e);
-      toast.error("Hubo un error al editar el producto", {
-        description: e.message || "Por favor, intentalo nuevamente",
-      });
-    } finally {
-      setLoading(false);
-      navigate(); //? Para refrescar la data
-    }
-  };
-
-  const handleClickImages = (item) => {
+  const handleModal = (product) => {
     onOpen();
-    setSelectedProduct(item);
+    setSelectedProduct(product);
   };
 
   const renderCell = useCallback((item, columnKey) => {
+    //TODO ACA HAY QUE ARMAR LAS LOGICAS PARA LAS VARIANTES CREO
+    //? item.variants en el array de variantes, se puede jugar con eso
     const cellValue = item[columnKey];
-
-    if (priceColumns.includes(columnKey)) {
-      return formatPrices(cellValue);
-    }
+    const variantsQty = item.variants.length;
+    const includedVariantsQty = item.variants.filter((v) => v.incluido === true).length;
 
     switch (columnKey) {
       case "id":
+        const color = includedVariantsQty === 0 ? "bg-red-500" : "bg-green-500";
         return (
-          <p className="bg-gradient-to-r from-dark to-yellow-600 bg-clip-text font-bold text-transparent">
-            {cellValue}
-          </p>
+          <div className="flex items-center gap-2">
+            <Tooltip
+              color="primary"
+              delay={200}
+              content={
+                includedVariantsQty === 0
+                  ? "Este producto NO se esta mostrando en la web"
+                  : "Este producto se esta mostrando en la web"
+              }
+            >
+              <div className={`h-2 w-2 rounded-full shadow-xl ${color}`} />
+            </Tooltip>
+            <p className="bg-gradient-to-r from-dark to-yellow-700 bg-clip-text font-bold text-transparent">
+              {cellValue}
+            </p>
+          </div>
         );
       case "featured":
         return (
@@ -143,38 +133,34 @@ export function Products() {
             </Tooltip>
           </div>
         );
-      case "incluido":
+      case "variants":
         return (
-          <div className="flex justify-center">
-            <Tooltip
-              content={cellValue ? "Dejar de mostrar en la web" : "Mostrar en la web"}
-              delay={1000}
-              color="primary"
-            >
-              <i
-                onClick={() => handleToggleIncluido(item.id)}
-                className={`${
-                  cellValue
-                    ? "ri-eye-line bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-transparent"
-                    : "ri-eye-close-line bg-gradient-to-r from-dark to-yellow-600 bg-clip-text text-transparent"
-                } icons text-xl font-bold`}
-              />
-            </Tooltip>
-          </div>
-        );
-      case "images":
-        return (
-          <Tooltip content="Agregar imagenes al producto" delay={1000} color="primary">
+          <Tooltip
+            content={
+              <div className="flex flex-col gap-2  p-2 text-center">
+                <p className="text-sm font-bold text-dark">Gestionar las variantes de este producto</p>
+                <p className="text-xs text-dark/90">
+                  <strong>{includedVariantsQty}</strong> variantes de <strong>{variantsQty}</strong> mostradas en la web
+                </p>
+              </div>
+            }
+            delay={1000}
+            classNames={{ content: "bg-gradient-to-r from-primary to-yellow-200" }}
+          >
             <div
-              className="icons flex items-center justify-center gap-2 font-bold"
-              onClick={() => handleClickImages(item)}
+              className="icons mx-auto flex w-20 justify-end gap-2 font-bold"
+              onClick={() => {
+                setLoading(true);
+                handleModal(item);
+              }}
             >
-              <p>{cellValue.split(" - ").length}</p>
-              <i className="ri-image-line  bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-xl text-transparent" />
+              <p>{`${includedVariantsQty}/${variantsQty}`}</p>
+              <i
+                className={`ri-eye-line bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-xl font-bold text-transparent`}
+              />
             </div>
           </Tooltip>
         );
-
       default:
         return cellValue;
     }
@@ -184,9 +170,7 @@ export function Products() {
     switch (key) {
       case "featured":
         return <p className="text-center">{label}</p>;
-      case "incluido":
-        return <p className="text-center">{label}</p>;
-      case "images":
+      case "variants":
         return <p className="text-center">{label}</p>;
       default:
         return <p>{label}</p>;
@@ -194,18 +178,19 @@ export function Products() {
   }, []);
 
   return (
-    <>
+    <main className="flex flex-col items-center">
       <Table
         aria-label="Example table with custom cells"
         isStriped
         removeWrapper
         isHeaderSticky
+        className="!z-20"
         classNames={{
-          th: "bg-primary",
-          base: "overflow-y-scroll rounded-md max-h-[800px] backdrop-blur-sm",
+          th: "bg-gradient-to-b from-primary to-yellow-600",
+          base: "overflow-y-scroll rounded-md min-h-[600px] max-h-[600px] backdrop-blur-sm",
         }}
       >
-        <TableHeader columns={columns}>
+        <TableHeader columns={marcas_columns}>
           {(column) => (
             <TableColumn key={column.key} className="text-sm uppercase !text-dark">
               {renderCol(column.key, column.label)}
@@ -213,7 +198,7 @@ export function Products() {
           )}
         </TableHeader>
         <TableBody
-          items={mockItems}
+          items={list.items}
           isLoading={loading}
           loadingContent={
             <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
@@ -221,29 +206,265 @@ export function Products() {
         >
           {(item) => (
             <TableRow key={item.id}>
-              {(columnKey) => <TableCell className="relative">{renderCell(item, columnKey)}</TableCell>}
+              {(columnKey) => <TableCell className="relative font-medium">{renderCell(item, columnKey)}</TableCell>}
             </TableRow>
           )}
         </TableBody>
       </Table>
+      {hasMore && (
+        <DefaultButton
+          isDisabled={list.isLoading}
+          isLoading={loading}
+          onPress={list.loadMore}
+          endContent={<i className="ri-refresh-line" />}
+          className={"mx-auto mt-10"}
+        >
+          CARGAR MAS
+        </DefaultButton>
+      )}
+
       {isOpen && (
-        <ImagesModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} product={selectedProduct} />
+        <VariantsModal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          onClose={onClose}
+          product={selectedProduct}
+          setGeneralLoading={setLoading}
+        />
+      )}
+    </main>
+  );
+}
+
+const priceColumns = ["precio1", "precio2", "precio3", "precio4", "precio5", "precio6"];
+const variants_columns = [
+  { label: "ID", key: "id" },
+  { label: "codigo", key: "productCode" },
+  { label: "nombre", key: "description" },
+  { label: "color", key: "subRub" },
+  { label: "categoria", key: "category" },
+  { label: "precio1", key: "precio1" },
+  { label: "precio2", key: "precio2" },
+  { label: "precio3", key: "precio3" },
+  { label: "precio4", key: "precio4" },
+  { label: "precio5", key: "precio5" },
+  { label: "precio6", key: "precio6" },
+  { label: "incluido", key: "incluido" },
+  { label: "imagen", key: "pathImage" },
+];
+
+function VariantsModal({ isOpen, onOpenChange, onClose, product, setGeneralLoading }) {
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState(false);
+
+  useEffect(() => {
+    setGeneralLoading(false);
+  }, []);
+
+  const {
+    onOpen,
+    onOpenChange: imageModalOnOpenChange,
+    isOpen: imageModalIsOpen,
+    onClose: imageModalOnClose,
+  } = useDisclosure();
+
+  const list = useAsyncList({
+    //? Para actualizar la tabla en tiempo real hay que traerse las variantes
+    async load({ signal }) {
+      //setLoading(true);
+      //TODO Aca hay que buscar las variantes dinamicas de alguna manera para que cuando por ejemplo alternen el incluido, se tiene que volver a renderizar la tabla con los datos nuevos.
+      //TODO Este pedido tendria que traer en array todas las variantes de X producto y cargarlas en la tabla, cuando este andando poner en `items` de la TableBody `list.items` en vez de products.variants
+      //TODO De esta manera funcionaria dinamicamente la tabla de variantes, sino solo se carga al principio y queda estatico.
+      //? Esto esta implementado en la tabla de marcas, fijarse arriba
+      //const res = await APISpot.dashboard.getProductVariants(product.id, signal);
+      //if (!res.data) {
+      //  throw new Error("Error al cargar las variantes");
+      //}
+      //setLoading(false);
+      //return {
+      //  items: res.data,
+      //  cursor: null,
+      //};
+    },
+  });
+
+  const handleModal = (variant) => {
+    onOpen();
+    setSelectedVariant(variant);
+  };
+
+  const handleToggleInluido = async (productCode) => {
+    //? Logica para alternar la propiedad `incluido` de una variante
+    try {
+      setLoading(true);
+      const res = await APISpot.dashboard.toggleIncluidoVariant(productCode);
+      if (res) {
+        toast.success("Variante editada con exito");
+      }
+    } catch (e) {
+      console.log(e);
+      toast.error("Hubo un error al editar la variante", {
+        description: e.message || "Por favor, intentalo nuevamente",
+      });
+    } finally {
+      setLoading(false);
+      navigate(); //? Para refrescar la data
+    }
+  };
+
+  const renderCell = useCallback((item, columnKey) => {
+    const cellValue = item[columnKey];
+
+    if (priceColumns.includes(columnKey)) {
+      return <p className="text-left">{formatPrices(Number(cellValue))}</p>;
+    }
+
+    switch (columnKey) {
+      case "id":
+        const color = item.incluido ? "bg-green-500" : "bg-red-500";
+        return (
+          <div className="flex items-center gap-2">
+            <Tooltip
+              color="primary"
+              delay={200}
+              content={
+                item.incluido
+                  ? "Este producto se esta mostrando en la web"
+                  : "Este producto NO se esta mostrando en la web"
+              }
+            >
+              <div className={`h-2 w-2 rounded-full shadow-xl ${color}`} />
+            </Tooltip>
+            <p className="bg-gradient-to-r from-dark to-yellow-700 bg-clip-text font-bold text-transparent">
+              {cellValue}
+            </p>
+          </div>
+        );
+      case "description":
+        return (
+          <div>
+            <Tooltip content={cellValue} delay={200} color="primary">
+              <p className="line-clamp-1 text-left">{cellValue}</p>
+            </Tooltip>
+          </div>
+        );
+      case "subRub":
+        return (
+          <div>
+            <Tooltip content={cellValue} delay={200} color="primary">
+              <p className="line-clamp-1 text-left">{cellValue}</p>
+            </Tooltip>
+          </div>
+        );
+      case "incluido":
+        return (
+          <Tooltip content={cellValue ? "NO mostrar en la web" : "Mostrar en la web"} delay={1000} color="primary">
+            <i
+              className={`${
+                cellValue
+                  ? "ri-eye-line bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-transparent"
+                  : "ri-eye-close-line bg-gradient-to-r from-dark to-yellow-600 bg-clip-text text-transparent"
+              } icons mx-auto text-xl font-bold`}
+              onClick={() => handleToggleInluido(item.productCode)}
+            />
+          </Tooltip>
+        );
+      case "pathImage":
+        const imageQty = item.images ? item.images.split(" - ").length : 0;
+        return (
+          <Tooltip content="Agregar imagenes al producto" delay={1000} color="primary">
+            <div className="icons flex items-center justify-center gap-2 font-bold" onClick={() => handleModal(item)}>
+              <p>{imageQty}</p>
+              <i className="ri-image-line  bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-xl text-transparent" />
+            </div>
+          </Tooltip>
+        );
+      default:
+        return <p className="text-left">{cellValue}</p>;
+    }
+  }, []);
+
+  const renderCol = useCallback((key, label) => {
+    switch (key) {
+      default:
+        return <p>{label}</p>;
+    }
+  }, []);
+
+  return (
+    <>
+      <DarkModal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        title={`GESTIONA LAS VARIANTES DE ${product.description.toUpperCase()}`}
+        size="full"
+        description={"En esta pantalla podras gestionar todas las variantes del producto"}
+      >
+        <i
+          className="ri-close-fill icons absolute right-5 top-5 flex h-10 w-10  items-center justify-center rounded-full bg-primary p-2 text-2xl font-bold text-dark hover:text-white"
+          onClick={() => onClose()}
+        />
+        <Table
+          aria-label="Variants table"
+          isStriped
+          removeWrapper
+          isHeaderSticky
+          className="!z-20 mt-10"
+          classNames={{
+            th: "bg-gradient-to-b from-primary to-yellow-600",
+            base: "overflow-y-scroll rounded-md min-h-[600px] max-h-[600px] backdrop-blur-sm",
+            tr: "!bg-background/50",
+          }}
+        >
+          <TableHeader columns={variants_columns}>
+            {(column) => (
+              <TableColumn key={column.key} className="text-sm uppercase !text-dark">
+                {renderCol(column.key, column.label)}
+              </TableColumn>
+            )}
+          </TableHeader>
+          <TableBody
+            items={product.variants}
+            isLoading={loading}
+            loadingContent={
+              <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
+            }
+          >
+            {(item) => (
+              <TableRow key={item.id}>
+                {(columnKey) => <TableCell className="relative font-medium">{renderCell(item, columnKey)}</TableCell>}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </DarkModal>
+      {imageModalIsOpen && selectedVariant && (
+        <ImagesModal
+          isOpen={imageModalIsOpen}
+          onOpenChange={imageModalOnOpenChange}
+          onClose={imageModalOnClose}
+          variant={selectedVariant}
+        />
       )}
     </>
   );
 }
 
-function ImagesModal({ isOpen, onOpenChange, onClose, product }) {
-  //TODO VALIDAR MAXIMO DE FOTOS, CREO QUE 6 ESTARIA BIEN
-
+function ImagesModal({ isOpen, onOpenChange, onClose, variant }) {
   const [loading, setLoading] = useState(false);
-  const [thisImages, setThisImages] = useState(product.images);
+  const [thisImages, setThisImages] = useState(
+    variant.pathImage ||
+      //? IMAGENES DE TESTEO
+      "https://spotsline-bucket.s3.amazonaws.com/logoBlack.png - https://spotsline-bucket.s3.amazonaws.com/logoWhite.png - https://spotsline-bucket.s3.amazonaws.com/logoYellow.png"
+  );
 
   const handleUpdateImages = async () => {
     //? Logica para actualizar la propiedad `images` de un producto
     try {
       setLoading(true);
-      const res = await APISpot.dashboard.updateProductImages({ product_id: product.id, images: thisImages });
+      const res = await APISpot.dashboard.updateProductImages({ product_id: variant.id, images: thisImages });
       if (res) {
         toast.success("Imagenes cargadas con exito");
       }
@@ -279,10 +500,10 @@ function ImagesModal({ isOpen, onOpenChange, onClose, product }) {
 
   return (
     <DarkModal
-      isDismissable={false}
       isOpen={isOpen}
+      isDismissable={false}
       onOpenChange={onOpenChange}
-      title={`GESTIONA LAS IMAGENES DE ${product.name.toUpperCase()}`}
+      title={`GESTIONA LAS IMAGENES DE ${variant.description.toUpperCase()}`}
       size="4xl"
       description={"En esta pantalla podras agregar o eliminar fotos de cada producto"}
     >
@@ -305,7 +526,7 @@ function ImagesModal({ isOpen, onOpenChange, onClose, product }) {
                       <i className="ri-close-fill text-xl" />
                     </Chip>
                   </Tooltip>
-                  <Image src={image} width={200} height={200} alt={product?.name + " " + image} />
+                  <Image src={image} width={200} height={200} alt={variant.description + " " + image} />
                 </div>
               ))
             )}

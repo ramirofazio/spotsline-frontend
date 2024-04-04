@@ -1,17 +1,15 @@
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { DefaultButton } from "src/components";
 import FloatingLogos from "src/components/images/FloatingLogos";
-import { Coupons, Orders, Products, Users } from "./index";
 import { Button, Divider } from "@nextui-org/react";
-import { getOfStorage, saveInStorage } from "src/utils/localStorage";
-import { useState } from "react";
 import { motion } from "framer-motion";
 
 const selectButtonsData = [
-  { name: "PRODUCTOS", startIcon: "image-2", component: <Products /> },
-  { name: "CUPONES", startIcon: "coupon-2", component: <Coupons /> },
-  { name: "ORDENES", startIcon: "shopping-cart-2", component: <Orders /> },
-  { name: "USUARIOS", startIcon: "user-3", component: <Users /> },
+  { name: "PRODUCTOS", startIcon: "image-2", link: "/dashboard/productos" },
+  { name: "CUPONES", startIcon: "coupon-2", link: "/dashboard/cupones" },
+  { name: "ORDENES", startIcon: "shopping-cart-2", link: "/dashboard/ordenes" },
+  { name: "USUARIOS", startIcon: "user-3", link: "/dashboard/usuarios" },
 ];
 
 const sidebarVariants = {
@@ -19,16 +17,9 @@ const sidebarVariants = {
   visible: { width: "100%", opacity: 1 },
 };
 
-export default function Dashboard() {
+export default function Dashboard({ children }) {
   const [hide, setHide] = useState(false);
-  const [selectedSection, setSelectedSection] = useState(() => {
-    const local = getOfStorage("dashboardSelectedSection");
-    if (local) {
-      return local;
-    }
-
-    return "PRODUCTOS";
-  });
+  //TODO VER EL TEMA DE SUSPENSE Y LOADERS EN LAS DISINTAS RUTAS
 
   return (
     <main>
@@ -51,14 +42,10 @@ export default function Dashboard() {
           exit="hidden"
           variants={sidebarVariants}
         >
-          <SelectButtons selectedSection={selectedSection} setSelectedSection={setSelectedSection} />
+          <SelectButtons />
         </motion.div>
         <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600 lg:hidden" />
-        <motion.div className={`px-2 pt-6 lg:h-screen lg:pt-20 ${hide ? "lg:col-span-4" : "lg:col-span-3"}`}>
-          {selectButtonsData.map(({ name, component }, index) => (
-            <div key={index}>{name === selectedSection && component}</div>
-          ))}
-        </motion.div>
+        <div className={`px-2 pt-6 lg:h-screen lg:pt-20 ${hide ? "lg:col-span-4" : "lg:col-span-3"}`}>{children}</div>
       </section>
     </main>
   );
@@ -106,25 +93,23 @@ export function DashboardNavBar({ hide, setHide }) {
   );
 }
 
-function SelectButtons({ selectedSection, setSelectedSection }) {
-  const handleSelect = (name) => {
-    setSelectedSection(name);
-    saveInStorage("dashboardSelectedSection", name);
-  };
+function SelectButtons() {
+  const { pathname } = useLocation();
 
-  return selectButtonsData.map(({ name, startIcon }) => (
+  return selectButtonsData.map(({ name, startIcon, link }) => (
     <DefaultButton
       key={name}
-      onPress={() => handleSelect(name)}
       startContent={<i className={`ri-${startIcon}-fill text-xl text-dark transition`} />}
       endContent={
         <i
           className={`ri-arrow-right-s-line text-xl text-dark transition lg:rotate-90 ${
-            selectedSection === name && "rotate-90 lg:!rotate-0"
+            pathname === link && "rotate-90 lg:!rotate-0"
           }`}
         />
       }
-      className={`xl:!w-80 ${selectedSection === name && "!scale-110 from-dark/20 to-dark/20"}`}
+      className={`xl:!w-80 ${pathname === link && "!scale-110 from-dark/20 to-dark/20"}`}
+      as={Link}
+      to={link}
     >
       {name}
     </DefaultButton>

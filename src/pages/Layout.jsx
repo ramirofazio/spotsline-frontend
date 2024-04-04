@@ -10,7 +10,6 @@ import { ChangePasswordModal } from "./signIn/ChangePasswordModal";
 import { useDisclosure } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { actionsShoppingCart } from "src/redux/reducers";
-import { assets } from "src/assets";
 
 export default function Layout({ children }) {
   const dispatch = useDispatch();
@@ -50,28 +49,9 @@ export default function Layout({ children }) {
 
     //? Shopping Cart
     const shoppingCart = getOfStorage("shoppingCart");
-
     if (shoppingCart) {
       dispatch(actionsShoppingCart.loadCart(shoppingCart));
     }
-
-    window.addEventListener("beforeunload", () => {
-      if (access_token && user && shoppingCart) {
-        //? Logica guardar carrito en DB `CREO`
-      }
-    });
-
-    // !BORRAR;
-    //dispatch(actionsShoppingCart.applyDiscount(20));
-    dispatch(
-      actionsShoppingCart.addItemToCart({
-        id: 12,
-        name: "Articulo SPT.",
-        img: assets.lights.light,
-        price: 12831.43,
-        quantity: 1,
-      })
-    );
   }, [document]);
 
   return (

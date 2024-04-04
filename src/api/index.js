@@ -12,36 +12,38 @@ const route = {
 
 export const APISpot = {
   dashboard: {
+    getDashboardProducts: (page, signal) => {
+      return BASE_API.get(`/${route.PRODUCTS}/dashboard-products?page=${page}`, { signal: signal });
+    },
     toggleFeaturedProduct: (product_id) => {
-      //TODO ARMAR RUTA
+      //TODO VALIDAR RUTA
       return BASE_API.patch(`/${route.PRODUCTS}/toggleFeatured`, { product_id });
     },
-    toggleIncluidoProduct: (product_id) => {
-      //TODO ARMAR RUTA
-      return BASE_API.patch(`/${route.PRODUCTS}/toggleIncluido`, { product_id });
+    toggleIncluidoVariant: (productCode) => {
+      addAuthWithToken(getOfStorage("access_token"));
+      return BASE_API.patch(`/${route.PRODUCTS}/toggleIncluido?productCode=${productCode}`);
     },
     updateProductImages: (body) => {
       //TODO ARMAR RUTA
       return BASE_API.patch(`/${route.PRODUCTS}/updateProductImages`, body);
     },
+    getCoupons: async () => {
+      addAuthWithToken(getOfStorage("access_token"));
+      const res = await BASE_API.get(`/${route.COUPON}`);
+      return res.data;
+    },
     createCoupon: (body) => {
-      //TODO validar esto
       return BASE_API.post(`/${route.COUPON}/create`, body);
     },
     removeCoupon: (coupon_id) => {
-      //TODO validar esto
       return BASE_API.delete(`/${route.COUPON}/delete/${coupon_id}`);
     },
     toggleStateCoupon: (coupon_id) => {
-      //TODO validar esto
-      return BASE_API.patch(`/${route.COUPON}/change_state`, { coupon_id });
+      return BASE_API.patch(`/${route.COUPON}/change_state`, { id: coupon_id });
     },
   },
 
   product: {
-    getDashboardProducts: (signal) => {
-      return BASE_API.get(`/${route.PRODUCTS}`, { signal: signal });
-    },
     getAll: ({ take, page, search = null }) => {
       return BASE_API.get(`/${route.PRODUCTS}?take=${take}&&page=${page}&&search=${search}`);
     },
@@ -88,7 +90,7 @@ export const APISpot = {
   },
   cart: {
     validateCoupon: async (coupon) => {
-      const res = await BASE_API.get(`/${route.COUPON}/validate/${coupon}`, );
+      const res = await BASE_API.get(`/${route.COUPON}/validate/${coupon}`);
       return res.data;
     },
   },
