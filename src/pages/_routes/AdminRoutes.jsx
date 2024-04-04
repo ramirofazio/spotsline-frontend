@@ -3,7 +3,8 @@ import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
 import { useSelector } from "react-redux";
 import Dashboard from "../dashboard/Dashboard";
-const Products = lazy(() => import("../dashboard/Products").then((module) => ({ default: module.Products })));
+const ProductsPage = lazy(() => import("../dashboard/Products").then((module) => ({ default: module.ProductsPage })));
+const VariantPage = lazy(() => import("../dashboard/Products").then((module) => ({ default: module.VariantPage })));
 const Coupons = lazy(() => import("../dashboard/Coupons").then((module) => ({ default: module.Coupons })));
 const Users = lazy(() => import("../dashboard/Users").then((module) => ({ default: module.Users })));
 const Orders = lazy(() => import("../dashboard/Orders").then((module) => ({ default: module.Orders })));
@@ -14,14 +15,14 @@ import { Spinner } from "@nextui-org/react";
 export const adminRoutesPaths = [
   {
     path: "/dashboard",
-    errorElement: <DefaultError />,
+    errorElement: <DefaultError link="/dashboard/productos" />,
     element: <AdminRoot />,
     children: [
       {
         path: "/dashboard/productos",
-        element: <Products />,
-        index: true,
+        element: <ProductsPage />,
       },
+      { path: "/dashboard/productos/:variant_id", element: <VariantPage /> },
       {
         path: "/dashboard/cupones",
         element: <Coupons />,

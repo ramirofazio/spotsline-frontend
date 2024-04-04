@@ -17,30 +17,23 @@ import {
 import { APISpot } from "src/api";
 import { toast } from "sonner";
 import { DarkModal, DefaultButton } from "src/components";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAsyncList } from "@react-stately/data";
 import { formatPrices } from "src/utils";
 
 const marcas_columns = [
-  { label: "código", key: "id" },
+  { label: "código", key: "codigo" },
   { label: "nombre", key: "description" },
   { label: "destacado", key: "featured" },
   { label: "variantes", key: "variants" },
 ];
 
-export function Products() {
-  const navigate = useNavigate();
-
+export function ProductsPage() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState();
-
-  const { onOpen, onOpenChange, isOpen, onClose } = useDisclosure();
 
   const hasMore = page < 6;
-  if (!hasMore) {
-    toast.info("No hay mas productos por cargar");
-  }
+
   const list = useAsyncList({
     async load({ signal }) {
       setLoading(true);
@@ -53,7 +46,9 @@ export function Products() {
       setLoading(false);
       setPage(page + 1);
 
-      console.log(res.data);
+      if (page > 1) {
+        setThisItems([...thisItems, ...res.data]);
+      }
 
       return {
         items: res.data,
@@ -62,28 +57,41 @@ export function Products() {
     },
   });
 
-  const handleToggleFeatured = async (product_id) => {
-    //? Logica para alternar la propiedad `featured` de un productos
+  const [thisItems, setThisItems] = useState([]);
+
+  useEffect(() => {
+    setThisItems(list.items);
+    console.log(list.items);
+  }, [list.items.length > 0]);
+
+  const handleToggleFeatured = async (item) => {
     try {
       setLoading(true);
-      const res = await APISpot.dashboard.toggleFeaturedProduct(product_id);
-      if (res) {
-        toast.success("Producto editado con exito");
+
+      // Alternar la propiedad `featured` del producto
+      const updatedItem = { ...item, featured: !item.featured };
+
+      const res = await APISpot.dashboard.toggleFeaturedProduct({
+        id: item.codigo,
+        featured: updatedItem.featured,
+      });
+
+      if (res.status === 200) {
+        // Actualizar thisItems con el producto actualizado
+        setThisItems((prevItems) =>
+          prevItems.map((prevItem) => (prevItem.codigo === updatedItem.codigo ? updatedItem : prevItem))
+        );
+
+        toast.success("Producto editado con éxito");
       }
     } catch (e) {
       console.log(e);
       toast.error("Hubo un error al editar el producto", {
-        description: e.message || "Por favor, intentalo nuevamente",
+        description: e.message || "Por favor, inténtalo nuevamente",
       });
     } finally {
       setLoading(false);
-      navigate(); //? Para refrescar la data
     }
-  };
-
-  const handleModal = (product) => {
-    onOpen();
-    setSelectedProduct(product);
   };
 
   const renderCell = useCallback((item, columnKey) => {
@@ -94,7 +102,7 @@ export function Products() {
     const includedVariantsQty = item.variants.filter((v) => v.incluido === true).length;
 
     switch (columnKey) {
-      case "id":
+      case "codigo":
         const color = includedVariantsQty === 0 ? "bg-red-500" : "bg-green-500";
         return (
           <div className="flex items-center gap-2">
@@ -123,9 +131,9 @@ export function Products() {
               color="primary"
             >
               <i
-                onClick={() => handleToggleFeatured(item.id)}
+                onClick={() => handleToggleFeatured(item)}
                 className={`${
-                  cellValue
+                  Boolean(cellValue)
                     ? "ri-star-fill bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-transparent"
                     : "ri-star-line bg-gradient-to-r from-dark to-yellow-600 bg-clip-text text-transparent"
                 } icons text-center text-xl font-bold`}
@@ -147,18 +155,19 @@ export function Products() {
             delay={1000}
             classNames={{ content: "bg-gradient-to-r from-primary to-yellow-200" }}
           >
-            <div
-              className="icons mx-auto flex w-20 justify-end gap-2 font-bold"
-              onClick={() => {
-                setLoading(true);
-                handleModal(item);
-              }}
-            >
-              <p>{`${includedVariantsQty}/${variantsQty}`}</p>
-              <i
-                className={`ri-eye-line bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-xl font-bold text-transparent`}
-              />
-            </div>
+            <Link to={item.codigo}>
+              <div
+                className="icons mx-auto flex w-20 justify-end gap-2 font-bold"
+                onClick={() => {
+                  setLoading(true);
+                }}
+              >
+                <p>{`${includedVariantsQty}/${variantsQty}`}</p>
+                <i
+                  className={`ri-eye-line bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-xl font-bold text-transparent`}
+                />
+              </div>
+            </Link>
           </Tooltip>
         );
       default:
@@ -198,14 +207,14 @@ export function Products() {
           )}
         </TableHeader>
         <TableBody
-          items={list.items}
+          items={thisItems}
           isLoading={loading}
           loadingContent={
             <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
           }
         >
           {(item) => (
-            <TableRow key={item.id}>
+            <TableRow key={item.codigo}>
               {(columnKey) => <TableCell className="relative font-medium">{renderCell(item, columnKey)}</TableCell>}
             </TableRow>
           )}
@@ -221,16 +230,6 @@ export function Products() {
         >
           CARGAR MAS
         </DefaultButton>
-      )}
-
-      {isOpen && (
-        <VariantsModal
-          isOpen={isOpen}
-          onOpenChange={onOpenChange}
-          onClose={onClose}
-          product={selectedProduct}
-          setGeneralLoading={setLoading}
-        />
       )}
     </main>
   );
@@ -253,40 +252,30 @@ const variants_columns = [
   { label: "imagen", key: "pathImage" },
 ];
 
-function VariantsModal({ isOpen, onOpenChange, onClose, product, setGeneralLoading }) {
+export function VariantPage() {
+  const { variant_id } = useParams();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState(false);
 
-  useEffect(() => {
-    setGeneralLoading(false);
-  }, []);
-
-  const {
-    onOpen,
-    onOpenChange: imageModalOnOpenChange,
-    isOpen: imageModalIsOpen,
-    onClose: imageModalOnClose,
-  } = useDisclosure();
+  const { onOpen, onOpenChange, isOpen, onClose } = useDisclosure();
 
   const list = useAsyncList({
-    //? Para actualizar la tabla en tiempo real hay que traerse las variantes
     async load({ signal }) {
-      //setLoading(true);
-      //TODO Aca hay que buscar las variantes dinamicas de alguna manera para que cuando por ejemplo alternen el incluido, se tiene que volver a renderizar la tabla con los datos nuevos.
-      //TODO Este pedido tendria que traer en array todas las variantes de X producto y cargarlas en la tabla, cuando este andando poner en `items` de la TableBody `list.items` en vez de products.variants
-      //TODO De esta manera funcionaria dinamicamente la tabla de variantes, sino solo se carga al principio y queda estatico.
-      //? Esto esta implementado en la tabla de marcas, fijarse arriba
-      //const res = await APISpot.dashboard.getProductVariants(product.id, signal);
-      //if (!res.data) {
-      //  throw new Error("Error al cargar las variantes");
-      //}
-      //setLoading(false);
-      //return {
-      //  items: res.data,
-      //  cursor: null,
-      //};
+      setLoading(true);
+      const res = await APISpot.dashboard.getProductVariants(variant_id, signal);
+
+      console.log("---> ", res);
+
+      if (!res.data) {
+        throw new Error("Error al cargar las variantes");
+      }
+      setLoading(false);
+      return {
+        items: res.data,
+        cursor: null,
+      };
     },
   });
 
@@ -394,61 +383,43 @@ function VariantsModal({ isOpen, onOpenChange, onClose, product, setGeneralLoadi
   }, []);
 
   return (
-    <>
-      <DarkModal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        title={`GESTIONA LAS VARIANTES DE ${product.description.toUpperCase()}`}
-        size="full"
-        description={"En esta pantalla podras gestionar todas las variantes del producto"}
+    <main className="flex flex-col items-center">
+      <Table
+        aria-label="Example table with custom cells"
+        isStriped
+        removeWrapper
+        isHeaderSticky
+        className="!z-20"
+        classNames={{
+          th: "bg-gradient-to-b from-primary to-yellow-600",
+          base: "overflow-y-scroll rounded-md min-h-[600px] max-h-[600px] backdrop-blur-sm",
+        }}
       >
-        <i
-          className="ri-close-fill icons absolute right-5 top-5 flex h-10 w-10  items-center justify-center rounded-full bg-primary p-2 text-2xl font-bold text-dark hover:text-white"
-          onClick={() => onClose()}
-        />
-        <Table
-          aria-label="Variants table"
-          isStriped
-          removeWrapper
-          isHeaderSticky
-          className="!z-20 mt-10"
-          classNames={{
-            th: "bg-gradient-to-b from-primary to-yellow-600",
-            base: "overflow-y-scroll rounded-md min-h-[600px] max-h-[600px] backdrop-blur-sm",
-            tr: "!bg-background/50",
-          }}
+        <TableHeader columns={variants_columns}>
+          {(column) => (
+            <TableColumn key={column.key} className="text-sm uppercase !text-dark">
+              {renderCol(column.key, column.label)}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody
+          items={list.items}
+          isLoading={loading}
+          loadingContent={
+            <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
+          }
         >
-          <TableHeader columns={variants_columns}>
-            {(column) => (
-              <TableColumn key={column.key} className="text-sm uppercase !text-dark">
-                {renderCol(column.key, column.label)}
-              </TableColumn>
-            )}
-          </TableHeader>
-          <TableBody
-            items={product.variants}
-            isLoading={loading}
-            loadingContent={
-              <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
-            }
-          >
-            {(item) => (
-              <TableRow key={item.id}>
-                {(columnKey) => <TableCell className="relative font-medium">{renderCell(item, columnKey)}</TableCell>}
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </DarkModal>
-      {imageModalIsOpen && selectedVariant && (
-        <ImagesModal
-          isOpen={imageModalIsOpen}
-          onOpenChange={imageModalOnOpenChange}
-          onClose={imageModalOnClose}
-          variant={selectedVariant}
-        />
+          {(item) => (
+            <TableRow key={item.id}>
+              {(columnKey) => <TableCell className="relative font-medium">{renderCell(item, columnKey)}</TableCell>}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+      {isOpen && selectedVariant && (
+        <ImagesModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} variant={selectedVariant} />
       )}
-    </>
+    </main>
   );
 }
 

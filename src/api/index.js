@@ -12,12 +12,17 @@ const route = {
 
 export const APISpot = {
   dashboard: {
+    getDashboardProductVariants: (variant_id, signal) => {
+      return BASE_API.get(`/${route.PRODUCTS}/dashboard-products-variants?variant_id=${variant_id}`, {
+        signal: signal,
+      });
+    },
     getDashboardProducts: (page, signal) => {
       return BASE_API.get(`/${route.PRODUCTS}/dashboard-products?page=${page}`, { signal: signal });
     },
-    toggleFeaturedProduct: (product_id) => {
-      //TODO VALIDAR RUTA
-      return BASE_API.patch(`/${route.PRODUCTS}/toggleFeatured`, { product_id });
+    toggleFeaturedProduct: (body) => {
+      addAuthWithToken(getOfStorage("access_token"));
+      return BASE_API.patch(`/${route.PRODUCTS}/edit_featured`, body);
     },
     toggleIncluidoVariant: (productCode) => {
       addAuthWithToken(getOfStorage("access_token"));
