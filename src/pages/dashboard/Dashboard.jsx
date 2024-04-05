@@ -19,7 +19,6 @@ const sidebarVariants = {
 
 export default function Dashboard({ children }) {
   const [hide, setHide] = useState(false);
-  //TODO VER EL TEMA DE SUSPENSE Y LOADERS EN LAS DISINTAS RUTAS
 
   return (
     <main>
@@ -45,7 +44,13 @@ export default function Dashboard({ children }) {
           <SelectButtons />
         </motion.div>
         <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600 lg:hidden" />
-        <div className={`px-2 pt-6 lg:h-screen lg:pt-20 ${hide ? "lg:col-span-4" : "lg:col-span-3"}`}>{children}</div>
+        <div
+          className={`min-h-[80vh] px-2 pt-6  lg:py-10 lg:pr-10 lg:pt-20 ${
+            hide ? "pl-10 lg:col-span-4" : "lg:col-span-3"
+          }`}
+        >
+          {children}
+        </div>
       </section>
     </main>
   );
@@ -103,13 +108,13 @@ function SelectButtons() {
       endContent={
         <i
           className={`ri-arrow-right-s-line text-xl text-dark transition lg:rotate-90 ${
-            pathname === link && "rotate-90 lg:!rotate-0"
+            pathname.includes(link) && "rotate-90 lg:!rotate-0"
           }`}
         />
       }
-      className={`xl:!w-80 ${pathname === link && "!scale-110 from-dark/20 to-dark/20"}`}
+      className={`xl:!w-80 ${pathname.includes(link) && "!scale-110 from-dark/20 to-dark/20"}`}
       as={Link}
-      to={link}
+      to={name === "PRODUCTOS" ? `${link}/1` : link}
     >
       {name}
     </DefaultButton>

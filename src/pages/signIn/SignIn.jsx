@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { isValidSignIn } from "../../utils/validation";
 import { APISpot, addAuthWithToken } from "../../api";
 import { actionsAuth, actionsUser } from "../../redux/reducers";
-import { Divider, Image, useDisclosure } from "@nextui-org/react";
+import { Divider, useDisclosure } from "@nextui-org/react";
 import { toast } from "sonner";
 import { InitChangePasswordModal } from "./InitChangePasswordModal";
 import { BasicInput, PasswordInput, DefaultButton } from "src/components/index";
@@ -17,13 +16,11 @@ export function SignIn() {
   const { onOpen, onOpenChange, isOpen } = useDisclosure();
 
   const [signInData, setSignInData] = useState(false);
-  const [errs, setErrs] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = ({ target: { name, value } }) => {
     setSignInData((prev) => {
       const newData = { ...prev, [name]: value };
-      //setErrs(isValidSignIn(newData));
       return newData;
     });
   };
@@ -67,25 +64,17 @@ export function SignIn() {
             <h5 className="-my-2 md:text-xl md:font-semibold">SPOTSLINE</h5>
             <p className="font-slogan text-xs md:text-sm">Se ve bien.</p>
           </div>
-          <form onSubmit={handleSubmit} className="z-20 flex flex-col items-center gap-4 md:w-full">
+          <form onSubmit={handleSubmit} className="z-20 flex flex-col items-center gap-4 md:w-[30vw]">
             <BasicInput
               name="email"
               type="email"
               label="Correo electrónico"
               startContentIcon="ri-mail-fill text-xl text-secondary"
-              isInvalid={Boolean(errs.email)}
-              errorMessage={errs.email}
               onChange={handleChange}
             />
-            <PasswordInput
-              name="password"
-              label="Contraseña"
-              isInvalid={Boolean(errs.password)}
-              errorMessage={errs.password}
-              onChange={handleChange}
-            />
+            <PasswordInput name="password" label="Contraseña" onChange={handleChange} />
             <DefaultButton
-              isDisabled={!signInData?.email?.length || !signInData?.password?.length && true}
+              isDisabled={!signInData?.email?.length || (!signInData?.password?.length && true)}
               isLoading={isLoading}
               type="submit"
             >

@@ -15,14 +15,33 @@ import { Spinner } from "@nextui-org/react";
 export const adminRoutesPaths = [
   {
     path: "/dashboard",
-    errorElement: <DefaultError link="/dashboard/productos" />,
+    errorElement: <DefaultError link="/dashboard/productos/1" />,
     element: <AdminRoot />,
     children: [
       {
-        path: "/dashboard/productos",
+        path: "/dashboard/productos/:page",
         element: <ProductsPage />,
+        loader: async ({ params }) => {
+          try {
+            return await APISpot.dashboard.getDashboardProducts(params.page);
+          } catch (e) {
+            console.log(e);
+            return null;
+          }
+        },
       },
-      { path: "/dashboard/productos/:variant_id", element: <VariantPage /> },
+      {
+        path: "/dashboard/productos/:page/:productCode",
+        element: <VariantPage />,
+        loader: async ({ params }) => {
+          try {
+            return await APISpot.dashboard.getDashboardProductVariants(params.productCode);
+          } catch (e) {
+            console.log(e);
+            return null;
+          }
+        },
+      },
       {
         path: "/dashboard/cupones",
         element: <Coupons />,

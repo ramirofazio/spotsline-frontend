@@ -8,17 +8,19 @@ const route = {
   CART: "shoppingCart",
   CHECKOUT: "mobbex",
   COUPON: "coupon",
+  AWS: "aws-s3-upload",
 };
 
 export const APISpot = {
   dashboard: {
-    getDashboardProductVariants: (variant_id, signal) => {
-      return BASE_API.get(`/${route.PRODUCTS}/dashboard-products-variants?variant_id=${variant_id}`, {
-        signal: signal,
-      });
+    getDashboardProductVariants: async (productCode) => {
+      //TODO ARMAR ESTA RUTA
+      const res = await BASE_API.get(`/${route.PRODUCTS}/dashboard-product-variants?productCode=${productCode}`);
+      return res.data;
     },
-    getDashboardProducts: (page, signal) => {
-      return BASE_API.get(`/${route.PRODUCTS}/dashboard-products?page=${page}`, { signal: signal });
+    getDashboardProducts: async (page) => {
+      const res = await BASE_API.get(`/${route.PRODUCTS}/dashboard-products?page=${page}`);
+      return res.data;
     },
     toggleFeaturedProduct: (body) => {
       addAuthWithToken(getOfStorage("access_token"));
@@ -28,9 +30,12 @@ export const APISpot = {
       addAuthWithToken(getOfStorage("access_token"));
       return BASE_API.patch(`/${route.PRODUCTS}/toggleIncluido?productCode=${productCode}`);
     },
-    updateProductImages: (body) => {
-      //TODO ARMAR RUTA
-      return BASE_API.patch(`/${route.PRODUCTS}/updateProductImages`, body);
+    updateProductImages: (variant_id, formData) => {
+      //TODO Chequear ruta
+      addAuthWithToken(getOfStorage("access_token"));
+      return BASE_API.post(`/${route.AWS}/${variant_id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
     },
     getCoupons: async () => {
       addAuthWithToken(getOfStorage("access_token"));

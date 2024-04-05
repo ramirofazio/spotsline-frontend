@@ -13,12 +13,12 @@ import {
   Image,
   Divider,
   Chip,
+  Button,
 } from "@nextui-org/react";
 import { APISpot } from "src/api";
 import { toast } from "sonner";
 import { DarkModal, DefaultButton } from "src/components";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { useAsyncList } from "@react-stately/data";
+import { Link, useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { formatPrices } from "src/utils";
 
 const marcas_columns = [
@@ -29,74 +29,38 @@ const marcas_columns = [
 ];
 
 export function ProductsPage() {
-  const [page, setPage] = useState(1);
+  const navigate = useNavigate();
+  const marcas = useLoaderData();
+
+  const { page } = useParams();
   const [loading, setLoading] = useState(false);
 
-  const hasMore = page < 6;
-
-  const list = useAsyncList({
-    async load({ signal }) {
-      setLoading(true);
-      const res = await APISpot.dashboard.getDashboardProducts(page, signal);
-
-      if (!res.data) {
-        throw new Error("Error al cargar los productos");
-      }
-
-      setLoading(false);
-      setPage(page + 1);
-
-      if (page > 1) {
-        setThisItems([...thisItems, ...res.data]);
-      }
-
-      return {
-        items: res.data,
-        cursor: page,
-      };
-    },
-  });
-
-  const [thisItems, setThisItems] = useState([]);
-
-  useEffect(() => {
-    setThisItems(list.items);
-    console.log(list.items);
-  }, [list.items.length > 0]);
+  const hasMore = page < 5;
 
   const handleToggleFeatured = async (item) => {
     try {
       setLoading(true);
 
-      // Alternar la propiedad `featured` del producto
-      const updatedItem = { ...item, featured: !item.featured };
-
       const res = await APISpot.dashboard.toggleFeaturedProduct({
         id: item.codigo,
-        featured: updatedItem.featured,
+        featured: !item.featured,
       });
 
       if (res.status === 200) {
-        // Actualizar thisItems con el producto actualizado
-        setThisItems((prevItems) =>
-          prevItems.map((prevItem) => (prevItem.codigo === updatedItem.codigo ? updatedItem : prevItem))
-        );
-
         toast.success("Producto editado con éxito");
       }
     } catch (e) {
       console.log(e);
       toast.error("Hubo un error al editar el producto", {
-        description: e.message || "Por favor, inténtalo nuevamente",
+        description: e.response.data.message || "Por favor, inténtalo nuevamente",
       });
     } finally {
       setLoading(false);
+      navigate();
     }
   };
 
   const renderCell = useCallback((item, columnKey) => {
-    //TODO ACA HAY QUE ARMAR LAS LOGICAS PARA LAS VARIANTES CREO
-    //? item.variants en el array de variantes, se puede jugar con eso
     const cellValue = item[columnKey];
     const variantsQty = item.variants.length;
     const includedVariantsQty = item.variants.filter((v) => v.incluido === true).length;
@@ -207,7 +171,7 @@ export function ProductsPage() {
           )}
         </TableHeader>
         <TableBody
-          items={thisItems}
+          items={marcas}
           isLoading={loading}
           loadingContent={
             <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
@@ -220,17 +184,28 @@ export function ProductsPage() {
           )}
         </TableBody>
       </Table>
-      {hasMore && (
-        <DefaultButton
-          isDisabled={list.isLoading}
-          isLoading={loading}
-          onPress={list.loadMore}
-          endContent={<i className="ri-refresh-line" />}
-          className={"mx-auto mt-10"}
-        >
-          CARGAR MAS
-        </DefaultButton>
-      )}
+      <div>
+        {page > 1 && (
+          <DefaultButton
+            startContent={<i className="ri-arrow-left-s-fill text-xl" />}
+            className={"mx-auto mt-10 hover:scale-100"}
+            as={Link}
+            to={`/dashboard/productos/${Number(page) - 1}`}
+          >
+            ANTERIOR
+          </DefaultButton>
+        )}
+        {hasMore && (
+          <DefaultButton
+            endContent={<i className="ri-arrow-right-s-fill text-xl" />}
+            className={"mx-auto mt-10 hover:scale-100"}
+            as={Link}
+            to={`/dashboard/productos/${Number(page) + 1}`}
+          >
+            SIGUENTE
+          </DefaultButton>
+        )}
+      </div>
     </main>
   );
 }
@@ -253,31 +228,13 @@ const variants_columns = [
 ];
 
 export function VariantPage() {
-  const { variant_id } = useParams();
   const navigate = useNavigate();
+  const variants = useLoaderData();
 
   const [loading, setLoading] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState(false);
 
   const { onOpen, onOpenChange, isOpen, onClose } = useDisclosure();
-
-  const list = useAsyncList({
-    async load({ signal }) {
-      setLoading(true);
-      const res = await APISpot.dashboard.getProductVariants(variant_id, signal);
-
-      console.log("---> ", res);
-
-      if (!res.data) {
-        throw new Error("Error al cargar las variantes");
-      }
-      setLoading(false);
-      return {
-        items: res.data,
-        cursor: null,
-      };
-    },
-  });
 
   const handleModal = (variant) => {
     onOpen();
@@ -361,12 +318,14 @@ export function VariantPage() {
           </Tooltip>
         );
       case "pathImage":
-        const imageQty = item.images ? item.images.split(" - ").length : 0;
         return (
           <Tooltip content="Agregar imagenes al producto" delay={1000} color="primary">
             <div className="icons flex items-center justify-center gap-2 font-bold" onClick={() => handleModal(item)}>
-              <p>{imageQty}</p>
-              <i className="ri-image-line  bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-xl text-transparent" />
+              <i
+                className={`ri-image-line  bg-gradient-to-r ${
+                  Boolean(cellValue) ? "from-green-600 to-primary" : "from-red-600 to-primary"
+                } bg-clip-text text-xl text-transparent`}
+              />
             </div>
           </Tooltip>
         );
@@ -392,7 +351,7 @@ export function VariantPage() {
         className="!z-20"
         classNames={{
           th: "bg-gradient-to-b from-primary to-yellow-600",
-          base: "overflow-y-scroll rounded-md min-h-[600px] max-h-[600px] backdrop-blur-sm",
+          base: "overflow-y-scroll rounded-md  max-h-[600px] backdrop-blur-sm",
         }}
       >
         <TableHeader columns={variants_columns}>
@@ -403,7 +362,7 @@ export function VariantPage() {
           )}
         </TableHeader>
         <TableBody
-          items={list.items}
+          items={variants}
           isLoading={loading}
           loadingContent={
             <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
@@ -417,56 +376,66 @@ export function VariantPage() {
         </TableBody>
       </Table>
       {isOpen && selectedVariant && (
-        <ImagesModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} variant={selectedVariant} />
+        <ImagesModal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          onClose={onClose}
+          variant={selectedVariant}
+          navigate={navigate}
+        />
       )}
     </main>
   );
 }
 
-function ImagesModal({ isOpen, onOpenChange, onClose, variant }) {
+function ImagesModal({ isOpen, onOpenChange, onClose, variant, navigate }) {
   const [loading, setLoading] = useState(false);
-  const [thisImages, setThisImages] = useState(
-    variant.pathImage ||
-      //? IMAGENES DE TESTEO
-      "https://spotsline-bucket.s3.amazonaws.com/logoBlack.png - https://spotsline-bucket.s3.amazonaws.com/logoWhite.png - https://spotsline-bucket.s3.amazonaws.com/logoYellow.png"
-  );
+  const [image, setImage] = useState(variant.pathImage || { url: "", formData: "" });
+
+  useEffect(() => {
+    if (variant.pathImage === "") {
+      setImage("");
+    }
+  }, []);
 
   const handleUpdateImages = async () => {
     //? Logica para actualizar la propiedad `images` de un producto
-    try {
-      setLoading(true);
-      const res = await APISpot.dashboard.updateProductImages({ product_id: variant.id, images: thisImages });
-      if (res) {
-        toast.success("Imagenes cargadas con exito");
-      }
-    } catch (e) {
-      console.log(e);
-      toast.error("Hubo un error al cargar las imagenes", {
-        description: e.message || "Por favor, intentalo nuevamente",
+    if (image === "") {
+      //? Imagen vacia
+      toast.info("¿Seguro quieres guardar esta variante sin imagen?", {
+        position: "top-center",
+        duration: 10000,
+        action: { label: "CONFIRMAR", onClick: () => onClose() },
       });
-    } finally {
-      setLoading(false);
+      return;
+    } else if (variant.pathImage && !image.formData) {
+      toast.info("Variante no modificada");
       onClose();
-      navigate(); //? Para refrescar la data
+    } else {
+      try {
+        setLoading(true);
+        const res = await APISpot.dashboard.updateProductImages(variant.id, image.formData, false);
+        if (res) {
+          toast.success("Imagen cargad con exito");
+        }
+      } catch (e) {
+        console.log(e);
+        toast.error("Hubo un error al cargar la imagen", {
+          description: e.response.data.message || "Por favor, intentalo nuevamente",
+        });
+      } finally {
+        navigate();
+        setLoading(false);
+        onClose();
+      }
     }
   };
 
-  const handleRemoveImage = (image) => {
-    //? Logica para borrar una imagen
-    let newImages = "";
-
-    //? Este codigo raro es por como se almacenan en la DB.
-    thisImages.split(" - ").map((_image) => {
-      if (_image !== image) {
-        if (newImages !== "") {
-          newImages += ` - ${_image}`;
-        } else {
-          newImages += `${_image}`;
-        }
-      }
-    });
-
-    setThisImages(newImages);
+  const handleOnChangeFile = (e) => {
+    const formData = new FormData();
+    formData.append("file", e.target.files[0]);
+    const newImage = URL.createObjectURL(e.target.files[0]);
+    setImage({ url: newImage, formData: formData });
   };
 
   return (
@@ -475,36 +444,46 @@ function ImagesModal({ isOpen, onOpenChange, onClose, variant }) {
       isDismissable={false}
       onOpenChange={onOpenChange}
       title={`GESTIONA LAS IMAGENES DE ${variant.description.toUpperCase()}`}
-      size="4xl"
+      size="xl"
       description={"En esta pantalla podras agregar o eliminar fotos de cada producto"}
     >
       <main className="flex w-full flex-col items-center justify-between">
         <section className="grid h-full w-full grid-rows-3">
           <div className="row-span-2 flex flex-wrap items-center justify-center gap-3 p-6">
-            {thisImages === "" ? (
-              <p className="text-background">Este producto no tiene imagenes</p>
+            {!image ? (
+              <div className="flex flex-col items-center gap-4">
+                <p className="text-background">Este producto no tiene imagen</p>
+                <label htmlFor="upload-images" className="transition hover:cursor-pointer hover:opacity-50">
+                  <p className="yellowGradient flex h-10 w-10 items-center justify-center rounded-xl border-3 border-primary/50 p-2">
+                    <i className="ri-add-line text-xl" />
+                  </p>
+                  <input
+                    type="file"
+                    id="upload-images"
+                    accept="image/*"
+                    multiple
+                    title="Cargar imagenes"
+                    className="invisible absolute right-0 top-0 h-full w-full border-2"
+                    onChange={handleOnChangeFile}
+                  />
+                </label>
+              </div>
             ) : (
-              thisImages.split(" - ").map((image, index) => (
-                <div
-                  key={index}
-                  className="relative flex aspect-square h-[150px] items-center justify-center rounded-xl bg-background/50"
-                >
-                  <Tooltip content="Eliminar esta imagen" delay={1000} color="primary">
-                    <Chip
-                      className="text-md icons absolute right-2 top-1 z-20 flex aspect-square h-8 w-8 items-center justify-center rounded-full bg-primary text-dark"
-                      onClick={() => handleRemoveImage(image)}
-                    >
-                      <i className="ri-close-fill text-xl" />
-                    </Chip>
-                  </Tooltip>
-                  <Image src={image} width={200} height={200} alt={variant.description + " " + image} />
-                </div>
-              ))
+              <div className="relative flex aspect-square h-[150px] items-center justify-center rounded-xl bg-background/50">
+                <Tooltip content="Eliminar esta imagen" delay={1000} color="primary">
+                  <Chip
+                    className="text-md icons absolute right-2 top-1 z-20 flex aspect-square h-8 w-8 items-center justify-center rounded-full bg-primary text-dark"
+                    onClick={() => setImage("")}
+                  >
+                    <i className="ri-close-fill text-xl" />
+                  </Chip>
+                </Tooltip>
+                <Image src={image.url || image} width={200} height={200} alt={variant.description + " " + image.url} />
+              </div>
             )}
           </div>
-          <div className="relative row-span-1 flex items-center justify-center p-6">
+          <div className="relative z-20 row-span-1 flex items-center justify-center p-6">
             <Divider className="absolute inset-x-0 top-0 h-[3px] rounded-full bg-gradient-to-r from-primary to-yellow-200" />
-            <input type="file" className="text-white" />
           </div>
         </section>
 
@@ -517,12 +496,7 @@ function ImagesModal({ isOpen, onOpenChange, onClose, variant }) {
           >
             GUARDAR
           </DefaultButton>
-          <Tooltip
-            content="Los cambios no se aplicaran hasta que presione GUARDAR"
-            delay={200}
-            color="primary"
-            placement="right"
-          >
+          <Tooltip content="Solo se permite 1 ) imagen por variante" delay={200} color="primary" placement="right">
             <i className="ri-information-line yellowGradient icons text-xl hover:cursor-help" />
           </Tooltip>
         </div>
