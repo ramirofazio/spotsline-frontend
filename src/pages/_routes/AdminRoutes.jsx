@@ -2,12 +2,14 @@ import React, { Suspense, lazy } from "react";
 import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
 import { useSelector } from "react-redux";
-import Dashboard from "../dashboard/Dashboard";
+const Dashboard = lazy(() => import("../dashboard/Dashboard"));
 const ProductsPage = lazy(() => import("../dashboard/Products").then((module) => ({ default: module.ProductsPage })));
 const VariantPage = lazy(() => import("../dashboard/Products").then((module) => ({ default: module.VariantPage })));
 const Coupons = lazy(() => import("../dashboard/Coupons").then((module) => ({ default: module.Coupons })));
-const Users = lazy(() => import("../dashboard/Users").then((module) => ({ default: module.Users })));
+const ClientsPage = lazy(() => import("../dashboard/Clients").then((module) => ({ default: module.ClientsPage })));
 const Orders = lazy(() => import("../dashboard/Orders").then((module) => ({ default: module.Orders })));
+const Sellers = lazy(() => import("../dashboard/Sellers").then((module) => ({ default: module.Sellers })));
+
 import { getOfStorage } from "src/utils/localStorage";
 import { APISpot } from "src/api";
 import { Spinner } from "@nextui-org/react";
@@ -15,7 +17,7 @@ import { Spinner } from "@nextui-org/react";
 export const adminRoutesPaths = [
   {
     path: "/dashboard",
-    errorElement: <DefaultError link="/dashboard/productos/1" />,
+    errorElement: <DefaultError link={"/dashboard/productos/1"} />,
     element: <AdminRoot />,
     children: [
       {
@@ -55,12 +57,24 @@ export const adminRoutesPaths = [
         },
       },
       {
-        path: "/dashboard/usuarios",
-        element: <Users />,
+        path: "/dashboard/clientes/:page",
+        element: <ClientsPage />,
+        loader: async ({ params }) => {
+          try {
+            return await APISpot.dashboard.getDashboardClients(params.page);
+          } catch (e) {
+            console.log(e);
+            return null;
+          }
+        },
       },
       {
         path: "/dashboard/ordenes",
         element: <Orders />,
+      },
+      {
+        path: "/dashboard/vendedores",
+        element: <Sellers />,
       },
     ],
   },
@@ -94,10 +108,10 @@ export function AdminRoot() {
   }
 
   return (
-    <Dashboard>
-      <Suspense fallback={<Spinner color="secondary" className="absolute inset-0 !z-50 text-xl" />}>
+    <Suspense fallback={<Spinner color="secondary" className="absolute inset-0 !z-50 text-xl" />}>
+      <Dashboard>
         <Outlet />
-      </Suspense>
-    </Dashboard>
+      </Dashboard>
+    </Suspense>
   );
 }

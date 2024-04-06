@@ -13,13 +13,13 @@ import {
   Image,
   Divider,
   Chip,
-  Button,
 } from "@nextui-org/react";
 import { APISpot } from "src/api";
 import { toast } from "sonner";
 import { DarkModal, DefaultButton } from "src/components";
 import { Link, useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { formatPrices } from "src/utils";
+import { motion } from "framer-motion";
 
 const marcas_columns = [
   { label: "código", key: "codigo" },
@@ -310,8 +310,8 @@ export function VariantPage() {
             <i
               className={`${
                 cellValue
-                  ? "ri-eye-line bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-transparent"
-                  : "ri-eye-close-line bg-gradient-to-r from-dark to-yellow-600 bg-clip-text text-transparent"
+                  ? "ri-eye-line bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent"
+                  : "ri-eye-close-line bg-gradient-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent"
               } icons mx-auto text-xl font-bold`}
               onClick={() => handleToggleInluido(item.productCode)}
             />
@@ -323,7 +323,7 @@ export function VariantPage() {
             <div className="icons flex items-center justify-center gap-2 font-bold" onClick={() => handleModal(item)}>
               <i
                 className={`ri-image-line  bg-gradient-to-r ${
-                  Boolean(cellValue) ? "from-green-600 to-primary" : "from-red-600 to-primary"
+                  Boolean(cellValue) ? "from-green-600 to-yellow-600" : "from-red-600 to-yellow-600"
                 } bg-clip-text text-xl text-transparent`}
               />
             </div>
@@ -390,6 +390,8 @@ export function VariantPage() {
 
 function ImagesModal({ isOpen, onOpenChange, onClose, variant, navigate }) {
   const [loading, setLoading] = useState(false);
+  const [ImageLoading, setImageLoading] = useState(false);
+
   const [image, setImage] = useState(variant.pathImage || { url: "", formData: "" });
 
   useEffect(() => {
@@ -416,7 +418,7 @@ function ImagesModal({ isOpen, onOpenChange, onClose, variant, navigate }) {
         setLoading(true);
         const res = await APISpot.dashboard.updateProductImages(variant.id, image.formData, false);
         if (res) {
-          toast.success("Imagen cargad con exito");
+          toast.success("Imagen cargada con exito");
         }
       } catch (e) {
         console.log(e);
@@ -432,6 +434,7 @@ function ImagesModal({ isOpen, onOpenChange, onClose, variant, navigate }) {
   };
 
   const handleOnChangeFile = (e) => {
+    setImageLoading(false);
     const formData = new FormData();
     formData.append("file", e.target.files[0]);
     const newImage = URL.createObjectURL(e.target.files[0]);
@@ -451,35 +454,45 @@ function ImagesModal({ isOpen, onOpenChange, onClose, variant, navigate }) {
         <section className="grid h-full w-full grid-rows-3">
           <div className="row-span-2 flex flex-wrap items-center justify-center gap-3 p-6">
             {!image ? (
-              <div className="flex flex-col items-center gap-4">
-                <p className="text-background">Este producto no tiene imagen</p>
-                <label htmlFor="upload-images" className="transition hover:cursor-pointer hover:opacity-50">
-                  <p className="yellowGradient flex h-10 w-10 items-center justify-center rounded-xl border-3 border-primary/50 p-2">
-                    <i className="ri-add-line text-xl" />
-                  </p>
+              <div className="grid h-[150px] place-items-center">
+                <label htmlFor="upload-images" className="flex flex-col items-center gap-4">
+                  {ImageLoading ? (
+                    <Spinner />
+                  ) : (
+                    <>
+                      <p className="text-background">Este producto no tiene imagen</p>
+                      <p className="yellowGradient icons flex h-10 w-10 items-center justify-center rounded-xl border-3 border-primary/50 p-2">
+                        <i className="ri-add-line text-xl" />
+                      </p>
+                    </>
+                  )}
                   <input
                     type="file"
                     id="upload-images"
                     accept="image/*"
-                    multiple
                     title="Cargar imagenes"
                     className="invisible absolute right-0 top-0 h-full w-full border-2"
                     onChange={handleOnChangeFile}
+                    onClick={() => setImageLoading(true)}
                   />
                 </label>
               </div>
             ) : (
-              <div className="relative flex aspect-square h-[150px] items-center justify-center rounded-xl bg-background/50">
+              <motion.div
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1, transition: { duration: 0.2 } }}
+                className="relative flex aspect-square h-[150px] items-center justify-center rounded-xl bg-background/50"
+              >
                 <Tooltip content="Eliminar esta imagen" delay={1000} color="primary">
                   <Chip
-                    className="text-md icons absolute right-2 top-1 z-20 flex aspect-square h-8 w-8 items-center justify-center rounded-full bg-primary text-dark"
+                    className="text-md icons absolute -right-2 -top-2 z-20 flex aspect-square h-5 w-5 items-center justify-center rounded-full bg-primary text-dark hover:bg-red-600"
                     onClick={() => setImage("")}
                   >
-                    <i className="ri-close-fill text-xl" />
+                    <i className="ri-close-fill text-lg" />
                   </Chip>
                 </Tooltip>
                 <Image src={image.url || image} width={200} height={200} alt={variant.description + " " + image.url} />
-              </div>
+              </motion.div>
             )}
           </div>
           <div className="relative z-20 row-span-1 flex items-center justify-center p-6">

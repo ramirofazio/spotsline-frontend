@@ -4,6 +4,7 @@ import { BASE_API } from "./baseApi";
 const route = {
   PRODUCTS: "products",
   AUTH: "auth",
+  CLIENTS: "clients",
   USER: "users",
   CART: "shoppingCart",
   CHECKOUT: "mobbex",
@@ -13,6 +14,11 @@ const route = {
 
 export const APISpot = {
   dashboard: {
+    getDashboardClients: async (page) => {
+      addAuthWithToken(getOfStorage("access_token"));
+      const res = await BASE_API.get(`/${route.CLIENTS}/dashboard-clients?page=${page}`);
+      return res.data;
+    },
     getDashboardProductVariants: async (productCode) => {
       //TODO ARMAR ESTA RUTA
       const res = await BASE_API.get(`/${route.PRODUCTS}/dashboard-product-variants?productCode=${productCode}`);

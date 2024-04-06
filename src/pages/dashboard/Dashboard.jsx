@@ -7,9 +7,10 @@ import { motion } from "framer-motion";
 
 const selectButtonsData = [
   { name: "PRODUCTOS", startIcon: "image-2", link: "/dashboard/productos" },
+  { name: "VENDEDORES", startIcon: "customer-service", link: "/dashboard/vendedores" },
   { name: "CUPONES", startIcon: "coupon-2", link: "/dashboard/cupones" },
+  { name: "CLIENTES", startIcon: "user-3", link: "/dashboard/clientes/1" },
   { name: "ORDENES", startIcon: "shopping-cart-2", link: "/dashboard/ordenes" },
-  { name: "USUARIOS", startIcon: "user-3", link: "/dashboard/usuarios" },
 ];
 
 const sidebarVariants = {
@@ -104,15 +105,21 @@ function SelectButtons() {
   return selectButtonsData.map(({ name, startIcon, link }) => (
     <DefaultButton
       key={name}
-      startContent={<i className={`ri-${startIcon}-fill text-xl text-dark transition`} />}
-      endContent={
+      startContent={
         <i
-          className={`ri-arrow-right-s-line text-xl text-dark transition lg:rotate-90 ${
-            pathname.includes(link) && "rotate-90 lg:!rotate-0"
+          className={`ri-${startIcon}-fill absolute left-10 text-xl text-dark ${
+            pathname.includes(link) && "animate-pulse"
           }`}
         />
       }
-      className={`xl:!w-80 ${pathname.includes(link) && "!scale-110 from-dark/20 to-dark/20"}`}
+      endContent={
+        <i
+          className={`ri-arrow-right-s-line absolute right-10 text-xl text-dark transition lg:rotate-90 ${
+            pathname.includes(link) && "rotate-90 animate-pulse lg:!rotate-0"
+          }`}
+        />
+      }
+      className={`xl:!w-80 ${pathname.includes(link) && "from-yellow-200 to-primary "}`}
       as={Link}
       to={name === "PRODUCTOS" ? `${link}/1` : link}
     >
