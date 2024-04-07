@@ -32,9 +32,12 @@ export default function ShoppingCart() {
       };
 
       if (items?.length) {
+        console.log(items);
         const createCart = await APISpot.cart.createCart({
           ...body,
-          items,
+          items: items.map(({ id, quantity, name, image, price }) => {
+            return { productId: id, qty: quantity, name, image, price };
+          }),
           total,
           subtotal,
         });
@@ -58,8 +61,8 @@ export default function ShoppingCart() {
   const handleApplyDiscount = async () => {
     try {
       setLoading(true);
-      if (currentCoupon[discountCode]) {
-        return toast.error("ya esta usando este cupon");
+      if (currentCoupon) {
+        return toast.error("ya estas utilizando un cupon");
       }
 
       const coupon = await APISpot.cart.validateCoupon(discountCode);
@@ -68,8 +71,8 @@ export default function ShoppingCart() {
         toast.success(`Descuento de ${coupon.discountPercentaje}% aplicado!`);
       }
     } catch (e) {
+      console.log(e);
       const backErr = e?.response?.data;
-
       toast.error("Hubo un error al aplicar el cupon", { description: backErr ? backErr?.message : e.message });
     } finally {
       setLoading(false);
