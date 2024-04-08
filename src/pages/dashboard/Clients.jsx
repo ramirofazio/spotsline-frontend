@@ -66,11 +66,7 @@ export function ClientsPage() {
         );
       case "email":
         if (Boolean(cellValue)) {
-          return (
-            <p className="bg-gradient-to-r from-dark to-yellow-700 bg-clip-text font-bold text-transparent">
-              {cellValue.split(";")[0]}
-            </p>
-          );
+          return <p className="uppercase">{cellValue.split(";")[0]}</p>;
         } else {
           return (
             <Tooltip content={"Agregar Email a este cliente"} delay={1000} color="primary">

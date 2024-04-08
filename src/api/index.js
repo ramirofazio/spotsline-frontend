@@ -4,6 +4,7 @@ import { BASE_API } from "./baseApi";
 const route = {
   PRODUCTS: "products",
   AUTH: "auth",
+  SELLERS: "sellers",
   CLIENTS: "clients",
   USER: "users",
   CART: "shoppingCart",
@@ -14,6 +15,15 @@ const route = {
 
 export const APISpot = {
   dashboard: {
+    getDashboardSellers: async () => {
+      addAuthWithToken(getOfStorage("access_token"));
+      const res = await BASE_API.get(`/${route.SELLERS}/dashboard-sellers`);
+      return res.data;
+    },
+    addSellerEmail: (body) => {
+      addAuthWithToken(getOfStorage("access_token"));
+      return BASE_API.patch(`/${route.SELLERS}/add-email`, body);
+    },
     addClientEmail: (body) => {
       addAuthWithToken(getOfStorage("access_token"));
       return BASE_API.patch(`/${route.CLIENTS}/add-email`, body);

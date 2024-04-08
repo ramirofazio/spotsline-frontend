@@ -8,7 +8,7 @@ const VariantPage = lazy(() => import("../dashboard/Products").then((module) => 
 const Coupons = lazy(() => import("../dashboard/Coupons").then((module) => ({ default: module.Coupons })));
 const ClientsPage = lazy(() => import("../dashboard/Clients").then((module) => ({ default: module.ClientsPage })));
 const Orders = lazy(() => import("../dashboard/Orders").then((module) => ({ default: module.Orders })));
-const Sellers = lazy(() => import("../dashboard/Sellers").then((module) => ({ default: module.Sellers })));
+const SellersPage = lazy(() => import("../dashboard/Sellers").then((module) => ({ default: module.SellersPage })));
 
 import { getOfStorage } from "src/utils/localStorage";
 import { APISpot } from "src/api";
@@ -74,7 +74,15 @@ export const adminRoutesPaths = [
       },
       {
         path: "/dashboard/vendedores",
-        element: <Sellers />,
+        element: <SellersPage />,
+        loader: async () => {
+          try {
+            return await APISpot.dashboard.getDashboardSellers();
+          } catch (e) {
+            console.log(e);
+            return null;
+          }
+        },
       },
     ],
   },
