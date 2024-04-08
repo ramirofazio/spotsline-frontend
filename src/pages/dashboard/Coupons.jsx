@@ -54,8 +54,8 @@ export function Coupons() {
                     action: { label: "CONFIRMAR", onClick: () => handleRemoveCoupon(item.id) },
                   })
                 }
-                className={`ri-delete-bin-line icons bg-gradient-to-r from-primary to-yellow-600
-                bg-clip-text text-center text-xl font-bold text-transparent`}
+                className={`ri-delete-bin-line icons bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-center
+                text-xl font-bold text-transparent transition hover:from-red-600 hover:to-red-600`}
               />
             </Tooltip>
           </div>
@@ -68,8 +68,8 @@ export function Coupons() {
                 onClick={() => handleToggleState(item.id)}
                 className={`${
                   cellValue
-                    ? "ri-eye-fill bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-transparent"
-                    : "ri-eye-close-line bg-gradient-to-r from-dark to-yellow-600 bg-clip-text text-transparent"
+                    ? "ri-eye-fill bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent"
+                    : "ri-eye-close-line bg-gradient-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent"
                 } icons text-center text-xl font-bold`}
               />
             </Tooltip>

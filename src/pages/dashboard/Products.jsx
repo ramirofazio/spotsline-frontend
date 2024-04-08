@@ -98,8 +98,8 @@ export function ProductsPage() {
                 onClick={() => handleToggleFeatured(item)}
                 className={`${
                   Boolean(cellValue)
-                    ? "ri-star-fill bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-transparent"
-                    : "ri-star-line bg-gradient-to-r from-dark to-yellow-600 bg-clip-text text-transparent"
+                    ? "ri-star-fill bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent"
+                    : "ri-star-line bg-gradient-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent"
                 } icons text-center text-xl font-bold`}
               />
             </Tooltip>
@@ -509,7 +509,7 @@ function ImagesModal({ isOpen, onOpenChange, onClose, variant, navigate }) {
           >
             GUARDAR
           </DefaultButton>
-          <Tooltip content="Solo se permite 1 ) imagen por variante" delay={200} color="primary" placement="right">
+          <Tooltip content="Solo se permite 1 imagen por variante" delay={200} color="primary" placement="right">
             <i className="ri-information-line yellowGradient icons text-xl hover:cursor-help" />
           </Tooltip>
         </div>

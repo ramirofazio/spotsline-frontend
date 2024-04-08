@@ -14,13 +14,16 @@ const route = {
 
 export const APISpot = {
   dashboard: {
+    addClientEmail: (body) => {
+      addAuthWithToken(getOfStorage("access_token"));
+      return BASE_API.patch(`/${route.CLIENTS}/add-email`, body);
+    },
     getDashboardClients: async (page) => {
       addAuthWithToken(getOfStorage("access_token"));
       const res = await BASE_API.get(`/${route.CLIENTS}/dashboard-clients?page=${page}`);
       return res.data;
     },
     getDashboardProductVariants: async (productCode) => {
-      //TODO ARMAR ESTA RUTA
       const res = await BASE_API.get(`/${route.PRODUCTS}/dashboard-product-variants?productCode=${productCode}`);
       return res.data;
     },
