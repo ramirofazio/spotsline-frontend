@@ -33,14 +33,23 @@ export default function ShoppingCart() {
 
       if (items?.length) {
         console.log(items);
-        const createCart = await APISpot.cart.createCart({
+        const createCart = await APISpot.cart.updateCart({
           ...body,
-          items: items.map(({ id, quantity, name, image, price }) => {
-            return { productId: id, qty: quantity, name, image, price };
+          id: 27,
+          items: items.map(({ id, quantity, name, img, price }) => {
+            return { productId: id, qty: quantity, name, img, price };
           }),
           total,
           subtotal,
         });
+        // const createCart = await APISpot.cart.createCart({
+        //   ...body,
+        //   items: items.map(({ id, quantity, name, image, price }) => {
+        //     return { productId: id, qty: quantity, name, image, price };
+        //   }),
+        //   total,
+        //   subtotal,
+        // });
         console.log(createCart);
       }
 

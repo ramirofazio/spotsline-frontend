@@ -98,6 +98,11 @@ export const APISpot = {
       const res = await BASE_API.post(`/${route.CART}`, shoppingCart);
       return res.data;
     },
+    updateCart: async (shoppingCart) => {
+      console.log(shoppingCart);
+      const res = await BASE_API.put(`/${route.CART}/update`, shoppingCart);
+      return res.data;
+    },
   },
   checkout: {
     create: async (body) => {
