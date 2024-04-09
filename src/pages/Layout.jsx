@@ -1,7 +1,7 @@
 import { useEffect, Suspense } from "react";
 import Loader from "src/components/Loader";
 import { FirstSignInModal } from "./signIn";
-import { getOfStorage } from "src/utils/localStorage";
+import { getOfStorage, saveInStorage } from "src/utils/localStorage";
 import { setAccessToken } from "src/redux/reducers/auth";
 import { useDispatch } from "react-redux";
 import { addAuthWithToken, APISpot } from "src/api";
@@ -24,10 +24,22 @@ export default function Layout({ children }) {
   const { onOpen, onOpenChange, isOpen, onClose } = useDisclosure();
 
   const getUserFromDb = async (access_token, email) => {
-    const { user } = await APISpot.auth.jwtAutoSignIn({ jwt: access_token, email });
+    const { user, shoppingCart } = await APISpot.auth.jwtAutoSignIn({ jwt: access_token, email });
 
     if (user) {
+      shoppingCart.subtotal = parseFloat(shoppingCart.subtotal);
+      shoppingCart.total = parseFloat(shoppingCart.total);
+      shoppingCart.items = shoppingCart.items.map((itm) => {
+        return { ...itm, price: parseFloat(itm.price) };
+      });
+
       dispatch(setUser(user));
+      dispatch(actionsShoppingCart.loadCart(shoppingCart));
+      saveInStorage("shoppingCart", shoppingCart);
+      window.addEventListener("beforeunload", () => {
+        const updatedCart = getOfStorage("shoppingCart");
+        return APISpot.cart.updateCart(updatedCart);
+      });
     }
   };
 
@@ -46,32 +58,23 @@ export default function Layout({ children }) {
       addAuthWithToken(access_token);
       dispatch(setAccessToken(access_token));
       getUserFromDb(access_token, user.email);
-    }
-
-    //? Shopping Cart
-    const shoppingCart = getOfStorage("shoppingCart");
-
-    if (shoppingCart) {
-      dispatch(actionsShoppingCart.loadCart(shoppingCart));
-    }
-
-    window.addEventListener("beforeunload", () => {
-      if (access_token && user && shoppingCart) {
-        //? Logica guardar carrito en DB `CREO`
+    } else {
+      // * ShoppingCart para usuario no logueado
+      const shoppingCart = getOfStorage("shoppingCart");
+      if (shoppingCart) {
+        dispatch(actionsShoppingCart.loadCart(shoppingCart));
       }
-    });
+    }
 
-    // !BORRAR;
-    //dispatch(actionsShoppingCart.applyDiscount(20));
-    dispatch(
-      actionsShoppingCart.addItemToCart({
-        id: 12,
-        name: "Articulo SPT.",
-        img: assets.lights.light,
-        price: 12831.43,
-        quantity: 1,
-      })
-    );
+    return () => {
+      // * Por si acaso se guardad el cart en le "componentDidUnmount"
+      window.removeEventListener("beforeunload", () => {
+        const updatedCart = getOfStorage("shoppingCart");
+        return APISpot.cart.updateCart(updatedCart);
+      });
+      const updatedCart = getOfStorage("shoppingCart");
+      return APISpot.cart.updateCart(updatedCart);
+    };
   }, [document]);
 
   return (

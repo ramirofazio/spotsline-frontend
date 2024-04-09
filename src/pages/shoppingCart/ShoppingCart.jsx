@@ -18,7 +18,7 @@ export default function ShoppingCart() {
 
   const [discountCode, setDiscountCode] = useState("");
   const [loading, setLoading] = useState(false);
-
+  console.log(items)
   const handleCreateCheckout = async () => {
     setLoading(true);
     try {
@@ -33,23 +33,23 @@ export default function ShoppingCart() {
 
       if (items?.length) {
         console.log(items);
-        const createCart = await APISpot.cart.updateCart({
+        // const createCart = await APISpot.cart.updateCart({
+        //   ...body,
+        //   id: 43,
+        //   items: items.map(({ id, quantity, name, img, price }) => {
+        //     return { productId: id, qty: quantity, name, img, price };
+        //   }),
+        //   total,
+        //   subtotal,
+        // });
+        const createCart = await APISpot.cart.createCart({
           ...body,
-          id: 27,
           items: items.map(({ id, quantity, name, img, price }) => {
             return { productId: id, qty: quantity, name, img, price };
           }),
           total,
           subtotal,
         });
-        // const createCart = await APISpot.cart.createCart({
-        //   ...body,
-        //   items: items.map(({ id, quantity, name, image, price }) => {
-        //     return { productId: id, qty: quantity, name, image, price };
-        //   }),
-        //   total,
-        //   subtotal,
-        // });
         console.log(createCart);
       }
 
@@ -112,7 +112,7 @@ export default function ShoppingCart() {
             <Link to="/productos/0">VER PRODUCTOS</Link>
           </DefaultButton>
         )}
-        {items.map(({ img, name, price, quantity, id }, index) => (
+        {items.map(({ img, name, price, qty, id }, index) => (
           <article key={index} className="z-10 flex min-w-[80vw] items-center gap-6 rounded-xl bg-white p-6">
             <Image src={img} width={150} height={150} alt={`${name} img`} className="shadow-inner" />
             <div className="flex w-full flex-col items-start gap-4">
@@ -135,20 +135,20 @@ export default function ShoppingCart() {
                     radius="full"
                     className="flex bg-dark text-xl font-bold text-primary"
                     onPress={() =>
-                      dispatch(actionsShoppingCart.updateCartItemQuantity({ id: id, quantity: quantity - 1 }))
+                      dispatch(actionsShoppingCart.updateCartItemQuantity({ id: id, quantity: qty - 1 }))
                     }
                   >
                     <i className="ri-subtract-line" />
                   </Button>
-                  <p>{quantity}</p>
+                  <p>{qty}</p>
                   <Button
                     isIconOnly
                     radius="full"
-                    className="flex bg-dark text-xl font-bold text-primary"
+                    className="flex bg-dark text-xl font-bold text-primary disabled:opacity-50"
                     onPress={() =>
-                      dispatch(actionsShoppingCart.updateCartItemQuantity({ id: id, quantity: quantity + 1 }))
+                      dispatch(actionsShoppingCart.updateCartItemQuantity({ id, quantity: qty + 1 }))
                     }
-                    isDisabled={quantity >= 100}
+                    isDisabled={qty >= 100}
                   >
                     <i className="ri-add-line" />
                   </Button>

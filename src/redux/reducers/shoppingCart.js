@@ -10,7 +10,7 @@ const initialState = {
 };
 
 const calculateSubtotal = (items) => {
-  return items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  return items.reduce((acc, item) => acc + item.price * item.qty, 0);
 };
 
 export const calculateTotal = (subtotal, discount) => {
@@ -44,10 +44,11 @@ const shoppingCartSlice = createSlice({
       saveInStorage("shoppingCart", state);
     },
     updateCartItemQuantity(state, action) {
+      console.log(action.payload);
       const { id, quantity } = action.payload;
       const updatedItems = state.items.map((item) => {
         if (item.id === id) {
-          return { ...item, quantity: quantity };
+          return { ...item, qty: quantity };
         }
         return item;
       });
@@ -84,6 +85,8 @@ const shoppingCartSlice = createSlice({
       saveInStorage("shoppingCart", state);
     },
     loadCart(state, action) {
+      console.log(action.payload);
+      console.log("subtotal", calculateSubtotal(state.items));
       state.items = action.payload.items || [];
       state.subtotal = calculateSubtotal(state.items);
       state.total = calculateTotal(state.subtotal, state.discount);
