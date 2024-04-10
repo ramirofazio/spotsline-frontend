@@ -28,7 +28,6 @@ export default function Layout({ children }) {
 
       if (user) {
         if (Object.keys(shoppingCart)?.length) {
-          console.log("SI TENIA", shoppingCart);
           shoppingCart.subtotal = parseFloat(shoppingCart.subtotal);
           shoppingCart.total = parseFloat(shoppingCart.total);
           shoppingCart.items = shoppingCart.items.map((itm) => {
