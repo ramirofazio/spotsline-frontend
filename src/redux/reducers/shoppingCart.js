@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import { saveInStorage } from "src/utils/localStorage";
 
 const initialState = {
+  id: false,
+  modified: false,
   items: [],
   discount: 0,
   total: 0,
@@ -23,6 +25,7 @@ const shoppingCartSlice = createSlice({
   reducers: {
     addItemToCart(state, action) {
       //? action.payload = {id: 1234, name: "Articulo Spotsline", img: "....", price: 9999, quantity: 2}
+      state.modified = true;
       const newItem = action.payload;
       const existingItem = state.items.find((item) => item.id === newItem.id);
 
@@ -37,6 +40,7 @@ const shoppingCartSlice = createSlice({
       saveInStorage("shoppingCart", state);
     },
     removeItemFromCart(state, action) {
+      state.modified = true;
       const itemId = action.payload;
       state.items = state.items.filter((item) => item.id !== itemId);
       state.subtotal = calculateSubtotal(state.items);
@@ -44,7 +48,7 @@ const shoppingCartSlice = createSlice({
       saveInStorage("shoppingCart", state);
     },
     updateCartItemQuantity(state, action) {
-      console.log(action.payload);
+      state.modified = true;
       const { id, quantity } = action.payload;
       const updatedItems = state.items.map((item) => {
         if (item.id === id) {
@@ -59,6 +63,7 @@ const shoppingCartSlice = createSlice({
       saveInStorage("shoppingCart", state);
     },
     applyDiscount(state, action) {
+      state.modified = true;
       const coupon = action.payload;
 
       state.discount = state.discount + coupon.discountPercentaje;
@@ -68,6 +73,7 @@ const shoppingCartSlice = createSlice({
       saveInStorage("shoppingCart", state);
     },
     removeDiscount(state, action) {
+      state.modified = true;
       const coupon = action.payload;
       state.discount = state.discount - coupon.discountPercentaje;
       state.currentCoupon = false;
@@ -77,6 +83,7 @@ const shoppingCartSlice = createSlice({
     },
 
     clearCart(state) {
+      state.modified = false;
       state.items = [];
       state.subtotal = 0;
       state.total = 0;
@@ -87,6 +94,7 @@ const shoppingCartSlice = createSlice({
     loadCart(state, action) {
       console.log(action.payload);
       console.log("subtotal", calculateSubtotal(state.items));
+      state.id = action.payload.id || null;
       state.items = action.payload.items || [];
       state.subtotal = calculateSubtotal(state.items);
       state.total = calculateTotal(state.subtotal, state.discount);

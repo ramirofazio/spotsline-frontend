@@ -27,15 +27,17 @@ export default function Layout({ children }) {
     const { user, shoppingCart } = await APISpot.auth.jwtAutoSignIn({ jwt: access_token, email });
 
     if (user) {
-      shoppingCart.subtotal = parseFloat(shoppingCart.subtotal);
-      shoppingCart.total = parseFloat(shoppingCart.total);
-      shoppingCart.items = shoppingCart.items.map((itm) => {
-        return { ...itm, price: parseFloat(itm.price) };
-      });
+      if(Object.keys(shoppingCart)?.length) {
+        shoppingCart.subtotal = parseFloat(shoppingCart.subtotal);
+        shoppingCart.total = parseFloat(shoppingCart.total);
+        shoppingCart.items = shoppingCart.items.map((itm) => {
+          return { ...itm, price: parseFloat(itm.price) };
+        });
+        dispatch(actionsShoppingCart.loadCart(shoppingCart));
+        saveInStorage("shoppingCart", shoppingCart);
+      }
 
       dispatch(setUser(user));
-      dispatch(actionsShoppingCart.loadCart(shoppingCart));
-      saveInStorage("shoppingCart", shoppingCart);
       window.addEventListener("beforeunload", () => {
         const updatedCart = getOfStorage("shoppingCart");
         return APISpot.cart.updateCart(updatedCart);
@@ -68,12 +70,9 @@ export default function Layout({ children }) {
 
     return () => {
       // * Por si acaso se guardad el cart en le "componentDidUnmount"
-      window.removeEventListener("beforeunload", () => {
-        const updatedCart = getOfStorage("shoppingCart");
-        return APISpot.cart.updateCart(updatedCart);
-      });
-      const updatedCart = getOfStorage("shoppingCart");
-      return APISpot.cart.updateCart(updatedCart);
+      window.removeEventListener("beforeunload", () => {});
+      // const updatedCart = getOfStorage("shoppingCart");
+      // return APISpot.cart.updateCart(updatedCart);
     };
   }, [document]);
 
