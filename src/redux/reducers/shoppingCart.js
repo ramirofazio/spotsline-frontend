@@ -92,8 +92,7 @@ const shoppingCartSlice = createSlice({
       saveInStorage("shoppingCart", state);
     },
     loadCart(state, action) {
-      console.log(action.payload);
-      console.log("subtotal", calculateSubtotal(state.items));
+
       state.id = action.payload.id || null;
       state.items = action.payload.items || [];
       state.subtotal = calculateSubtotal(state.items);

@@ -99,8 +99,11 @@ export const APISpot = {
       return res.data;
     },
     updateCart: async (shoppingCart) => {
-      console.log(shoppingCart);
       const res = await BASE_API.put(`/${route.CART}/update`, shoppingCart);
+      return res.data;
+    },
+    deleteCart: async (userId, force) => {
+      const res = await BASE_API.delete(`/${route.CART}/delete/${userId}?force=${Boolean(force)}`);
       return res.data;
     },
   },

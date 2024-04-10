@@ -14,7 +14,7 @@ import { saveInStorage } from "src/utils/localStorage";
 export default function ShoppingCart() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const { items, total, subtotal, discount, currentCoupon } = useSelector((state) => state.cart);
+  const { items, total, subtotal, discount, currentCoupon, id } = useSelector((state) => state.cart);
 
   const [discountCode, setDiscountCode] = useState("");
   const [loading, setLoading] = useState(false);
@@ -66,6 +66,21 @@ export default function ShoppingCart() {
     }
   };
 
+  async function resetCart(cartId) {
+    try {
+      setLoading(true);
+      await APISpot.cart.deleteCart(cartId, false);
+      dispatch(actionsShoppingCart.clearCart());
+      toast.success(`Se vacio el carrito`);
+    } catch (e) {
+      console.log(e);
+      const backErr = e?.response?.data;
+      toast.error("Hubo un error al aplicar el cupon", { description: backErr ? backErr?.message : e.message });
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
     document.title = "SPOTSLINE - Carrito de compras";
   }, [document]);
@@ -90,6 +105,16 @@ export default function ShoppingCart() {
             <Link to="/productos/0">VER PRODUCTOS</Link>
           </DefaultButton>
         )}
+        <Button
+          isIconOnly
+          onPress={() => resetCart(id)}
+          radius="full"
+          disabled={!items.length && true}
+          className="ml-auto bg-gradient-to-tl from-primary to-background shadow-xl disabled:opacity-40 disabled:pointer-events-none"
+        >
+          <i className="ri-delete-bin-6-line text-2xl"></i>
+        </Button>
+
         {items.map(({ img, name, price, qty, id }, index) => (
           <article key={index} className="z-10 flex min-w-[80vw] items-center gap-6 rounded-xl bg-white p-6">
             <Image src={img} width={150} height={150} alt={`${name} img`} className="shadow-inner" />
@@ -112,9 +137,7 @@ export default function ShoppingCart() {
                     isIconOnly
                     radius="full"
                     className="flex bg-dark text-xl font-bold text-primary"
-                    onPress={() =>
-                      dispatch(actionsShoppingCart.updateCartItemQuantity({ id: id, quantity: qty - 1 }))
-                    }
+                    onPress={() => dispatch(actionsShoppingCart.updateCartItemQuantity({ id: id, quantity: qty - 1 }))}
                   >
                     <i className="ri-subtract-line" />
                   </Button>
@@ -123,9 +146,7 @@ export default function ShoppingCart() {
                     isIconOnly
                     radius="full"
                     className="flex bg-dark text-xl font-bold text-primary disabled:opacity-50"
-                    onPress={() =>
-                      dispatch(actionsShoppingCart.updateCartItemQuantity({ id, quantity: qty + 1 }))
-                    }
+                    onPress={() => dispatch(actionsShoppingCart.updateCartItemQuantity({ id, quantity: qty + 1 }))}
                     isDisabled={qty >= 100}
                   >
                     <i className="ri-add-line" />
@@ -137,6 +158,7 @@ export default function ShoppingCart() {
         ))}
       </section>
       <Divider className="h-1 bg-primary" />
+
       <section className="relative m-6 mx-auto flex max-w-[80vw] flex-col  items-start gap-6 rounded-xl border-2 border-primary/50 bg-dark/50 p-6 font-secondary font-bold text-white">
         <h2 className="yellow-neon text-xl font-extrabold">RESUMEN</h2>
         <div className="z-10 flex w-full items-center justify-between border-b-1 border-dotted border-primary/40">
