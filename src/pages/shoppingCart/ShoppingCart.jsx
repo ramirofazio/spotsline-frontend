@@ -30,24 +30,13 @@ export default function ShoppingCart() {
           return { id: id, qty: quantity };
         }),
       };
-      // TODO en que momento crear el cart
-      if (items?.length) {
-        await APISpot.cart.createCart({
-          ...body,
-          items: items.map(({ id, quantity, name, img, price }) => {
-            return { productId: id, qty: quantity, name, img, price };
-          }),
-          total,
-          subtotal,
-        });
-      }
 
       //* Guardo para recuperar en `PaymentOK.jsx`
       saveInStorage("orderBody", body);
-      // const res = await APISpot.checkout.create(body);
-      // if (res) {
-      //   window.open(res);
-      // }
+      const res = await APISpot.checkout.create(body);
+      if (res) {
+        window.open(res);
+      }
     } catch (e) {
       console.log(e);
       toast.error("Hubo un error al aplicar el cupon", { description: e.response.data.message || e });

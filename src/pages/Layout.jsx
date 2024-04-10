@@ -10,7 +10,6 @@ import { ChangePasswordModal } from "./signIn/ChangePasswordModal";
 import { useDisclosure } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { actionsShoppingCart } from "src/redux/reducers";
-import { assets } from "src/assets";
 
 export default function Layout({ children }) {
   const dispatch = useDispatch();
@@ -39,12 +38,10 @@ export default function Layout({ children }) {
           saveInStorage("shoppingCart", shoppingCart);
         } else {
           let storageCart = getOfStorage("shoppingCart");
-          console.log("NO TENIA", storageCart);
           storageCart && delete storageCart.id;
           if (storageCart && Object.keys(storageCart)?.length) {
             return await APISpot.cart.createCart(storageCart);
           } else {
-            console.log("desde 0");
             return await APISpot.cart.createCart({
               userId: user.id,
               discount: 0,
@@ -95,6 +92,7 @@ export default function Layout({ children }) {
     return () => {
       // * Por si acaso se guardad el cart en le "componentDidUnmount"
       window.removeEventListener("beforeunload", () => {});
+      // ? En caso de que no funcione "beforeunload"
       // const updatedCart = getOfStorage("shoppingCart");
       // return APISpot.cart.updateCart(updatedCart);
     };
