@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { isValidSignIn } from "../../utils/validation";
 import { APISpot, addAuthWithToken } from "../../api";
-import { actionsAuth, actionsUser } from "../../redux/reducers";
+import { actionsAuth, actionsShoppingCart, actionsUser } from "../../redux/reducers";
 import { Divider, Image, useDisclosure } from "@nextui-org/react";
 import { toast } from "sonner";
 import { InitChangePasswordModal } from "./InitChangePasswordModal";
@@ -31,11 +31,13 @@ export function SignIn() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const { access_token, user } = await APISpot.auth.signIn(signInData);
+      const { access_token, user, shoppingCart } = await APISpot.auth.signIn(signInData);
       if (access_token && user) {
         addAuthWithToken(access_token);
         dispatch(actionsAuth.setAccessToken(access_token));
         dispatch(actionsUser.setUser(user));
+        console.log(shoppingCart);
+        Object.keys(shoppingCart)?.length && dispatch(actionsShoppingCart.loadCart(shoppingCart));
         if (!user.firstSignIn) {
           toast.info(`Bienvenido de nuevo ${user.email.split("@")[0]}`, {
             description: "¡Estamos contentos de que hayas vuelto a nuestra web!",
@@ -85,7 +87,7 @@ export function SignIn() {
               onChange={handleChange}
             />
             <DefaultButton
-              isDisabled={!signInData?.email?.length || !signInData?.password?.length && true}
+              isDisabled={!signInData?.email?.length || (!signInData?.password?.length && true)}
               isLoading={isLoading}
               type="submit"
             >
