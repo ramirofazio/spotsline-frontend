@@ -1,15 +1,16 @@
+import { useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { DefaultButton } from "src/components";
 import FloatingLogos from "src/components/images/FloatingLogos";
-import { Button, Divider, Spinner } from "@nextui-org/react";
-import { Suspense, useState } from "react";
+import { Button, Divider } from "@nextui-org/react";
 import { motion } from "framer-motion";
 
 const selectButtonsData = [
   { name: "PRODUCTOS", startIcon: "image-2", link: "/dashboard/productos" },
+  { name: "VENDEDORES", startIcon: "customer-service", link: "/dashboard/vendedores" },
   { name: "CUPONES", startIcon: "coupon-2", link: "/dashboard/cupones" },
+  { name: "CLIENTES", startIcon: "user-3", link: "/dashboard/clientes/1" },
   { name: "ORDENES", startIcon: "shopping-cart-2", link: "/dashboard/ordenes" },
-  { name: "USUARIOS", startIcon: "user-3", link: "/dashboard/usuarios" },
 ];
 
 const sidebarVariants = {
@@ -19,7 +20,6 @@ const sidebarVariants = {
 
 export default function Dashboard({ children }) {
   const [hide, setHide] = useState(false);
-  //TODO VER EL TEMA DE SUSPENSE Y LOADERS EN LAS DISINTAS RUTAS
 
   return (
     <main>
@@ -45,10 +45,12 @@ export default function Dashboard({ children }) {
           <SelectButtons />
         </motion.div>
         <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600 lg:hidden" />
-        <div className={`px-2 pt-6 lg:h-screen lg:pt-20 ${hide ? "lg:col-span-4" : "lg:col-span-3"}`}>
-          <Suspense key={children} fallback={<Spinner color="secondary" className="text-xl" />}>
-            {children}
-          </Suspense>
+        <div
+          className={`min-h-[80vh] px-2 pt-6  lg:py-10 lg:pr-10 lg:pt-20 ${
+            hide ? "pl-10 lg:col-span-4" : "lg:col-span-3"
+          }`}
+        >
+          {children}
         </div>
       </section>
     </main>
@@ -103,17 +105,23 @@ function SelectButtons() {
   return selectButtonsData.map(({ name, startIcon, link }) => (
     <DefaultButton
       key={name}
-      startContent={<i className={`ri-${startIcon}-fill text-xl text-dark transition`} />}
-      endContent={
+      startContent={
         <i
-          className={`ri-arrow-right-s-line text-xl text-dark transition lg:rotate-90 ${
-            pathname === link && "rotate-90 lg:!rotate-0"
+          className={`ri-${startIcon}-fill absolute left-10 text-xl text-dark ${
+            pathname.includes(link) && "animate-pulse"
           }`}
         />
       }
-      className={`xl:!w-80 ${pathname === link && "!scale-110 from-dark/20 to-dark/20"}`}
+      endContent={
+        <i
+          className={`ri-arrow-right-s-line absolute right-10 text-xl text-dark transition lg:rotate-90 ${
+            pathname.includes(link) && "rotate-90 animate-pulse lg:!rotate-0"
+          }`}
+        />
+      }
+      className={`xl:!w-80 ${pathname.includes(link) && "from-yellow-200 to-primary "}`}
       as={Link}
-      to={link}
+      to={name === "PRODUCTOS" ? `${link}/1` : link}
     >
       {name}
     </DefaultButton>

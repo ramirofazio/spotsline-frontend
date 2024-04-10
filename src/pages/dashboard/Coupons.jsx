@@ -47,9 +47,15 @@ export function Coupons() {
           <div className="flex justify-center">
             <Tooltip content={"Eliminar cupon"} delay={1000} color="primary">
               <i
-                onClick={() => handleRemoveCoupon(item.id)}
-                className={`ri-delete-bin-line icons bg-gradient-to-r from-primary to-yellow-600
-                bg-clip-text text-center text-xl font-bold text-transparent`}
+                onClick={() =>
+                  toast.info("¿Seguro quieres eliminar este cupon?", {
+                    position: "top-center",
+                    duration: 10000,
+                    action: { label: "CONFIRMAR", onClick: () => handleRemoveCoupon(item.id) },
+                  })
+                }
+                className={`ri-delete-bin-line icons bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-center
+                text-xl font-bold text-transparent transition hover:from-red-600 hover:to-red-600`}
               />
             </Tooltip>
           </div>
@@ -62,8 +68,8 @@ export function Coupons() {
                 onClick={() => handleToggleState(item.id)}
                 className={`${
                   cellValue
-                    ? "ri-eye-fill bg-gradient-to-r from-primary to-yellow-600 bg-clip-text text-transparent"
-                    : "ri-eye-close-line bg-gradient-to-r from-dark to-yellow-600 bg-clip-text text-transparent"
+                    ? "ri-eye-fill bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent"
+                    : "ri-eye-close-line bg-gradient-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent"
                 } icons text-center text-xl font-bold`}
               />
             </Tooltip>
@@ -190,7 +196,7 @@ export function Coupons() {
 function CreateNewCouponModal({ isOpen, onOpenChange, onClose }) {
   //TODO VALIDAR ESTE FORM
   const [loading, setLoading] = useState(false);
-  const [thisCoupon, setThisCoupon] = useState({ name: "", discountPercentaje: 1 });
+  const [thisCoupon, setThisCoupon] = useState({ name: "", discountPercentaje: "" });
 
   const handleCreateCoupon = async (e) => {
     //? Logica para crear un cupon
@@ -199,7 +205,7 @@ function CreateNewCouponModal({ isOpen, onOpenChange, onClose }) {
 
     try {
       const res = await APISpot.dashboard.createCoupon({
-        ...thisCoupon,
+        name: thisCoupon.name.trim(),
         discountPercentaje: Number(thisCoupon.discountPercentaje),
       });
       if (res) {
@@ -230,7 +236,7 @@ function CreateNewCouponModal({ isOpen, onOpenChange, onClose }) {
           label={"Codigo"}
           name={"name"}
           startContentIcon={"ri-text font-bold text-xl"}
-          onChange={(e) => setThisCoupon({ ...thisCoupon, [e.target.name]: e.target.value.toUpperCase().trim() })}
+          onChange={(e) => setThisCoupon({ ...thisCoupon, [e.target.name]: e.target.value.toUpperCase() })}
           value={thisCoupon.name}
         />
         <BasicInput
