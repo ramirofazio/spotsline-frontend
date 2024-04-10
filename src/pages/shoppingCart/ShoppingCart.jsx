@@ -18,7 +18,7 @@ export default function ShoppingCart() {
 
   const [discountCode, setDiscountCode] = useState("");
   const [loading, setLoading] = useState(false);
-  console.log(items)
+
   const handleCreateCheckout = async () => {
     setLoading(true);
     try {
@@ -30,19 +30,9 @@ export default function ShoppingCart() {
           return { id: id, qty: quantity };
         }),
       };
-
+      // TODO en que momento crear el cart
       if (items?.length) {
-        console.log(items);
-        // const createCart = await APISpot.cart.updateCart({
-        //   ...body,
-        //   id: 43,
-        //   items: items.map(({ id, quantity, name, img, price }) => {
-        //     return { productId: id, qty: quantity, name, img, price };
-        //   }),
-        //   total,
-        //   subtotal,
-        // });
-        const createCart = await APISpot.cart.createCart({
+        await APISpot.cart.createCart({
           ...body,
           items: items.map(({ id, quantity, name, img, price }) => {
             return { productId: id, qty: quantity, name, img, price };
@@ -50,10 +40,9 @@ export default function ShoppingCart() {
           total,
           subtotal,
         });
-        console.log(createCart);
       }
 
-      //? Guardo para recuperar en `PaymentOK.jsx`
+      //* Guardo para recuperar en `PaymentOK.jsx`
       saveInStorage("orderBody", body);
       // const res = await APISpot.checkout.create(body);
       // if (res) {

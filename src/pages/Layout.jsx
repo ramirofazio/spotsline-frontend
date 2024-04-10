@@ -24,26 +24,48 @@ export default function Layout({ children }) {
   const { onOpen, onOpenChange, isOpen, onClose } = useDisclosure();
 
   const getUserFromDb = async (access_token, email) => {
-    const { user, shoppingCart } = await APISpot.auth.jwtAutoSignIn({ jwt: access_token, email });
+    try {
+      const { user, shoppingCart } = await APISpot.auth.jwtAutoSignIn({ jwt: access_token, email });
 
-    if (user) {
-      if(Object.keys(shoppingCart)?.length) {
-        shoppingCart.subtotal = parseFloat(shoppingCart.subtotal);
-        shoppingCart.total = parseFloat(shoppingCart.total);
-        shoppingCart.items = shoppingCart.items.map((itm) => {
-          return { ...itm, price: parseFloat(itm.price) };
-        });
-        dispatch(actionsShoppingCart.loadCart(shoppingCart));
-        saveInStorage("shoppingCart", shoppingCart);
-      }
-
-      dispatch(setUser(user));
-      window.addEventListener("beforeunload", () => {
-        const shoppingCart = getOfStorage("shoppingCart");
-        if(shoppingCart.modified) {
-          return APISpot.cart.updateCart(shoppingCart);
+      if (user) {
+        if (Object.keys(shoppingCart)?.length) {
+          console.log("SI TENIA", shoppingCart);
+          shoppingCart.subtotal = parseFloat(shoppingCart.subtotal);
+          shoppingCart.total = parseFloat(shoppingCart.total);
+          shoppingCart.items = shoppingCart.items.map((itm) => {
+            return { ...itm, price: parseFloat(itm.price) };
+          });
+          dispatch(actionsShoppingCart.loadCart(shoppingCart));
+          saveInStorage("shoppingCart", shoppingCart);
+        } else {
+          let storageCart = getOfStorage("shoppingCart");
+          console.log("NO TENIA", storageCart);
+          storageCart && delete storageCart.id;
+          if (storageCart && Object.keys(storageCart)?.length) {
+            return await APISpot.cart.createCart(storageCart);
+          } else {
+            console.log("desde 0");
+            return await APISpot.cart.createCart({
+              userId: user.id,
+              discount: 0,
+              subtotal: 0,
+              total: 0,
+              coupon: false,
+              items: [],
+            });
+          }
         }
-      });
+
+        dispatch(setUser(user));
+        window.addEventListener("beforeunload", () => {
+          const shoppingCart = getOfStorage("shoppingCart");
+          if (shoppingCart.modified) {
+            return APISpot.cart.updateCart(shoppingCart);
+          }
+        });
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
