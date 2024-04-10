@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { DarkModal, DefaultButton } from "..";
 import { useDisclosure } from "@nextui-org/react";
 import { useEffect, useState } from "react";
@@ -6,9 +6,11 @@ import { Link } from "react-router-dom";
 import { APISpot } from "src/api";
 import { toast } from "sonner";
 import { deleteOfStorage, getOfStorage } from "src/utils/localStorage";
+import { actionsShoppingCart } from "src/redux/reducers";
 
 export function PaymentOk({ transactionId, type }) {
-  const { id } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const { id } = useSelector((state) => state.cart);
   const orderBody = getOfStorage("orderBody");
 
   const { onOpen, isOpen, onOpenChange, onClose } = useDisclosure();
@@ -23,10 +25,11 @@ export function PaymentOk({ transactionId, type }) {
 
       try {
         if (orderBody) {
-          
-          console.log("orden");
           APISpot.user.createOrder({ ...orderBody, transactionId, type }).then((res) => {
             if (res) {
+              APISpot.cart.deleteCart(id, false);
+              dispatch(actionsShoppingCart.clearCart());
+              deleteOfStorage("orderBody");
               toast.success("Orden de compra creada con exito", { description: "¡Gracias por comprar en Spotsline!" });
             }
           });
@@ -38,9 +41,6 @@ export function PaymentOk({ transactionId, type }) {
       } finally {
         setLoading(false);
       }
-      // reset shoppingCart
-      deleteOfStorage("orderBody");
-      deleteOfStorage("shoppingCart");
     };
   }, []);
 
