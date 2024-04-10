@@ -9,12 +9,12 @@ import "swiper/css";
 import { Toaster } from "sonner";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <NextUIProvider>
-        <Toaster duration={3000} style={{ backgroundColor: "#D9D9D9" }} richColors={true} gap={2} />
-        <Routes />
-      </NextUIProvider>
-    </Provider>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <Provider store={store}>
+    <NextUIProvider>
+      <Toaster duration={3000} style={{ backgroundColor: "#D9D9D9" }} richColors={true} gap={2} />
+      <Routes />
+    </NextUIProvider>
+  </Provider>
+  // </React.StrictMode>
 );

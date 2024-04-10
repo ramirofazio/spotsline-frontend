@@ -39,8 +39,10 @@ export default function Layout({ children }) {
 
       dispatch(setUser(user));
       window.addEventListener("beforeunload", () => {
-        const updatedCart = getOfStorage("shoppingCart");
-        return APISpot.cart.updateCart(updatedCart);
+        const shoppingCart = getOfStorage("shoppingCart");
+        if(shoppingCart.modified) {
+          return APISpot.cart.updateCart(shoppingCart);
+        }
       });
     }
   };
