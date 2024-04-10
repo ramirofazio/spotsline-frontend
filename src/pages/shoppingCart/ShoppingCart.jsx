@@ -45,15 +45,22 @@ export default function ShoppingCart() {
     }
   };
 
-  const handleApplyDiscount = async () => {
+  const handleApplyDiscount = async (e) => {
+    e.preventDefault();
     try {
       setLoading(true);
-      if (currentCoupon) {
-        return toast.error("ya estas utilizando un cupon");
+      const exist = Object.keys(currentCoupon).includes(discountCode);
+
+      if (exist) {
+        return toast.error("ya esta usando este cupon");
+      }
+      if (discount || Object.keys(currentCoupon).length) {
+        return toast.error("ya tiene un cupon en uso");
       }
 
       const coupon = await APISpot.cart.validateCoupon(discountCode);
       if (coupon) {
+        setDiscountCode("");
         dispatch(actionsShoppingCart.applyDiscount(coupon));
         toast.success(`Descuento de ${coupon.discountPercentaje}% aplicado!`);
       }
@@ -110,7 +117,7 @@ export default function ShoppingCart() {
           onPress={() => resetCart(id)}
           radius="full"
           disabled={!items.length && true}
-          className="ml-auto bg-gradient-to-tl from-primary to-background shadow-xl disabled:opacity-40 disabled:pointer-events-none"
+          className="ml-auto bg-gradient-to-tl from-primary to-background shadow-xl disabled:pointer-events-none disabled:opacity-40"
         >
           <i className="ri-delete-bin-6-line text-2xl"></i>
         </Button>
@@ -160,47 +167,58 @@ export default function ShoppingCart() {
       <Divider className="h-1 bg-primary" />
 
       <section className="relative m-6 mx-auto flex max-w-[80vw] flex-col  items-start gap-6 rounded-xl border-2 border-primary/50 bg-dark/50 p-6 font-secondary font-bold text-white">
-        <h2 className="yellow-neon text-xl font-extrabold">RESUMEN</h2>
-        <div className="z-10 flex w-full items-center justify-between border-b-1 border-dotted border-primary/40">
+        <h2 className="yellow-neon text-xl font-bold tracking-wider">RESUMEN</h2>
+        <div className="z-10 flex w-full items-center justify-between">
           <h3>SUBTOTAL</h3>
-          <h3 className="font-bold text-primary">{formatPrices(subtotal)}</h3>
+          <h3 className="yellowGradient font-bold">{formatPrices(subtotal)}</h3>
         </div>
-        {discount !== 0 && currentCoupon && Object.keys(currentCoupon)?.length && (
-          <div className="relative z-10 flex w-full items-center justify-between border-b-1 border-dotted border-primary/40">
-            <h3>DESCUENTO</h3>
-            <h3 className="mr-6 font-bold text-primary">{currentCoupon.discountPercentaje} %</h3>
-            <i
-              className="ri-delete-bin-line icons absolute right-0 text-sm text-dark"
-              onClick={() => dispatch(actionsShoppingCart.removeDiscount(currentCoupon))}
-            />
-          </div>
-        )}
-        <div className="z-10 flex w-full items-center justify-between border-b-1 border-dotted border-primary/40">
+        {discount !== 0 && <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />}
+        {discount !== 0 &&
+          Object.keys(currentCoupon)?.length &&
+          Object.values(currentCoupon).map((coupon, i) => (
+            <div key={i} className="relative z-10 flex w-full items-center justify-between">
+              <h3>
+                Cupón <strong className="yellowGradient">{coupon.name}</strong>
+              </h3>
+              <h3 className="yellowGradient mr-10 font-bold">{coupon.discountPercentaje} %</h3>
+              <i
+                className="ri-delete-bin-line icons absolute right-0 text-lg text-background"
+                onClick={() => dispatch(actionsShoppingCart.removeDiscount(coupon))}
+              />
+            </div>
+          ))}
+        <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
+        <div className="z-10 flex w-full items-center justify-between">
           <h3>TOTAL A PAGAR</h3>
-          <h3 className="font-bold text-primary">{formatPrices(total)}</h3>
+          <h3 className="bg-gradient-to-r from-primary to-yellow-200 bg-clip-text font-extrabold text-transparent">
+            {formatPrices(total)}
+          </h3>
         </div>
+        <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
         <div className="mx-auto flex w-full flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div className="flex flex-col">
             <p className="mx-auto text-left font-thin lg:mx-0">Tengo un código promocional</p>
-            <form className="z-20 mx-auto flex items-center justify-center rounded-xl md:w-80">
+            <form
+              className="z-20 mx-auto flex items-center justify-center rounded-xl md:w-80"
+              onSubmit={handleApplyDiscount}
+            >
               <Input
                 type="text"
                 radius="none"
                 classNames={{
                   inputWrapper: "h-10 rounded-tl-xl rounded-bl-xl",
                   clearButton: "text-dark",
-                  input: "uppercase",
                 }}
                 placeholder="CÓDIGO"
                 isClearable
                 onClear={() => setDiscountCode("")}
                 value={discountCode}
-                onChange={(e) => setDiscountCode(e.target.value)}
+                onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
               />
               <Button
-                onPress={handleApplyDiscount}
+                type="submit"
                 className="icons h-10 rounded-none rounded-br-xl rounded-tr-xl bg-background from-background to-primary font-bold text-black transition hover:bg-gradient-to-r"
-                isDisabled={items.length === 0}
+                isDisabled={items.length === 0 || discountCode === ""}
               >
                 APLICAR
               </Button>
