@@ -2,7 +2,7 @@ import { Button, Card, CardBody, CardFooter, Image } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { assets } from "src/assets";
 
-export function ProductCard({ description, id, pathImage }) {
+export function ProductCard({ description, codigo, pathImage }) {
   const navigate = useNavigate();
   return (
     <Card className=" w-[200px] overflow-visible bg-transparent shadow-none hover:scale-105">
@@ -22,7 +22,7 @@ export function ProductCard({ description, id, pathImage }) {
         <Button
           radius="full"
           className="bg-secondary px-6 text-[13px] uppercase text-primary shadow-xl hover:bg-primary hover:text-secondary"
-          onClick={() => navigate(`/producto/${id}`)}
+          onClick={() => navigate(`/producto/${codigo}`)}
         >
           <b>Ver más</b>
         </Button>

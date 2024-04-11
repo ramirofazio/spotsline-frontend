@@ -1,6 +1,6 @@
 import { ProductCard } from "src/components/index";
 import { PaginationComponent } from "components/index";
-import { Button, Input } from "@nextui-org/react";
+import { Input } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { APISpot } from "src/api";
 import { useNavigate, useParams } from "react-router-dom";
@@ -24,14 +24,13 @@ const categories = [
 export function Products() {
   const navigate = useNavigate();
   const { page } = useParams();
-  const { totalPages } = useSelector((state) => state.product);
+  const { totalPages, filters } = useSelector((state) => state.product);
 
   useEffect(() => {
     if (!parseInt(page)) navigate("/productos/1");
   }, [page]);
 
   function handleChangePage(page) {
-    console.log(page);
     navigate("/productos/" + page);
   }
 
@@ -46,7 +45,7 @@ export function Products() {
           <h2 className="text-lg font-semibold ">Categoria de Productos</h2>
           <ul className="pl-4">
             {categories.map((cat) => (
-              <li key={cat}>{cat}</li>
+              <li key={cat} className={cat === filters.category && 'font-semibold'}>{cat}</li>
             ))}
           </ul>
         </article>

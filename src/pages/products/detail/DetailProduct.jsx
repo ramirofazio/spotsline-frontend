@@ -25,13 +25,11 @@ export function DetailProduct() {
     APISpot.product
       .getOne({ id })
       .then(({ data }) => {
-        console.log(data);
         setProduct(data);
         setCurrent(data.variants[0]);
         document.title = "SPOTSLINE - " + data.description;
       })
       .catch((err) => {
-        console.log(err);
         toast.error(err.message);
       })
       .finally(() => {
@@ -97,7 +95,7 @@ export function DetailProduct() {
           {email ? "Agregar al carrito" : "Acceder para ver precios"}
         </Button>
       </section>
-      <div className="space-y-4 rounded-md bg-primary/30 p-6 md:w-[55%] lg:w-3/5 lg:mt-6">
+      <div className="space-y-4 rounded-md bg-primary/30 p-6 md:w-[55%] lg:mt-6 lg:w-3/5">
         <h2 className="text-center text-lg font-semibold uppercase">Caracteristicas</h2>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum totam itaque quod nihil! Tenetur, perferendis
         molestiae dolor optio commodi
