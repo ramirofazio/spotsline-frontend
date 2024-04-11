@@ -7,8 +7,8 @@ import { assets } from "src/assets";
 import { SkeletonDetail } from "./SkeletonDetail";
 import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart } from "src/redux/reducers/shoppingCart";
-import { PreviewImage } from "./PreviewImage";
-
+import colors from "../../../data/colors.json";
+import { VariantsProduct } from "./VariantsProducts";
 export function DetailProduct() {
   const { id } = useParams();
   const [product, setProduct] = useState();
@@ -63,9 +63,9 @@ export function DetailProduct() {
   //if (!product?.variants?.length) throw "";
 
   return (
-    <main className="mb-10 mt-20 min-h-[500px]  max-w-7xl gap-16 px-6 md:mt-32  md:flex md:px-12 lg:mx-auto">
+    <main className="mb-10 mt-20 min-h-[500px] max-w-7xl flex-wrap px-6 md:mt-32 md:flex md:gap-6 lg:mx-auto lg:gap-10 lg:px-12">
       <VariantsProduct variants={product.variants} current={{ set: setCurrent, values: current }} />
-      <section className="my-10 md:my-0 md:w-1/2">
+      <section className="my-10 md:my-0 md:flex-1">
         <h1 className="mb-8 font-primary text-3xl font-semibold">{product?.description}</h1>
 
         {email && (
@@ -96,39 +96,51 @@ export function DetailProduct() {
         >
           {email ? "Agregar al carrito" : "Acceder para ver precios"}
         </Button>
-        <div className="rounded-md bg-primary/30 p-6">
-          <h3 className="text-lg font-semibold uppercase">Descripción</h3>
-          Colgante con pantalla grande.
-          <h3 className="text-lg font-semibold uppercase">Lámpara</h3>
-          E27
-          <h3 className="text-lg font-semibold uppercase">Material</h3>
-          Aluminio Esmeralizado.
-          <h3 className="text-lg font-semibold uppercase">Dimensiones</h3>
-          Ø: 443mm – H: 326mm
-          <h3 className="text-lg font-semibold uppercase">Caja Cerrada</h3>4 Unidades
-        </div>
       </section>
+      <div className="space-y-4 rounded-md bg-primary/30 p-6 md:w-[55%] lg:w-3/5 lg:mt-6">
+        <h2 className="text-center text-lg font-semibold uppercase">Caracteristicas</h2>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum totam itaque quod nihil! Tenetur, perferendis
+        molestiae dolor optio commodi
+        <h3 className="text-lg font-semibold">Colores</h3>
+        {product.variants.map(({ subRub }) => {
+          let [interno, externo] = subRub.split("-");
+          interno = colors[interno];
+          externo = colors[externo];
+
+          return (
+            <div className="flex max-w-md" key={subRub}>
+              <p className="flex flex-1 items-center gap-2">
+                <span
+                  className="inline-block aspect-square w-5 items-center rounded-full"
+                  style={{ background: interno.color }}
+                ></span>
+                {interno.name}
+              </p>
+              {externo && (
+                <p className="flex flex-1 items-center gap-2 ">
+                  <span
+                    className="inline-block aspect-square w-5 items-center rounded-full"
+                    style={{ background: externo.color }}
+                  ></span>
+                  {externo.name}
+                </p>
+              )}
+            </div>
+          );
+        })}
+        <h3 className="text-lg font-semibold ">Lámpara</h3>
+        E27
+        <h3 className="text-lg font-semibold ">Material</h3>
+        Aluminio Esmeralizado.
+        <h3 className="text-lg font-semibold ">Dimensiones</h3>
+        Ø: 443mm – H: 326mm
+        <h3 className="text-lg font-semibold ">Caja Cerrada</h3>4 Unidades
+      </div>
     </main>
   );
 }
 
-function VariantsProduct({ variants, current }) {
-  const { id, pathImage, subRub } = current.values;
-  return (
-    <div className="mb-4 grid grid-cols-5 place-content-start gap-y-3 md:w-1/2">
-      <PreviewImage description={subRub} pathImage={pathImage || assets.lights.light2} />
-      {variants.map(({ description, pathImage, ...variant }, i) => (
-        <img
-          key={"variants" + i}
-          className={`aspect-square  object-cover  ${id !== variant.id && "brightness-75  hover:brightness-100 "}`}
-          src={pathImage || assets.lights.light2}
-          alt={description}
-          onClick={() => current.set({ description, pathImage, ...variant })}
-        />
-      ))}
-    </div>
-  );
-}
+/*
 
 function GoBack() {
   return (
@@ -141,4 +153,4 @@ function GoBack() {
       Volver
     </Button>
   );
-}
+}*/
