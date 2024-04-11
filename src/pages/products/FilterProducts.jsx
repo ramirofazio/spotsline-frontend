@@ -58,7 +58,7 @@ export function FilterProducts({ categories }) {
         isOpen={isOpen}
         onClose={onClose}
       >
-        <ModalContent >
+        <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="grid place-content-center">Filtros</ModalHeader>
@@ -87,7 +87,7 @@ export function FilterProducts({ categories }) {
                   ))}
                 </RadioGroup>
                 <Divider />
-                <CheckboxGroup
+                {/* <CheckboxGroup
                   value={filters.colors}
                   label="Color"
                   onChange={(value) => handleFilters("colors", value)}
@@ -97,7 +97,7 @@ export function FilterProducts({ categories }) {
                       {color}
                     </CustomCheck>
                   ))}
-                </CheckboxGroup>
+                </CheckboxGroup> */}
                 <Divider />
               </ModalBody>
               <ModalFooter>
