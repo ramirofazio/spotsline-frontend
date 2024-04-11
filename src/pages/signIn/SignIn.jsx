@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { InitChangePasswordModal } from "./InitChangePasswordModal";
 import { BasicInput, PasswordInput, DefaultButton } from "src/components/index";
 import AwsImage from "src/components/images/AwsImage";
+import { getOfStorage } from "src/utils/localStorage";
 
 export function SignIn() {
   const dispatch = useDispatch();
@@ -33,8 +34,24 @@ export function SignIn() {
         addAuthWithToken(access_token);
         dispatch(actionsAuth.setAccessToken(access_token));
         dispatch(actionsUser.setUser(user));
-        console.log(shoppingCart);
-        Object.keys(shoppingCart)?.length && dispatch(actionsShoppingCart.loadCart(shoppingCart));
+        if (Object.keys(shoppingCart)?.length) {
+          dispatch(actionsShoppingCart.loadCart(shoppingCart));
+        } else {
+          let storageCart = getOfStorage("shoppingCart");
+          storageCart && delete storageCart.id;
+          const emptyCart = {
+            userId: user.id,
+            discount: 0,
+            subtotal: 0,
+            total: 0,
+            coupon: false,
+            items: [],
+          };
+          await APISpot.cart.createCart(
+            storageCart && Object.values(storageCart)?.length ? { ...storageCart, userId: user.id } : emptyCart
+          );
+        }
+
         if (!user.firstSignIn) {
           toast.info(`Bienvenido de nuevo ${user.email.split("@")[0]}`, {
             description: "¡Estamos contentos de que hayas vuelto a nuestra web!",

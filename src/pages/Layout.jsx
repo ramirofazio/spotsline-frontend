@@ -35,28 +35,18 @@ export default function Layout({ children }) {
           });
           dispatch(actionsShoppingCart.loadCart(shoppingCart));
           saveInStorage("shoppingCart", shoppingCart);
-        } else {
-          let storageCart = getOfStorage("shoppingCart");
-          storageCart && delete storageCart.id;
-          if (storageCart && Object.keys(storageCart)?.length) {
-            return await APISpot.cart.createCart(storageCart);
-          } else {
-            return await APISpot.cart.createCart({
-              userId: user.id,
-              discount: 0,
-              subtotal: 0,
-              total: 0,
-              coupon: false,
-              items: [],
-            });
-          }
         }
 
         dispatch(setUser(user));
         window.addEventListener("beforeunload", () => {
-          const shoppingCart = getOfStorage("shoppingCart");
-          if (shoppingCart.modified) {
-            return APISpot.cart.updateCart(shoppingCart);
+          let storageCart = getOfStorage("shoppingCart");
+          if (storageCart?.modified) {
+            if (storageCart.items.length) {
+              storageCart.items = storageCart.items.map(({ img, price, qty, shoppingCartId, name, id }) => {
+                return { img, price, qty, shoppingCartId, name, productId: id };
+              });
+            }
+            return APISpot.cart.updateCart(storageCart);
           }
         });
       }

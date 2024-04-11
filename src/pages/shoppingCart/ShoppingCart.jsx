@@ -173,20 +173,18 @@ export default function ShoppingCart() {
           <h3 className="yellowGradient font-bold">{formatPrices(subtotal)}</h3>
         </div>
         {discount !== 0 && <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />}
-        {discount !== 0 &&
-          Object.keys(currentCoupon)?.length &&
-          Object.values(currentCoupon).map((coupon, i) => (
-            <div key={i} className="relative z-10 flex w-full items-center justify-between">
-              <h3>
-                Cupón <strong className="yellowGradient">{coupon.name}</strong>
-              </h3>
-              <h3 className="yellowGradient mr-10 font-bold">{coupon.discountPercentaje} %</h3>
-              <i
-                className="ri-delete-bin-line icons absolute right-0 text-lg text-background"
-                onClick={() => dispatch(actionsShoppingCart.removeDiscount(coupon))}
-              />
-            </div>
-          ))}
+        {discount !== 0 && Object.values(currentCoupon)?.length && (
+          <div className="relative z-10 flex w-full items-center justify-between">
+            <h3>
+              Cupón <strong className="yellowGradient">{currentCoupon.name}</strong>
+            </h3>
+            <h3 className="yellowGradient mr-10 font-bold">{currentCoupon.discountPercentaje} %</h3>
+            <i
+              className="ri-delete-bin-line icons absolute right-0 text-lg text-background"
+              onClick={() => dispatch(actionsShoppingCart.removeDiscount(currentCoupon))}
+            />
+          </div>
+        )}
         <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
         <div className="z-10 flex w-full items-center justify-between">
           <h3>TOTAL A PAGAR</h3>

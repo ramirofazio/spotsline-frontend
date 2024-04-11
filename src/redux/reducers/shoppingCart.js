@@ -24,7 +24,6 @@ const shoppingCartSlice = createSlice({
   initialState,
   reducers: {
     addItemToCart(state, action) {
-      //? action.payload = {id: 1234, name: "Articulo Spotsline", img: "....", price: 9999, quantity: 2}
       state.modified = true;
       const newItem = action.payload;
       const existingItem = state.items.find((item) => item.id === newItem.id);
