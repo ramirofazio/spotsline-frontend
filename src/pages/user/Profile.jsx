@@ -31,6 +31,10 @@ export function Profile() {
     return "MI PERFIL";
   });
 
+  async function updateAvatar(file) {
+    console.log(file);
+  }
+
   const handleSelect = (name) => {
     setSelectedSection(name);
     saveInStorage("profileSelectedSection", name);
@@ -69,10 +73,16 @@ export function Profile() {
               className="mx-auto mb-10 h-28 w-28 p-2 md:h-40 md:w-40"
               classNames={{ base: "bg-white" }}
             />
+            {/* acaaa */}
             <Button
+              onPress={() => updateAvatar("zaracatunga")}
               isIconOnly
               className="-right-20 -top-20 rounded-full bg-gradient-to-r from-primary to-yellow-200 font-bold text-black md:-right-28 md:flex"
-              startContent={<i className="ri-pencil-line icons text-xl font-bold text-black" />}
+              startContent={
+                <i className="ri-pencil-line icons text-xl font-bold text-black">
+                  <input type="file" className="bg-transparent"/>
+                </i>
+              }
             />
           </div>
           <h1 className="underliner -mt-10 rounded-full bg-gradient-to-r from-primary to-yellow-200 p-2 px-4 text-center font-bold md:text-xl lg:w-80">

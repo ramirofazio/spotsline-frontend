@@ -50,7 +50,6 @@ export const APISpot = {
       return BASE_API.patch(`/${route.PRODUCTS}/toggleIncluido?productCode=${productCode}`);
     },
     updateProductImages: (variant_id, formData) => {
-      //TODO Chequear ruta
       addAuthWithToken(getOfStorage("access_token"));
       return BASE_API.post(`/${route.AWS}/${variant_id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
