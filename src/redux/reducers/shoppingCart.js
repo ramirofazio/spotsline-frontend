@@ -2,15 +2,17 @@ import { createSlice } from "@reduxjs/toolkit";
 import { saveInStorage } from "src/utils/localStorage";
 
 const initialState = {
+  id: false,
+  modified: false,
   items: [],
   discount: 0,
   total: 0,
   subtotal: 0,
-  currentCoupons: {},
+  currentCoupon: false,
 };
 
 const calculateSubtotal = (items) => {
-  return items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  return items.reduce((acc, item) => acc + item.price * item.qty, 0);
 };
 
 export const calculateTotal = (subtotal, discount) => {
@@ -22,7 +24,7 @@ const shoppingCartSlice = createSlice({
   initialState,
   reducers: {
     addItemToCart(state, action) {
-      //? action.payload = {id: 1234, name: "Articulo Spotsline", img: "....", price: 9999, quantity: 2}
+      state.modified = true;
       const newItem = action.payload;
       const existingItem = state.items.find((item) => item.id === newItem.id);
 
@@ -37,6 +39,7 @@ const shoppingCartSlice = createSlice({
       saveInStorage("shoppingCart", state);
     },
     removeItemFromCart(state, action) {
+      state.modified = true;
       const itemId = action.payload;
       state.items = state.items.filter((item) => item.id !== itemId);
       state.subtotal = calculateSubtotal(state.items);
@@ -44,10 +47,11 @@ const shoppingCartSlice = createSlice({
       saveInStorage("shoppingCart", state);
     },
     updateCartItemQuantity(state, action) {
+      state.modified = true;
       const { id, quantity } = action.payload;
       const updatedItems = state.items.map((item) => {
         if (item.id === id) {
-          return { ...item, quantity: quantity };
+          return { ...item, qty: quantity };
         }
         return item;
       });
@@ -58,41 +62,42 @@ const shoppingCartSlice = createSlice({
       saveInStorage("shoppingCart", state);
     },
     applyDiscount(state, action) {
+      state.modified = true;
       const coupon = action.payload;
 
       state.discount = state.discount + coupon.discountPercentaje;
-      state.currentCoupons = {
-        ...state.currentCoupons,
-        [coupon.name]: coupon,
-      };
+      state.currentCoupon = coupon;
 
       state.total = calculateTotal(state.subtotal, state.discount);
       saveInStorage("shoppingCart", state);
     },
     removeDiscount(state, action) {
+      state.modified = true;
       const coupon = action.payload;
       state.discount = state.discount - coupon.discountPercentaje;
-      delete state.currentCoupons[coupon.name];
-      if (!state.currentCoupons) state.currentCoupons = {};
+      state.currentCoupon = false;
 
       state.total = calculateTotal(state.subtotal, state.discount);
       saveInStorage("shoppingCart", state);
     },
 
     clearCart(state) {
+      state.modified = false;
       state.items = [];
       state.subtotal = 0;
       state.total = 0;
       state.discount = 0;
-      state.currentCoupons = {};
+      state.currentCoupon = false;
       saveInStorage("shoppingCart", state);
     },
     loadCart(state, action) {
+
+      state.id = action.payload.id || null;
       state.items = action.payload.items || [];
       state.subtotal = calculateSubtotal(state.items);
       state.total = calculateTotal(state.subtotal, state.discount);
       state.discount = action.payload.discount || 0;
-      state.currentCoupons = action.payload.currentCoupons;
+      state.currentCoupon = action.payload.currentCoupon;
     },
   },
 });

@@ -7,7 +7,7 @@ const route = {
   SELLERS: "sellers",
   CLIENTS: "clients",
   USER: "users",
-  CART: "shoppingCart",
+  CART: "shopping-cart",
   CHECKOUT: "mobbex",
   COUPON: "coupon",
   AWS: "aws-s3-upload",
@@ -120,6 +120,18 @@ export const APISpot = {
   cart: {
     validateCoupon: async (coupon) => {
       const res = await BASE_API.get(`/${route.COUPON}/validate/${coupon}`);
+      return res.data;
+    },
+    createCart: async (shoppingCart) => {
+      const res = await BASE_API.post(`/${route.CART}`, shoppingCart);
+      return res.data;
+    },
+    updateCart: async (shoppingCart) => {
+      const res = await BASE_API.put(`/${route.CART}/update`, shoppingCart);
+      return res.data;
+    },
+    deleteCart: async (userId, force) => {
+      const res = await BASE_API.delete(`/${route.CART}/delete/${userId}?force=${Boolean(force)}`);
       return res.data;
     },
   },
