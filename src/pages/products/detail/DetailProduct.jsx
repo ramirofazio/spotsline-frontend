@@ -13,7 +13,7 @@ export function DetailProduct() {
   const { id } = useParams();
   const [product, setProduct] = useState();
   const [isLoading, setIsLoading] = useState(true);
-  const { email, numPrice } = useSelector((state) => state.user);
+  const { email, lista } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [current, setCurrent] = useState();
@@ -46,7 +46,7 @@ export function DetailProduct() {
         name: current.description,
         img: current.pathImage || assets.lights.light2,
 
-        price: parseFloat(current["precio" + ((numPrice || 0) + 1)]),
+        price: parseFloat(current["precio" + ((lista || 0) + 1)]),
         quantity: state,
       })
     );
@@ -69,7 +69,7 @@ export function DetailProduct() {
 
         {email && (
           <>
-            <p className="-mt-2 mb-4 text-xl ">{"$ " + current["precio" + ((numPrice || 0) + 1)]}</p>
+            <p className="-mt-2 mb-4 text-xl ">{"$ " + current["precio" + ((lista || 0) + 1)]}</p>
             <Select
               className="mb-6"
               value={state}
