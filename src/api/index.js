@@ -82,19 +82,16 @@ export const APISpot = {
     getFeaturedProducts: ({ take }) => {
       return BASE_API.get(`/${route.PRODUCTS}/featured?take=${take}`);
     },
-  },
-  //TODO acomodar estos 3 pedidos igual que el auth, metidos en un objeto `products`
-  getPaginatedProducts: (take, skip) => {
-    return BASE_API.get(`/${route.PRODUCTS}/pag?take=${take}&&skip=${skip}`);
-  },
-  getCategories: async () => {
-    const res = await BASE_API.get(`/${route.PRODUCTS}/categories`);
-    saveInStorage("categories", res.data);
+    getPaginatedProducts: (take, skip) => {
+      return BASE_API.get(`/${route.PRODUCTS}/pag?take=${take}&&skip=${skip}`);
+    },
+    getCategories: async () => {
+      const res = await BASE_API.get(`/${route.PRODUCTS}/categories`);
+      saveInStorage("categories", res.data);
 
-    return res.data;
+      return res.data;
+    },
   },
-
-  //? Rutas al backend POST, GET, PUT, etc...
   auth: {
     jwtAutoSignIn: async (body) => {
       const res = await BASE_API.post(`/${route.AUTH}/jwt-auto-sign-in`, body);
