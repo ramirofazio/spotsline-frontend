@@ -4,6 +4,7 @@ import { assets } from "src/assets";
 
 export function ProductCard({ description, codigo, pathImage }) {
   const navigate = useNavigate();
+
   return (
     <Card className=" w-[200px] overflow-visible bg-transparent shadow-none hover:scale-105">
       <CardBody className="overflow-visible p-0">

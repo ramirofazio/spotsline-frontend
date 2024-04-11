@@ -11,7 +11,7 @@ export function InitChangePasswordModal({ isOpen, onOpenChange }) {
   const [flag, setFlag] = useState(false);
 
   const handleChange = ({ target }) => {
-    setEmail((prev) => {
+    setEmail(() => {
       setErrs(isValidEmail(target.value));
       return target.value;
     });
@@ -68,12 +68,12 @@ export function InitChangePasswordModal({ isOpen, onOpenChange }) {
           </p>
           <p>¡No olvides chequear spam!</p>
         </div>
-        <p className="absolute bottom-0 text-primary/50">
-          ¿Te confundiste de mail?{" "}
-          <strong className="icons text-secondary underline" onClick={() => setFlag(false)}>
+        <div className="absolute bottom-4 flex items-center gap-2">
+          <p className="text-primary/50">¿Te confundiste de mail?</p>
+          <strong className="icons z-20 text-white/50 underline" onClick={() => setFlag(false)}>
             Reenviar a otro
           </strong>
-        </p>
+        </div>
       </section>
     </DarkModal>
   );

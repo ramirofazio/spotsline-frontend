@@ -145,11 +145,9 @@ export default function NavBar() {
           {web_role === Number(import.meta.env.VITE_ADMIN_ROLE) && (
             <Button
               as={Link}
-              to={"/dashboard/productos"}
+              to={"/dashboard/productos/1"}
               onPress={() => setIsMenuOpen(false)}
-              className={`bg-gradient-to-tl from-primary to-background shadow-xl ${
-                pathname === "/dashboard" && "pointer-events-none from-background"
-              }`}
+              className={`bg-gradient-to-tl from-primary to-background shadow-xl`}
               size="lg"
               isIconOnly
             >
@@ -215,10 +213,8 @@ export default function NavBar() {
         {web_role === Number(import.meta.env.VITE_ADMIN_ROLE) && (
           <Button
             as={Link}
-            to={"/dashboard/productos"}
-            className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
-              pathname === "/dashboard" && "pointer-events-none from-background"
-            }`}
+            to={"/dashboard/productos/1"}
+            className={`bg-gradient-to-br from-primary to-background transition hover:scale-110`}
             size="md"
             isIconOnly
           >

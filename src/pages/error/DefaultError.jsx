@@ -1,7 +1,7 @@
 import { useRouteError, Link } from "react-router-dom";
 import AwsImage from "src/components/images/AwsImage";
 
-export function DefaultError() {
+export function DefaultError({ link }) {
   console.log(useRouteError());
 
   return (
@@ -9,7 +9,7 @@ export function DefaultError() {
       id="error-page"
       className="grid h-screen w-screen place-items-center bg-gradient-to-tl from-dark/40 to-primary/50"
     >
-      <Link to="/" className="icons absolute left-4 top-4 flex items-center">
+      <Link to={link ? link : "/"} className="icons absolute left-4 top-4 flex items-center">
         <i className="ri-arrow-left-s-line white-neon  animate-pulse text-4xl" />
         <p className="white-neon font-secondary">VOLVER</p>
       </Link>
@@ -22,7 +22,7 @@ export function DefaultError() {
         </p>
         <p className="font-secondary lg:text-sm">
           ...pero siempre eres bienvenido/a a volver al
-          <Link to="/" className="yellow-neon ml-1 font-extrabold tracking-widest underline">
+          <Link to={link ? link : "/"} className="yellow-neon ml-1 font-extrabold tracking-widest underline">
             INICIO.
           </Link>
         </p>

@@ -4,28 +4,57 @@ import { BASE_API } from "./baseApi";
 const route = {
   PRODUCTS: "products",
   AUTH: "auth",
+  SELLERS: "sellers",
+  CLIENTS: "clients",
   USER: "users",
-  CART: "shoppingCart",
+  CART: "shopping-cart",
   CHECKOUT: "mobbex",
   COUPON: "coupon",
+  AWS: "aws-s3-upload",
 };
 
 export const APISpot = {
   dashboard: {
-    getDashboardProducts: (page, signal) => {
-      return BASE_API.get(`/${route.PRODUCTS}/dashboard-products?page=${page}`, { signal: signal });
+    getDashboardSellers: async () => {
+      addAuthWithToken(getOfStorage("access_token"));
+      const res = await BASE_API.get(`/${route.SELLERS}/dashboard-sellers`);
+      return res.data;
     },
-    toggleFeaturedProduct: (product_id) => {
-      //TODO VALIDAR RUTA
-      return BASE_API.patch(`/${route.PRODUCTS}/toggleFeatured`, { product_id });
+    addSellerEmail: (body) => {
+      addAuthWithToken(getOfStorage("access_token"));
+      return BASE_API.patch(`/${route.SELLERS}/add-email`, body);
+    },
+    addClientEmail: (body) => {
+      addAuthWithToken(getOfStorage("access_token"));
+      return BASE_API.patch(`/${route.CLIENTS}/add-email`, body);
+    },
+    getDashboardClients: async (page) => {
+      addAuthWithToken(getOfStorage("access_token"));
+      const res = await BASE_API.get(`/${route.CLIENTS}/dashboard-clients?page=${page}`);
+      return res.data;
+    },
+    getDashboardProductVariants: async (productCode) => {
+      const res = await BASE_API.get(`/${route.PRODUCTS}/dashboard-product-variants?productCode=${productCode}`);
+      return res.data;
+    },
+    getDashboardProducts: async (page) => {
+      const res = await BASE_API.get(`/${route.PRODUCTS}/dashboard-products?page=${page}`);
+      return res.data;
+    },
+    toggleFeaturedProduct: (body) => {
+      addAuthWithToken(getOfStorage("access_token"));
+      return BASE_API.patch(`/${route.PRODUCTS}/edit_featured`, body);
     },
     toggleIncluidoVariant: (productCode) => {
       addAuthWithToken(getOfStorage("access_token"));
       return BASE_API.patch(`/${route.PRODUCTS}/toggleIncluido?productCode=${productCode}`);
     },
-    updateProductImages: (body) => {
-      //TODO ARMAR RUTA
-      return BASE_API.patch(`/${route.PRODUCTS}/updateProductImages`, body);
+    updateProductImages: (variant_id, formData) => {
+      //TODO Chequear ruta
+      addAuthWithToken(getOfStorage("access_token"));
+      return BASE_API.post(`/${route.AWS}/${variant_id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
     },
     getCoupons: async () => {
       addAuthWithToken(getOfStorage("access_token"));
@@ -91,6 +120,18 @@ export const APISpot = {
   cart: {
     validateCoupon: async (coupon) => {
       const res = await BASE_API.get(`/${route.COUPON}/validate/${coupon}`);
+      return res.data;
+    },
+    createCart: async (shoppingCart) => {
+      const res = await BASE_API.post(`/${route.CART}`, shoppingCart);
+      return res.data;
+    },
+    updateCart: async (shoppingCart) => {
+      const res = await BASE_API.put(`/${route.CART}/update`, shoppingCart);
+      return res.data;
+    },
+    deleteCart: async (userId, force) => {
+      const res = await BASE_API.delete(`/${route.CART}/delete/${userId}?force=${Boolean(force)}`);
       return res.data;
     },
   },

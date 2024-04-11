@@ -22,7 +22,7 @@ export function DetailProduct() {
 
   useEffect(() => {
     document.title = "SPOTSLINE - Cargando...";
-    APISpot.product
+    APISpot.product // TODO estaria bueno fetchear la data en el loader de react-router
       .getOne({ id })
       .then(({ data }) => {
         setProduct(data);
@@ -45,7 +45,8 @@ export function DetailProduct() {
         id: current.id,
         name: current.description,
         img: current.pathImage || assets.lights.light2,
-        price: current.precio1,
+
+        price: parseFloat(current.precio1),
         quantity: state,
       })
     );

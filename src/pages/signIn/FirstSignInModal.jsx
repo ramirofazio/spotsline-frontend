@@ -15,7 +15,7 @@ const inputFields = [
 export function FirstSignInModal({ navigate }) {
   const dispatch = useDispatch();
 
-  const { firstSignIn, email } = useSelector((state) => state.user);
+  const { firstSignIn, email, id } = useSelector((state) => state.user);
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
@@ -28,6 +28,14 @@ export function FirstSignInModal({ navigate }) {
 
   useEffect(() => {
     if (firstSignIn) {
+      APISpot.cart.createCart({
+        userId: id,
+        discount: 0,
+        subtotal: 0,
+        total: 0,
+        coupon: false,
+        items: [],
+      });
       onOpen();
     }
   }, [firstSignIn]);
