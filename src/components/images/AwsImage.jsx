@@ -3,6 +3,14 @@ import { assets } from "src/assets/index";
 
 export default function AwsImage({ type, identify, className, ...props }) {
   return (
-    <Image src={assets[type][identify]} width={500} height={500} alt={identify} className={`${className}`} {...props} />
+    <Image
+      disableSkeleton
+      src={assets[type][identify]}
+      width={200}
+      height={200}
+      alt={identify}
+      className={`${className} max-w-[500px]`}
+      {...props}
+    />
   );
 }

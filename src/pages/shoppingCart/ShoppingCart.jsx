@@ -1,10 +1,10 @@
-import { Input, Button, Divider, Image } from "@nextui-org/react";
+import { Input, Button, Divider, Image, useDisclosure } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
-import { DefaultButton } from "src/components";
+import { DarkModal, DefaultButton } from "src/components";
 import { actionsShoppingCart } from "src/redux/reducers";
 import { formatPrices } from "src/utils";
 import { saveInStorage } from "src/utils/localStorage";
@@ -13,36 +13,14 @@ import { saveInStorage } from "src/utils/localStorage";
 
 export default function ShoppingCart() {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
   const { items, total, subtotal, discount, currentCoupon, id } = useSelector((state) => state.cart);
 
   const [discountCode, setDiscountCode] = useState("");
   const [loading, setLoading] = useState(false);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const handleCreateCheckout = async () => {
-    setLoading(true);
-    try {
-      const body = {
-        userId: user.id,
-        discount,
-        coupon: currentCoupon || false,
-        items: items.map(({ id, quantity }) => {
-          return { id: id, qty: quantity };
-        }),
-      };
-
-      //* Guardo para recuperar en `PaymentOK.jsx`
-      saveInStorage("orderBody", body);
-      const res = await APISpot.checkout.create(body);
-      if (res) {
-        window.open(res);
-      }
-    } catch (e) {
-      console.log(e);
-      toast.error("Hubo un error al aplicar el cupon", { description: e.response.data.message || e });
-    } finally {
-      setLoading(false);
-    }
+  const handlePickDate = () => {
+    onOpen();
   };
 
   const handleApplyDiscount = async (e) => {
@@ -223,15 +201,106 @@ export default function ShoppingCart() {
             </form>
           </div>
           <DefaultButton
-            onPress={handleCreateCheckout}
+            onPress={handlePickDate}
             className={"mx-auto lg:mx-0"}
             isLoading={loading}
             isDisabled={items.length === 0}
           >
-            PAGAR COMPRA
+            CONTINUAR
           </DefaultButton>
         </div>
       </section>
+      {isOpen && (
+        <PickDateModal
+          onOpenChange={onOpenChange}
+          isOpen={isOpen}
+          items={items}
+          currentCoupon={currentCoupon}
+          discount={discount}
+        />
+      )}
     </main>
+  );
+}
+
+function PickDateModal({ isOpen, onOpenChange, items, currentCoupon, discount }) {
+  const user = useSelector((state) => state.user);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  const [date, setDate] = useState("");
+
+  const handleCreateCheckout = async () => {
+    if (date === "") {
+      toast.error("Debe seleccionar la fecha de entrega");
+      setError(true);
+      return;
+    }
+    setLoading(true);
+    try {
+      const body = {
+        userId: user.id,
+        discount,
+        coupon: currentCoupon || false,
+        items: items.map(({ id, quantity }) => {
+          return { id: id, qty: quantity };
+        }),
+        deliveryDate: new Date(date).toISOString(),
+      };
+
+      //* Guardo para recuperar en `PaymentOK.jsx`
+      saveInStorage("orderBody", body);
+      const res = await APISpot.checkout.create(body);
+      if (res) {
+        window.open(res);
+      }
+    } catch (e) {
+      console.log(e);
+      toast.error("Hubo un error al crear el link de pago", { description: e.response.data.message || e });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getMinDate = () => {
+    const today = new Date();
+    const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+    const minDate = nextWeek.toISOString().split("T")[0];
+    return minDate;
+  };
+
+  const getMaxDate = () => {
+    const today = new Date();
+    const maxDate = new Date(today.getFullYear(), today.getMonth() + 2, 0); // Obtiene el último día del mes en 2 meses
+    return maxDate.toISOString().split("T")[0];
+  };
+
+  return (
+    <DarkModal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      title={"FECHA DE ENTREGA"}
+      description={"Seleccione fecha de entrega para el pedido"}
+      size="xl"
+    >
+      <form className={`z-20 mx-auto flex w-80 flex-col items-center justify-start gap-10`}>
+        <input
+          type="date"
+          value={date}
+          min={getMinDate()}
+          max={getMaxDate()}
+          onChange={(e) => {
+            setDate(e.target.value);
+            if (date !== "") setError(false);
+          }}
+          className={`${
+            error && "border-2 border-red-500"
+          } w-60 rounded-full bg-background p-2 text-center font-bold tracking-widest text-dark transition hover:cursor-pointer focus:outline-none`}
+        />
+        <DefaultButton onPress={handleCreateCheckout} className={"mx-auto lg:mx-0"} isLoading={loading}>
+          IR A PAGAR
+        </DefaultButton>
+      </form>
+    </DarkModal>
   );
 }
