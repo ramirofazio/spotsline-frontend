@@ -232,7 +232,7 @@ function PickDateModal({ isOpen, onOpenChange, items, currentCoupon, discount })
 
   const handleCreateCheckout = async () => {
     if (date === "") {
-      toast.error("Debe seleccionar la fecha de entrega!");
+      toast.error("Debe seleccionar la fecha de entrega");
       setError(true);
       return;
     }
