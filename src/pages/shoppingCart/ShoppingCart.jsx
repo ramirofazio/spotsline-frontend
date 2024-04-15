@@ -20,7 +20,7 @@ export default function ShoppingCart() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const handlePickDate = () => {
-    onOpen(true);
+    onOpen();
   };
 
   const handleApplyDiscount = async (e) => {
@@ -226,8 +226,16 @@ export default function ShoppingCart() {
 function PickDateModal({ isOpen, onOpenChange, items, currentCoupon, discount }) {
   const user = useSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  const [date, setDate] = useState("");
 
   const handleCreateCheckout = async () => {
+    if (date === "") {
+      toast.error("Debe seleccionar la fecha de entrega!");
+      setError(true);
+      return;
+    }
     setLoading(true);
     try {
       const body = {
@@ -237,6 +245,7 @@ function PickDateModal({ isOpen, onOpenChange, items, currentCoupon, discount })
         items: items.map(({ id, quantity }) => {
           return { id: id, qty: quantity };
         }),
+        deliveryDate: new Date(date).toISOString(),
       };
 
       //* Guardo para recuperar en `PaymentOK.jsx`
@@ -247,17 +256,49 @@ function PickDateModal({ isOpen, onOpenChange, items, currentCoupon, discount })
       }
     } catch (e) {
       console.log(e);
-      toast.error("Hubo un error al aplicar el cupon", { description: e.response.data.message || e });
+      toast.error("Hubo un error al crear el link de pago", { description: e.response.data.message || e });
     } finally {
       setLoading(false);
     }
   };
+
+  const getMinDate = () => {
+    const today = new Date();
+    const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+    const minDate = nextWeek.toISOString().split("T")[0];
+    return minDate;
+  };
+
+  const getMaxDate = () => {
+    const today = new Date();
+    const maxDate = new Date(today.getFullYear(), today.getMonth() + 2, 0); // Obtiene el último día del mes en 2 meses
+    return maxDate.toISOString().split("T")[0];
+  };
+
   return (
-    <DarkModal isOpen={isOpen} onOpenChange={onOpenChange} title={"SELECCIONA TU FECHA CAMPEON"}>
-      <form>
-        <input type="date" placeholder="Select date" />
+    <DarkModal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      title={"FECHA DE ENTREGA"}
+      description={"Seleccione fecha de entrega para el pedido"}
+      size="xl"
+    >
+      <form className={`z-20 mx-auto flex w-80 flex-col items-center justify-start gap-10`}>
+        <input
+          type="date"
+          value={date}
+          min={getMinDate()}
+          max={getMaxDate()}
+          onChange={(e) => {
+            setDate(e.target.value);
+            if (date !== "") setError(false);
+          }}
+          className={`${
+            error && "border-2 border-red-500"
+          } w-60 rounded-full bg-background p-2 text-center font-bold tracking-widest text-dark transition hover:cursor-pointer focus:outline-none`}
+        />
         <DefaultButton onPress={handleCreateCheckout} className={"mx-auto lg:mx-0"} isLoading={loading}>
-          CONTINUAR
+          IR A PAGAR
         </DefaultButton>
       </form>
     </DarkModal>
