@@ -1,12 +1,14 @@
 import { ProductCard } from "src/components/index";
 import { PaginationComponent } from "components/index";
-import { Button, Input } from "@nextui-org/react";
+import { Input } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { APISpot } from "src/api";
 import { useNavigate, useParams } from "react-router-dom";
 import { SkeletonCard } from "src/components/cards/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import { actionProducts } from "src/redux/reducers";
+import { toast } from "sonner";
+import { FilterProducts } from "./FilterProducts";
 const TAKE_PRODUCTS = 28;
 const categories = [
   "Accesorios",
@@ -22,14 +24,13 @@ const categories = [
 export function Products() {
   const navigate = useNavigate();
   const { page } = useParams();
-  const { totalPages } = useSelector((state) => state.product);
+  const { totalPages, filters } = useSelector((state) => state.product);
 
   useEffect(() => {
     if (!parseInt(page)) navigate("/productos/1");
   }, [page]);
 
   function handleChangePage(page) {
-    console.log(page);
     navigate("/productos/" + page);
   }
 
@@ -44,16 +45,18 @@ export function Products() {
           <h2 className="text-lg font-semibold ">Categoria de Productos</h2>
           <ul className="pl-4">
             {categories.map((cat) => (
-              <li key={cat}>{cat}</li>
+              <li key={cat} className={cat === filters.category && 'font-semibold'}>{cat}</li>
             ))}
           </ul>
         </article>
         <section className="my-10 grid flex-1 grid-cols-1 place-items-center gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           <Heading />
           <ProductsView />
-          <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4">
-            <PaginationComponent qty={totalPages} page={parseInt(page)} onChange={handleChangePage} />
-          </div>
+          {totalPages !== 1 && (
+            <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4">
+              <PaginationComponent qty={totalPages} page={parseInt(page)} onChange={handleChangePage} />
+            </div>
+          )}
         </section>
       </main>
     </>
@@ -77,7 +80,11 @@ function ProductsView() {
           dispatch(actionProducts.setPageProducts({ page, products: data.rows }));
           setLoading(false);
         })
-        .catch((err) => console.log(err));
+        .catch(({ response }) => {
+          setLoading(false);
+          dispatch(actionProducts.setSearch(""));
+          toast.error(response.data.message);
+        });
     }
   }, [page, search]);
 
@@ -100,29 +107,36 @@ function Heading() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [_search, set_Search] = useState("");
+  const { search } = useSelector((state) => state.product);
+
+  useEffect(() => {
+    set_Search(search);
+  }, [search]);
 
   function handleChange({ target }) {
-    let value = target.value;
-
-    if (!value.length) {
-      dispatch(actionProducts.setSearch(""));
-      dispatch(actionProducts.resetPageProducts());
-      navigate("/productos/1");
-    }
+    let value = target.value.trimStart();
     set_Search(value);
   }
 
   function handleSearch({ code }) {
-    if (code === "Enter") {
+    if (code === "Enter" && _search.length) {
       dispatch(actionProducts.setSearch(_search));
       dispatch(actionProducts.resetPageProducts());
       navigate("/productos/1");
     }
   }
 
+  function onClear() {
+    if (search !== "") {
+      dispatch(actionProducts.setSearch(""));
+      dispatch(actionProducts.resetPageProducts());
+      navigate("/productos/1");
+    }
+    set_Search("");
+  }
   return (
     <>
-      <div className=" mb-5 flex w-full items-center gap-1 sm:col-span-2 md:w-10/12 lg:col-span-3 xl:col-span-4">
+      <div d className=" mb-5 flex w-full items-center gap-1 sm:col-span-2 md:w-10/12 lg:col-span-3 xl:col-span-4">
         <Input
           value={_search}
           onChange={handleChange}
@@ -131,12 +145,21 @@ function Heading() {
           radius="full"
           className=""
           labelPlacement=""
+          onClear={onClear}
+          onBlur={() => {
+            if (_search.length && search !== _search) {
+              toast.info('Presiona "Enter" para buscar');
+            }
+            console.log(_search, search);
+            if (!_search.length && search !== _search) {
+              dispatch(actionProducts.resetPageProducts());
+              dispatch(actionProducts.setSearch(""));
+            }
+          }}
           placeholder="Buscar producto"
           startContent={<i className="ri-search-line scale-125"></i>}
         />
-        <Button className="bg-transparent hover:bg-secondary hover:text-white" isIconOnly aria-label="Like">
-          <i className="ri-equalizer-line scale-125"></i>
-        </Button>
+        <FilterProducts categories={categories} />
       </div>
     </>
   );

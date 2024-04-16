@@ -1,10 +1,10 @@
-import { Input, Button, Divider, Image } from "@nextui-org/react";
+import { Input, Button, Divider, Image, useDisclosure } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
-import { DefaultButton } from "src/components";
+import { DarkModal, DefaultButton } from "src/components";
 import { actionsShoppingCart } from "src/redux/reducers";
 import { formatPrices } from "src/utils";
 import { saveInStorage } from "src/utils/localStorage";
@@ -13,48 +13,26 @@ import { saveInStorage } from "src/utils/localStorage";
 
 export default function ShoppingCart() {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
-  const { items, total, subtotal, discount, currentCoupons } = useSelector((state) => state.cart);
+  const { items, total, subtotal, discount, currentCoupon, id } = useSelector((state) => state.cart);
 
   const [discountCode, setDiscountCode] = useState("");
   const [loading, setLoading] = useState(false);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const handleCreateCheckout = async () => {
-    setLoading(true);
-    try {
-      const body = {
-        userId: user.id,
-        discount,
-        coupon: Object.values(currentCoupons)[0]?.id || false,
-        items: items.map(({ id, quantity }) => {
-          return { id: id, qty: quantity };
-        }),
-      };
-
-      //? Guardo para recuperar en `PaymentOK.jsx`
-      saveInStorage("orderBody", body);
-      const res = await APISpot.checkout.create(body);
-      if (res) {
-        window.open(res);
-      }
-    } catch (e) {
-      console.log(e);
-      toast.error("Hubo un error al aplicar el cupon", { description: e.response.data.message });
-    } finally {
-      setLoading(false);
-    }
+  const handlePickDate = () => {
+    onOpen();
   };
 
   const handleApplyDiscount = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const exist = Object.keys(currentCoupons).includes(discountCode);
+      const exist = Object.keys(currentCoupon).includes(discountCode);
 
       if (exist) {
         return toast.error("ya esta usando este cupon");
       }
-      if (discount || Object.keys(currentCoupons).length) {
+      if (discount || Object.keys(currentCoupon).length) {
         return toast.error("ya tiene un cupon en uso");
       }
 
@@ -65,11 +43,28 @@ export default function ShoppingCart() {
         toast.success(`Descuento de ${coupon.discountPercentaje}% aplicado!`);
       }
     } catch (e) {
-      toast.error("Hubo un error al aplicar el cupon", { description: e.message });
+      console.log(e);
+      const backErr = e?.response?.data;
+      toast.error("Hubo un error al aplicar el cupon", { description: backErr ? backErr?.message : e.message });
     } finally {
       setLoading(false);
     }
   };
+
+  async function resetCart(cartId) {
+    try {
+      setLoading(true);
+      await APISpot.cart.deleteCart(cartId, false);
+      dispatch(actionsShoppingCart.clearCart());
+      toast.success(`Se vacio el carrito`);
+    } catch (e) {
+      console.log(e);
+      const backErr = e?.response?.data;
+      toast.error("Hubo un error al aplicar el cupon", { description: backErr ? backErr?.message : e.message });
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
     document.title = "SPOTSLINE - Carrito de compras";
@@ -95,7 +90,17 @@ export default function ShoppingCart() {
             <Link to="/productos/0">VER PRODUCTOS</Link>
           </DefaultButton>
         )}
-        {items.map(({ img, name, price, quantity, id }, index) => (
+        <Button
+          isIconOnly
+          onPress={() => resetCart(id)}
+          radius="full"
+          disabled={!items.length && true}
+          className="ml-auto bg-gradient-to-tl from-primary to-background shadow-xl disabled:pointer-events-none disabled:opacity-40"
+        >
+          <i className="ri-delete-bin-6-line text-2xl"></i>
+        </Button>
+
+        {items.map(({ img, name, price, qty, id }, index) => (
           <article key={index} className="z-10 flex min-w-[80vw] items-center gap-6 rounded-xl bg-white p-6">
             <Image src={img} width={150} height={150} alt={`${name} img`} className="shadow-inner" />
             <div className="flex w-full flex-col items-start gap-4">
@@ -117,21 +122,17 @@ export default function ShoppingCart() {
                     isIconOnly
                     radius="full"
                     className="flex bg-dark text-xl font-bold text-primary"
-                    onPress={() =>
-                      dispatch(actionsShoppingCart.updateCartItemQuantity({ id: id, quantity: quantity - 1 }))
-                    }
+                    onPress={() => dispatch(actionsShoppingCart.updateCartItemQuantity({ id: id, quantity: qty - 1 }))}
                   >
                     <i className="ri-subtract-line" />
                   </Button>
-                  <p>{quantity}</p>
+                  <p>{qty}</p>
                   <Button
                     isIconOnly
                     radius="full"
-                    className="flex bg-dark text-xl font-bold text-primary"
-                    onPress={() =>
-                      dispatch(actionsShoppingCart.updateCartItemQuantity({ id: id, quantity: quantity + 1 }))
-                    }
-                    isDisabled={quantity >= 100}
+                    className="flex bg-dark text-xl font-bold text-primary disabled:opacity-50"
+                    onPress={() => dispatch(actionsShoppingCart.updateCartItemQuantity({ id, quantity: qty + 1 }))}
+                    isDisabled={qty >= 100}
                   >
                     <i className="ri-add-line" />
                   </Button>
@@ -142,6 +143,7 @@ export default function ShoppingCart() {
         ))}
       </section>
       <Divider className="h-1 bg-primary" />
+
       <section className="relative m-6 mx-auto flex max-w-[80vw] flex-col  items-start gap-6 rounded-xl border-2 border-primary/50 bg-dark/50 p-6 font-secondary font-bold text-white">
         <h2 className="yellow-neon text-xl font-bold tracking-wider">RESUMEN</h2>
         <div className="z-10 flex w-full items-center justify-between">
@@ -149,20 +151,18 @@ export default function ShoppingCart() {
           <h3 className="yellowGradient font-bold">{formatPrices(subtotal)}</h3>
         </div>
         {discount !== 0 && <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />}
-        {discount !== 0 &&
-          Object.keys(currentCoupons)?.length &&
-          Object.values(currentCoupons).map((coupon, i) => (
-            <div key={i} className="relative z-10 flex w-full items-center justify-between">
-              <h3>
-                Cupón <strong className="yellowGradient">{coupon.name}</strong>
-              </h3>
-              <h3 className="yellowGradient mr-10 font-bold">{coupon.discountPercentaje} %</h3>
-              <i
-                className="ri-delete-bin-line icons absolute right-0 text-lg text-background"
-                onClick={() => dispatch(actionsShoppingCart.removeDiscount(coupon))}
-              />
-            </div>
-          ))}
+        {discount !== 0 && Object.values(currentCoupon)?.length && (
+          <div className="relative z-10 flex w-full items-center justify-between">
+            <h3>
+              Cupón <strong className="yellowGradient">{currentCoupon.name}</strong>
+            </h3>
+            <h3 className="yellowGradient mr-10 font-bold">{currentCoupon.discountPercentaje} %</h3>
+            <i
+              className="ri-delete-bin-line icons absolute right-0 text-lg text-background"
+              onClick={() => dispatch(actionsShoppingCart.removeDiscount(currentCoupon))}
+            />
+          </div>
+        )}
         <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
         <div className="z-10 flex w-full items-center justify-between">
           <h3>TOTAL A PAGAR</h3>
@@ -201,15 +201,106 @@ export default function ShoppingCart() {
             </form>
           </div>
           <DefaultButton
-            onPress={handleCreateCheckout}
+            onPress={handlePickDate}
             className={"mx-auto lg:mx-0"}
             isLoading={loading}
             isDisabled={items.length === 0}
           >
-            PAGAR COMPRA
+            CONTINUAR
           </DefaultButton>
         </div>
       </section>
+      {isOpen && (
+        <PickDateModal
+          onOpenChange={onOpenChange}
+          isOpen={isOpen}
+          items={items}
+          currentCoupon={currentCoupon}
+          discount={discount}
+        />
+      )}
     </main>
+  );
+}
+
+function PickDateModal({ isOpen, onOpenChange, items, currentCoupon, discount }) {
+  const user = useSelector((state) => state.user);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  const [date, setDate] = useState("");
+
+  const handleCreateCheckout = async () => {
+    if (date === "") {
+      toast.error("Debe seleccionar la fecha de entrega");
+      setError(true);
+      return;
+    }
+    setLoading(true);
+    try {
+      const body = {
+        userId: user.id,
+        discount,
+        coupon: currentCoupon || false,
+        items: items.map(({ id, quantity }) => {
+          return { id: id, qty: quantity };
+        }),
+        deliveryDate: new Date(date).toISOString(),
+      };
+
+      //* Guardo para recuperar en `PaymentOK.jsx`
+      saveInStorage("orderBody", body);
+      const res = await APISpot.checkout.create(body);
+      if (res) {
+        window.open(res);
+      }
+    } catch (e) {
+      console.log(e);
+      toast.error("Hubo un error al crear el link de pago", { description: e.response.data.message || e });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getMinDate = () => {
+    const today = new Date();
+    const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+    const minDate = nextWeek.toISOString().split("T")[0];
+    return minDate;
+  };
+
+  const getMaxDate = () => {
+    const today = new Date();
+    const maxDate = new Date(today.getFullYear(), today.getMonth() + 2, 0); // Obtiene el último día del mes en 2 meses
+    return maxDate.toISOString().split("T")[0];
+  };
+
+  return (
+    <DarkModal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      title={"FECHA DE ENTREGA"}
+      description={"Seleccione fecha de entrega para el pedido"}
+      size="xl"
+    >
+      <form className={`z-20 mx-auto flex w-80 flex-col items-center justify-start gap-10`}>
+        <input
+          type="date"
+          value={date}
+          min={getMinDate()}
+          max={getMaxDate()}
+          onChange={(e) => {
+            setDate(e.target.value);
+            if (date !== "") setError(false);
+          }}
+          className={`${
+            error && "border-2 border-red-500"
+          } w-60 rounded-full bg-background p-2 text-center font-bold tracking-widest text-dark transition hover:cursor-pointer focus:outline-none`}
+        />
+        <DefaultButton onPress={handleCreateCheckout} className={"mx-auto lg:mx-0"} isLoading={loading}>
+          IR A PAGAR
+        </DefaultButton>
+      </form>
+    </DarkModal>
   );
 }

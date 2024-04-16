@@ -19,7 +19,7 @@ export function DefaultButton({
       type={type}
       variant="solid"
       color={"primary"}
-      className={`w-60 rounded-full bg-gradient-to-r from-primary to-yellow-200 p-6 font-bold tracking-widest text-dark hover:scale-110 ${className}`}
+      className={`w-60 rounded-full bg-gradient-to-r from-primary to-yellow-200 p-6 font-bold tracking-widest text-dark hover:scale-110 disabled:opacity-50 ${className}`}
       isLoading={isLoading}
       onPress={onPress}
       startContent={startContent}

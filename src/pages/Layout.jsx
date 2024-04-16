@@ -1,7 +1,7 @@
 import { useEffect, Suspense } from "react";
 import Loader from "src/components/Loader";
 import { FirstSignInModal } from "./signIn";
-import { getOfStorage } from "src/utils/localStorage";
+import { getOfStorage, saveInStorage } from "src/utils/localStorage";
 import { setAccessToken } from "src/redux/reducers/auth";
 import { useDispatch } from "react-redux";
 import { addAuthWithToken, APISpot } from "src/api";
@@ -23,10 +23,35 @@ export default function Layout({ children }) {
   const { onOpen, onOpenChange, isOpen, onClose } = useDisclosure();
 
   const getUserFromDb = async (access_token, email) => {
-    const { user } = await APISpot.auth.jwtAutoSignIn({ jwt: access_token, email });
+    try {
+      const { user, shoppingCart } = await APISpot.auth.jwtAutoSignIn({ jwt: access_token, email });
 
-    if (user) {
-      dispatch(setUser(user));
+      if (user) {
+        if (Object.keys(shoppingCart)?.length) {
+          shoppingCart.subtotal = parseFloat(shoppingCart.subtotal);
+          shoppingCart.total = parseFloat(shoppingCart.total);
+          shoppingCart.items = shoppingCart.items.map((itm) => {
+            return { ...itm, price: parseFloat(itm.price) };
+          });
+          dispatch(actionsShoppingCart.loadCart(shoppingCart));
+          saveInStorage("shoppingCart", shoppingCart);
+        }
+
+        dispatch(setUser(user));
+        window.addEventListener("beforeunload", () => {
+          let storageCart = getOfStorage("shoppingCart");
+          if (storageCart?.modified) {
+            if (storageCart.items.length) {
+              storageCart.items = storageCart.items.map(({ img, price, qty, shoppingCartId, name, id }) => {
+                return { img, price, qty, shoppingCartId, name, productId: id };
+              });
+            }
+            return APISpot.cart.updateCart(storageCart);
+          }
+        });
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -45,13 +70,21 @@ export default function Layout({ children }) {
       addAuthWithToken(access_token);
       dispatch(setAccessToken(access_token));
       getUserFromDb(access_token, user.email);
+    } else {
+      // * ShoppingCart para usuario no logueado
+      const shoppingCart = getOfStorage("shoppingCart");
+      if (shoppingCart) {
+        dispatch(actionsShoppingCart.loadCart(shoppingCart));
+      }
     }
 
-    //? Shopping Cart
-    const shoppingCart = getOfStorage("shoppingCart");
-    if (shoppingCart) {
-      dispatch(actionsShoppingCart.loadCart(shoppingCart));
-    }
+    return () => {
+      // * Por si acaso se guardad el cart en le "componentDidUnmount"
+      window.removeEventListener("beforeunload", () => {});
+      // ? En caso de que no funcione "beforeunload"
+      // const updatedCart = getOfStorage("shoppingCart");
+      // return APISpot.cart.updateCart(updatedCart);
+    };
   }, [document]);
 
   return (
