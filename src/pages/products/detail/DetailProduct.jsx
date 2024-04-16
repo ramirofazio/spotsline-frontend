@@ -41,10 +41,6 @@ export function DetailProduct() {
 
   function addProductToShoppingCart() {
 
-
-
-
-
     dispatch(
       addItemToCart( {
         id: current.id,

@@ -22,7 +22,6 @@ export function Profile() {
   //TODO crear avatar en tabla CLIENTE
 
   const { userData } = useLoaderData();
-  console.log(userData);
   const [avatar, setAvatar] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedSection, setSelectedSection] = useState(() => {
@@ -37,8 +36,7 @@ export function Profile() {
   async function updateAvatar() {
     try {
       setLoading(true);
-      const res = await APISpot.user.updateAvatar({ formData: avatar.formData, userId: userData.id, web_role: "client" });
-      console.log(res);
+      await APISpot.user.updateAvatar({ formData: avatar.formData, userId: userData.id, web_role: "client" });
       toast.success("Avatar actualizado!");
       userData.avatar = avatar.url;
       setAvatar(null);
@@ -54,7 +52,6 @@ export function Profile() {
     const formData = new FormData();
     formData.append("file", target.files[0]);
     const newAvatar = URL.createObjectURL(target.files[0]);
-    console.log(newAvatar);
     setAvatar({ url: newAvatar, formData: formData });
   };
 
@@ -89,7 +86,7 @@ export function Profile() {
       </header>
       <div className="md:grid md:grid-cols-2">
         <section className="flex flex-col items-center justify-start gap-2 p-10 pt-10">
-          <div className="relative shrink-0 !h-fit ">
+          <div className="relative ">
             <Avatar
               src={avatar ? avatar.url : userData.avatar}
               name={userData.fantasyName}
