@@ -1,4 +1,4 @@
-import { Avatar, Button, Divider } from "@nextui-org/react";
+import { Avatar, Button, Divider, Spinner } from "@nextui-org/react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useLoaderData, useNavigate } from "react-router-dom";
@@ -22,7 +22,9 @@ export function Profile() {
   //TODO crear avatar en tabla CLIENTE
 
   const { userData } = useLoaderData();
+  console.log(userData);
   const [avatar, setAvatar] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [selectedSection, setSelectedSection] = useState(() => {
     const local = getOfStorage("profileSelectedSection");
     if (local) {
@@ -35,11 +37,17 @@ export function Profile() {
   async function updateAvatar() {
     try {
       setLoading(true);
-      await APISpot.user.updateAvatar({});
+      const res = await APISpot.user.updateAvatar({ formData: avatar.formData, userId: userData.id, web_role: "client" });
+      console.log(res);
+      toast.success("Avatar actualizado!");
+      userData.avatar = avatar.url;
+      setAvatar(null);
     } catch (err) {
       console.log(err);
     }
-
+    finally {
+      setLoading(false);
+    }
   }
 
   const handleAvatar= ({ target }) => {
@@ -81,7 +89,7 @@ export function Profile() {
       </header>
       <div className="md:grid md:grid-cols-2">
         <section className="flex flex-col items-center justify-start gap-2 p-10 pt-10">
-          <div className="relative shrink-0 !h-fit border-2 border-black">
+          <div className="relative shrink-0 !h-fit ">
             <Avatar
               src={avatar ? avatar.url : userData.avatar}
               name={userData.fantasyName}
@@ -90,13 +98,12 @@ export function Profile() {
             />
 
             <Button
-              onPress={() => updateAvatar("zaracatunga")}
               isIconOnly
-              className="left-0 bottom-0 absolute rounded-full bg-gradient-to-r from-primary to-yellow-200 font-bold text-black  "
+              className=" left-0 bottom-0 absolute rounded-full bg-gradient-to-r from-primary to-yellow-200 font-bold text-black  "
               startContent={
-                <div className="relative">
+                <div className={`relative ${loading && "hidden"}`}>
                   <label htmlFor="upload-avatar" className=" font-bold py-2 px-4 rounded cursor-pointer">
-                    <i className="ri-pencil-line icons text-2xl font-bold text-black">
+                    <i className={`ri-pencil-line icons text-2xl font-bold text-black`}>
                     </i>
 
                     <input
@@ -109,13 +116,15 @@ export function Profile() {
                   </label>
                 </div>
               }
+              isLoading={loading}
+              loadingContent={<Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />}
             />
 
             {
               avatar && (
-                <span className="animate-pulse absolute -right-11 bottom-11  border-2 flex flex-col gap-3">
+                <span className="animate-pulse absolute -right-11 bottom-11 flex flex-col gap-3">
                   <Button
-                    onPress={() => updateAvatar("zaracatunga")}
+                    onPress={() => updateAvatar()}
                     isIconOnly
                     className=" rounded-full bg-green-500 font-bold text-black  "
                     startContent={
