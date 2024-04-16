@@ -47,7 +47,7 @@ export function DetailProduct() {
         img: current.pathImage || assets.lights.light2,
 
         price: parseFloat(current["precio" + ((lista || 0) + 1)]),
-        quantity: state,
+        qty: state,
       })
     );
     toast("Producto Agregado", {
