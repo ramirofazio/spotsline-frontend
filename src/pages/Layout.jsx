@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { addAuthWithToken, APISpot } from "src/api";
 import { setUser } from "src/redux/reducers/user";
 import { ChangePasswordModal } from "./signIn/ChangePasswordModal";
-import { useDisclosure } from "@nextui-org/react";
+import { Spinner, useDisclosure } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { actionsShoppingCart } from "src/redux/reducers";
 
@@ -88,7 +88,7 @@ export default function Layout({ children }) {
   }, [document]);
 
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense fallback={<Spinner color="primary" className="absolute inset-0 !z-50 text-xl" />}>
       <ChangePasswordModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}

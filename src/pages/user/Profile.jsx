@@ -1,13 +1,8 @@
 import { Avatar, Button, Divider } from "@nextui-org/react";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useLoaderData, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import { removeAuthWithToken } from "src/api";
-import { actionsAuth, actionsUser } from "src/redux/reducers";
+import { useLoaderData } from "react-router-dom";
 import ProfileData from "./ProfileData";
 import ProfileOrders from "./ProfileOrders";
-import { DefaultButton } from "src/components";
 import { getOfStorage, saveInStorage } from "src/utils/localStorage";
 
 const selectButtonsData = [
@@ -16,9 +11,6 @@ const selectButtonsData = [
 ];
 
 export function Profile() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
   //TODO crear avatar en tabla CLIENTE
   const { userData } = useLoaderData();
 
@@ -40,24 +32,6 @@ export function Profile() {
     <main className="pt-16 md:pt-20">
       <header className="relative hidden flex-col items-center justify-center md:flex md:h-40">
         <h1 className="text-2xl font-bold lg:text-3xl">MI CUENTA</h1>
-        <DefaultButton
-          className="absolute right-10 bg-gradient-to-r from-primary to-yellow-200 font-bold"
-          radius="full"
-          endContent={<i className="ri-logout-circle-line icons text-xl font-bold text-black" />}
-          onPress={() => {
-            navigate("/");
-            toast.info("Sesión cerrada con exito", { description: "¡Esperamos verte pronto!" });
-            setTimeout(() => {
-              //? Para evitar salto y que aparezca el errorBundler
-              //TODO ANALIZAR ESTO
-              removeAuthWithToken();
-              dispatch(actionsUser.cleanUser());
-              dispatch(actionsAuth.cleanAuth());
-            }, 1000);
-          }}
-        >
-          CERRAR SESIÓN
-        </DefaultButton>
         <Divider className="absolute bottom-0 mx-auto h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
       </header>
       <div className="md:grid md:grid-cols-2">

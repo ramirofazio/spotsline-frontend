@@ -99,27 +99,24 @@ export function AdminRoot() {
       const localWeb_role = getOfStorage("user").web_role;
       if (localWeb_role === web_role) {
         //? es valido, sigo. Ambos existen asi que esta logged. Hay que validar el rol
-
-        if (web_role === import.meta.env.VITE_ADMIN_ROLE) {
+        if (web_role === Number(import.meta.env.VITE_ADMIN_ROLE)) {
           //? Cumplio todas las condiciones asi que es ADMIN
           return true;
         }
       }
     }
-
     //? No cumplio las condiciones
     return false;
   };
 
   if (validate()) {
-    return <DefaultError />;
+    return (
+      <Suspense fallback={<Spinner color="primary" className="absolute inset-0 !z-50 text-xl" />}>
+        <Dashboard>
+          <Outlet />
+        </Dashboard>
+      </Suspense>
+    );
   }
-
-  return (
-    <Suspense fallback={<Spinner color="secondary" className="absolute inset-0 !z-50 text-xl" />}>
-      <Dashboard>
-        <Outlet />
-      </Dashboard>
-    </Suspense>
-  );
+  return <DefaultError />;
 }
