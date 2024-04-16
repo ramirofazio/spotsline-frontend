@@ -51,7 +51,7 @@ export const APISpot = {
     },
     updateProductImages: (variant_id, formData) => {
       addAuthWithToken(getOfStorage("access_token"));
-      return BASE_API.post(`/${route.AWS}/${variant_id}`, formData, {
+      return BASE_API.post(`/${route.AWS}/productImg/${variant_id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
     },
@@ -161,6 +161,12 @@ export const APISpot = {
       addAuthWithToken(getOfStorage("access_token"));
       const res = await BASE_API.post(`/${route.USER}/update-data`, body);
       return res.data;
+    },
+    updateAvatar: ({ userId, web_role, formData }) => {
+      addAuthWithToken(getOfStorage("access_token"));
+      return BASE_API.post(`/${route.AWS}/avatar/${userId}?web_role=${web_role}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
     },
   },
 };

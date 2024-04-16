@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { removeAuthWithToken } from "src/api";
+import { APISpot, removeAuthWithToken } from "src/api";
 import { actionsAuth, actionsUser } from "src/redux/reducers";
 import ProfileData from "./ProfileData";
 import ProfileOrders from "./ProfileOrders";
@@ -20,8 +20,9 @@ export function Profile() {
   const dispatch = useDispatch();
 
   //TODO crear avatar en tabla CLIENTE
-  const { userData } = useLoaderData();
 
+  const { userData } = useLoaderData();
+  const [avatar, setAvatar] = useState(null);
   const [selectedSection, setSelectedSection] = useState(() => {
     const local = getOfStorage("profileSelectedSection");
     if (local) {
@@ -31,9 +32,23 @@ export function Profile() {
     return "MI PERFIL";
   });
 
-  async function updateAvatar(file) {
-    console.log(file);
+  async function updateAvatar() {
+    try {
+      setLoading(true);
+      await APISpot.user.updateAvatar({});
+    } catch (err) {
+      console.log(err);
+    }
+
   }
+
+  const handleAvatar= ({ target }) => {
+    const formData = new FormData();
+    formData.append("file", target.files[0]);
+    const newAvatar = URL.createObjectURL(target.files[0]);
+    console.log(newAvatar);
+    setAvatar({ url: newAvatar, formData: formData });
+  };
 
   const handleSelect = (name) => {
     setSelectedSection(name);
@@ -66,26 +81,60 @@ export function Profile() {
       </header>
       <div className="md:grid md:grid-cols-2">
         <section className="flex flex-col items-center justify-start gap-2 p-10 pt-10">
-          <div className="relative">
+          <div className="relative shrink-0 !h-fit border-2 border-black">
             <Avatar
-              src={userData.avatar}
+              src={avatar ? avatar.url : userData.avatar}
               name={userData.fantasyName}
-              className="mx-auto mb-10 h-28 w-28 p-2 md:h-40 md:w-40"
+              className="mx-auto w-44 h-44 "
               classNames={{ base: "bg-white" }}
             />
-            {/* acaaa */}
+
             <Button
               onPress={() => updateAvatar("zaracatunga")}
               isIconOnly
-              className="-right-20 -top-20 rounded-full bg-gradient-to-r from-primary to-yellow-200 font-bold text-black md:-right-28 md:flex"
+              className="left-0 bottom-0 absolute rounded-full bg-gradient-to-r from-primary to-yellow-200 font-bold text-black  "
               startContent={
-                <i className="ri-pencil-line icons text-xl font-bold text-black">
-                  <input type="file" className="bg-transparent"/>
-                </i>
+                <div className="relative">
+                  <label htmlFor="upload-avatar" className=" font-bold py-2 px-4 rounded cursor-pointer">
+                    <i className="ri-pencil-line icons text-2xl font-bold text-black">
+                    </i>
+
+                    <input
+                      title="Cargar imagenes"
+                      accept="image/*"
+                      id="upload-avatar"
+                      type="file"
+                      onChange={handleAvatar}
+                      className="invisible absolute right-0 top-0 h-full w-full border-2"/>
+                  </label>
+                </div>
               }
             />
+
+            {
+              avatar && (
+                <span className="animate-pulse absolute -right-11 bottom-11  border-2 flex flex-col gap-3">
+                  <Button
+                    onPress={() => updateAvatar("zaracatunga")}
+                    isIconOnly
+                    className=" rounded-full bg-green-500 font-bold text-black  "
+                    startContent={
+                      <i className="ri-check-line text-xl text-white"></i>
+                    }
+                  />
+                  <Button
+                    onPress={() => setAvatar(null)}
+                    isIconOnly
+                    className="animate-pulse  rounded-full bg-red-500 font-bold text-black  "
+                    startContent={
+                      <i className="ri-close-line text-xl text-white"></i>
+                    }
+                  />
+                </span>
+              )
+            }
           </div>
-          <h1 className="underliner -mt-10 rounded-full bg-gradient-to-r from-primary to-yellow-200 p-2 px-4 text-center font-bold md:text-xl lg:w-80">
+          <h1 className="underliner mt-10 rounded-full bg-gradient-to-r from-primary to-yellow-200 p-2 px-4 text-center font-bold md:text-xl lg:w-80">
             {userData.fantasyName}
           </h1>
 
