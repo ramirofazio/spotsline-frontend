@@ -27,7 +27,6 @@ export const assets = {
     3: `${BASE_AWS_URL}/rrhh/rrhh-03.jpg`,
     4: `${BASE_AWS_URL}/rrhh/rrhh-04.jpg`,
     5: `${BASE_AWS_URL}/rrhh/rrhh-05.jpg`,
-    6: `${BASE_AWS_URL}/rrhh/rrhh-06.jpg`,
     7: `${BASE_AWS_URL}/rrhh/rrhh-07.jpg`,
   },
 };
