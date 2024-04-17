@@ -11,6 +11,7 @@ import {
   DropdownMenu,
   DropdownItem,
   NavbarMenuItem,
+  useDisclosure,
 } from "@nextui-org/react";
 import { links } from ".";
 import { Link, NavLink, useLoaderData, useLocation } from "react-router-dom";
@@ -21,13 +22,19 @@ import { toast } from "sonner";
 import { removeAuthWithToken } from "src/api";
 import { actionsAuth, actionsUser } from "src/redux/reducers";
 import { DefaultButton } from "..";
+import ManageClientsModal from "../modals/ManageClientsModal";
 
 export default function NavBar() {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
 
+  const params = new URLSearchParams(window.location.search);
+  const sellerLogIn = params.get("sellerLogIn");
+
   const { access_token } = useSelector((state) => state.auth);
   const { id, web_role } = useSelector((state) => state.user);
+
+  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [blur, setBlur] = React.useState(false);
@@ -50,6 +57,17 @@ export default function NavBar() {
       document.removeEventListener("scroll", handleScroll);
     };
   }, [isMenuOpen, pathname]);
+
+  useEffect(() => {
+    if (sellerLogIn) {
+      //TODO VALIDAR ACA QUE YA HAYA SELECCIONADO UN CLIENTE, SINO MANDAR ALGUNA PROP AL MODAL PARA QUE NO SEA DISSMISABLE
+      document.getElementById("manage-clients-button").click();
+    }
+  }, [document]);
+
+  const handleManageClients = () => {
+    onOpen();
+  };
 
   return (
     <Navbar
@@ -135,13 +153,24 @@ export default function NavBar() {
         dispatch={dispatch}
         isMenuOpen={isMenuOpen}
         setIsMenuOpen={setIsMenuOpen}
+        handleManageClients={handleManageClients}
       />
-      <DesktopContent web_role={web_role} id={id} access_token={access_token} pathname={pathname} dispatch={dispatch} />
+      <DesktopContent
+        web_role={web_role}
+        id={id}
+        access_token={access_token}
+        pathname={pathname}
+        dispatch={dispatch}
+        handleManageClients={handleManageClients}
+      />
+      {web_role === Number(import.meta.env.VITE_SELLER_ROLE) && (
+        <ManageClientsModal isOpen={isOpen} onClose={onClose} onOpenChange={onOpenChange} />
+      )}
     </Navbar>
   );
 }
 
-function DesktopContent({ web_role, id, access_token, pathname, dispatch }) {
+function DesktopContent({ web_role, id, access_token, pathname, dispatch, handleManageClients }) {
   return (
     <NavbarContent justify="end" className="hidden sm:flex">
       {!id && !access_token && (
@@ -169,7 +198,8 @@ function DesktopContent({ web_role, id, access_token, pathname, dispatch }) {
 
       {web_role === Number(import.meta.env.VITE_SELLER_ROLE) && (
         <Button
-          onClick={() => /* TODO LOGICA PARA MOSTRAR MODAL CLIENT SELECTION A SELLERS */ console.log("CLICK")}
+          id="manage-clients-button"
+          onClick={() => handleManageClients()}
           className={`bg-gradient-to-br from-primary to-background transition hover:scale-110`}
           size="md"
           isIconOnly
@@ -228,7 +258,16 @@ function DesktopContent({ web_role, id, access_token, pathname, dispatch }) {
   );
 }
 
-function MobileContent({ web_role, id, access_token, pathname, dispatch, isMenuOpen, setIsMenuOpen }) {
+function MobileContent({
+  web_role,
+  id,
+  access_token,
+  pathname,
+  dispatch,
+  isMenuOpen,
+  setIsMenuOpen,
+  handleManageClients,
+}) {
   return (
     <NavbarMenu className="gap-4 overflow-hidden bg-gradient-to-br from-primary to-white/20">
       <div className="absolute -right-48 -top-10 -z-40 opacity-50">
@@ -272,7 +311,8 @@ function MobileContent({ web_role, id, access_token, pathname, dispatch, isMenuO
 
         {web_role === Number(import.meta.env.VITE_SELLER_ROLE) && (
           <Button
-            onClick={() => /* TODO LOGICA PARA MOSTRAR MODAL CLIENT SELECTION A SELLERS */ console.log("CLICK")}
+            id="manage-clients-button"
+            onClick={() => handleManageClients()}
             className={`bg-gradient-to-tl from-primary to-background shadow-xl`}
             size="lg"
             isIconOnly

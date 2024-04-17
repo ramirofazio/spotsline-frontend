@@ -14,6 +14,12 @@ const route = {
 };
 
 export const APISpot = {
+  seller: {
+    getManagedClients: () => {
+      addAuthWithToken(getOfStorage("access_token"));
+      return BASE_API.get(`/${route.CLIENTS}/managed-clients`);
+    },
+  },
   dashboard: {
     getDashboardSellers: async () => {
       addAuthWithToken(getOfStorage("access_token"));

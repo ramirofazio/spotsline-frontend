@@ -56,7 +56,11 @@ export function SignIn() {
           toast.info(`Bienvenido de nuevo ${user.email.split("@")[0]}`, {
             description: "¡Estamos contentos de que hayas vuelto a nuestra web!",
           });
-          navigate("/");
+          if (user.web_role === Number(import.meta.env.VITE_SELLER_ROLE)) {
+            navigate("/?sellerLogIn=true");
+          } else {
+            navigate("/");
+          }
         }
       }
     } catch (e) {
