@@ -11,6 +11,7 @@ const route = {
   CHECKOUT: "mobbex",
   COUPON: "coupon",
   AWS: "aws-s3-upload",
+  MAIL: "mailing",
 };
 
 export const APISpot = {
@@ -165,6 +166,13 @@ export const APISpot = {
       addAuthWithToken(getOfStorage("access_token"));
       const res = await BASE_API.post(`/${route.USER}/update-data`, body);
       return res.data;
+    },
+  },
+  mail: {
+    sendRrhhRequest: async (body) => {
+      return BASE_API.post(`/${route.MAIL}/rrhh`, body, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
     },
   },
 };
