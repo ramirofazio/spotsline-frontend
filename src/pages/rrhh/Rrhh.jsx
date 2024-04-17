@@ -23,7 +23,7 @@ export function Rrhh() {
           <h1 className="text-4xl text-primary">HUMANOS</h1>
         </strong>
         <article className="my-6 grid grid-cols-3 gap-3">
-          <picture className="col-span-1 flex flex-col gap-2 border-2 border-black ">
+          <picture className="col-span-1 flex flex-col justify-around gap-2  ">
             {Object.values(assets.rrhh).map((img) => {
               const id = img.slice(-5, -4);
               console.log(id);
@@ -31,6 +31,9 @@ export function Rrhh() {
             })}
           </picture>
           <span className="col-span-2 flex flex-col gap-4 ">
+            <strong>
+              <p className="text-xl">¿Queres unirte?</p>
+            </strong>
             <p>
               En <strong>Spotsline</strong> somos un gran equipo humano y profesional.
             </p>
