@@ -25,7 +25,7 @@ export default function CustomSelect({
       }}
       {...props}
     >
-      {children}
+      {items && children}
     </Select>
   );
 }

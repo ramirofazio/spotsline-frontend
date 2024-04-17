@@ -30,7 +30,7 @@ export function DarkModal({
           <main>
             {isDismissable && Boolean(onClose) && (
               <i
-                className="ri-close-line icons absolute right-0 top-0 text-xl text-background"
+                className="ri-close-line icons absolute right-2 top-2 text-2xl text-background"
                 onClick={() => onClose()}
               />
             )}

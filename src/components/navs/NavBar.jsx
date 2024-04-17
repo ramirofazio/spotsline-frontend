@@ -171,6 +171,8 @@ export default function NavBar() {
 }
 
 function DesktopContent({ web_role, id, access_token, pathname, dispatch, handleManageClients }) {
+  const { managedClient } = useSelector((state) => state.seller);
+
   return (
     <NavbarContent justify="end" className="hidden sm:flex">
       {!id && !access_token && (
@@ -200,7 +202,9 @@ function DesktopContent({ web_role, id, access_token, pathname, dispatch, handle
         <Button
           id="manage-clients-button"
           onClick={() => handleManageClients()}
-          className={`bg-gradient-to-br from-primary to-background transition hover:scale-110`}
+          className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
+            managedClient.id && "animate-pulse from-success to-success"
+          }`}
           size="md"
           isIconOnly
         >
@@ -268,6 +272,8 @@ function MobileContent({
   setIsMenuOpen,
   handleManageClients,
 }) {
+  const { managedClient } = useSelector((state) => state.seller);
+
   return (
     <NavbarMenu className="gap-4 overflow-hidden bg-gradient-to-br from-primary to-white/20">
       <div className="absolute -right-48 -top-10 -z-40 opacity-50">
@@ -312,8 +318,13 @@ function MobileContent({
         {web_role === Number(import.meta.env.VITE_SELLER_ROLE) && (
           <Button
             id="manage-clients-button"
-            onClick={() => handleManageClients()}
-            className={`bg-gradient-to-tl from-primary to-background shadow-xl`}
+            onPress={() => {
+              setIsMenuOpen(false);
+              handleManageClients();
+            }}
+            className={`bg-gradient-to-tl from-primary to-background shadow-xl ${
+              managedClient.id && "animate-pulse from-success to-success"
+            }`}
             size="lg"
             isIconOnly
           >

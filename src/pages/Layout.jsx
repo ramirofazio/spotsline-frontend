@@ -1,17 +1,17 @@
 import { useEffect, Suspense } from "react";
-import Loader from "src/components/Loader";
 import { FirstSignInModal } from "./signIn";
 import { getOfStorage, saveInStorage } from "src/utils/localStorage";
-import { setAccessToken } from "src/redux/reducers/auth";
 import { useDispatch } from "react-redux";
 import { addAuthWithToken, APISpot } from "src/api";
 import { setUser } from "src/redux/reducers/user";
 import { ChangePasswordModal } from "./signIn/ChangePasswordModal";
 import { Spinner, useDisclosure } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
-import { actionsShoppingCart } from "src/redux/reducers";
+import { actionsShoppingCart, actionsAuth, actionSeller } from "src/redux/reducers";
 
 export default function Layout({ children }) {
+  //TODO ACOMODAR ESTO QUE ES UN LIO
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -65,10 +65,16 @@ export default function Layout({ children }) {
     //? first time signIn logic
     const access_token = getOfStorage("access_token");
     const user = getOfStorage("user");
+    const managedClient = getOfStorage("managedClient");
 
     if (access_token && user) {
       addAuthWithToken(access_token);
-      dispatch(setAccessToken(access_token));
+      dispatch(actionsAuth.setAccessToken(access_token));
+
+      if (user.web_role === Number(import.meta.env.VITE_SELLER_ROLE) && managedClient) {
+        dispatch(actionSeller.selectClientToManage(managedClient));
+      }
+
       getUserFromDb(access_token, user.email);
     } else {
       // * ShoppingCart para usuario no logueado

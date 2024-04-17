@@ -5,31 +5,39 @@ import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import CustomSelect from "../form/CustomSelect";
 import { assets } from "src/assets";
+import { actionSeller } from "src/redux/reducers";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function ManageClientsModal({ isOpen, onClose, onOpenChange }) {
-  //TODO VALIDAR QUE YA TENGA UN CLIENTE GESTIONANDO, SINO NO PUEDE CERRAR EL MODAL
-  const [clients, setClients] = useState();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  const { managedClient } = useSelector((state) => state.seller);
+
+  const [clients, setClients] = useState();
   const [client, setClient] = useState();
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (client) => {
-    setClient(client);
+  const handleChange = (e) => {
+    const res = clients.find((c) => c.fantasyName === e.target.value);
+
+    setClient(res);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      //redux action
-
-      toast.success(`${client.fantasy} seleccionado con exito`);
+      dispatch(actionSeller.selectClientToManage(client));
+      toast.success(`${client.fantasyName} seleccionado con exito`);
       onClose();
     } catch (e) {
       console.log(e);
     } finally {
       setLoading(false);
       onClose();
+      navigate("/");
     }
   };
 
@@ -55,14 +63,20 @@ export default function ManageClientsModal({ isOpen, onClose, onOpenChange }) {
       size="xl"
       title={"SELECCIÓN DE CLIENTE"}
       description="Aca podes seleccionar el Cliente que queres gestionar en esta sesión"
-      isDismissable={false}
+      isDismissable={managedClient.fantasyName ? true : false}
       onClose={onClose}
     >
       <form className={`z-20 flex flex-col items-center justify-start gap-10`} onSubmit={(e) => handleSubmit(e)}>
-        <CustomSelect items={clients} label="Selecciona un cliente" onChange={handleChange}>
-          {(client, index) => (
+        <CustomSelect
+          items={clients}
+          label="Selecciona un cliente"
+          onChange={handleChange}
+          defaultSelectedKeys={managedClient.fantasyName ? [managedClient.fantasyName] : false}
+        >
+          {(client) => (
             <SelectItem
-              key={index}
+              value={client.id}
+              key={client.fantasyName}
               textValue={client.fantasyName || "NOMBRE"}
               classNames={{
                 base: "!bg-gradient-to-r to-primary from-yellow-200 my-1 hover:opacity-70 !transition",
