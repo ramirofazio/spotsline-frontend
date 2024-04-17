@@ -19,7 +19,6 @@ export function Profile() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  //TODO crear avatar en tabla CLIENTE
   const { userData } = useLoaderData();
 
   const [selectedSection, setSelectedSection] = useState(() => {
