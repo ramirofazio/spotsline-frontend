@@ -1,19 +1,20 @@
 import { Textarea } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BasicInput, DefaultButton } from "src/components";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
 
 export function Contact() {
-  const [emailData, setEmailData] = useState({ file: null });
+  const _defaultData = { name: "", email: "", subject: "", message: "", file: null };
+  const [emailData, setEmailData] = useState(_defaultData);
   const [loading, setLoading] = useState(false);
   async function handleSubmit(e) {
     e.preventDefault();
     try {
       setLoading(true);
-      console.log("se subioooooo");
       await APISpot.mail.sendRrhhRequest(emailData);
       toast.success("Se envio email con sus datos!");
+      setEmailData(_defaultData);
     } catch (err) {
       toast.error("Error" + err.message);
       console.log(err);
@@ -33,9 +34,6 @@ export function Contact() {
       } else return { ...prev, [target.name]: target.value };
     });
   }
-  useEffect(() => {
-    console.log(emailData);
-  }, [emailData]);
 
   return (
     <form onSubmit={(e) => handleSubmit(e)}>
@@ -44,14 +42,23 @@ export function Contact() {
       </strong>
       <article className="mt-4 flex flex-col gap-3">
         <BasicInput
+          value={emailData.name}
           onChange={handleChange}
           name="name"
           label="Nombre y Apellido"
           labelClass="text-black ml-2 "
           isRequired={true}
         />
-        <BasicInput onChange={handleChange} name="email" label="Email" labelClass="text-black ml-2" isRequired={true} />
         <BasicInput
+          value={emailData.email}
+          onChange={handleChange}
+          name="email"
+          label="Email"
+          labelClass="text-black ml-2"
+          isRequired={true}
+        />
+        <BasicInput
+          value={emailData.subject}
           onChange={handleChange}
           name="subject"
           label="Asunto"
@@ -59,6 +66,7 @@ export function Contact() {
           isRequired={false}
         />
         <Textarea
+          value={emailData.message}
           onChange={handleChange}
           isRequired
           name="message"
@@ -104,7 +112,7 @@ export function Contact() {
               setEmailData((...prev) => {
                 return { ...prev, file: null };
               });
-              toast.info("se elimino el CV previo");
+              toast.info("Se elimino el CV previo");
             }}
             className="ri-close-circle-line mx-auto text-4xl text-red-500 hover:opacity-30"
           ></i>
