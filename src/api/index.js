@@ -11,6 +11,7 @@ const route = {
   CHECKOUT: "mobbex",
   COUPON: "coupon",
   AWS: "aws-s3-upload",
+  ORDERS: "orders",
 };
 
 export const APISpot = {
@@ -39,6 +40,10 @@ export const APISpot = {
     },
     getDashboardProducts: async (page) => {
       const res = await BASE_API.get(`/${route.PRODUCTS}/dashboard-products?page=${page}`);
+      return res.data;
+    },
+    getDashboardOrders: async () => {
+      const res = await BASE_API.get(`/${route.ORDERS}/`);
       return res.data;
     },
     toggleFeaturedProduct: (body) => {
