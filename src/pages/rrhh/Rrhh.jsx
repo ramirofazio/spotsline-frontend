@@ -57,7 +57,7 @@ export function Rrhh() {
               </div>
             </div>
           </span>
-          <picture className="ml-auto mt-2  grid max-w-[300px] grid-cols-2 justify-around gap-2 sm:col-span-1 sm:flex  sm:flex-col">
+          <picture className="mt-2 grid grid-cols-2 place-items-center justify-around gap-2 sm:col-span-1 sm:ml-auto sm:flex  sm:flex-col">
             {Object.values(assets.rrhh).map((img) => {
               const id = img.slice(-5, -4);
               return <AwsImage className="w-full " key={id} type="rrhh" identify={id} />;
