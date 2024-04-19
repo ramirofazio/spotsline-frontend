@@ -31,6 +31,9 @@ export const actionsShoppingCart = {
   updateCartItemQuantity,
   removeDiscount,
 };
-export { productRdr } from "./product.js";
 
+export { productRdr } from "./product.js";
 export * as actionProducts from "./product.js";
+
+export { sellerRdr } from "./seller.js";
+export * as actionSeller from "./seller.js";

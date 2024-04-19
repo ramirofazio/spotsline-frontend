@@ -9,11 +9,11 @@ import { actionsShoppingCart } from "src/redux/reducers";
 import { formatPrices } from "src/utils";
 import { saveInStorage } from "src/utils/localStorage";
 
-//? Faltan utilidades para los tipos de administradores y vendedores. Ideas en NOTION!
-
 export default function ShoppingCart() {
   const dispatch = useDispatch();
   const { items, total, subtotal, discount, currentCoupon, id } = useSelector((state) => state.cart);
+  const { web_role } = useSelector((state) => state.user);
+  const { managedClient } = useSelector((state) => state.seller);
 
   const [discountCode, setDiscountCode] = useState("");
   const [loading, setLoading] = useState(false);
@@ -51,7 +51,7 @@ export default function ShoppingCart() {
     }
   };
 
-  async function resetCart(cartId) {
+  const resetCart = async (cartId) => {
     try {
       setLoading(true);
       await APISpot.cart.deleteCart(cartId, false);
@@ -64,7 +64,37 @@ export default function ShoppingCart() {
     } finally {
       setLoading(false);
     }
-  }
+  };
+
+  const handleAddCartToClient = async () => {
+    try {
+      setLoading(true);
+      const mappedItems = items.map((i) => {
+        return { ...i, productId: i.id };
+      });
+
+      console.log(mappedItems);
+
+      const res = await APISpot.cart.createCart({
+        userId: managedClient.id,
+        discount: discount,
+        total: total,
+        subtotal: subtotal,
+        items: mappedItems,
+        coupon: currentCoupon,
+      });
+
+      if (res) {
+        toast.success(`Carrito agregado con exito al cliente ${managedClient.fantasyName}`);
+        dispatch(actionsShoppingCart.clearCart());
+      }
+    } catch (e) {
+      console.log(e);
+      toast.error(`Hubo un problema al agregar el carrito al cliente ${managedClient.fantasyName}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     document.title = "SPOTSLINE - Carrito de compras";
@@ -73,7 +103,7 @@ export default function ShoppingCart() {
   return (
     <main className="text-center">
       <section className="grid place-items-center gap-2 p-6">
-        <h3 className="text-xl font-bold">INFORMACIÓN IMPORTANTE</h3>
+        <h1 className="text-xl font-bold">INFORMACIÓN IMPORTANTE</h1>
         <p className="px-4 font-secondary text-sm">
           Para guardar tu carrito, es necesario <strong className="font-bold">ingresar a tu cuenta</strong> dentro de
           Spotsline. Si aún no lo has hecho, no pierdas tu carrito e{" "}
@@ -86,16 +116,19 @@ export default function ShoppingCart() {
 
       <section className="relative grid place-items-center gap-6 p-6">
         {items.length === 0 && (
-          <DefaultButton className={"w-fit"}>
-            <Link to="/productos/0">VER PRODUCTOS</Link>
-          </DefaultButton>
+          <div className="flex flex-col items-center gap-6">
+            <h3 className="font-semibold">NO HAY NINGUN PRODUCTO EN TU CARRITO</h3>
+            <DefaultButton className={"w-fit"}>
+              <Link to="/productos/0">VER PRODUCTOS</Link>
+            </DefaultButton>
+          </div>
         )}
         <Button
           isIconOnly
           onPress={() => resetCart(id)}
           radius="full"
           disabled={!items.length && true}
-          className="ml-auto bg-gradient-to-tl from-primary to-background shadow-xl disabled:pointer-events-none disabled:opacity-40"
+          className="absolute bottom-4 right-4 ml-auto bg-gradient-to-tl from-primary to-background shadow-xl disabled:pointer-events-none disabled:opacity-40"
         >
           <i className="ri-delete-bin-6-line text-2xl"></i>
         </Button>
@@ -143,12 +176,13 @@ export default function ShoppingCart() {
         ))}
       </section>
       <Divider className="h-1 bg-primary" />
-
       <section className="relative m-6 mx-auto flex max-w-[80vw] flex-col  items-start gap-6 rounded-xl border-2 border-primary/50 bg-dark/50 p-6 font-secondary font-bold text-white">
         <h2 className="yellow-neon text-xl font-bold tracking-wider">RESUMEN</h2>
         <div className="z-10 flex w-full items-center justify-between">
           <h3>SUBTOTAL</h3>
-          <h3 className="yellowGradient font-bold">{formatPrices(subtotal)}</h3>
+          <h3 className="bg-gradient-to-r from-primary to-yellow-200 bg-clip-text font-extrabold text-transparent">
+            {formatPrices(subtotal)}
+          </h3>
         </div>
         {discount !== 0 && <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />}
         {discount !== 0 && Object.values(currentCoupon)?.length && (
@@ -171,44 +205,59 @@ export default function ShoppingCart() {
           </h3>
         </div>
         <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
-        <div className="mx-auto flex w-full flex-col justify-between gap-6 lg:flex-row lg:items-end">
-          <div className="flex flex-col">
-            <p className="mx-auto text-left font-thin lg:mx-0">Tengo un código promocional</p>
-            <form
-              className="z-20 mx-auto flex items-center justify-center rounded-xl md:w-80"
-              onSubmit={handleApplyDiscount}
-            >
-              <Input
-                type="text"
-                radius="none"
-                classNames={{
-                  inputWrapper: "h-10 rounded-tl-xl rounded-bl-xl",
-                  clearButton: "text-dark",
-                }}
-                placeholder="CÓDIGO"
-                isClearable
-                onClear={() => setDiscountCode("")}
-                value={discountCode}
-                onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
-              />
-              <Button
-                type="submit"
-                className="icons h-10 rounded-none rounded-br-xl rounded-tr-xl bg-background from-background to-primary font-bold text-black transition hover:bg-gradient-to-r"
-                isDisabled={items.length === 0 || discountCode === ""}
+
+        {web_role === Number(import.meta.env.VITE_USER_ROLE) && (
+          <div className="mx-auto flex w-full flex-col justify-between gap-6 lg:flex-row lg:items-end">
+            <div className="flex flex-col">
+              <p className="mx-auto text-left font-thin lg:mx-0">Tengo un código promocional</p>
+              <form
+                className="z-20 mx-auto flex items-center justify-center rounded-xl md:w-80"
+                onSubmit={handleApplyDiscount}
               >
-                APLICAR
-              </Button>
-            </form>
+                <Input
+                  type="text"
+                  radius="none"
+                  classNames={{
+                    inputWrapper: "h-10 rounded-tl-xl rounded-bl-xl",
+                    clearButton: "text-dark",
+                  }}
+                  placeholder="CÓDIGO"
+                  isClearable
+                  onClear={() => setDiscountCode("")}
+                  value={discountCode}
+                  onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
+                />
+                <Button
+                  type="submit"
+                  className="icons h-10 rounded-none rounded-br-xl rounded-tr-xl bg-background from-background to-primary font-bold text-black transition hover:bg-gradient-to-r"
+                  isDisabled={items.length === 0 || discountCode === ""}
+                >
+                  APLICAR
+                </Button>
+              </form>
+            </div>
+            <DefaultButton
+              onPress={handlePickDate}
+              className={"mx-auto lg:mx-0"}
+              isLoading={loading}
+              isDisabled={items.length === 0}
+            >
+              CONTINUAR
+            </DefaultButton>
           </div>
-          <DefaultButton
-            onPress={handlePickDate}
-            className={"mx-auto lg:mx-0"}
-            isLoading={loading}
-            isDisabled={items.length === 0}
-          >
-            CONTINUAR
-          </DefaultButton>
-        </div>
+        )}
+        {web_role === Number(import.meta.env.VITE_SELLER_ROLE) && (
+          <div className="mx-auto flex w-full flex-col justify-center gap-6 lg:flex-row ">
+            <DefaultButton
+              onPress={handleAddCartToClient}
+              className={"mx-auto !w-80 lg:mx-0"}
+              isLoading={loading}
+              isDisabled={items.length === 0 || loading}
+            >
+              AGREGAR CARRITO AL CLIENTE
+            </DefaultButton>
+          </div>
+        )}
       </section>
       {isOpen && (
         <PickDateModal
@@ -242,16 +291,16 @@ function PickDateModal({ isOpen, onOpenChange, items, currentCoupon, discount })
         userId: user.id,
         discount,
         coupon: currentCoupon || false,
-        items: items.map(({ id, quantity }) => {
-          return { id: id, qty: quantity };
+        items: items.map(({ id, qty }) => {
+          return { id: id, qty: qty };
         }),
         deliveryDate: new Date(date).toISOString(),
       };
 
       //* Guardo para recuperar en `PaymentOK.jsx`
-      saveInStorage("orderBody", body);
       const res = await APISpot.checkout.create(body);
       if (res) {
+        saveInStorage("orderBody", body);
         window.open(res);
       }
     } catch (e) {

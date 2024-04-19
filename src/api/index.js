@@ -14,6 +14,12 @@ const route = {
 };
 
 export const APISpot = {
+  seller: {
+    getManagedClients: () => {
+      addAuthWithToken(getOfStorage("access_token"));
+      return BASE_API.get(`/${route.CLIENTS}/managed-clients`);
+    },
+  },
   dashboard: {
     getDashboardSellers: async () => {
       addAuthWithToken(getOfStorage("access_token"));
@@ -50,9 +56,8 @@ export const APISpot = {
       return BASE_API.patch(`/${route.PRODUCTS}/toggleIncluido?productCode=${productCode}`);
     },
     updateProductImages: (variant_id, formData) => {
-      //TODO Chequear ruta
       addAuthWithToken(getOfStorage("access_token"));
-      return BASE_API.post(`/${route.AWS}/${variant_id}`, formData, {
+      return BASE_API.post(`/${route.AWS}/productImg/${variant_id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
     },
@@ -82,19 +87,16 @@ export const APISpot = {
     getFeaturedProducts: ({ take }) => {
       return BASE_API.get(`/${route.PRODUCTS}/featured?take=${take}`);
     },
-  },
-  //TODO acomodar estos 3 pedidos igual que el auth, metidos en un objeto `products`
-  getPaginatedProducts: (take, skip) => {
-    return BASE_API.get(`/${route.PRODUCTS}/pag?take=${take}&&skip=${skip}`);
-  },
-  getCategories: async () => {
-    const res = await BASE_API.get(`/${route.PRODUCTS}/categories`);
-    saveInStorage("categories", res.data);
+    getPaginatedProducts: (take, skip) => {
+      return BASE_API.get(`/${route.PRODUCTS}/pag?take=${take}&&skip=${skip}`);
+    },
+    getCategories: async () => {
+      const res = await BASE_API.get(`/${route.PRODUCTS}/categories`);
+      saveInStorage("categories", res.data);
 
-    return res.data;
+      return res.data;
+    },
   },
-
-  //? Rutas al backend POST, GET, PUT, etc...
   auth: {
     jwtAutoSignIn: async (body) => {
       const res = await BASE_API.post(`/${route.AUTH}/jwt-auto-sign-in`, body);
@@ -122,8 +124,8 @@ export const APISpot = {
       const res = await BASE_API.get(`/${route.COUPON}/validate/${coupon}`);
       return res.data;
     },
-    createCart: async (shoppingCart) => {
-      const res = await BASE_API.post(`/${route.CART}`, shoppingCart);
+    createCart: async (body) => {
+      const res = await BASE_API.post(`/${route.CART}`, body);
       return res.data;
     },
     updateCart: async (shoppingCart) => {
@@ -165,6 +167,12 @@ export const APISpot = {
       addAuthWithToken(getOfStorage("access_token"));
       const res = await BASE_API.post(`/${route.USER}/update-data`, body);
       return res.data;
+    },
+    updateAvatar: ({ userId, web_role, formData }) => {
+      addAuthWithToken(getOfStorage("access_token"));
+      return BASE_API.post(`/${route.AWS}/avatar/${userId}?web_role=${web_role}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
     },
   },
 };

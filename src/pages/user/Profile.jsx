@@ -1,13 +1,10 @@
-import { Avatar, Button, Divider } from "@nextui-org/react";
+import { Avatar, Button, Divider, Spinner } from "@nextui-org/react";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
 import { toast } from "sonner";
-import { removeAuthWithToken } from "src/api";
-import { actionsAuth, actionsUser } from "src/redux/reducers";
+import { APISpot } from "src/api";
 import ProfileData from "./ProfileData";
 import ProfileOrders from "./ProfileOrders";
-import { DefaultButton } from "src/components";
 import { getOfStorage, saveInStorage } from "src/utils/localStorage";
 
 const selectButtonsData = [
@@ -16,12 +13,11 @@ const selectButtonsData = [
 ];
 
 export function Profile() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
   //TODO crear avatar en tabla CLIENTE
-  const { userData } = useLoaderData();
 
+  const { userData } = useLoaderData();
+  const [avatar, setAvatar] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [selectedSection, setSelectedSection] = useState(() => {
     const local = getOfStorage("profileSelectedSection");
     if (local) {
@@ -30,6 +26,27 @@ export function Profile() {
 
     return "MI PERFIL";
   });
+
+  async function updateAvatar() {
+    try {
+      setLoading(true);
+      await APISpot.user.updateAvatar({ formData: avatar.formData, userId: userData.id, web_role: "client" });
+      toast.success("Avatar actualizado!");
+      userData.avatar = avatar.url;
+      setAvatar(null);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleAvatar = ({ target }) => {
+    const formData = new FormData();
+    formData.append("file", target.files[0]);
+    const newAvatar = URL.createObjectURL(target.files[0]);
+    setAvatar({ url: newAvatar, formData: formData });
+  };
 
   const handleSelect = (name) => {
     setSelectedSection(name);
@@ -40,42 +57,61 @@ export function Profile() {
     <main className="pt-16 md:pt-20">
       <header className="relative hidden flex-col items-center justify-center md:flex md:h-40">
         <h1 className="text-2xl font-bold lg:text-3xl">MI CUENTA</h1>
-        <DefaultButton
-          className="absolute right-10 bg-gradient-to-r from-primary to-yellow-200 font-bold"
-          radius="full"
-          endContent={<i className="ri-logout-circle-line icons text-xl font-bold text-black" />}
-          onPress={() => {
-            navigate("/");
-            toast.info("Sesión cerrada con exito", { description: "¡Esperamos verte pronto!" });
-            setTimeout(() => {
-              //? Para evitar salto y que aparezca el errorBundler
-              //TODO ANALIZAR ESTO
-              removeAuthWithToken();
-              dispatch(actionsUser.cleanUser());
-              dispatch(actionsAuth.cleanAuth());
-            }, 1000);
-          }}
-        >
-          CERRAR SESIÓN
-        </DefaultButton>
         <Divider className="absolute bottom-0 mx-auto h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
       </header>
       <div className="md:grid md:grid-cols-2">
         <section className="flex flex-col items-center justify-start gap-2 p-10 pt-10">
-          <div className="relative">
+          <div className="relative ">
             <Avatar
-              src={userData.avatar}
+              src={avatar ? avatar.url : userData.avatar}
               name={userData.fantasyName}
-              className="mx-auto mb-10 h-28 w-28 p-2 md:h-40 md:w-40"
+              className="mx-auto h-44 w-44 "
               classNames={{ base: "bg-white" }}
             />
+
             <Button
               isIconOnly
-              className="-right-20 -top-20 rounded-full bg-gradient-to-r from-primary to-yellow-200 font-bold text-black md:-right-28 md:flex"
-              startContent={<i className="ri-pencil-line icons text-xl font-bold text-black" />}
+              className=" absolute bottom-0 left-0 rounded-full bg-gradient-to-r from-primary to-yellow-200 font-bold text-black  "
+              startContent={
+                <div className={`relative ${loading && "hidden"}`}>
+                  <label htmlFor="upload-avatar" className=" cursor-pointer rounded px-4 py-2 font-bold">
+                    <i className={`ri-pencil-line icons text-2xl font-bold text-black`}></i>
+
+                    <input
+                      title="Cargar imagenes"
+                      accept="image/*"
+                      id="upload-avatar"
+                      type="file"
+                      onChange={handleAvatar}
+                      className="invisible absolute right-0 top-0 h-full w-full border-2"
+                    />
+                  </label>
+                </div>
+              }
+              isLoading={loading}
+              loadingContent={
+                <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
+              }
             />
+
+            {avatar && (
+              <span className="absolute -right-11 bottom-11 flex animate-pulse flex-col gap-3">
+                <Button
+                  onPress={() => updateAvatar()}
+                  isIconOnly
+                  className=" rounded-full bg-green-500 font-bold text-black  "
+                  startContent={<i className="ri-check-line text-xl text-white"></i>}
+                />
+                <Button
+                  onPress={() => setAvatar(null)}
+                  isIconOnly
+                  className="animate-pulse  rounded-full bg-red-500 font-bold text-black  "
+                  startContent={<i className="ri-close-line text-xl text-white"></i>}
+                />
+              </span>
+            )}
           </div>
-          <h1 className="underliner -mt-10 rounded-full bg-gradient-to-r from-primary to-yellow-200 p-2 px-4 text-center font-bold md:text-xl lg:w-80">
+          <h1 className="underliner mt-10 rounded-full bg-gradient-to-r from-primary to-yellow-200 p-2 px-4 text-center font-bold md:text-xl lg:w-80">
             {userData.fantasyName}
           </h1>
 

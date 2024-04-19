@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { authRdr, shoppingCartRdr, userRdr, productRdr } from "./reducers";
+import { authRdr, shoppingCartRdr, userRdr, productRdr, sellerRdr } from "./reducers";
 
 export const store = configureStore({
   reducer: {
@@ -7,5 +7,6 @@ export const store = configureStore({
     user: userRdr,
     cart: shoppingCartRdr,
     product: productRdr,
+    seller: sellerRdr,
   },
 });

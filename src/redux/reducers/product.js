@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-//import { deleteOfStorage, getOfStorage, saveInStorage } from "../../utils/localStorage";
 
 const initialFilters = {
   orderBy: "",

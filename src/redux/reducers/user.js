@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { deleteOfStorage, saveInStorage } from "src/utils/localStorage";
-//import { deleteOfStorage, getOfStorage, saveInStorage } from "../../utils/localStorage";
 
 const user = createSlice({
   name: "user",
