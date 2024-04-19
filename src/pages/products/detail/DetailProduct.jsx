@@ -25,6 +25,16 @@ export function DetailProduct() {
     APISpot.product // TODO estaria bueno fetchear la data en el loader de react-router
       .getOne({ id })
       .then(({ data }) => {
+        const map = {};
+        let variants = [];
+        data.variants.map((variant, description) => {
+          const { subRub } = variant;
+          if (!map[subRub]) {
+            map[subRub] = description;
+            variants.push(variant);
+          }
+        });
+        data.variants = variants;
         setProduct(data);
         setCurrent(data.variants[0]);
         document.title = "SPOTSLINE - " + data.description;
@@ -101,32 +111,7 @@ export function DetailProduct() {
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum totam itaque quod nihil! Tenetur, perferendis
         molestiae dolor optio commodi
         <h3 className="text-lg font-semibold">Colores</h3>
-        {product.variants.map(({ subRub }) => {
-          let [interno, externo] = subRub.split("-");
-          interno = colors[interno];
-          externo = colors[externo];
-
-          return (
-            <div className="flex max-w-md" key={subRub}>
-              <p className="flex flex-1 items-center gap-2">
-                <span
-                  className="inline-block aspect-square w-5 items-center rounded-full"
-                  style={{ background: interno.color }}
-                ></span>
-                {interno.name}
-              </p>
-              {externo && (
-                <p className="flex flex-1 items-center gap-2 ">
-                  <span
-                    className="inline-block aspect-square w-5 items-center rounded-full"
-                    style={{ background: externo.color }}
-                  ></span>
-                  {externo.name}
-                </p>
-              )}
-            </div>
-          );
-        })}
+        <ColorPalette variants={product.variants} />
         <h3 className="text-lg font-semibold ">Lámpara</h3>
         E27
         <h3 className="text-lg font-semibold ">Material</h3>
@@ -139,6 +124,36 @@ export function DetailProduct() {
   );
 }
 
+function ColorPalette({ variants = [] }) {
+  const _colors = new Set();
+  variants.forEach(({ subRub }) => {
+    let [interno, externo] = subRub.split("-");
+    if (interno) _colors.add(interno);
+    if (externo) _colors.add(externo);
+  });
+
+  console.log(_colors);
+  return (
+    <>
+      {Array.from(_colors).map((interno) => {
+        interno = colors[interno];
+        return (
+          <>
+            <div className="flex max-w-md" key={`interno:${interno.name}`}>
+              <p className="flex flex-1 items-center gap-2">
+                <span
+                  className="inline-block aspect-square w-5 items-center rounded-full"
+                  style={{ background: interno.color }}
+                ></span>
+                {interno.name}
+              </p>
+            </div>
+          </>
+        );
+      })}
+    </>
+  );
+}
 /*
 
 function GoBack() {
