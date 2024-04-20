@@ -146,7 +146,7 @@ export default function NavBar() {
           </NavbarMenuItem>
         ))}
 
-        <div onClick={() => console.log("cliked")} className="mt-10 flex items-center justify-evenly ">
+        <div className="mt-10 flex items-center justify-evenly ">
           {web_role === Number(import.meta.env.VITE_ADMIN_ROLE) && (
             <Button
               as={Link}
