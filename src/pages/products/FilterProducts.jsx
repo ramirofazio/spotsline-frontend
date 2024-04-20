@@ -38,7 +38,10 @@ export function FilterProducts({ categories }) {
 
   const handleFilters = (key, value) => setFilters((cur) => ({ ...cur, [key]: value }));
 
-  useEffect(() => setFilters(product.filters), [product.filters]);
+  useEffect(() => {
+    console.log(filters);
+    setFilters(product.filters);
+  }, [product.filters]);
 
   return (
     <>
