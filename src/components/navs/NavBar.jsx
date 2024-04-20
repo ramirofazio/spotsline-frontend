@@ -152,7 +152,7 @@ export default function NavBar() {
               as={Link}
               onPress={() => {
                 setLoading(true);
-                navigate("/dashboard/productos/1");
+                navigate("/dashboard/vendedores");
               }}
               className={`bg-gradient-to-tl from-primary to-background shadow-xl`}
               size="lg"
@@ -222,7 +222,7 @@ export default function NavBar() {
             as={Link}
             onPress={() => {
               setLoading(true);
-              navigate("/dashboard/productos/1");
+              navigate("/dashboard/vendedores");
             }}
             className={`bg-gradient-to-br from-primary to-background transition hover:scale-110`}
             size="md"
