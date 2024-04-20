@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { sortProducts } from "src/pages/products/hanldeFilters";
 //import { deleteOfStorage, getOfStorage, saveInStorage } from "../../utils/localStorage";
 
 const initialFilters = {
@@ -55,6 +56,22 @@ const product = createSlice({
         ...state,
         filters: initialFilters,
       };
+    },
+    sortProducts: function (state, action) {
+      const { order } = action.payload;
+      if(order === "ASC") {
+        const sorted = state.products.sort((a, b) => {
+          const priceA = parseInt(a.price)
+          const priceB = parseInt(a.price)
+          if(a.price)
+        })
+        return {
+          ...state,
+          products: 
+        }
+      } else if(order === "DESC") {
+
+      }
     },
   },
 });
