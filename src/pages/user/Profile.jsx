@@ -19,7 +19,10 @@ export function Profile() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  //TODO crear avatar en tabla CLIENTE
+
+  const { userData } = useLoaderData();
+
+ 
 
   const { userData } = useLoaderData();
   const [avatar, setAvatar] = useState(null);

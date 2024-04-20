@@ -11,6 +11,7 @@ const route = {
   CHECKOUT: "mobbex",
   COUPON: "coupon",
   AWS: "aws-s3-upload",
+  MAIL: "mailing",
 };
 
 export const APISpot = {
@@ -165,6 +166,13 @@ export const APISpot = {
     updateAvatar: ({ userId, web_role, formData }) => {
       addAuthWithToken(getOfStorage("access_token"));
       return BASE_API.post(`/${route.AWS}/avatar/${userId}?web_role=${web_role}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    },
+  },
+  mail: {
+    sendRrhhRequest: async (body) => {
+      return BASE_API.post(`/${route.MAIL}/rrhh`, body, {
         headers: { "Content-Type": "multipart/form-data" },
       });
     },

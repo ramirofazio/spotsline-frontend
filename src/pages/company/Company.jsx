@@ -135,7 +135,9 @@ export function Company() {
             <strong>satisfacer</strong> todas vuestras necesidades y permita una <strong>mayor conexión</strong> entre
             ustedes y nuestra gente. Gracias por contar con nosotros.
           </p>
-          <DefaultButton className="w-max shadow-xl">POLÍTICA DE CAMBIO Y DEVOLUCIÓN</DefaultButton>
+          <span className="border-2 border-red-500">
+            <DefaultButton className="w-max  shadow-xl">POLÍTICA DE CAMBIO Y DEVOLUCIÓN</DefaultButton>
+          </span>
         </div>
         <div className="absolute -bottom-20 -right-60">
           <AwsImage type="logos" identify="logoBlack" className="w-[30vw] -rotate-12" />
