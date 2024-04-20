@@ -36,18 +36,19 @@ export function DetailProduct() {
         setIsLoading(false);
       });
 
-    return () => (document.title = "SPOTSLINE");
+    return () =>    (document.title = "SPOTSLINE");
   }, [id]);
 
   function addProductToShoppingCart() {
+
     dispatch(
-      addItemToCart({
+      addItemToCart( {
         id: current.id,
         name: current.description,
         img: current.pathImage || assets.lights.light2,
 
         price: parseFloat(current["precio" + ((lista || 0) + 1)]),
-        quantity: state,
+        qty: state,
       })
     );
     toast("Producto Agregado", {
@@ -64,7 +65,7 @@ export function DetailProduct() {
   return (
     <main className="mb-10 mt-20 min-h-[500px] max-w-7xl flex-wrap px-6 md:mt-32 md:flex md:gap-6 lg:mx-auto lg:gap-10 lg:px-12">
       <VariantsProduct variants={product.variants} current={{ set: setCurrent, values: current }} />
-      <section className="my-10 md:my-0 md:flex-1">
+      <section        className="my-10 md:my-0 md:flex-1">
         <h1 className="mb-8 font-primary text-3xl font-semibold">{product?.description}</h1>
 
         {email && (

@@ -14,11 +14,11 @@ export function SkeletonDetail() {
         <div className={`${className} my-2 h-8 w-2/3 rounded-full`}></div>
         <div className={`${className} my-6 h-12 w-2/3 rounded-full`}></div>
 
-        {[1, 2, 3, 4, 5].map(() => (
-          <>
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div key={i}>
             <div className={`${className} mt-5 h-5 w-1/3 rounded-full`}></div>
             <div className={`${className} mt-1 h-3 w-5/6 rounded-full`}></div>
-          </>
+          </div>
         ))}
       </div>
     </div>
