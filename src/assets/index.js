@@ -21,4 +21,12 @@ export const assets = {
     light2: `${BASE_AWS_URL}/light2.png`,
     light3: `${BASE_AWS_URL}/light3.png`,
   },
+  rrhh: {
+    1: `${BASE_AWS_URL}/rrhh/rrhh-01.jpg`,
+    2: `${BASE_AWS_URL}/rrhh/rrhh-02.jpg`,
+    3: `${BASE_AWS_URL}/rrhh/rrhh-03.jpg`,
+    4: `${BASE_AWS_URL}/rrhh/rrhh-04.jpg`,
+    5: `${BASE_AWS_URL}/rrhh/rrhh-05.jpg`,
+    7: `${BASE_AWS_URL}/rrhh/rrhh-07.jpg`,
+  },
 };
