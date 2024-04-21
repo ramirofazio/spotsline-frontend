@@ -13,21 +13,23 @@ import {
   NavbarMenuItem,
 } from "@nextui-org/react";
 import { links } from ".";
-import { Link, NavLink, useLoaderData, useLocation } from "react-router-dom";
+import { Link, NavLink, useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import { getOfStorage } from "src/utils/localStorage";
 import { useDispatch, useSelector } from "react-redux";
 import AwsImage from "../images/AwsImage";
 import { toast } from "sonner";
 import { removeAuthWithToken } from "src/api";
 import { actionsAuth, actionsUser } from "src/redux/reducers";
+import Loader from "../Loader";
 
 export default function NavBar() {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
-
+  const navigate = useNavigate();
   const { access_token } = useSelector((state) => state.auth);
   const { id, web_role } = useSelector((state) => state.user);
 
+  const [loading, setLoading] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [blur, setBlur] = React.useState(false);
 
@@ -46,11 +48,14 @@ export default function NavBar() {
     document.addEventListener("scroll", handleScroll);
 
     return () => {
+      setLoading(false);
       document.removeEventListener("scroll", handleScroll);
     };
   }, [isMenuOpen, pathname]);
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <Navbar
       shouldHideOnScroll
       className={`xl:rounded-bl-2xl xl:rounded-br-2xl ${
@@ -145,8 +150,10 @@ export default function NavBar() {
           {web_role === Number(import.meta.env.VITE_ADMIN_ROLE) && (
             <Button
               as={Link}
-              to={"/dashboard/productos/1"}
-              onPress={() => setIsMenuOpen(false)}
+              onPress={() => {
+                setLoading(true);
+                navigate("/dashboard/vendedores");
+              }}
               className={`bg-gradient-to-tl from-primary to-background shadow-xl`}
               size="lg"
               isIconOnly
@@ -213,7 +220,10 @@ export default function NavBar() {
         {web_role === Number(import.meta.env.VITE_ADMIN_ROLE) && (
           <Button
             as={Link}
-            to={"/dashboard/productos/1"}
+            onPress={() => {
+              setLoading(true);
+              navigate("/dashboard/vendedores");
+            }}
             className={`bg-gradient-to-br from-primary to-background transition hover:scale-110`}
             size="md"
             isIconOnly

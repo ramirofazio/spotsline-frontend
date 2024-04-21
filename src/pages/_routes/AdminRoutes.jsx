@@ -70,6 +70,14 @@ export const adminRoutesPaths = [
       },
       {
         path: "/dashboard/ordenes",
+        loader: async () => {
+          try {
+            return await APISpot.dashboard.getDashboardOrders();
+          } catch (e) {
+            console.log(e);
+            return null;
+          }
+        },
         element: <Orders />,
       },
       {
