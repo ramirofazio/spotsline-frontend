@@ -7,11 +7,7 @@ const user = createSlice({
   reducers: {
     cleanUser: () => {
       deleteOfStorage("user");
-      return {
-        id: null,
-        email: null,
-        firstSignIn: null,
-      };
+      return {};
     },
 
     setUser: (state, action) => {

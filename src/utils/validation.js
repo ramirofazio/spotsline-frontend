@@ -39,7 +39,6 @@ export function validatePassword(password) {
 
 export function isValidPasswords({ newPassword, newPasswordConfirm }) {
   const errs = {};
-  console.log("llego", newPassword, newPasswordConfirm);
   if (newPassword) {
     const getErr = validatePassword(newPassword);
     getErr ? (errs.newPassword = getErr) : null;
@@ -53,6 +52,5 @@ export function isValidPasswords({ newPassword, newPasswordConfirm }) {
   if (newPassword !== newPasswordConfirm) {
     errs.submit = "las contraseñas no coinciden";
   }
-  console.log("envio:", errs);
   return errs;
 }
