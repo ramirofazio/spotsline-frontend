@@ -18,7 +18,7 @@ export function BasicInput({
       classNames={{
         label: labelClass,
         inputWrapper: inputWrapperClass,
-        input: "lg:ml-4",
+        input: " lg:ml-4",
       }}
       color="secondary"
       name={name}
