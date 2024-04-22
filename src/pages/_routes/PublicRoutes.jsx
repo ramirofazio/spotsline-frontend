@@ -1,4 +1,4 @@
-import { lazy } from "react";
+import { Suspense, lazy } from "react";
 import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
 import { APISpot } from "src/api/index.js";
@@ -18,6 +18,10 @@ const RecursosHumanos = lazy(() =>
 );
 const ChangePassword = lazy(() =>
   import("pages/signIn/ChangePassword").then((module) => ({ default: module.ChangePassword }))
+);
+import { SkeletonCard } from "src/components/cards/ProductCard";
+const ProductBody = lazy(() =>
+  import("pages/products/ProductsBody").then((module) => ({ default: module.ProductsBody }))
 );
 
 const ShoppingCart = lazy(() => import("pages/shoppingCart/ShoppingCart.jsx"));
@@ -48,7 +52,8 @@ export const publicRoutesPaths = [
           try {
             const products = (await APISpot.product.getFeaturedProducts({ take: 5 })).data;
             let featuredAssets = Object.keys(assets.lights);
-            return products.map((p, i) => { // ? fotos mockup hasta conectar con s3
+            return products.map((p, i) => {
+              // ? fotos mockup hasta conectar con s3
               return {
                 ...p,
                 identify: featuredAssets[i],
@@ -66,8 +71,48 @@ export const publicRoutesPaths = [
       { path: "/contacto", element: <AboutUs /> },
       { path: "/change-password", element: <ChangePassword /> },
       {
-        path: "/productos/:page",
-        element: <Products />,
+        path: "/productos",
+        element: (
+          <Products>
+            <Outlet />
+          </Products>
+        ),
+        children: [
+          {
+            path: ":page",
+            index: true,
+            loader: async ({ request, params }) => {
+              try {
+                console.log("im in");
+                // const search = new URL(request.url).searchParams.get("search");
+                // const sort = new URL(request.url).searchParams.get("sort");
+                // console.log(page, search, sort);
+                await new Promise((resolve) => setTimeout(resolve, 3000));
+                const { page } = params;
+                console.log(page);
+                const res = await APISpot.product.getAll({ page, take: 28, search: null });
+                console.log(res);
+                return res.data;
+              } catch (e) {
+                return null;
+              }
+            },
+            element: (
+              // <ProductBody />
+              <Suspense
+                fallback={
+                  <div className="h-screen bg-green-500">
+                    <SkeletonCard key={1} />
+                    <SkeletonCard key={2} />
+                    <SkeletonCard key={3} />
+                  </div>
+                }
+              >
+                <ProductBody />
+              </Suspense>
+            ),
+          },
+        ],
       },
       { path: "/producto/:id", element: <DetailProduct /> },
       { path: "/carrito", element: <ShoppingCart /> },

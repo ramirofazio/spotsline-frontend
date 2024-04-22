@@ -16,6 +16,7 @@ import {
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionProducts } from "src/redux/reducers";
+import { useFetcher } from "react-router-dom";
 
 const colors = [
   {
@@ -39,6 +40,8 @@ export function FilterProducts({ categories }) {
   const handleFilters = (key, value) => setFilters((cur) => ({ ...cur, [key]: value }));
 
   useEffect(() => setFilters(product.filters), [product.filters]);
+
+  const fetcher = useFetcher();
 
   return (
     <>
@@ -106,6 +109,7 @@ export function FilterProducts({ categories }) {
                   radius="full"
                   className="w-full p-6 font-secondary text-lg font-semibold uppercase hover:bg-secondary hover:text-slate-50"
                   onClick={() => {
+                    fetcher.load("/productos/2");
                     dispatch(actionProducts.setFilters(filters));
                     onClose();
                   }}

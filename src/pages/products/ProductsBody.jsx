@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { actionProducts } from "src/redux/reducers";
 import { toast } from "sonner";
 import { FilterProducts } from "./FilterProducts";
-const TAKE_PRODUCTS = 28;
+
 const categories = [
   "Accesorios",
   "Apliques",
@@ -21,61 +21,15 @@ const categories = [
   "Veladores y Apliques",
 ];
 
-export function Products({ children }) {
-  const navigate = useNavigate();
-  const { page } = useParams();
-  const { totalPages, filters } = useSelector((state) => state.product);
-  const _products = useLoaderData();
-  // console.log("refactor", _products);
-  // useEffect(() => {
-  //   if (!parseInt(page)) navigate("/productos/1");
-  // }, [page]);
-
-  function handleChangePage(page) {
-    navigate("/productos/" + page);
-  }
-
-  return (
-    <>
-      <header className="relative hidden min-h-[400px] flex-col items-center justify-center gap-2 bg-signIn bg-contain bg-bottom pt-16 text-white shadow-medium before:absolute before:inset-0 before:z-10 before:bg-black/50  before:content-[''] sm:flex">
-        <h1 className="z-20 font-primary text-5xl font-bold uppercase ">Productos</h1>
-        <p className="z-20 font-secondary text-3xl">Encontra todo lo que necesites...</p>
-      </header>
-      <main className="flex gap-x-4 bg-[#D9D9D9] p-10">
-        <Link to="1">Pasa palabraaaa</Link>
-        <article className="my-10 hidden pl-5 font-secondary md:block">
-          <h2 className="text-lg font-semibold ">Categoria de Productos</h2>
-          <ul className="pl-4">
-            {categories.map((cat) => (
-              <li key={cat} className={cat === filters.category && "font-semibold"}>
-                {cat}
-              </li>
-            ))}
-          </ul>
-        </article>
-        {children}
-        {/* <section className="my-10 grid flex-1 grid-cols-1 place-items-center gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          <Heading />
-          <ProductsView />
-          {totalPages !== 1 && (
-            <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4">
-              <PaginationComponent qty={totalPages} page={parseInt(page)} onChange={handleChangePage} />
-            </div>
-          )}
-        </section> */}
-      </main>
-    </>
-  );
-}
-
-export function ProductBody() {
+export function ProductsBody() {
   let a = useLoaderData();
   console.log(a);
   let totalPages = 3;
   return (
     <section className="my-10 grid flex-1 grid-cols-1 place-items-center gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <Heading />
-      <ProductsView _products={a.rows} />
+      <h1>Esto cargooo</h1>
+      {/* <ProductsView _products={a.rows} /> */}
       {totalPages !== 1 && (
         <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4">
           <PaginationComponent qty={totalPages} page={parseInt("2")} onChange={() => console.log("change")} />
