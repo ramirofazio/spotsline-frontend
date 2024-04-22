@@ -19,11 +19,6 @@ export function Profile() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-
-  const { userData } = useLoaderData();
-
- 
-
   const { userData } = useLoaderData();
   const [avatar, setAvatar] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -45,13 +40,12 @@ export function Profile() {
       setAvatar(null);
     } catch (err) {
       console.log(err);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   }
 
-  const handleAvatar= ({ target }) => {
+  const handleAvatar = ({ target }) => {
     const formData = new FormData();
     formData.append("file", target.files[0]);
     const newAvatar = URL.createObjectURL(target.files[0]);
@@ -93,18 +87,17 @@ export function Profile() {
             <Avatar
               src={avatar ? avatar.url : userData.avatar}
               name={userData.fantasyName}
-              className="mx-auto w-44 h-44 "
+              className="mx-auto h-44 w-44 "
               classNames={{ base: "bg-white" }}
             />
 
             <Button
               isIconOnly
-              className=" left-0 bottom-0 absolute rounded-full bg-gradient-to-r from-primary to-yellow-200 font-bold text-black  "
+              className=" absolute bottom-0 left-0 rounded-full bg-gradient-to-r from-primary to-yellow-200 font-bold text-black  "
               startContent={
                 <div className={`relative ${loading && "hidden"}`}>
-                  <label htmlFor="upload-avatar" className=" font-bold py-2 px-4 rounded cursor-pointer">
-                    <i className={`ri-pencil-line icons text-2xl font-bold text-black`}>
-                    </i>
+                  <label htmlFor="upload-avatar" className=" cursor-pointer rounded px-4 py-2 font-bold">
+                    <i className={`ri-pencil-line icons text-2xl font-bold text-black`}></i>
 
                     <input
                       title="Cargar imagenes"
@@ -112,36 +105,33 @@ export function Profile() {
                       id="upload-avatar"
                       type="file"
                       onChange={handleAvatar}
-                      className="invisible absolute right-0 top-0 h-full w-full border-2"/>
+                      className="invisible absolute right-0 top-0 h-full w-full border-2"
+                    />
                   </label>
                 </div>
               }
               isLoading={loading}
-              loadingContent={<Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />}
+              loadingContent={
+                <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
+              }
             />
 
-            {
-              avatar && (
-                <span className="animate-pulse absolute -right-11 bottom-11 flex flex-col gap-3">
-                  <Button
-                    onPress={() => updateAvatar()}
-                    isIconOnly
-                    className=" rounded-full bg-green-500 font-bold text-black  "
-                    startContent={
-                      <i className="ri-check-line text-xl text-white"></i>
-                    }
-                  />
-                  <Button
-                    onPress={() => setAvatar(null)}
-                    isIconOnly
-                    className="animate-pulse  rounded-full bg-red-500 font-bold text-black  "
-                    startContent={
-                      <i className="ri-close-line text-xl text-white"></i>
-                    }
-                  />
-                </span>
-              )
-            }
+            {avatar && (
+              <span className="absolute -right-11 bottom-11 flex animate-pulse flex-col gap-3">
+                <Button
+                  onPress={() => updateAvatar()}
+                  isIconOnly
+                  className=" rounded-full bg-green-500 font-bold text-black  "
+                  startContent={<i className="ri-check-line text-xl text-white"></i>}
+                />
+                <Button
+                  onPress={() => setAvatar(null)}
+                  isIconOnly
+                  className="animate-pulse  rounded-full bg-red-500 font-bold text-black  "
+                  startContent={<i className="ri-close-line text-xl text-white"></i>}
+                />
+              </span>
+            )}
           </div>
           <h1 className="underliner mt-10 rounded-full bg-gradient-to-r from-primary to-yellow-200 p-2 px-4 text-center font-bold md:text-xl lg:w-80">
             {userData.fantasyName}
