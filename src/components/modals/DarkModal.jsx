@@ -12,6 +12,7 @@ export function DarkModal({
   placement = "center",
   backdrop = "blur",
   size = "xl",
+  onClose = false,
 }) {
   return (
     <Modal
@@ -27,6 +28,12 @@ export function DarkModal({
       <ModalContent className="relative">
         {() => (
           <main>
+            {isDismissable && Boolean(onClose) && (
+              <i
+                className="ri-close-line icons absolute right-2 top-2 text-2xl text-background"
+                onClick={() => onClose()}
+              />
+            )}
             <ModalHeader className="grid place-items-center text-white">
               <h3 className="text-2xl">{title || "TITLE"}</h3>
               <p className="text-xs font-thin text-white/40">{description}</p>

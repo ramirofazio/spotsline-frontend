@@ -1,6 +1,6 @@
 import { assets } from "./src/assets/index";
 import defaultTheme from "tailwindcss/defaultTheme";
-const { nextui } = require("@nextui-org/react");
+const { nextui, select } = require("@nextui-org/react");
 
 /** @type {import('tailwindcss').Config} */
 export default {

@@ -8,16 +8,11 @@ import { APISpot } from "src/api";
 import { getOfStorage } from "src/utils/localStorage";
 import OrderDetail from "../user/OrderDetail";
 
-export const authRoutesPaths = [
+export const userRoutesPaths = [
   {
     path: "/",
     errorElement: <DefaultError />,
-    element: (
-      <Layout>
-        <NavBar />
-        <AuthRoot />
-      </Layout>
-    ),
+    element: <UserRoot />,
 
     children: [
       {
@@ -50,18 +45,21 @@ export const authRoutesPaths = [
   },
 ];
 
-export function AuthRoot() {
+export function UserRoot() {
   const { access_token } = useSelector((state) => state.auth);
-  const user = useSelector((state) => state.user);
+  const { web_role } = useSelector((state) => state.user);
 
   const validate = () => {
     const localAccess_token = getOfStorage("access_token");
     if (localAccess_token === access_token) {
       //? el token es valido, sigo
-      const localUser = getOfStorage("user");
-      if (localUser === user) {
-        //? es valido, sigo. Ambos existen asi que esta logged
-        return true;
+      const localWeb_role = getOfStorage("user").web_role;
+      if (localWeb_role === web_role) {
+        //? es valido, sigo. Ambos existen asi que esta logged. Hay que validar el rol
+        if (web_role === Number(import.meta.env.VITE_USER_ROLE)) {
+          //? Cumplio todas las condiciones asi que es USER
+          return true;
+        }
       }
     }
 
@@ -70,8 +68,13 @@ export function AuthRoot() {
   };
 
   if (validate()) {
-    return <DefaultError />;
+    return (
+      <Layout>
+        <NavBar />
+        <Outlet />
+      </Layout>
+    );
   }
 
-  return <Outlet />;
+  return <DefaultError />;
 }

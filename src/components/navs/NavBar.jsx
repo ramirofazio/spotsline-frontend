@@ -11,28 +11,35 @@ import {
   DropdownMenu,
   DropdownItem,
   NavbarMenuItem,
+  useDisclosure,
 } from "@nextui-org/react";
 import { links } from ".";
-import { Link, NavLink, useLoaderData, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLoaderData, useLocation } from "react-router-dom";
 import { getOfStorage } from "src/utils/localStorage";
 import { useDispatch, useSelector } from "react-redux";
 import AwsImage from "../images/AwsImage";
 import { toast } from "sonner";
 import { removeAuthWithToken } from "src/api";
 import { actionsAuth, actionsUser } from "src/redux/reducers";
+import { DefaultButton } from "..";
+import ManageClientsModal from "../modals/ManageClientsModal";
 import Loader from "../Loader";
 
 export default function NavBar() {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
-  const navigate = useNavigate();
+
+  const params = new URLSearchParams(window.location.search);
+  const sellerLogIn = params.get("sellerLogIn");
+
   const { access_token } = useSelector((state) => state.auth);
   const { id, web_role } = useSelector((state) => state.user);
 
-  const [loading, setLoading] = React.useState(false);
+  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [blur, setBlur] = React.useState(false);
-
+  const [loading, setLoading] = React.useState(false);
   const categories = getOfStorage("categories") || useLoaderData();
 
   useEffect(() => {
@@ -52,6 +59,17 @@ export default function NavBar() {
       document.removeEventListener("scroll", handleScroll);
     };
   }, [isMenuOpen, pathname]);
+
+  useEffect(() => {
+    if (sellerLogIn) {
+      //TODO VALIDAR ACA QUE YA HAYA SELECCIONADO UN CLIENTE, SINO MANDAR ALGUNA PROP AL MODAL PARA QUE NO SEA DISSMISABLE
+      document.getElementById("manage-clients-button").click();
+    }
+  }, [document]);
+
+  const handleManageClients = () => {
+    onOpen();
+  };
 
   return loading ? (
     <Loader />
@@ -131,62 +149,219 @@ export default function NavBar() {
         <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className={`ml-20 text-background`} />
       </NavbarContent>
 
-      {/* MOBILE */}
-      <NavbarMenu className="gap-4 overflow-x-hidden bg-gradient-to-br from-primary to-white/20">
-        <div className="absolute -right-48 -top-10 -z-40 opacity-50">
-          <AwsImage type="logos" identify="logoBlack" hidden={isMenuOpen ? false : true} className="rotate-12" />
-        </div>
+      <MobileContent
+        web_role={web_role}
+        id={id}
+        access_token={access_token}
+        pathname={pathname}
+        dispatch={dispatch}
+        isMenuOpen={isMenuOpen}
+        setIsMenuOpen={setIsMenuOpen}
+        handleManageClients={handleManageClients}
+      />
+      <DesktopContent
+        web_role={web_role}
+        id={id}
+        access_token={access_token}
+        pathname={pathname}
+        dispatch={dispatch}
+        handleManageClients={handleManageClients}
+      />
+      {web_role === Number(import.meta.env.VITE_SELLER_ROLE) && (
+        <ManageClientsModal isOpen={isOpen} onClose={onClose} onOpenChange={onOpenChange} />
+      )}
+    </Navbar>
+  );
+}
 
-        {links.map(({ name, path }, i) => (
-          <NavbarMenuItem onClick={() => setIsMenuOpen(false)} className="w-fit " key={i}>
-            <NavLink className="flex h-full w-[12rem] items-center gap-1.5  border-b-2 p-1" to={path}>
-              <i className="ri-arrow-right-s-line text-md  !text-secondary"></i>
-              <p className="w-full font-primary text-lg uppercase text-white">{name}</p>
-            </NavLink>
-          </NavbarMenuItem>
-        ))}
+function DesktopContent({ web_role, id, access_token, pathname, dispatch, handleManageClients }) {
+  const { managedClient } = useSelector((state) => state.seller);
+  return (
+    <NavbarContent justify="end" className="hidden sm:flex">
+      {!id && !access_token && (
+        <DefaultButton
+          as={Link}
+          to={"/sign-in"}
+          className={`!p-4 hover:opacity-50`}
+          size="md"
+          startContent={<i className="ri-user-fill mr-2 text-lg" />}
+        >
+          INICIAR SESION
+        </DefaultButton>
+      )}
+      {web_role === Number(import.meta.env.VITE_ADMIN_ROLE) && (
+        <Button
+          as={Link}
+          to={"/dashboard/vendedores"}
+          className={`bg-gradient-to-br from-primary to-background transition hover:scale-110`}
+          size="md"
+          isIconOnly
+        >
+          <i className="ri-dashboard-fill text-2xl" />
+        </Button>
+      )}
 
-        <div className="mt-10 flex items-center justify-evenly ">
-          {web_role === Number(import.meta.env.VITE_ADMIN_ROLE) && (
-            <Button
-              as={Link}
-              onPress={() => {
-                setLoading(true);
-                navigate("/dashboard/vendedores");
-              }}
-              className={`bg-gradient-to-tl from-primary to-background shadow-xl`}
-              size="lg"
-              isIconOnly
-            >
-              <i className="ri-dashboard-fill text-2xl" />
-            </Button>
-          )}
+      {web_role === Number(import.meta.env.VITE_SELLER_ROLE) && (
+        <Button
+          id="manage-clients-button"
+          onClick={() => handleManageClients()}
+          className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
+            managedClient.id && "animate-pulse from-success to-success"
+          }`}
+          size="md"
+          isIconOnly
+        >
+          <i className="ri-customer-service-fill text-2xl" />
+        </Button>
+      )}
 
+      {web_role === Number(import.meta.env.VITE_USER_ROLE) && (
+        <Button
+          as={Link}
+          to={"/user/profile"}
+          className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
+            pathname === "/user/profile" && "pointer-events-none from-background"
+          }`}
+          size="md"
+          isIconOnly
+        >
+          <i className="ri-user-fill text-2xl" />
+        </Button>
+      )}
+
+      {id && access_token && (
+        <>
           <Button
             as={Link}
-            to={id ? `user/profile` : "sign-in"}
-            onPress={() => setIsMenuOpen(false)}
+            to="/carrito"
+            className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
+              pathname === "/carrito" && "pointer-events-none from-background"
+            }`}
+            size="md"
+            isIconOnly
+          >
+            <i className="ri-shopping-cart-2-fill text-2xl" />
+          </Button>
+          <Button
+            as={Link}
+            to={"/"}
+            className={`bg-gradient-to-br from-primary to-background transition hover:scale-110`}
+            size="md"
+            isIconOnly
+            onPress={() => {
+              setTimeout(() => {
+                removeAuthWithToken();
+                dispatch(actionsUser.cleanUser());
+                dispatch(actionsAuth.cleanAuth());
+                toast.info("Sesión cerrada con exito", { description: "¡Esperamos verte pronto!" });
+              }, 200);
+            }}
+          >
+            <i className="ri-logout-circle-r-line text-2xl" />
+          </Button>
+        </>
+      )}
+    </NavbarContent>
+  );
+}
+
+function MobileContent({
+  web_role,
+  id,
+  access_token,
+  pathname,
+  dispatch,
+  isMenuOpen,
+  setIsMenuOpen,
+  handleManageClients,
+}) {
+  const { managedClient } = useSelector((state) => state.seller);
+
+  return (
+    <NavbarMenu className="gap-4 overflow-hidden bg-gradient-to-br from-primary to-white/20">
+      <div className="absolute -right-48 -top-10 -z-40 opacity-50">
+        <AwsImage type="logos" identify="logoBlack" hidden={isMenuOpen ? false : true} className="rotate-12" />
+      </div>
+
+      {links.map(({ name, path }, i) => (
+        <NavbarMenuItem onClick={() => setIsMenuOpen(false)} className="w-fit " key={i}>
+          <NavLink className="flex h-full w-[12rem] items-center gap-1.5 border-b-2  border-dark/50 p-1" to={path}>
+            <i className="ri-arrow-right-s-line text-md  !text-secondary"></i>
+            <p className="w-full font-primary text-lg uppercase text-white">{name}</p>
+          </NavLink>
+        </NavbarMenuItem>
+      ))}
+
+      <div className="mt-10 flex items-center justify-evenly">
+        {!id && !access_token && (
+          <DefaultButton
+            as={Link}
+            to={"/sign-in"}
+            className="bg-gradient-to-tl from-primary to-background shadow-xl"
+            size="md"
+            startContent={<i className="ri-user-fill mr-2 text-lg" />}
+          >
+            INICIAR SESION
+          </DefaultButton>
+        )}
+
+        {web_role === Number(import.meta.env.VITE_ADMIN_ROLE) && (
+          <Button
+            as={Link}
+            to={"/dashboard/vendedores"}
+            className={`bg-gradient-to-tl from-primary to-background shadow-xl`}
+            size="lg"
+            isIconOnly
+          >
+            <i className="ri-dashboard-fill text-2xl" />
+          </Button>
+        )}
+
+        {web_role === Number(import.meta.env.VITE_SELLER_ROLE) && (
+          <Button
+            id="manage-clients-button"
+            onPress={() => {
+              setIsMenuOpen(false);
+              handleManageClients();
+            }}
             className={`bg-gradient-to-tl from-primary to-background shadow-xl ${
-              (pathname === "/sign-in" || pathname === "/user/profile") && "pointer-events-none from-background"
+              managedClient.id && "animate-pulse from-success to-success"
+            }`}
+            size="lg"
+            isIconOnly
+          >
+            <i className="ri-customer-service-fill text-2xl" />
+          </Button>
+        )}
+
+        {web_role === Number(import.meta.env.VITE_USER_ROLE) && (
+          <Button
+            as={Link}
+            to={"/user/profile"}
+            className={`bg-gradient-to-tl from-primary to-background shadow-xl ${
+              pathname === "/user/profile" && "pointer-events-none from-background"
             }`}
             size="lg"
             isIconOnly
           >
             <i className="ri-user-fill text-2xl" />
           </Button>
-          <Button
-            as={Link}
-            to={"/carrito"}
-            onPress={() => setIsMenuOpen(false)}
-            className={`bg-gradient-to-tl  from-primary to-background shadow-xl ${
-              pathname === "/carrito" && "pointer-events-none from-background"
-            }`}
-            size="lg"
-            isIconOnly
-          >
-            <i className="ri-shopping-cart-2-fill text-2xl" />
-          </Button>
-          {id && access_token && (
+        )}
+
+        {id && access_token && (
+          <>
+            <Button
+              as={Link}
+              to={"/carrito"}
+              onPress={() => setIsMenuOpen(false)}
+              className={`bg-gradient-to-tl  from-primary to-background shadow-xl ${
+                pathname === "/carrito" && "pointer-events-none from-background"
+              }`}
+              size="lg"
+              isIconOnly
+            >
+              <i className="ri-shopping-cart-2-fill text-2xl" />
+            </Button>
             <Button
               as={Link}
               to={"/"}
@@ -195,65 +370,26 @@ export default function NavBar() {
               isIconOnly
               onPress={() => {
                 setIsMenuOpen(false);
-                toast.info("Sesión cerrada con exito", { description: "¡Esperamos verte pronto!" });
                 setTimeout(() => {
-                  //? Para evitar salto y que aparezca el errorBundler
-                  //TODO ANALIZAR ESTO
                   removeAuthWithToken();
                   dispatch(actionsUser.cleanUser());
                   dispatch(actionsAuth.cleanAuth());
-                }, 1000);
+                  toast.info("Sesión cerrada con exito", { description: "¡Esperamos verte pronto!" });
+                }, 200);
               }}
             >
-              <i className="ri-logout-circle-line text-2xl" />
+              <i className="ri-logout-circle-r-line text-2xl" />
             </Button>
-          )}
-        </div>
-        <div className="f bottom-0 mx-auto mt-10 text-center">
-          <h1 className="text-3xl">SPOTSLINE</h1>
-          <p className="-mt-2 font-slogan text-2xl">Se ve bien.</p>
-        </div>
-      </NavbarMenu>
-
-      {/* DESKTOP */}
-      <NavbarContent justify="end" className="hidden sm:flex">
-        {web_role === Number(import.meta.env.VITE_ADMIN_ROLE) && (
-          <Button
-            as={Link}
-            onPress={() => {
-              setLoading(true);
-              navigate("/dashboard/vendedores");
-            }}
-            className={`bg-gradient-to-br from-primary to-background transition hover:scale-110`}
-            size="md"
-            isIconOnly
-          >
-            <i className="ri-dashboard-fill text-2xl" />
-          </Button>
+          </>
         )}
-        <Button
-          as={Link}
-          to={id ? `/user/profile` : "/sign-in"}
-          className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
-            (pathname === "/sign-in" || pathname === "/user/profile") && "pointer-events-none from-background"
-          }`}
-          size="md"
-          isIconOnly
-        >
-          <i className="ri-user-fill text-2xl" />
-        </Button>
-        <Button
-          as={Link}
-          to="/carrito"
-          className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
-            pathname === "/carrito" && "pointer-events-none from-background"
-          }`}
-          size="md"
-          isIconOnly
-        >
-          <i className="ri-shopping-cart-2-fill text-2xl" />
-        </Button>
-      </NavbarContent>
-    </Navbar>
+      </div>
+      <div className="bottom-0 mx-auto mt-10 text-center">
+        <h1 className="text-3xl">SPOTSLINE</h1>
+        <p className="-mt-2 font-slogan text-2xl">Se ve bien.</p>
+      </div>
+      <div className="absolute -bottom-20 -left-28">
+        <AwsImage type="logos" identify="logoWhite" className="w-[400px] rotate-12" />
+      </div>
+    </NavbarMenu>
   );
 }
