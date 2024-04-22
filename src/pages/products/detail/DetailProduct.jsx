@@ -82,8 +82,12 @@ export function DetailProduct() {
         {email && (
           <>
             <p className="-mt-2 mb-4 text-xl ">{"$ " + current["precio" + ((priceList || 0) + 1)]}</p>
-            <div className="space-y-10 my-10">
-              <SelectVariant variants={product.variants} current={current} setCurrent={setCurrent} />
+            <div className="my-10 space-y-10">
+              <SelectVariant
+                variants={product.variants.filter((v) => v === true)}
+                current={current}
+                setCurrent={setCurrent}
+              />
               <SelectQuantity
                 quantity={{
                   value: quantity,
@@ -122,10 +126,14 @@ export function DetailProduct() {
 
 function ColorPalette({ variants = [] }) {
   const _colors = new Set();
-  variants.forEach(({ subRub }) => {
-    let [interno, externo] = subRub.split("-");
-    if (interno) _colors.add(interno);
-    if (externo) _colors.add(externo);
+  variants.forEach((v) => {
+    const { subRub } = v;
+    if (subRub) {
+      console.log(subRub);
+      let [interno, externo] = subRub.split("-");
+      if (interno) _colors.add(interno);
+      if (externo) _colors.add(externo);
+    }
   });
 
   return (

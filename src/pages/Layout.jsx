@@ -27,7 +27,7 @@ export default function Layout({ children }) {
       const { user, shoppingCart } = await APISpot.auth.jwtAutoSignIn({ jwt: access_token, email });
 
       if (user) {
-        if (Object.keys(shoppingCart)?.length) {
+        if (shoppingCart && Object.keys(shoppingCart)?.length) {
           shoppingCart.subtotal = parseFloat(shoppingCart.subtotal);
           shoppingCart.total = parseFloat(shoppingCart.total);
           shoppingCart.items = shoppingCart.items.map((itm) => {
