@@ -6,8 +6,8 @@ import { Button, Divider } from "@nextui-org/react";
 import { motion } from "framer-motion";
 
 const selectButtonsData = [
-  { name: "PRODUCTOS", startIcon: "image-2", link: "/dashboard/productos" },
   { name: "VENDEDORES", startIcon: "customer-service", link: "/dashboard/vendedores" },
+  { name: "PRODUCTOS", startIcon: "image-2", link: "/dashboard/productos" },
   { name: "CUPONES", startIcon: "coupon-2", link: "/dashboard/cupones" },
   { name: "CLIENTES", startIcon: "user-3", link: "/dashboard/clientes/1" },
   { name: "ORDENES", startIcon: "shopping-cart-2", link: "/dashboard/ordenes" },

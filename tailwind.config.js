@@ -45,6 +45,7 @@ export default {
         landingbg: `url(${assets.backgrounds[1]})`,
         light: `url(${assets.lights.light})`,
         signIn: `url(${assets.backgrounds[5]})`,
+
         //! Esto tiene que volar!
       },
       transitionDuration: {

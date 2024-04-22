@@ -1,3 +1,5 @@
+import { toast } from "sonner";
+
 export function formatPrices(price) {
   return price.toLocaleString("es-AR", {
     style: "currency",
@@ -14,10 +16,8 @@ export function convertISOToDate(isoDate) {
 }
 
 export function copyToClipboard(text) {
-  navigator.clipboard
-    .writeText(text)
-
-    .catch((e) => {
-      console.log(e);
-    });
+  toast.info("Se copio en portapapeles");
+  navigator.clipboard.writeText(text).catch((e) => {
+    console.log(e);
+  });
 }

@@ -11,6 +11,8 @@ const route = {
   CHECKOUT: "mobbex",
   COUPON: "coupon",
   AWS: "aws-s3-upload",
+  ORDERS: "orders",
+  MAIL: "mailing",
 };
 
 export const APISpot = {
@@ -45,6 +47,10 @@ export const APISpot = {
     },
     getDashboardProducts: async (page) => {
       const res = await BASE_API.get(`/${route.PRODUCTS}/dashboard-products?page=${page}`);
+      return res.data;
+    },
+    getDashboardOrders: async () => {
+      const res = await BASE_API.get(`/${route.ORDERS}/`);
       return res.data;
     },
     toggleFeaturedProduct: (body) => {
@@ -171,6 +177,13 @@ export const APISpot = {
     updateAvatar: ({ userId, web_role, formData }) => {
       addAuthWithToken(getOfStorage("access_token"));
       return BASE_API.post(`/${route.AWS}/avatar/${userId}?web_role=${web_role}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    },
+  },
+  mail: {
+    sendRrhhRequest: async (body) => {
+      return BASE_API.post(`/${route.MAIL}/rrhh`, body, {
         headers: { "Content-Type": "multipart/form-data" },
       });
     },
