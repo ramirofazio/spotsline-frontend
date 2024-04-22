@@ -43,7 +43,6 @@ export function FirstSignInModal({ navigate }) {
   const handleChange = ({ target: { name, value } }) => {
     setData((prev) => {
       const newData = { ...prev, [name]: value };
-      console.log(newData);
       setErrs(isValidPasswords(newData));
       return newData;
     });
@@ -96,7 +95,13 @@ export function FirstSignInModal({ navigate }) {
           />
         ))}
 
-        <DefaultButton isDisabled={!data?.newPassword.length || !data?.newPasswordConfirm.length || Object.values(errs).length && true} type="submit" isLoading={isLoading}>
+        <DefaultButton
+          isDisabled={
+            !data?.newPassword.length || !data?.newPasswordConfirm.length || (Object.values(errs).length && true)
+          }
+          type="submit"
+          isLoading={isLoading}
+        >
           ACTUALIZAR
         </DefaultButton>
       </form>

@@ -1,9 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { saveInStorage } from "src/utils/localStorage";
+import { deleteOfStorage, saveInStorage } from "src/utils/localStorage";
 
 const initialState = {
   id: false,
-  modified: false,
   items: [],
   discount: 0,
   total: 0,
@@ -24,7 +23,6 @@ const shoppingCartSlice = createSlice({
   initialState,
   reducers: {
     addItemToCart(state, action) {
-      state.modified = true;
       const newItem = action.payload;
       const existingItem = state.items.find((item) => item.id === newItem.id);
 
@@ -36,21 +34,25 @@ const shoppingCartSlice = createSlice({
 
       state.subtotal = calculateSubtotal(state.items);
       state.total = calculateTotal(state.subtotal, state.discount);
+
       saveInStorage("shoppingCart", state);
     },
     removeItemFromCart(state, action) {
-      state.modified = true;
       const itemId = action.payload;
-      state.items = state.items.filter((item) => item.id !== itemId);
+      state.items = state.items.filter((item) => item.id ?? item.productId !== itemId);
       state.subtotal = calculateSubtotal(state.items);
       state.total = calculateTotal(state.subtotal, state.discount);
       saveInStorage("shoppingCart", state);
     },
     updateCartItemQuantity(state, action) {
-      state.modified = true;
       const { id, quantity } = action.payload;
+
+      if (quantity === 0) {
+        state.items = state.items.filter((item) => item.id ?? item.productId !== id);
+      }
+
       const updatedItems = state.items.map((item) => {
-        if (item.id === id) {
+        if (item.id ?? item.productId === id) {
           return { ...item, qty: quantity };
         }
         return item;
@@ -62,7 +64,6 @@ const shoppingCartSlice = createSlice({
       saveInStorage("shoppingCart", state);
     },
     applyDiscount(state, action) {
-      state.modified = true;
       const coupon = action.payload;
 
       state.discount = state.discount + coupon.discountPercentaje;
@@ -72,7 +73,6 @@ const shoppingCartSlice = createSlice({
       saveInStorage("shoppingCart", state);
     },
     removeDiscount(state, action) {
-      state.modified = true;
       const coupon = action.payload;
       state.discount = state.discount - coupon.discountPercentaje;
       state.currentCoupon = false;
@@ -81,16 +81,12 @@ const shoppingCartSlice = createSlice({
       saveInStorage("shoppingCart", state);
     },
 
-    clearCart(state) {
-      state.modified = false;
-      state.items = [];
-      state.subtotal = 0;
-      state.total = 0;
-      state.discount = 0;
-      state.currentCoupon = false;
-      saveInStorage("shoppingCart", state);
+    clearCart() {
+      deleteOfStorage("shoppingCart");
+      return { id: false, items: [], discount: 0, total: 0, subtotal: 0, currentCoupon: false };
     },
     loadCart(state, action) {
+      saveInStorage("shoppingCart", action.payload);
 
       state.id = action.payload.id || null;
       state.items = action.payload.items || [];

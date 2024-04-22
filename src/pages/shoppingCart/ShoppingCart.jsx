@@ -11,7 +11,8 @@ import { saveInStorage } from "src/utils/localStorage";
 
 export default function ShoppingCart() {
   const dispatch = useDispatch();
-  const { items, total, subtotal, discount, currentCoupon, id } = useSelector((state) => state.cart);
+  //TODO REVISAR TODO ESTO!
+  const reduxCart = useSelector((state) => state.cart);
   const { web_role } = useSelector((state) => state.user);
   const { managedClient } = useSelector((state) => state.seller);
 
@@ -27,12 +28,12 @@ export default function ShoppingCart() {
     e.preventDefault();
     try {
       setLoading(true);
-      const exist = Object.keys(currentCoupon).includes(discountCode);
+      const exist = Object.keys(reduxCart.currentCoupon).includes(discountCode);
 
       if (exist) {
         return toast.error("ya esta usando este cupon");
       }
-      if (discount || Object.keys(currentCoupon).length) {
+      if (reduxCart.discount || Object.keys(reduxCart.currentCoupon).length) {
         return toast.error("ya tiene un cupon en uso");
       }
 
@@ -54,6 +55,7 @@ export default function ShoppingCart() {
   const resetCart = async (cartId) => {
     try {
       setLoading(true);
+      //! Que onda ese force
       await APISpot.cart.deleteCart(cartId, false);
       dispatch(actionsShoppingCart.clearCart());
       toast.success(`Se vacio el carrito`);
@@ -69,24 +71,17 @@ export default function ShoppingCart() {
   const handleAddCartToClient = async () => {
     try {
       setLoading(true);
-      const mappedItems = items.map((i) => {
-        return { ...i, productId: i.id };
-      });
+      //   const mappedItems = reduxCart.items.map((i) => {
+      //     return { ...i, productId: i.id };
+      //   });
+      //! Ver como viene de redux y si tiene productID
 
-      console.log(mappedItems);
+      const res = await APISpot.cart.updateCart(reduxCart);
 
-      const res = await APISpot.cart.createCart({
-        userId: managedClient.id,
-        discount: discount,
-        total: total,
-        subtotal: subtotal,
-        items: mappedItems,
-        coupon: currentCoupon,
-      });
+      console.log(res);
 
       if (res) {
         toast.success(`Carrito agregado con exito al cliente ${managedClient.fantasyName}`);
-        dispatch(actionsShoppingCart.clearCart());
       }
     } catch (e) {
       console.log(e);
@@ -102,60 +97,66 @@ export default function ShoppingCart() {
 
   return (
     <main className="text-center">
-      <section className="grid place-items-center gap-2 p-6">
-        <h1 className="text-xl font-bold">INFORMACIÓN IMPORTANTE</h1>
-        <p className="px-4 font-secondary text-sm">
-          Para guardar tu carrito, es necesario <strong className="font-bold">ingresar a tu cuenta</strong> dentro de
-          Spotsline. Si aún no lo has hecho, no pierdas tu carrito e{" "}
-          <Link to="/sign-in" className="icons font-bold">
-            inicia sesión
-          </Link>
-        </p>
-      </section>
-      <Divider className="h-1 bg-primary" />
+      {!web_role && (
+        <>
+          <section className="grid place-items-center gap-2 p-6">
+            <h1 className="text-xl font-bold">INFORMACIÓN IMPORTANTE</h1>
+            <p className="px-4 font-secondary text-sm">
+              Para guardar tu carrito, es necesario <strong className="font-bold">ingresar a tu cuenta</strong> dentro
+              de Spotsline. Si aún no lo has hecho, no pierdas tu carrito e{" "}
+              <Link to="/sign-in" className="icons font-bold">
+                inicia sesión
+              </Link>
+            </p>
+          </section>
+          <Divider className="h-1 bg-primary" />
+        </>
+      )}
 
       <section className="relative grid place-items-center gap-6 p-6">
-        {items.length === 0 && (
+        {reduxCart.items.length === 0 && (
           <div className="flex flex-col items-center gap-6">
             <h3 className="font-semibold">NO HAY NINGUN PRODUCTO EN TU CARRITO</h3>
-            <DefaultButton className={"w-fit"}>
-              <Link to="/productos/0">VER PRODUCTOS</Link>
+            <DefaultButton as={Link} to="/productos/0" className={"w-fit"}>
+              VER PRODUCTOS
             </DefaultButton>
           </div>
         )}
         <Button
           isIconOnly
-          onPress={() => resetCart(id)}
+          onPress={() => resetCart(reduxCart.id)}
           radius="full"
-          disabled={!items.length && true}
+          disabled={!reduxCart.items.length && true}
           className="absolute bottom-4 right-4 ml-auto bg-gradient-to-tl from-primary to-background shadow-xl disabled:pointer-events-none disabled:opacity-40"
         >
           <i className="ri-delete-bin-6-line text-2xl"></i>
         </Button>
 
-        {items.map(({ img, name, price, qty, id }, index) => (
+        {reduxCart.items.map(({ img, name, price, qty, id, productId }, index) => (
           <article key={index} className="z-10 flex min-w-[80vw] items-center gap-6 rounded-xl bg-white p-6">
             <Image src={img} width={150} height={150} alt={`${name} img`} className="shadow-inner" />
             <div className="flex w-full flex-col items-start gap-4">
               <div className="w-full space-y-2 text-left text-lg">
-                <h4 className="line-clamp-1 w-40 font-bold">{name}</h4>
+                <h4 className="line-clamp-1 w-40 font-bold lg:line-clamp-none lg:w-auto">{name}</h4>
                 <p className="font-bold tracking-wider text-primary">{formatPrices(price)}</p>
               </div>
               <div className="w -full    flex items-center justify-between gap-4 text-xl">
                 <Button
                   isIconOnly
                   radius="full"
-                  className="flex bg-dark text-xl  text-primary"
-                  onPress={() => dispatch(actionsShoppingCart.removeItemFromCart(id))}
+                  className="flex bg-red-600"
+                  onPress={() => dispatch(actionsShoppingCart.removeItemFromCart(id ?? productId))}
                 >
-                  <i className="ri-delete-bin-line icons text-xl text-primary" />
+                  <i className="ri-delete-bin-line icons text-xl text-dark" />
                 </Button>
                 <div className="flex items-center gap-3 font-secondary font-bold">
                   <Button
                     isIconOnly
                     radius="full"
-                    className="flex bg-dark text-xl font-bold text-primary"
-                    onPress={() => dispatch(actionsShoppingCart.updateCartItemQuantity({ id: id, quantity: qty - 1 }))}
+                    className={`flex bg-dark text-xl  text-primary ${qty === 1 && "bg-red-600"}`}
+                    onPress={() =>
+                      dispatch(actionsShoppingCart.updateCartItemQuantity({ id: id ?? productId, quantity: qty - 1 }))
+                    }
                   >
                     <i className="ri-subtract-line" />
                   </Button>
@@ -164,7 +165,9 @@ export default function ShoppingCart() {
                     isIconOnly
                     radius="full"
                     className="flex bg-dark text-xl font-bold text-primary disabled:opacity-50"
-                    onPress={() => dispatch(actionsShoppingCart.updateCartItemQuantity({ id, quantity: qty + 1 }))}
+                    onPress={() =>
+                      dispatch(actionsShoppingCart.updateCartItemQuantity({ id: id ?? productId, quantity: qty + 1 }))
+                    }
                     isDisabled={qty >= 100}
                   >
                     <i className="ri-add-line" />
@@ -181,19 +184,21 @@ export default function ShoppingCart() {
         <div className="z-10 flex w-full items-center justify-between">
           <h3>SUBTOTAL</h3>
           <h3 className="bg-gradient-to-r from-primary to-yellow-200 bg-clip-text font-extrabold text-transparent">
-            {formatPrices(subtotal)}
+            {formatPrices(reduxCart.subtotal)}
           </h3>
         </div>
-        {discount !== 0 && <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />}
-        {discount !== 0 && Object.values(currentCoupon)?.length && (
+        {reduxCart.discount !== 0 && (
+          <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
+        )}
+        {reduxCart.discount !== 0 && Object.values(reduxCart.currentCoupon)?.length && (
           <div className="relative z-10 flex w-full items-center justify-between">
             <h3>
-              Cupón <strong className="yellowGradient">{currentCoupon.name}</strong>
+              Cupón <strong className="yellowGradient">{reduxCart.currentCoupon.name}</strong>
             </h3>
-            <h3 className="yellowGradient mr-10 font-bold">{currentCoupon.discountPercentaje} %</h3>
+            <h3 className="yellowGradient mr-10 font-bold">{reduxCart.currentCoupon.discountPercentaje} %</h3>
             <i
               className="ri-delete-bin-line icons absolute right-0 text-lg text-background"
-              onClick={() => dispatch(actionsShoppingCart.removeDiscount(currentCoupon))}
+              onClick={() => dispatch(actionsShoppingCart.removeDiscount(reduxCart.currentCoupon))}
             />
           </div>
         )}
@@ -201,7 +206,7 @@ export default function ShoppingCart() {
         <div className="z-10 flex w-full items-center justify-between">
           <h3>TOTAL A PAGAR</h3>
           <h3 className="bg-gradient-to-r from-primary to-yellow-200 bg-clip-text font-extrabold text-transparent">
-            {formatPrices(total)}
+            {formatPrices(reduxCart.total)}
           </h3>
         </div>
         <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
@@ -230,7 +235,7 @@ export default function ShoppingCart() {
                 <Button
                   type="submit"
                   className="icons h-10 rounded-none rounded-br-xl rounded-tr-xl bg-background from-background to-primary font-bold text-black transition hover:bg-gradient-to-r"
-                  isDisabled={items.length === 0 || discountCode === ""}
+                  isDisabled={reduxCart.items.length === 0 || discountCode === ""}
                 >
                   APLICAR
                 </Button>
@@ -240,7 +245,7 @@ export default function ShoppingCart() {
               onPress={handlePickDate}
               className={"mx-auto lg:mx-0"}
               isLoading={loading}
-              isDisabled={items.length === 0}
+              isDisabled={reduxCart.items.length === 0}
             >
               CONTINUAR
             </DefaultButton>
@@ -252,7 +257,7 @@ export default function ShoppingCart() {
               onPress={handleAddCartToClient}
               className={"mx-auto !w-80 lg:mx-0"}
               isLoading={loading}
-              isDisabled={items.length === 0 || loading}
+              isDisabled={reduxCart.items.length === 0 || loading}
             >
               AGREGAR CARRITO AL CLIENTE
             </DefaultButton>
@@ -263,9 +268,9 @@ export default function ShoppingCart() {
         <PickDateModal
           onOpenChange={onOpenChange}
           isOpen={isOpen}
-          items={items}
-          currentCoupon={currentCoupon}
-          discount={discount}
+          items={reduxCart.items}
+          currentCoupon={reduxCart.currentCoupon}
+          discount={reduxCart.discount}
         />
       )}
     </main>
@@ -291,8 +296,8 @@ function PickDateModal({ isOpen, onOpenChange, items, currentCoupon, discount })
         userId: user.id,
         discount,
         coupon: currentCoupon || false,
-        items: items.map(({ id, qty }) => {
-          return { id: id, qty: qty };
+        items: items.map(({ id, qty, productId }) => {
+          return { productId: id ?? productId, qty: qty };
         }),
         deliveryDate: new Date(date).toISOString(),
       };
@@ -301,7 +306,7 @@ function PickDateModal({ isOpen, onOpenChange, items, currentCoupon, discount })
       const res = await APISpot.checkout.create(body);
       if (res) {
         saveInStorage("orderBody", body);
-        window.open(res);
+        window.location.replace(res);
       }
     } catch (e) {
       console.log(e);

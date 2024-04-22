@@ -16,24 +16,19 @@ import {
 import { links } from ".";
 import { Link, NavLink, useLoaderData, useLocation } from "react-router-dom";
 import { getOfStorage } from "src/utils/localStorage";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import AwsImage from "../images/AwsImage";
 import { toast } from "sonner";
-import { removeAuthWithToken } from "src/api";
-import { actionsAuth, actionsUser } from "src/redux/reducers";
 import { DefaultButton } from "..";
 import ManageClientsModal from "../modals/ManageClientsModal";
 import Loader from "../Loader";
 
 export default function NavBar() {
-  const dispatch = useDispatch();
   const { pathname } = useLocation();
-
-  const params = new URLSearchParams(window.location.search);
-  const sellerLogIn = params.get("sellerLogIn");
 
   const { access_token } = useSelector((state) => state.auth);
   const { id, web_role } = useSelector((state) => state.user);
+  const { managedClient } = useSelector((state) => state.seller);
 
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
@@ -61,11 +56,19 @@ export default function NavBar() {
   }, [isMenuOpen, pathname]);
 
   useEffect(() => {
-    if (sellerLogIn) {
-      //TODO VALIDAR ACA QUE YA HAYA SELECCIONADO UN CLIENTE, SINO MANDAR ALGUNA PROP AL MODAL PARA QUE NO SEA DISSMISABLE
-      document.getElementById("manage-clients-button").click();
+    if (!managedClient.id && web_role === Number(import.meta.env.VITE_SELLER_ROLE)) {
+      const button = document.getElementById("manage-clients-button");
+      if (button && !isOpen) {
+        button.click();
+      }
     }
-  }, [document]);
+  });
+
+  const handleLogOut = () => {
+    localStorage.clear();
+    window.location.replace("/");
+    toast.info("Sesión cerrada con exito", { description: "¡Esperamos verte pronto!" });
+  };
 
   const handleManageClients = () => {
     onOpen();
@@ -154,17 +157,17 @@ export default function NavBar() {
         id={id}
         access_token={access_token}
         pathname={pathname}
-        dispatch={dispatch}
         isMenuOpen={isMenuOpen}
         setIsMenuOpen={setIsMenuOpen}
         handleManageClients={handleManageClients}
+        handleLogOut={handleLogOut}
       />
       <DesktopContent
         web_role={web_role}
         id={id}
         access_token={access_token}
         pathname={pathname}
-        dispatch={dispatch}
+        handleLogOut={handleLogOut}
         handleManageClients={handleManageClients}
       />
       {web_role === Number(import.meta.env.VITE_SELLER_ROLE) && (
@@ -174,7 +177,7 @@ export default function NavBar() {
   );
 }
 
-function DesktopContent({ web_role, id, access_token, pathname, dispatch, handleManageClients }) {
+function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, handleManageClients }) {
   const { managedClient } = useSelector((state) => state.seller);
   return (
     <NavbarContent justify="end" className="hidden sm:flex">
@@ -205,13 +208,11 @@ function DesktopContent({ web_role, id, access_token, pathname, dispatch, handle
         <Button
           id="manage-clients-button"
           onClick={() => handleManageClients()}
-          className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
-            managedClient.id && "animate-pulse from-success to-success"
-          }`}
+          className={`bg-gradient-to-br from-primary to-background transition hover:scale-110`}
           size="md"
           isIconOnly
         >
-          <i className="ri-customer-service-fill text-2xl" />
+          <i className={`ri-link text-2xl ${managedClient.id && "animate-pulse text-success"}`} />
         </Button>
       )}
 
@@ -242,20 +243,12 @@ function DesktopContent({ web_role, id, access_token, pathname, dispatch, handle
           >
             <i className="ri-shopping-cart-2-fill text-2xl" />
           </Button>
+
           <Button
-            as={Link}
-            to={"/"}
             className={`bg-gradient-to-br from-primary to-background transition hover:scale-110`}
             size="md"
             isIconOnly
-            onPress={() => {
-              setTimeout(() => {
-                removeAuthWithToken();
-                dispatch(actionsUser.cleanUser());
-                dispatch(actionsAuth.cleanAuth());
-                toast.info("Sesión cerrada con exito", { description: "¡Esperamos verte pronto!" });
-              }, 200);
-            }}
+            onPress={handleLogOut}
           >
             <i className="ri-logout-circle-r-line text-2xl" />
           </Button>
@@ -270,7 +263,7 @@ function MobileContent({
   id,
   access_token,
   pathname,
-  dispatch,
+  handleLogOut,
   isMenuOpen,
   setIsMenuOpen,
   handleManageClients,
@@ -363,20 +356,10 @@ function MobileContent({
               <i className="ri-shopping-cart-2-fill text-2xl" />
             </Button>
             <Button
-              as={Link}
-              to={"/"}
               className="bg-gradient-to-tl from-primary to-background shadow-xl"
               size="lg"
               isIconOnly
-              onPress={() => {
-                setIsMenuOpen(false);
-                setTimeout(() => {
-                  removeAuthWithToken();
-                  dispatch(actionsUser.cleanUser());
-                  dispatch(actionsAuth.cleanAuth());
-                  toast.info("Sesión cerrada con exito", { description: "¡Esperamos verte pronto!" });
-                }, 200);
-              }}
+              onPress={handleLogOut}
             >
               <i className="ri-logout-circle-r-line text-2xl" />
             </Button>
