@@ -1,4 +1,4 @@
-import { Button, Select, SelectItem } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -9,16 +9,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart } from "src/redux/reducers/shoppingCart";
 import colors from "../../../data/colors.json";
 import { VariantsProduct } from "./VariantsProducts";
+
+import { SelectQuantity } from "./SelectQuantity";
+import { SelectVariant } from "./SelectVariant";
 export function DetailProduct() {
   const { id } = useParams();
   const [product, setProduct] = useState();
   const [isLoading, setIsLoading] = useState(true);
-  const { email, lista } = useSelector((state) => state.user);
+  const { email, priceList } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [current, setCurrent] = useState();
-  const [state, setState] = useState(1);
-  const qty = 2;
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     document.title = "SPOTSLINE - Cargando...";
@@ -46,19 +48,18 @@ export function DetailProduct() {
         setIsLoading(false);
       });
 
-    return () =>    (document.title = "SPOTSLINE");
+    return () => (document.title = "SPOTSLINE");
   }, [id]);
 
   function addProductToShoppingCart() {
-
     dispatch(
-      addItemToCart( {
+      addItemToCart({
         id: current.id,
         name: current.description,
         img: current.pathImage || assets.lights.light2,
 
-        price: parseFloat(current["precio" + ((lista || 0) + 1)]),
-        qty: state,
+        price: parseFloat(current["precio" + ((priceList || 0) + 1)]),
+        qty: quantity,
       })
     );
     toast("Producto Agregado", {
@@ -75,27 +76,21 @@ export function DetailProduct() {
   return (
     <main className="mb-10 mt-20 min-h-[500px] max-w-7xl flex-wrap px-6 md:mt-32 md:flex md:gap-6 lg:mx-auto lg:gap-10 lg:px-12">
       <VariantsProduct variants={product.variants} current={{ set: setCurrent, values: current }} />
-      <section        className="my-10 md:my-0 md:flex-1">
+      <section className="my-10 md:my-0 md:flex-1">
         <h1 className="mb-8 font-primary text-3xl font-semibold">{product?.description}</h1>
 
         {email && (
           <>
-            <p className="-mt-2 mb-4 text-xl ">{"$ " + current["precio" + ((lista || 0) + 1)]}</p>
-            <Select
-              className="mb-6"
-              value={state}
-              label="Cantidad"
-              onChange={({ target }) => setState(target.value)}
-              placeholder="2 Disponibles"
-            >
-              {Array(qty)
-                .fill(1)
-                .map((_x, i) => (
-                  <SelectItem key={i + 1} textValue={i + 1}>
-                    {i + 1}
-                  </SelectItem>
-                ))}
-            </Select>
+            <p className="-mt-2 mb-4 text-xl ">{"$ " + current["precio" + ((priceList || 0) + 1)]}</p>
+            <div className="space-y-10 my-10">
+              <SelectVariant variants={product.variants} current={current} setCurrent={setCurrent} />
+              <SelectQuantity
+                quantity={{
+                  value: quantity,
+                  set: setQuantity,
+                }}
+              />
+            </div>
           </>
         )}
         <Button
@@ -133,14 +128,13 @@ function ColorPalette({ variants = [] }) {
     if (externo) _colors.add(externo);
   });
 
-  console.log(_colors);
   return (
     <>
       {Array.from(_colors).map((interno) => {
         interno = colors[interno];
         return (
           <>
-            <div className="flex max-w-md" key={`interno:${interno.name}`}>
+            <div className="flex" key={`interno:${interno.name}`}>
               <p className="flex flex-1 items-center gap-2">
                 <span
                   className="inline-block aspect-square w-5 items-center rounded-full"
