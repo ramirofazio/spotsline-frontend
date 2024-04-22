@@ -3,7 +3,7 @@ import { assets } from "src/assets";
 
 const imagePerPage = 5;
 
-export function VariantsProduct({ variants, current }) {
+export function VariantsProduct({ variants }) {
   const [state, setState] = useState({
     currentSlide: 0,
     currentPage: 1,
@@ -30,7 +30,6 @@ export function VariantsProduct({ variants, current }) {
       currentSlide: to,
       currentPage: getChangeOfPage(to, prevState.currentPage),
     }));
-    current.set({ ...variants[to] });
   }
 
   function getPointIndexes() {

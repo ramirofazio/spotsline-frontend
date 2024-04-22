@@ -12,9 +12,7 @@ const Landing = lazy(() => import("pages/landing/Landing.jsx").then((module) => 
 const Company = lazy(() => import("pages/company/Company.jsx").then((module) => ({ default: module.Company })));
 const Products = lazy(() => import("pages/products/Products.jsx").then((module) => ({ default: module.Products })));
 const SignIn = lazy(() => import("pages/signIn/SignIn").then((module) => ({ default: module.SignIn })));
-const RecursosHumanos = lazy(() =>
-  import("pages/recursosHumanos/RecursosHumanos").then((module) => ({ default: module.RecursosHumanos }))
-);
+const Rrhh = lazy(() => import("pages/rrhh/Rrhh.jsx").then((module) => ({ default: module.Rrhh })));
 const ChangePassword = lazy(() =>
   import("pages/signIn/ChangePassword").then((module) => ({ default: module.ChangePassword }))
 );
@@ -62,7 +60,7 @@ export const publicRoutesPaths = [
         index: true,
       },
       { path: "/empresa", element: <Company /> },
-      { path: "/rrhh", element: <RecursosHumanos /> },
+      { path: "/rrhh", element: <Rrhh /> },
       { path: "/change-password", element: <ChangePassword /> },
       {
         path: "/productos/:page",

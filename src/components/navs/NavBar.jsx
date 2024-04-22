@@ -21,6 +21,7 @@ import AwsImage from "../images/AwsImage";
 import { toast } from "sonner";
 import { DefaultButton } from "..";
 import ManageClientsModal from "../modals/ManageClientsModal";
+import Loader from "../Loader";
 
 export default function NavBar() {
   const { pathname } = useLocation();
@@ -33,7 +34,7 @@ export default function NavBar() {
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [blur, setBlur] = React.useState(false);
-
+  const [loading, setLoading] = React.useState(false);
   const categories = getOfStorage("categories") || useLoaderData();
 
   useEffect(() => {
@@ -49,6 +50,7 @@ export default function NavBar() {
     document.addEventListener("scroll", handleScroll);
 
     return () => {
+      setLoading(false);
       document.removeEventListener("scroll", handleScroll);
     };
   }, [isMenuOpen, pathname]);
@@ -72,7 +74,9 @@ export default function NavBar() {
     onOpen();
   };
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <Navbar
       shouldHideOnScroll
       className={`xl:rounded-bl-2xl xl:rounded-br-2xl ${
@@ -175,7 +179,6 @@ export default function NavBar() {
 
 function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, handleManageClients }) {
   const { managedClient } = useSelector((state) => state.seller);
-
   return (
     <NavbarContent justify="end" className="hidden sm:flex">
       {!id && !access_token && (
@@ -192,7 +195,7 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
       {web_role === Number(import.meta.env.VITE_ADMIN_ROLE) && (
         <Button
           as={Link}
-          to={"/dashboard/productos/1"}
+          to={"/dashboard/vendedores"}
           className={`bg-gradient-to-br from-primary to-background transition hover:scale-110`}
           size="md"
           isIconOnly
@@ -298,8 +301,7 @@ function MobileContent({
         {web_role === Number(import.meta.env.VITE_ADMIN_ROLE) && (
           <Button
             as={Link}
-            to={"/dashboard/productos/1"}
-            onPress={() => setIsMenuOpen(false)}
+            to={"/dashboard/vendedores"}
             className={`bg-gradient-to-tl from-primary to-background shadow-xl`}
             size="lg"
             isIconOnly
