@@ -7,11 +7,12 @@ import CustomSelect from "../form/CustomSelect";
 import { assets } from "src/assets";
 import { actionSeller } from "src/redux/reducers";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { loadUserData } from "src/utils/loadUserData";
 
 export default function ManageClientsModal({ isOpen, onClose, onOpenChange }) {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const { access_token } = useSelector((state) => state.auth);
+  const { email } = useSelector((state) => state.user);
 
   const { managedClient } = useSelector((state) => state.seller);
 
@@ -21,7 +22,6 @@ export default function ManageClientsModal({ isOpen, onClose, onOpenChange }) {
 
   const handleChange = (e) => {
     const res = clients.find((c) => c.fantasyName === e.target.value);
-
     setClient(res);
   };
 
@@ -29,7 +29,13 @@ export default function ManageClientsModal({ isOpen, onClose, onOpenChange }) {
     e.preventDefault();
     setLoading(true);
     try {
+      if (!client.shoppingCart) {
+        //? Si entra aca es porque no tiene carrito y hay que crearlo
+        await APISpot.cart.createEmptyCart(client.id);
+      }
+
       dispatch(actionSeller.selectClientToManage(client));
+      await loadUserData(dispatch, access_token, email, client);
       toast.success(`${client.fantasyName} seleccionado con exito`);
       onClose();
     } catch (e) {
@@ -37,7 +43,6 @@ export default function ManageClientsModal({ isOpen, onClose, onOpenChange }) {
     } finally {
       setLoading(false);
       onClose();
-      navigate("/");
     }
   };
 

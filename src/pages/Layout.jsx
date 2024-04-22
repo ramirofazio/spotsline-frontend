@@ -1,42 +1,21 @@
 import { useEffect, Suspense } from "react";
-import { getOfStorage, saveInStorage } from "src/utils/localStorage";
+import { getOfStorage } from "src/utils/localStorage";
 import { useDispatch, useSelector } from "react-redux";
 import { addAuthWithToken, APISpot } from "src/api";
-import { setUser } from "src/redux/reducers/user";
 import { Spinner } from "@nextui-org/react";
-import { actionsShoppingCart, actionsAuth, actionSeller } from "src/redux/reducers";
+import { actionsAuth } from "src/redux/reducers";
 import AuthValidationModal from "src/components/modals/AuthValidationsModal";
 import { useDebouncedCallback } from "use-debounce";
+import { loadUserData } from "src/utils/loadUserData";
 
 export default function Layout({ children }) {
   const dispatch = useDispatch();
   const reduxUser = useSelector((state) => state.user);
 
-  const loadUserData = async (access_token, email) => {
-    try {
-      const { user, shoppingCart } = await APISpot.auth.jwtAutoSignIn({ jwt: access_token, email });
-
-      if (user) {
-        dispatch(setUser(user));
-
-        if (user.web_role === Number(import.meta.env.VITE_SELLER_ROLE)) {
-          //? Si el usuario loggeado es SELLER TENGO QUE TRAERME LE SHOPPIN CART DEL MANAGED USER
-        } else if (shoppingCart) {
-          //? Si el usuario loggeado y no es SELLER tiene un shopping cart guardado en DB lo cargo en redux
-          dispatch(actionsShoppingCart.loadCart(shoppingCart));
-        }
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const autoSaveShoppingCart = useDebouncedCallback(() => {
     if (!reduxUser.id) return;
 
     let storageCart = getOfStorage("shoppingCart");
-    console.log("Me llamaron");
-    saveInStorage("me_llamaron", true);
 
     return APISpot.cart.updateCart({
       ...storageCart,
@@ -81,11 +60,7 @@ export default function Layout({ children }) {
       addAuthWithToken(access_token);
       dispatch(actionsAuth.setAccessToken(access_token));
 
-      loadUserData(access_token, user.email);
-
-      if (user.web_role === Number(import.meta.env.VITE_SELLER_ROLE) && managedClient) {
-        dispatch(actionSeller.selectClientToManage(managedClient));
-      }
+      loadUserData(dispatch, access_token, user.email, managedClient);
     }
   }, []);
 

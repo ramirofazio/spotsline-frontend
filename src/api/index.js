@@ -120,6 +120,17 @@ export const APISpot = {
     },
   },
   cart: {
+    createEmptyCart: async (userId) => {
+      const res = await BASE_API.post(`/${route.CART}`, {
+        userId: userId,
+        discount: 0,
+        subtotal: 0,
+        total: 0,
+        coupon: false,
+        items: [],
+      });
+      return res.data;
+    },
     validateCoupon: async (coupon) => {
       const res = await BASE_API.get(`/${route.COUPON}/validate/${coupon}`);
       return res.data;

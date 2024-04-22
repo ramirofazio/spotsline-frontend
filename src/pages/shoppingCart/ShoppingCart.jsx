@@ -12,7 +12,7 @@ import { saveInStorage } from "src/utils/localStorage";
 export default function ShoppingCart() {
   const dispatch = useDispatch();
   //TODO REVISAR TODO ESTO!
-  const { items, total, subtotal, discount, currentCoupon, id } = useSelector((state) => state.cart);
+  const reduxCart = useSelector((state) => state.cart);
   const { web_role } = useSelector((state) => state.user);
   const { managedClient } = useSelector((state) => state.seller);
 
@@ -28,12 +28,12 @@ export default function ShoppingCart() {
     e.preventDefault();
     try {
       setLoading(true);
-      const exist = Object.keys(currentCoupon).includes(discountCode);
+      const exist = Object.keys(reduxCart.currentCoupon).includes(discountCode);
 
       if (exist) {
         return toast.error("ya esta usando este cupon");
       }
-      if (discount || Object.keys(currentCoupon).length) {
+      if (reduxCart.discount || Object.keys(reduxCart.currentCoupon).length) {
         return toast.error("ya tiene un cupon en uso");
       }
 
@@ -55,6 +55,7 @@ export default function ShoppingCart() {
   const resetCart = async (cartId) => {
     try {
       setLoading(true);
+      //! Que onda ese force
       await APISpot.cart.deleteCart(cartId, false);
       dispatch(actionsShoppingCart.clearCart());
       toast.success(`Se vacio el carrito`);
@@ -70,22 +71,17 @@ export default function ShoppingCart() {
   const handleAddCartToClient = async () => {
     try {
       setLoading(true);
-      const mappedItems = items.map((i) => {
-        return { ...i, productId: i.id };
-      });
+      //   const mappedItems = reduxCart.items.map((i) => {
+      //     return { ...i, productId: i.id };
+      //   });
+      //! Ver como viene de redux y si tiene productID
 
-      const res = await APISpot.cart.createCart({
-        userId: managedClient.id,
-        discount: discount,
-        total: total,
-        subtotal: subtotal,
-        items: mappedItems,
-        coupon: currentCoupon,
-      });
+      const res = await APISpot.cart.updateCart(reduxCart);
+
+      console.log(res);
 
       if (res) {
         toast.success(`Carrito agregado con exito al cliente ${managedClient.fantasyName}`);
-        dispatch(actionsShoppingCart.clearCart());
       }
     } catch (e) {
       console.log(e);
@@ -118,7 +114,7 @@ export default function ShoppingCart() {
       )}
 
       <section className="relative grid place-items-center gap-6 p-6">
-        {items.length === 0 && (
+        {reduxCart.items.length === 0 && (
           <div className="flex flex-col items-center gap-6">
             <h3 className="font-semibold">NO HAY NINGUN PRODUCTO EN TU CARRITO</h3>
             <DefaultButton as={Link} to="/productos/0" className={"w-fit"}>
@@ -128,15 +124,15 @@ export default function ShoppingCart() {
         )}
         <Button
           isIconOnly
-          onPress={() => resetCart(id)}
+          onPress={() => resetCart(reduxCart.id)}
           radius="full"
-          disabled={!items.length && true}
+          disabled={!reduxCart.items.length && true}
           className="absolute bottom-4 right-4 ml-auto bg-gradient-to-tl from-primary to-background shadow-xl disabled:pointer-events-none disabled:opacity-40"
         >
           <i className="ri-delete-bin-6-line text-2xl"></i>
         </Button>
 
-        {items.map(({ img, name, price, qty, id, productId }, index) => (
+        {reduxCart.items.map(({ img, name, price, qty, id, productId }, index) => (
           <article key={index} className="z-10 flex min-w-[80vw] items-center gap-6 rounded-xl bg-white p-6">
             <Image src={img} width={150} height={150} alt={`${name} img`} className="shadow-inner" />
             <div className="flex w-full flex-col items-start gap-4">
@@ -188,19 +184,21 @@ export default function ShoppingCart() {
         <div className="z-10 flex w-full items-center justify-between">
           <h3>SUBTOTAL</h3>
           <h3 className="bg-gradient-to-r from-primary to-yellow-200 bg-clip-text font-extrabold text-transparent">
-            {formatPrices(subtotal)}
+            {formatPrices(reduxCart.subtotal)}
           </h3>
         </div>
-        {discount !== 0 && <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />}
-        {discount !== 0 && Object.values(currentCoupon)?.length && (
+        {reduxCart.discount !== 0 && (
+          <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
+        )}
+        {reduxCart.discount !== 0 && Object.values(reduxCart.currentCoupon)?.length && (
           <div className="relative z-10 flex w-full items-center justify-between">
             <h3>
-              Cupón <strong className="yellowGradient">{currentCoupon.name}</strong>
+              Cupón <strong className="yellowGradient">{reduxCart.currentCoupon.name}</strong>
             </h3>
-            <h3 className="yellowGradient mr-10 font-bold">{currentCoupon.discountPercentaje} %</h3>
+            <h3 className="yellowGradient mr-10 font-bold">{reduxCart.currentCoupon.discountPercentaje} %</h3>
             <i
               className="ri-delete-bin-line icons absolute right-0 text-lg text-background"
-              onClick={() => dispatch(actionsShoppingCart.removeDiscount(currentCoupon))}
+              onClick={() => dispatch(actionsShoppingCart.removeDiscount(reduxCart.currentCoupon))}
             />
           </div>
         )}
@@ -208,7 +206,7 @@ export default function ShoppingCart() {
         <div className="z-10 flex w-full items-center justify-between">
           <h3>TOTAL A PAGAR</h3>
           <h3 className="bg-gradient-to-r from-primary to-yellow-200 bg-clip-text font-extrabold text-transparent">
-            {formatPrices(total)}
+            {formatPrices(reduxCart.total)}
           </h3>
         </div>
         <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
@@ -237,7 +235,7 @@ export default function ShoppingCart() {
                 <Button
                   type="submit"
                   className="icons h-10 rounded-none rounded-br-xl rounded-tr-xl bg-background from-background to-primary font-bold text-black transition hover:bg-gradient-to-r"
-                  isDisabled={items.length === 0 || discountCode === ""}
+                  isDisabled={reduxCart.items.length === 0 || discountCode === ""}
                 >
                   APLICAR
                 </Button>
@@ -247,7 +245,7 @@ export default function ShoppingCart() {
               onPress={handlePickDate}
               className={"mx-auto lg:mx-0"}
               isLoading={loading}
-              isDisabled={items.length === 0}
+              isDisabled={reduxCart.items.length === 0}
             >
               CONTINUAR
             </DefaultButton>
@@ -259,7 +257,7 @@ export default function ShoppingCart() {
               onPress={handleAddCartToClient}
               className={"mx-auto !w-80 lg:mx-0"}
               isLoading={loading}
-              isDisabled={items.length === 0 || loading}
+              isDisabled={reduxCart.items.length === 0 || loading}
             >
               AGREGAR CARRITO AL CLIENTE
             </DefaultButton>
@@ -270,9 +268,9 @@ export default function ShoppingCart() {
         <PickDateModal
           onOpenChange={onOpenChange}
           isOpen={isOpen}
-          items={items}
-          currentCoupon={currentCoupon}
-          discount={discount}
+          items={reduxCart.items}
+          currentCoupon={reduxCart.currentCoupon}
+          discount={reduxCart.discount}
         />
       )}
     </main>

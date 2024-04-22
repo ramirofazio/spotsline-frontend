@@ -3,7 +3,12 @@ import { deleteOfStorage, saveInStorage } from "src/utils/localStorage";
 
 const user = createSlice({
   name: "user",
-  initialState: {},
+  initialState: {
+    email: "",
+    firstSignIn: "",
+    id: "",
+    web_role: "",
+  },
   reducers: {
     cleanUser: () => {
       deleteOfStorage("user");

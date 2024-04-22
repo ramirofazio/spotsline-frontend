@@ -35,21 +35,15 @@ export function SignIn() {
         dispatch(actionsAuth.setAccessToken(access_token));
         dispatch(actionsUser.setUser(user));
 
-        if (shoppingCart) {
-          //? Si tiene shoppingCart lo cargo
-          console.log(shoppingCart);
-
-          dispatch(actionsShoppingCart.loadCart(shoppingCart));
-        } else {
-          //? Creo shopping cart vacio
-          await APISpot.cart.createCart({
-            userId: user.id,
-            discount: 0,
-            subtotal: 0,
-            total: 0,
-            coupon: false,
-            items: [],
-          });
+        if (user.web_role !== Number(import.meta.env.VITE_SELLER_ROLE)) {
+          //? Si el user no es vendedor se le crea/carga un carrito. Sino no hace falta porque se carga el del cliente a gestionar que elija
+          if (shoppingCart) {
+            //? Si tiene shoppingCart lo cargo
+            dispatch(actionsShoppingCart.loadCart(shoppingCart));
+          } else {
+            //? Creo shopping cart vacio
+            await APISpot.cart.createEmptyCart(user.id);
+          }
         }
 
         if (!user.firstSignIn) {
