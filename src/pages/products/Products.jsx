@@ -42,8 +42,8 @@ export function Products() {
         <h1 className="z-20 font-primary text-5xl font-bold uppercase ">Productos</h1>
         <p className="z-20 font-secondary text-3xl">Encontra todo lo que necesites...</p>
       </header>
-      <main className="flex gap-x-4 bg-[#D9D9D9] p-10">
-        <article className="mx-auto my-10 hidden p-6 font-secondary md:block">
+      <main className="flex gap-x-4  bg-[#D9D9D9] p-1">
+        <article className="mx-auto my-10 hidden border-r-2 p-6 font-secondary md:block">
           <h2 className="mb-4 text-lg font-semibold">CATEGORIA DE PRODUCTOS</h2>
           <ul>
             {categories.map((cat) => (
@@ -53,7 +53,7 @@ export function Products() {
             ))}
           </ul>
         </article>
-        <section className="my-10 grid flex-1 grid-cols-1 place-items-center  gap-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <section className="my-10 grid flex-1 grid-cols-1 place-items-center gap-y-8   ">
           <Heading />
           <ProductsView />
           {totalPages !== 1 && (
@@ -98,11 +98,11 @@ function ProductsView() {
   }
 
   return (
-    <>
+    <div className="grid w-[90%] grid-cols-2  gap-4  p-2 lg:w-full lg:grid-cols-3">
       {products[page].map((p, index) => (
         <ProductCard {...p} key={index} />
       ))}
-    </>
+    </div>
   );
 }
 

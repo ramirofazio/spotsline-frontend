@@ -4,7 +4,7 @@ import { DefaultError } from "pages/error/DefaultError";
 import { APISpot } from "src/api/index.js";
 import Layout from "../Layout";
 import { DetailProduct } from "../products/detail/DetailProduct";
-import { assets } from "src/assets";
+
 //? Imp en lazy, mapeo componentes a default para que funcionen que el suspense
 const Footer = lazy(() => import("components/navs/Footer.jsx"));
 const NavBar = lazy(() => import("components/navs/NavBar.jsx"));
@@ -43,15 +43,8 @@ export const publicRoutesPaths = [
         path: "/",
         loader: async () => {
           try {
-            const products = (await APISpot.product.getFeaturedProducts({ take: 5 })).data;
-            let featuredAssets = Object.keys(assets.lights);
-            return products.map((p, i) => {
-              // ? fotos mockup hasta conectar con s3
-              return {
-                ...p,
-                identify: featuredAssets[i],
-              };
-            });
+            const featured = (await APISpot.product.getFeaturedProducts({ take: 5 })).data;
+            return featured;
           } catch (e) {
             return null;
           }
