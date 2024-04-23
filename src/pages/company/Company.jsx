@@ -61,16 +61,16 @@ export function Company() {
         </SwiperSlide>
       </Swiper>
 
-      <section className="relative flex w-full  flex-col gap-6 border-2 border-red-500 p-2  md:gap-10">
+      <section className="relative mx-auto flex w-[92%] flex-col  gap-6  p-2  md:gap-10">
         <div className="absolute -right-14 -top-6">
           <AwsImage type="logos" identify="logoBlack" className="w-48 -rotate-12" />
         </div>
-        <h2 className="text-4xl font-bold tracking-wider text-black drop-shadow-xl md:text-5xl">
-          LA <br className="" /> <span className="text-primary">EMPRESA</span>
+        <h2 className="mt-4 w-fit text-4xl font-bold tracking-wider text-black drop-shadow-xl md:mx-auto md:text-5xl">
+          LA <br /> <span className="text-primary">EMPRESA</span>
         </h2>
 
-        <article className="grid grid-cols-4  items-center gap-1  border-2 border-red-500 sm:grid-cols-3">
-          <picture className="col-span-1 max-w-[200px] border-2 border-black sm:col-span-1 sm:max-w-[230px] ">
+        <article className="mx-auto flex w-fit items-center gap-2  lg:gap-3 ">
+          <picture className="h-fit max-w-[200px]  md:max-w-[250px] ">
             <Image
               className="w-full"
               src={"https://spotsline-bucket.s3.amazonaws.com/empresa-trabajador.jpg"}
@@ -78,7 +78,7 @@ export function Company() {
               isZoomed
             />
           </picture>
-          <p className="col-span-3 mr-auto max-w-[400px]  border-2 border-black text-start  sm:col-span-2 sm:text-lg s:text-xs">
+          <p className="max-w-[450px]  text-start text-[11px] leading-[11px] sm:text-sm md:max-w-[520px] md:text-base lg:max-w-[580px] lg:text-lg">
             Desde <strong>1986</strong> nos dedicamos al <strong>diseño</strong>, <strong>produción</strong> y{" "}
             <strong>comercialización</strong> de luminarias para el área industrial, comercial y del hogar.{" "}
             <strong>Industria nacional</strong>. <br />
@@ -89,15 +89,15 @@ export function Company() {
           </p>
         </article>
 
-        <article className="grid grid-cols-4  items-center gap-1  border-2 border-red-500 sm:grid-cols-3">
-          <p className="col-span-3 ml-auto max-w-[400px] border-2 border-black text-start  sm:col-span-2 sm:text-lg s:text-xs">
+        <article className="mx-auto flex w-fit items-center justify-end gap-2  lg:gap-3">
+          <p className="max-w-[450px] text-start text-[11px] leading-[11px] sm:text-sm md:max-w-[520px] md:text-base lg:max-w-[580px] lg:text-lg">
             Nuestra empresa posee <strong>más de 2000 m2</strong> destinados al área de producción, los cuales nos
             permiten realizar prácticamente todos los proceso de fabricación internamente. Nuestro departamento
             comercial y de marketing se encuentra al <strong>servicio del cliente y del usuario</strong>, respaldándose
             en las áreas antes mencionadas, le brindarán la <strong>solución adecuada</strong> a todos sus problemas e
             inquietudes lumínicas.
           </p>
-          <picture className="col-span-1 max-w-full border-2 border-black sm:col-span-1 sm:max-w-[230px] ">
+          <picture className="h-fit max-w-[200px] md:max-w-[250px] ">
             <Image
               className="w-full"
               src={"https://spotsline-bucket.s3.amazonaws.com/empresa-trabajador.jpg"}
@@ -107,8 +107,8 @@ export function Company() {
           </picture>
         </article>
 
-        <article className="grid grid-cols-4  items-center gap-1  border-2 border-red-500 sm:grid-cols-3">
-          <picture className="col-span-1 max-w-[200px] border-2 border-black sm:col-span-1 sm:max-w-[230px] ">
+        <article className=" mx-auto flex w-fit items-center justify-end gap-2  lg:gap-3">
+          <picture className="h-fit max-w-[200px]  md:max-w-[250px] ">
             <Image
               className="w-full"
               src={"https://spotsline-bucket.s3.amazonaws.com/empresa-trabajador.jpg"}
@@ -116,7 +116,7 @@ export function Company() {
               isZoomed
             />
           </picture>
-          <p className="col-span-3 mr-auto max-w-[400px]  border-2 border-black text-start  sm:col-span-2 sm:text-lg s:text-xs">
+          <p className="max-w-[450px]  text-start text-[11px] leading-[11px] sm:text-sm md:max-w-[520px] md:text-base lg:max-w-[580px] lg:text-lg">
             Como hemos mencionado anteriormente, somos una empresa nacional que desde el día de su fundación, ha crecido
             con <strong>honestidad</strong> y <strong>esfuerzo</strong>. Es nuestro objetivo que este sitio web pueda
             <strong>satisfacer</strong> todas vuestras necesidades y permita una <strong>mayor conexión</strong> entre
@@ -124,7 +124,8 @@ export function Company() {
           </p>
         </article>
       </section>
-      <div className="mx-auto my-10 w-fit border-2 border-green-500">
+
+      <div className="mx-auto my-10 w-fit">
         <DefaultButton className="w-fit shadow-xl">POLÍTICA DE CAMBIO Y DEVOLUCIÓN</DefaultButton>
       </div>
     </main>
