@@ -10,7 +10,6 @@ const featuredFooter = [
 ];
 
 export default function FeaturedProducts({ products }) {
-  console.log(products);
   return (
     <section
       id="landing-featured-products"
@@ -22,7 +21,7 @@ export default function FeaturedProducts({ products }) {
         PRODUCTOS <br /> DESTACADOS
       </h1>
       <article className="mt-10 grid grid-cols-2 grid-rows-3  sm:mt-14 md:grid-flow-row md:grid-cols-4 md:grid-rows-4">
-        {products?.map(({ id, identify, pathfoto }, index) => (
+        {products?.map(({ identify, pathfoto, codigo }, index) => (
           <Button
             key={index}
             className={`grid h-auto  items-center justify-items-center   bg-landingbg bg-cover bg-center pb-10 md:row-span-2 ${
@@ -32,7 +31,7 @@ export default function FeaturedProducts({ products }) {
             }`}
           >
             <div className="absolute h-full w-full bg-black/70 "></div>
-            <NavLink className="absolute z-50 h-full w-full " to={`/producto/${id}`}></NavLink>
+            <NavLink className="absolute z-50 h-full w-full " to={`/producto/${codigo}`}></NavLink>
             <AwsImage
               type={"lights"}
               identify={identify}
