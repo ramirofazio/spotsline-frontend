@@ -65,8 +65,8 @@ export function Company() {
         <div className="absolute -right-14 -top-6">
           <AwsImage type="logos" identify="logoBlack" className="w-48 -rotate-12" />
         </div>
-        <h2 className="mt-4 w-fit text-4xl font-bold tracking-wider text-black drop-shadow-xl md:mx-auto md:text-5xl">
-          LA <br /> <span className="text-primary">EMPRESA</span>
+        <h2 className="w- mt-4 w-fit text-4xl font-bold tracking-wider text-black drop-shadow-xl md:mx-auto md:text-5xl">
+          LA <br className="md:hidden" /> <span className="text-primary">EMPRESA</span>
         </h2>
 
         <article className="mx-auto flex w-fit items-center gap-2  lg:gap-3 ">
@@ -125,9 +125,14 @@ export function Company() {
         </article>
       </section>
 
-      <div className="mx-auto my-10 w-fit">
+      <a
+        target="blank"
+        href="https://www.spotsline.com.ar/wp-content/uploads/2022/08/Politica-de-garantia-y-devoluciones.pdf"
+        download
+        className="mx-auto my-10 block w-fit"
+      >
         <DefaultButton className="w-fit shadow-xl">POLÍTICA DE CAMBIO Y DEVOLUCIÓN</DefaultButton>
-      </div>
+      </a>
     </main>
   );
 }
