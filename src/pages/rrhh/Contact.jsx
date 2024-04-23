@@ -1,4 +1,4 @@
-import { Textarea } from "@nextui-org/react";
+import { Textarea, Input } from "@nextui-org/react";
 import { useState } from "react";
 import { BasicInput, DefaultButton } from "src/components";
 import { toast } from "sonner";
@@ -36,24 +36,27 @@ export function Contact() {
   }
 
   return (
-    <form onSubmit={(e) => handleSubmit(e)}>
+    <form className="mx-auto my-4 w-[90%] max-w-[650px]" onSubmit={(e) => handleSubmit(e)}>
       <strong>
-        <h1 className="mx-auto w-fit">DEJANOS TU MENSAJE</h1>
+        <h1 className="mx-auto w-fit text-xl">DEJANOS TU MENSAJE</h1>
       </strong>
       <article className="mt-4 flex flex-col gap-3">
         <BasicInput
           value={emailData.name}
           onChange={handleChange}
           name="name"
+          variant="flat"
           label="Nombre y Apellido"
           labelClass="text-black ml-2 "
           isRequired={true}
         />
+
         <BasicInput
           value={emailData.email}
           onChange={handleChange}
           name="email"
           label="Email"
+          variant="flat"
           labelClass="text-black ml-2"
           isRequired={true}
         />
@@ -62,6 +65,7 @@ export function Contact() {
           onChange={handleChange}
           name="subject"
           label="Asunto"
+          variant="flat"
           labelClass="text-black ml-2"
           isRequired={false}
         />
@@ -73,13 +77,13 @@ export function Contact() {
           label="Su mensaje"
           classNames={{
             label: "text-black ml-2 text-md",
-            input: "bg-primary/30 rounded-lg min-h-[180px] p-2",
+            input: "bg-primary/30 rounded-lg min-h-[180px] p-2 md:placeholder:text-lg",
             inputWrapper: "bg-primary/30 p-0 ",
           }}
           color="bg-red-500"
           labelPlacement="outside"
           placeholder="Escriba el mensaje que desea enviar"
-          className="min-h-full max-w-lg rounded-full"
+          className="min-h-full rounded-full"
         />
         <label
           htmlFor="upload-avatar"
