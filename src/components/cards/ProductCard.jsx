@@ -1,13 +1,16 @@
 import { Card, CardBody, CardFooter, Image } from "@nextui-org/react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { assets } from "src/assets";
 import { DefaultButton } from "..";
 import AwsImage from "../images/AwsImage";
 
 export function ProductCard({ description, codigo, pathImage }) {
   return (
-    <Link to={`/producto/${codigo}`}>
-      <Card className="maxHeight max-h-[400px] w-[250px] overflow-visible  bg-white shadow-xl transition hover:scale-105">
+    <NavLink
+      className="col-span-2 mx-auto w-[250px]  sm:col-span-1 lg:col-span-1 s:w-full  s:max-w-[300px]"
+      to={`/producto/${codigo}`}
+    >
+      <Card className="maxHeight aspect-square max-h-[400px] w-full overflow-visible  bg-white shadow-xl transition hover:scale-105">
         <CardBody className="flex items-center justify-center overflow-visible p-0">
           <Image
             loading="lazy"
@@ -26,7 +29,7 @@ export function ProductCard({ description, codigo, pathImage }) {
           </DefaultButton>
         </CardFooter>
       </Card>
-    </Link>
+    </NavLink>
   );
 }
 
