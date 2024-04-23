@@ -43,15 +43,8 @@ export const publicRoutesPaths = [
         path: "/",
         loader: async () => {
           try {
-            const products = (await APISpot.product.getFeaturedProducts({ take: 5 })).data;
-            let featuredAssets = Object.keys(assets.lights);
-            return products.map((p, i) => {
-              // ? fotos mockup hasta conectar con s3
-              return {
-                ...p,
-                identify: featuredAssets[i],
-              };
-            });
+            const featured = (await APISpot.product.getFeaturedProducts({ take: 5 })).data;
+            return featured;
           } catch (e) {
             return null;
           }

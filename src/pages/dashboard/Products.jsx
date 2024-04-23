@@ -230,7 +230,7 @@ const variants_columns = [
 export function VariantPage() {
   const navigate = useNavigate();
   const variants = useLoaderData();
-
+  console.log(variants);
   const [loading, setLoading] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState(false);
 
@@ -290,9 +290,10 @@ export function VariantPage() {
         );
       case "description":
         return (
-          <div>
-            <Tooltip content={cellValue} delay={200} color="primary">
-              <p className="line-clamp-1 text-left">{cellValue}</p>
+          <div className="w-[200px]">
+            {console.log(cellValue)}
+            <Tooltip className="min-w-fit" content={cellValue} delay={200} color="primary">
+              <p className="line-clamp-1  text-left">{cellValue}</p>
             </Tooltip>
           </div>
         );
