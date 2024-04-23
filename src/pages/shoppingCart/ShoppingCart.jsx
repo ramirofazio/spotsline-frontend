@@ -37,10 +37,10 @@ export default function ShoppingCart() {
     e.preventDefault();
     try {
       setLoading(true);
-      const exist = reduxCart.currentCoupon.name === discountCode;
+      const exist = reduxCart.coupon?.name === discountCode;
 
       if (exist) {
-        return toast.error("ya esta usando este cupon");
+        return toast.info("ya esta usando este cupon");
       }
 
       const coupon = await APISpot.cart.validateCoupon(discountCode);
@@ -61,10 +61,6 @@ export default function ShoppingCart() {
   const resetCart = async () => {
     try {
       setLoading(true);
-      //! Que onda ese force
-
-      //? Esto no va a hacer falta porque al hacer clear del carrito se dispara el updateCart() y lo resetea
-      //await APISpot.cart.deleteCart(cartId, false);
       dispatch(actionsShoppingCart.clearCart());
       toast.success(`Se vacio el carrito`);
     } catch (e) {
@@ -77,11 +73,9 @@ export default function ShoppingCart() {
   };
 
   const handleAddCartToClient = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-
       const res = await handleUpdateCart();
-
       if (res) {
         toast.success(`Carrito agregado con exito al cliente ${managedClient.fantasyName}`);
       }
@@ -97,11 +91,20 @@ export default function ShoppingCart() {
 
   useEffect(() => {
     document.title = "SPOTSLINE - Carrito de compras";
+    if (!web_role) {
+      setLoading(true);
+    }
   }, [document]);
 
   useEffect(() => {
     handleUpdateCart();
   }, [reduxCart]);
+
+  setTimeout(() => {
+    setLoading(false);
+  }, 800);
+
+  if (loading) return <ShoppingCartSkeleton />;
 
   return (
     <main className="text-center">
@@ -118,7 +121,7 @@ export default function ShoppingCart() {
           isIconOnly={true}
           onPress={() => resetCart(reduxCart.id)}
           disabled={!reduxCart.items.length && true}
-          className="absolute bottom-4 right-4 w-4 from-red-600 to-red-600 !px-0 disabled:pointer-events-none disabled:opacity-40"
+          className="invisible absolute bottom-4 right-4 w-4 from-red-600 to-red-600 !px-0 disabled:pointer-events-none disabled:opacity-40 xl:visible"
         >
           <i className="ri-delete-bin-line text-2xl"></i>
         </DefaultButton>
@@ -135,7 +138,7 @@ export default function ShoppingCart() {
         {reduxCart.items.map(({ img, name, price, qty, id, productId }, index) => (
           <article
             key={index}
-            className="z-10 flex min-w-[80vw] items-center gap-6 rounded-xl bg-gradient-to-r from-yellow-200 to-white p-6 xl:min-w-[60vw]"
+            className="z-10 flex min-w-[80vw] max-w-[50vw] flex-col items-center  gap-6 rounded-xl bg-gradient-to-b from-yellow-200 to-white p-6 md:flex-row md:bg-gradient-to-r xl:min-w-[60vw]"
           >
             <Image
               src={img}
@@ -144,17 +147,17 @@ export default function ShoppingCart() {
               alt={`${name} img`}
               className="aspect-square bg-white shadow-inner"
             />
-            <div className="flex w-full flex-col items-start gap-4">
-              <h4 className="line-clamp-1 w-40 text-lg font-bold lg:line-clamp-none lg:w-auto">{name}</h4>
-              <div className="w-80 space-y-4 text-left text-sm">
-                <p className="flex  w-80 justify-between font-bold tracking-wider text-dark">
-                  ITEM: <strong className="w-40">{formatPrices(price)}</strong>
+            <div className="flex w-60 flex-col items-center gap-6 md:w-full md:items-start">
+              <h4 className="line-clamp-1 w-auto text-lg font-bold md:line-clamp-none">{name}</h4>
+              <div className="flex w-80 flex-col items-center space-y-4 text-left text-sm">
+                <p className="flex w-60 justify-between font-bold tracking-wider text-dark md:w-80">
+                  ITEM: <strong className="md:w-40">{formatPrices(price)}</strong>
                 </p>
-                <p className="flex w-80 justify-between  font-bold tracking-wider text-dark">
-                  TOTAL({qty}): <strong className="w-40">{formatPrices(price * qty)}</strong>
+                <p className="flex w-60 justify-between font-bold  tracking-wider text-dark md:w-80">
+                  TOTAL({qty}): <strong className="md:w-40">{formatPrices(price * qty)}</strong>
                 </p>
               </div>
-              <div className="w -full    flex items-center justify-between gap-4 text-xl">
+              <div className="flex w-full items-center justify-between gap-4 text-xl md:w-40">
                 <DefaultButton
                   isIconOnly={true}
                   className="w-4 from-red-600 to-red-600"
@@ -198,32 +201,27 @@ export default function ShoppingCart() {
         <h2 className="yellow-neon text-xl font-bold tracking-wider">RESUMEN</h2>
         <div className="z-10 flex w-full items-center justify-between">
           <h3>SUBTOTAL</h3>
-          <h3 className="bg-gradient-to-r from-primary to-yellow-200 bg-clip-text font-extrabold text-transparent">
-            {formatPrices(reduxCart.subtotal)}
-          </h3>
+          <h3 className="font-extrabold text-white">{formatPrices(reduxCart.subtotal)}</h3>
         </div>
         {reduxCart.discount !== 0 && (
           <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
         )}
-        {/*//! CHEQIUEAR TEMA DE CUPONES! */}
-        {/* {reduxCart.discount !== 0 && Object.values(reduxCart.currentCoupon)?.length && (
+        {reduxCart.discount !== 0 && Object.values(reduxCart.coupon)?.length && (
           <div className="relative z-10 flex w-full items-center justify-between">
-            <h3>
-              Cupón <strong className="yellowGradient">{reduxCart.currentCoupon.name}</strong>
+            <h3 className="text-md">
+              CUPÓN <strong className="yellow-neon">{reduxCart.coupon.name}</strong>
             </h3>
-            <h3 className="yellowGradient mr-10 font-bold">{reduxCart.currentCoupon.discountPercentaje} %</h3>
+            <h3 className="mr-10 font-bold text-white">{reduxCart.coupon.discountPercentaje} %</h3>
             <i
-              className="ri-delete-bin-line icons absolute right-0 text-lg text-background"
-              onClick={() => dispatch(actionsShoppingCart.removeDiscount(reduxCart.currentCoupon))}
+              className="ri-delete-bin-line icons absolute right-0 text-lg text-red-600"
+              onClick={() => dispatch(actionsShoppingCart.removeDiscount())}
             />
           </div>
-        )} */}
+        )}
         <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
         <div className="z-10 flex w-full items-center justify-between">
           <h3>TOTAL A PAGAR</h3>
-          <h3 className="bg-gradient-to-r from-primary to-yellow-200 bg-clip-text font-extrabold text-transparent">
-            {formatPrices(reduxCart.total)}
-          </h3>
+          <h3 className="font-extrabold text-white">{formatPrices(reduxCart.total)}</h3>
         </div>
         <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
 
@@ -285,7 +283,7 @@ export default function ShoppingCart() {
           onOpenChange={onOpenChange}
           isOpen={isOpen}
           items={reduxCart.items}
-          currentCoupon={reduxCart.currentCoupon}
+          coupon={reduxCart.coupon}
           discount={reduxCart.discount}
         />
       )}
@@ -293,7 +291,7 @@ export default function ShoppingCart() {
   );
 }
 
-function PickDateModal({ isOpen, onOpenChange, items, currentCoupon, discount }) {
+function PickDateModal({ isOpen, onOpenChange, items, coupon, discount }) {
   const user = useSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -311,7 +309,7 @@ function PickDateModal({ isOpen, onOpenChange, items, currentCoupon, discount })
       const body = {
         userId: user.id,
         discount,
-        coupon: currentCoupon || false,
+        coupon: coupon || false,
         items: items.map(({ id, qty, productId }) => {
           return { productId: id ?? productId, qty: qty };
         }),
@@ -374,3 +372,14 @@ function PickDateModal({ isOpen, onOpenChange, items, currentCoupon, discount })
     </DarkModal>
   );
 }
+
+const ShoppingCartSkeleton = () => {
+  const className = "animate-pulse bg-gradient-to-r from-dark to-primary opacity-20 rounded-xl ";
+
+  //TODO HACER SKELETON
+  return (
+    <div className="my-20 flex flex-col px-20">
+      <div className={`${className} h-10 w-full`} />
+    </div>
+  );
+};

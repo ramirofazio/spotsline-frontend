@@ -2,11 +2,15 @@ import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
 import { Profile } from "pages/user/Profile.jsx";
 import Layout from "../Layout";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import NavBar from "src/components/navs/NavBar";
-import { APISpot } from "src/api";
+import { APISpot, addAuthWithToken } from "src/api";
 import { getOfStorage } from "src/utils/localStorage";
 import OrderDetail from "../user/OrderDetail";
+import { useEffect, useState } from "react";
+import { loadUserData } from "src/utils/loadUserData";
+import { actionsAuth } from "src/redux/reducers";
+import { useDebouncedCallback } from "use-debounce";
 
 export const userRoutesPaths = [
   {
@@ -46,28 +50,33 @@ export const userRoutesPaths = [
 ];
 
 export function UserRoot() {
-  const { access_token } = useSelector((state) => state.auth);
-  const { web_role } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const [isUser, setIsUser] = useState(null);
 
-  const validate = () => {
-    const localAccess_token = getOfStorage("access_token");
-    if (localAccess_token === access_token) {
-      //? el token es valido, sigo
-      const localWeb_role = getOfStorage("user").web_role;
-      if (localWeb_role === web_role) {
-        //? es valido, sigo. Ambos existen asi que esta logged. Hay que validar el rol
-        if (web_role === Number(import.meta.env.VITE_USER_ROLE)) {
-          //? Cumplio todas las condiciones asi que es USER
-          return true;
-        }
+  const loadUser = useDebouncedCallback(async () => {
+    const user = getOfStorage("user");
+    const access_token = getOfStorage("access_token");
+
+    if (access_token && user) {
+      //? El usuario ya estaba loggeado
+      addAuthWithToken(access_token);
+      dispatch(actionsAuth.setAccessToken(access_token));
+
+      const { web_role } = await loadUserData(dispatch, access_token, user.email);
+
+      if (web_role === Number(import.meta.env.VITE_USER_ROLE)) {
+        setIsUser(true);
+      } else {
+        setIsUser(false);
       }
     }
+  }, [100]);
 
-    //? No cumplio las condiciones
-    return false;
-  };
+  useEffect(() => {
+    loadUser();
+  }, [document]);
 
-  if (validate()) {
+  if (isUser) {
     return (
       <Layout>
         <NavBar />
@@ -76,5 +85,7 @@ export function UserRoot() {
     );
   }
 
-  return <DefaultError />;
+  if (isUser === false) {
+    return <DefaultError />;
+  }
 }

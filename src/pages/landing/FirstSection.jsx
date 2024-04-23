@@ -12,7 +12,7 @@ export default function FirstSection() {
         <AwsImage
           type="lights"
           identify={"hole7"}
-          className="absolute inset-x-0 top-0 mx-auto min-h-[200px] !max-w-[700px] object-cover drop-shadow-xl sm:min-h-[250px]  "
+          className="absolute inset-x-0 top-0 mx-auto min-h-[200px] !max-w-[700px] object-cover drop-shadow-xl sm:min-h-[250px] lg:min-h-[300px]"
         />
         <div className="top-50  absolute -z-10 h-80 w-[35%] animate-glow rounded-tl-full rounded-tr-full bg-[#FEFFC4] blur-3xl xl:flex" />
         <h1 className="text-5xl md:mt-12 md:text-6xl xl:text-7xl">SPOTSLINE</h1>

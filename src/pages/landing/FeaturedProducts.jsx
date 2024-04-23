@@ -13,7 +13,7 @@ export default function FeaturedProducts({ products }) {
   return (
     <section
       id="landing-featured-products"
-      className="to-seoc relative grid place-content-center gap-6 overflow-hidden bg-gradient-to-b from-background px-4 py-6 sm:px-6 xl:px-20"
+      className="relative grid place-content-center gap-6 overflow-hidden bg-gradient-to-b from-background px-4 py-6 sm:px-6 xl:px-20"
     >
       <FloatingLogos positions={["-top-20 -right-40", "-top-32 -left-40", "-bottom-20 -right-40"]} qty={3} />
       <div className="absolute inset-x-0 top-0 z-20 h-2 !w-screen bg-secondary" />

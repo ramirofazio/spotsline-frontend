@@ -7,7 +7,7 @@ const initialState = {
   discount: 0,
   total: 0,
   subtotal: 0,
-  currentCoupon: false,
+  coupon: false,
   userId: 0,
 };
 
@@ -69,16 +69,15 @@ const shoppingCartSlice = createSlice({
     applyDiscount(state, action) {
       const coupon = action.payload;
 
-      state.discount = state.discount + coupon.discountPercentaje;
-      state.currentCoupon = coupon;
+      state.discount = coupon.discountPercentaje;
+      state.coupon = coupon;
 
       state.total = calculateTotal(state.subtotal, state.discount);
       saveInStorage("shoppingCart", state);
     },
-    removeDiscount(state, action) {
-      const coupon = action.payload;
-      state.discount = state.discount - coupon.discountPercentaje;
-      state.currentCoupon = false;
+    removeDiscount(state) {
+      state.discount = 0;
+      state.coupon = false;
 
       state.total = calculateTotal(state.subtotal, state.discount);
       saveInStorage("shoppingCart", state);
@@ -86,7 +85,7 @@ const shoppingCartSlice = createSlice({
 
     clearCart(state) {
       deleteOfStorage("shoppingCart");
-      return { id: state.id, items: [], discount: 0, total: 0, subtotal: 0, currentCoupon: false };
+      return { id: state.id, items: [], discount: 0, total: 0, subtotal: 0, coupon: false };
     },
     loadCart(state, action) {
       saveInStorage("shoppingCart", action.payload);
@@ -95,7 +94,7 @@ const shoppingCartSlice = createSlice({
       state.subtotal = calculateSubtotal(state.items);
       state.total = calculateTotal(state.subtotal, state.discount);
       state.discount = action.payload.discount || 0;
-      state.currentCoupon = action.payload.currentCoupon;
+      state.coupon = action.payload.coupon;
     },
   },
 });

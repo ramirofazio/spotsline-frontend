@@ -24,6 +24,8 @@ export const loadUserData = async (dispatch, access_token, email, managedClient)
       if (user.web_role === Number(import.meta.env.VITE_SELLER_ROLE) && managedClient) {
         dispatch(actionSeller.selectClientToManage(managedClient));
       }
+
+      return user;
     }
   } catch (err) {
     console.log(err);

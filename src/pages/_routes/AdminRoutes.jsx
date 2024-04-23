@@ -1,7 +1,14 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { getOfStorage } from "src/utils/localStorage";
+import { APISpot, addAuthWithToken } from "src/api";
+import { Spinner } from "@nextui-org/react";
+import { useDebouncedCallback } from "use-debounce";
+import { loadUserData } from "src/utils/loadUserData";
+import { actionsAuth } from "src/redux/reducers";
+
 const Dashboard = lazy(() => import("../dashboard/Dashboard"));
 const ProductsPage = lazy(() => import("../dashboard/Products").then((module) => ({ default: module.ProductsPage })));
 const VariantPage = lazy(() => import("../dashboard/Products").then((module) => ({ default: module.VariantPage })));
@@ -9,10 +16,6 @@ const Coupons = lazy(() => import("../dashboard/Coupons").then((module) => ({ de
 const ClientsPage = lazy(() => import("../dashboard/Clients").then((module) => ({ default: module.ClientsPage })));
 const Orders = lazy(() => import("../dashboard/Orders").then((module) => ({ default: module.Orders })));
 const SellersPage = lazy(() => import("../dashboard/Sellers").then((module) => ({ default: module.SellersPage })));
-
-import { getOfStorage } from "src/utils/localStorage";
-import { APISpot } from "src/api";
-import { Spinner } from "@nextui-org/react";
 
 export const adminRoutesPaths = [
   {
@@ -97,27 +100,38 @@ export const adminRoutesPaths = [
 ];
 
 export function AdminRoot() {
-  const { access_token } = useSelector((state) => state.auth);
-  const { web_role } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const [isAdmin, setIsAdmin] = useState(null);
 
-  const validate = () => {
-    const localAccess_token = getOfStorage("access_token");
-    if (localAccess_token === access_token) {
-      //? el token es valido, sigo
-      const localWeb_role = getOfStorage("user").web_role;
-      if (localWeb_role === web_role) {
-        //? es valido, sigo. Ambos existen asi que esta logged. Hay que validar el rol
-        if (web_role === Number(import.meta.env.VITE_ADMIN_ROLE)) {
-          //? Cumplio todas las condiciones asi que es ADMIN
-          return true;
+  const loadUser = useDebouncedCallback(async () => {
+    const user = getOfStorage("user");
+    const access_token = getOfStorage("access_token");
+    const managedClient = getOfStorage("managedClient");
+
+    if (access_token && user) {
+      //? El usuario ya estaba loggeado
+      addAuthWithToken(access_token);
+      dispatch(actionsAuth.setAccessToken(access_token));
+      const { web_role } = await loadUserData(dispatch, access_token, user.email, managedClient);
+
+      if (web_role) {
+        if (
+          web_role === Number(import.meta.env.VITE_ADMIN_ROLE) ||
+          web_role === Number(import.meta.env.VITE_SELLER_ROLE)
+        ) {
+          setIsAdmin(true);
+        } else {
+          setIsAdmin(false);
         }
       }
     }
-    //? No cumplio las condiciones
-    return false;
-  };
+  }, [100]);
 
-  if (validate()) {
+  useEffect(() => {
+    loadUser();
+  }, [document]);
+
+  if (isAdmin) {
     return (
       <Suspense fallback={<Spinner color="primary" className="absolute inset-0 !z-50 text-xl" />}>
         <Dashboard>
@@ -126,5 +140,7 @@ export function AdminRoot() {
       </Suspense>
     );
   }
-  return <DefaultError />;
+  if (isAdmin === false) {
+    return <DefaultError />;
+  }
 }
