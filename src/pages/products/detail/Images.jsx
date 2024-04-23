@@ -3,7 +3,7 @@ import { assets } from "src/assets";
 
 const imagePerPage = 5;
 
-export function VariantsProduct({ variants }) {
+export function Images({ variants, currentVariant, setCurrentVariant }) {
   const [state, setState] = useState({
     currentSlide: 0,
     currentPage: 1,
@@ -24,6 +24,7 @@ export function VariantsProduct({ variants }) {
 
     return currentPage;
   }
+
   function handleClick(to) {
     setState((prevState) => ({
       ...prevState,
@@ -63,7 +64,7 @@ export function VariantsProduct({ variants }) {
             <img
               key={"variants" + index}
               className={`object-cover transition-all ease-in-out ${index === state.currentSlide && "brightness-75"}`}
-              src={variants[index].pathImage || assets.lights.light2}
+              src={variants[index].pathImage || assets.logos.logoBlack}
               onClick={() => handleClick(index)}
               style={{
                 cursor: "pointer",

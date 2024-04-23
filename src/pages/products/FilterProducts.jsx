@@ -1,7 +1,6 @@
 import {
   Button,
   Checkbox,
-  CheckboxGroup,
   Divider,
   Modal,
   ModalBody,
@@ -17,18 +16,19 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionProducts } from "src/redux/reducers";
 
-const colors = [
-  {
-    id: 1,
-    color: "Red",
-    pathImage: "https://www.spotsline.com.ar/wp-content/uploads/2021/06/rojo.png",
-  },
-  {
-    id: 2,
-    color: "Cobre",
-    pathImage: "https://www.spotsline.com.ar/wp-content/uploads/2021/06/cobre.png",
-  },
-];
+//! Esto si se aplica hay que traerlos del backend
+// const colors = [
+//   {
+//     id: 1,
+//     color: "Red",
+//     pathImage: "https://www.spotsline.com.ar/wp-content/uploads/2021/06/rojo.png",
+//   },
+//   {
+//     id: 2,
+//     color: "Cobre",
+//     pathImage: "https://www.spotsline.com.ar/wp-content/uploads/2021/06/cobre.png",
+//   },
+// ];
 
 export function FilterProducts({ categories }) {
   const product = useSelector((state) => state.product);
@@ -39,7 +39,6 @@ export function FilterProducts({ categories }) {
   const handleFilters = (key, value) => setFilters((cur) => ({ ...cur, [key]: value }));
 
   useEffect(() => {
-    console.log(filters);
     setFilters(product.filters);
   }, [product.filters]);
 

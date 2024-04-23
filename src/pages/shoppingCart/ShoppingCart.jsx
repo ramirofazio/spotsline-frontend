@@ -8,10 +8,13 @@ import { DarkModal, DefaultButton } from "src/components";
 import { actionsShoppingCart } from "src/redux/reducers";
 import { formatPrices } from "src/utils";
 import { saveInStorage } from "src/utils/localStorage";
+import { useDebouncedCallback } from "use-debounce";
+
+const MAX_AMOUNT = 15;
 
 export default function ShoppingCart() {
   const dispatch = useDispatch();
-  //TODO REVISAR TODO ESTO!
+
   const reduxCart = useSelector((state) => state.cart);
   const { web_role } = useSelector((state) => state.user);
   const { managedClient } = useSelector((state) => state.seller);
@@ -19,6 +22,12 @@ export default function ShoppingCart() {
   const [discountCode, setDiscountCode] = useState("");
   const [loading, setLoading] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const handleUpdateCart = useDebouncedCallback(async () => {
+    if (reduxCart.id) {
+      return await APISpot.cart.updateCart(reduxCart);
+    }
+  }, [500]);
 
   const handlePickDate = () => {
     onOpen();
@@ -28,13 +37,10 @@ export default function ShoppingCart() {
     e.preventDefault();
     try {
       setLoading(true);
-      const exist = Object.keys(reduxCart.currentCoupon).includes(discountCode);
+      const exist = reduxCart.currentCoupon.name === discountCode;
 
       if (exist) {
         return toast.error("ya esta usando este cupon");
-      }
-      if (reduxCart.discount || Object.keys(reduxCart.currentCoupon).length) {
-        return toast.error("ya tiene un cupon en uso");
       }
 
       const coupon = await APISpot.cart.validateCoupon(discountCode);
@@ -52,11 +58,13 @@ export default function ShoppingCart() {
     }
   };
 
-  const resetCart = async (cartId) => {
+  const resetCart = async () => {
     try {
       setLoading(true);
       //! Que onda ese force
-      await APISpot.cart.deleteCart(cartId, false);
+
+      //? Esto no va a hacer falta porque al hacer clear del carrito se dispara el updateCart() y lo resetea
+      //await APISpot.cart.deleteCart(cartId, false);
       dispatch(actionsShoppingCart.clearCart());
       toast.success(`Se vacio el carrito`);
     } catch (e) {
@@ -71,14 +79,8 @@ export default function ShoppingCart() {
   const handleAddCartToClient = async () => {
     try {
       setLoading(true);
-      //   const mappedItems = reduxCart.items.map((i) => {
-      //     return { ...i, productId: i.id };
-      //   });
-      //! Ver como viene de redux y si tiene productID
 
-      const res = await APISpot.cart.updateCart(reduxCart);
-
-      console.log(res);
+      const res = await handleUpdateCart();
 
       if (res) {
         toast.success(`Carrito agregado con exito al cliente ${managedClient.fantasyName}`);
@@ -87,7 +89,9 @@ export default function ShoppingCart() {
       console.log(e);
       toast.error(`Hubo un problema al agregar el carrito al cliente ${managedClient.fantasyName}`);
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     }
   };
 
@@ -95,24 +99,12 @@ export default function ShoppingCart() {
     document.title = "SPOTSLINE - Carrito de compras";
   }, [document]);
 
+  useEffect(() => {
+    handleUpdateCart();
+  }, [reduxCart]);
+
   return (
     <main className="text-center">
-      {!web_role && (
-        <>
-          <section className="grid place-items-center gap-2 p-6">
-            <h1 className="text-xl font-bold">INFORMACIÓN IMPORTANTE</h1>
-            <p className="px-4 font-secondary text-sm">
-              Para guardar tu carrito, es necesario <strong className="font-bold">ingresar a tu cuenta</strong> dentro
-              de Spotsline. Si aún no lo has hecho, no pierdas tu carrito e{" "}
-              <Link to="/sign-in" className="icons font-bold">
-                inicia sesión
-              </Link>
-            </p>
-          </section>
-          <Divider className="h-1 bg-primary" />
-        </>
-      )}
-
       <section className="relative grid place-items-center gap-6 p-6">
         {reduxCart.items.length === 0 && (
           <div className="flex flex-col items-center gap-6">
@@ -122,33 +114,54 @@ export default function ShoppingCart() {
             </DefaultButton>
           </div>
         )}
-        <Button
-          isIconOnly
+        <DefaultButton
+          isIconOnly={true}
           onPress={() => resetCart(reduxCart.id)}
-          radius="full"
           disabled={!reduxCart.items.length && true}
-          className="absolute bottom-4 right-4 ml-auto bg-gradient-to-tl from-primary to-background shadow-xl disabled:pointer-events-none disabled:opacity-40"
+          className="absolute bottom-4 right-4 w-4 from-red-600 to-red-600 !px-0 disabled:pointer-events-none disabled:opacity-40"
         >
-          <i className="ri-delete-bin-6-line text-2xl"></i>
-        </Button>
+          <i className="ri-delete-bin-line text-2xl"></i>
+        </DefaultButton>
+
+        {managedClient.fantasyName && (
+          <>
+            <h1 className="text-3xl font-bold text-dark drop-shadow-xl">
+              CARRITO DE <strong className="yellowGradient">{managedClient.fantasyName}</strong>{" "}
+            </h1>
+            <Divider className="h-1 bg-primary" />
+          </>
+        )}
 
         {reduxCart.items.map(({ img, name, price, qty, id, productId }, index) => (
-          <article key={index} className="z-10 flex min-w-[80vw] items-center gap-6 rounded-xl bg-white p-6">
-            <Image src={img} width={150} height={150} alt={`${name} img`} className="shadow-inner" />
+          <article
+            key={index}
+            className="z-10 flex min-w-[80vw] items-center gap-6 rounded-xl bg-gradient-to-r from-yellow-200 to-white p-6 xl:min-w-[60vw]"
+          >
+            <Image
+              src={img}
+              width={200}
+              height={200}
+              alt={`${name} img`}
+              className="aspect-square bg-white shadow-inner"
+            />
             <div className="flex w-full flex-col items-start gap-4">
-              <div className="w-full space-y-2 text-left text-lg">
-                <h4 className="line-clamp-1 w-40 font-bold lg:line-clamp-none lg:w-auto">{name}</h4>
-                <p className="font-bold tracking-wider text-primary">{formatPrices(price)}</p>
+              <h4 className="line-clamp-1 w-40 text-lg font-bold lg:line-clamp-none lg:w-auto">{name}</h4>
+              <div className="w-80 space-y-4 text-left text-sm">
+                <p className="flex  w-80 justify-between font-bold tracking-wider text-dark">
+                  ITEM: <strong className="w-40">{formatPrices(price)}</strong>
+                </p>
+                <p className="flex w-80 justify-between  font-bold tracking-wider text-dark">
+                  TOTAL({qty}): <strong className="w-40">{formatPrices(price * qty)}</strong>
+                </p>
               </div>
               <div className="w -full    flex items-center justify-between gap-4 text-xl">
-                <Button
-                  isIconOnly
-                  radius="full"
-                  className="flex bg-red-600"
+                <DefaultButton
+                  isIconOnly={true}
+                  className="w-4 from-red-600 to-red-600"
                   onPress={() => dispatch(actionsShoppingCart.removeItemFromCart(id ?? productId))}
                 >
-                  <i className="ri-delete-bin-line icons text-xl text-dark" />
-                </Button>
+                  <i className="ri-delete-bin-line text-xl text-dark" />
+                </DefaultButton>
                 <div className="flex items-center gap-3 font-secondary font-bold">
                   <Button
                     isIconOnly
@@ -164,11 +177,13 @@ export default function ShoppingCart() {
                   <Button
                     isIconOnly
                     radius="full"
-                    className="flex bg-dark text-xl font-bold text-primary disabled:opacity-50"
+                    disabled={qty >= MAX_AMOUNT ? true : false}
+                    className={`flex bg-dark text-xl font-bold text-primary disabled:opacity-50 ${
+                      qty >= MAX_AMOUNT && "pointer-events-none"
+                    }`}
                     onPress={() =>
                       dispatch(actionsShoppingCart.updateCartItemQuantity({ id: id ?? productId, quantity: qty + 1 }))
                     }
-                    isDisabled={qty >= 100}
                   >
                     <i className="ri-add-line" />
                   </Button>
@@ -179,7 +194,7 @@ export default function ShoppingCart() {
         ))}
       </section>
       <Divider className="h-1 bg-primary" />
-      <section className="relative m-6 mx-auto flex max-w-[80vw] flex-col  items-start gap-6 rounded-xl border-2 border-primary/50 bg-dark/50 p-6 font-secondary font-bold text-white">
+      <section className="relative m-6 mx-auto flex max-w-[80vw] flex-col  items-start gap-6 rounded-xl border-2 border-primary/50 bg-dark/50 p-6 font-secondary font-bold text-white xl:max-w-[60vw]">
         <h2 className="yellow-neon text-xl font-bold tracking-wider">RESUMEN</h2>
         <div className="z-10 flex w-full items-center justify-between">
           <h3>SUBTOTAL</h3>
@@ -190,7 +205,8 @@ export default function ShoppingCart() {
         {reduxCart.discount !== 0 && (
           <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
         )}
-        {reduxCart.discount !== 0 && Object.values(reduxCart.currentCoupon)?.length && (
+        {/*//! CHEQIUEAR TEMA DE CUPONES! */}
+        {/* {reduxCart.discount !== 0 && Object.values(reduxCart.currentCoupon)?.length && (
           <div className="relative z-10 flex w-full items-center justify-between">
             <h3>
               Cupón <strong className="yellowGradient">{reduxCart.currentCoupon.name}</strong>
@@ -201,7 +217,7 @@ export default function ShoppingCart() {
               onClick={() => dispatch(actionsShoppingCart.removeDiscount(reduxCart.currentCoupon))}
             />
           </div>
-        )}
+        )} */}
         <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
         <div className="z-10 flex w-full items-center justify-between">
           <h3>TOTAL A PAGAR</h3>
@@ -245,7 +261,7 @@ export default function ShoppingCart() {
               onPress={handlePickDate}
               className={"mx-auto lg:mx-0"}
               isLoading={loading}
-              isDisabled={reduxCart.items.length === 0}
+              isDisabled={reduxCart.items.length === 0 || loading}
             >
               CONTINUAR
             </DefaultButton>

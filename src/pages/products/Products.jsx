@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { actionProducts } from "src/redux/reducers";
 import { toast } from "sonner";
 import { FilterProducts } from "./FilterProducts";
+
 const TAKE_PRODUCTS = 28;
 const categories = [
   "Accesorios",
@@ -32,6 +33,7 @@ export function Products() {
 
   function handleChangePage(page) {
     navigate("/productos/" + page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   return (
@@ -41,15 +43,17 @@ export function Products() {
         <p className="z-20 font-secondary text-3xl">Encontra todo lo que necesites...</p>
       </header>
       <main className="flex gap-x-4 bg-[#D9D9D9] p-10">
-        <article className="my-10 hidden pl-5 font-secondary md:block">
-          <h2 className="text-lg font-semibold ">Categoria de Productos</h2>
-          <ul className="pl-4">
+        <article className="mx-auto my-10 hidden p-6 font-secondary md:block">
+          <h2 className="mb-4 text-lg font-semibold">CATEGORIA DE PRODUCTOS</h2>
+          <ul>
             {categories.map((cat) => (
-              <li key={cat} className={cat === filters.category && 'font-semibold'}>{cat}</li>
+              <li key={cat} className={cat === filters.category && "font-semibold"}>
+                {cat}
+              </li>
             ))}
           </ul>
         </article>
-        <section className="my-10 grid flex-1 grid-cols-1 place-items-center gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <section className="my-10 grid flex-1 grid-cols-1 place-items-center  gap-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           <Heading />
           <ProductsView />
           {totalPages !== 1 && (
@@ -74,7 +78,7 @@ function ProductsView() {
     if (products[page]) setLoading(false);
     else {
       APISpot.product
-        .getAll({ page, take: TAKE_PRODUCTS, search: !search.length ? null : search })
+        .getAll({ page, search: !search.length ? null : search })
         .then(({ data }) => {
           dispatch(actionProducts.setTotalPages(data.metadata.total_pages));
           dispatch(actionProducts.setPageProducts({ page, products: data.rows }));
@@ -95,7 +99,6 @@ function ProductsView() {
 
   return (
     <>
-      {" "}
       {products[page].map((p, index) => (
         <ProductCard {...p} key={index} />
       ))}
@@ -150,7 +153,6 @@ function Heading() {
             if (_search.length && search !== _search) {
               toast.info('Presiona "Enter" para buscar');
             }
-            console.log(_search, search);
             if (!_search.length && search !== _search) {
               dispatch(actionProducts.resetPageProducts());
               dispatch(actionProducts.setSearch(""));

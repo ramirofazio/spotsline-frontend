@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 
 export function formatPrices(price) {
-  return price.toLocaleString("es-AR", {
+  return Math.floor(price).toLocaleString("es-AR", {
     style: "currency",
     currency: "ARS",
   });
