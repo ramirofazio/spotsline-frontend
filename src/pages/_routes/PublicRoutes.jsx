@@ -4,7 +4,7 @@ import { DefaultError } from "pages/error/DefaultError";
 import { APISpot } from "src/api/index.js";
 import Layout from "../Layout";
 import { DetailProduct } from "../products/detail/DetailProduct";
-import { assets } from "src/assets";
+
 //? Imp en lazy, mapeo componentes a default para que funcionen que el suspense
 const Footer = lazy(() => import("components/navs/Footer.jsx"));
 const NavBar = lazy(() => import("components/navs/NavBar.jsx"));
