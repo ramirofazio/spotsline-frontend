@@ -9,6 +9,7 @@ export default function CustomSelect({
   label,
   onChange,
   labelClass,
+  baseClass,
   ...props
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +34,7 @@ export default function CustomSelect({
       onChange={onChange}
       classNames={{
         label: `${labelClass}`,
-        base: "w-80 p-3 hover:opacity-70 transition",
+        base: `w-80 p-3 hover:opacity-70 transition ${baseClass}`,
         popoverContent: "bg-background/20 backdrop-blur-lg",
       }}
       {...props}

@@ -1,8 +1,8 @@
 export function SkeletonDetail() {
-  const className = "bg-gray-500 animate-pulse";
+  const className = "animate-pulse bg-gradient-to-r from-dark to-primary opacity-20 ";
 
   return (
-    <div className="mx-auto my-24 max-w-7xl px-7 md:flex gap-16 mt-32">
+    <div className="mx-auto my-24 mt-32 max-w-7xl gap-16 px-7 md:flex">
       <div className="mb-10 grid grid-cols-5 gap-2 md:flex-1">
         <div className={`${className} col-span-5 aspect-[10/6] rounded-2xl`}></div>
 

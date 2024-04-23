@@ -9,11 +9,11 @@ export default function FirstSection() {
       className="grid  h-screen w-screen place-items-center bg-landingbg bg-cover bg-center bg-no-repeat"
     >
       <div className="grid h-full w-full place-content-center place-items-center bg-black/30 backdrop-blur-sm">
-        <div className="absolute top-0 md:top-14 xl:top-0 ">
+        <div className="absolute top-0 md:top-14 xl:top-0">
           <AwsImage
             type="lights"
             identify={"hole7"}
-            className=" inset-x-0 mx-auto h-[50vw] object-cover drop-shadow-xl md:h-[35vh] xl:h-[40vh]"
+            className="inset-x-0 mx-auto h-[50vw] w-full object-cover drop-shadow-xl md:h-[35vh] xl:h-[40vh]"
           />
         </div>
         <div className="top-50  absolute -z-10 h-80 w-[35%] animate-glow rounded-tl-full rounded-tr-full bg-[#FEFFC4] blur-3xl xl:flex" />

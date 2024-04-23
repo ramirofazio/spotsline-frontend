@@ -50,7 +50,7 @@ export default function Layout({ children }) {
     };
   }, []);
 
-  useEffect(() => {
+  const loadUser = useDebouncedCallback(() => {
     const user = getOfStorage("user");
     const access_token = getOfStorage("access_token");
     const managedClient = getOfStorage("managedClient");
@@ -62,10 +62,14 @@ export default function Layout({ children }) {
 
       loadUserData(dispatch, access_token, user.email, managedClient);
     }
+  }, [100]);
+
+  useEffect(() => {
+    loadUser();
   }, []);
 
   return (
-    <Suspense fallback={<Spinner color="primary" className="absolute inset-0 !z-50 text-xl" />}>
+    <Suspense fallback={<Spinner color="primary" className="absolute inset-0 !z-50 bg-dark/50 text-xl" size="lg" />}>
       <AuthValidationModal />
       {children}
     </Suspense>

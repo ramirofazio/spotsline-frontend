@@ -8,6 +8,7 @@ const initialState = {
   total: 0,
   subtotal: 0,
   currentCoupon: false,
+  userId: 0,
 };
 
 const calculateSubtotal = (items) => {
@@ -24,10 +25,12 @@ const shoppingCartSlice = createSlice({
   reducers: {
     addItemToCart(state, action) {
       const newItem = action.payload;
-      const existingItem = state.items.find((item) => item.id === newItem.id);
+      const existingItem = state.items.find((item) => item.productId === newItem.productId);
+
+      console.log("EXISTE?", existingItem);
 
       if (existingItem) {
-        existingItem.quantity += newItem.quantity;
+        existingItem.qty += newItem.qty;
       } else {
         state.items.push(newItem);
       }
@@ -81,13 +84,12 @@ const shoppingCartSlice = createSlice({
       saveInStorage("shoppingCart", state);
     },
 
-    clearCart() {
+    clearCart(state) {
       deleteOfStorage("shoppingCart");
-      return { id: false, items: [], discount: 0, total: 0, subtotal: 0, currentCoupon: false };
+      return { id: state.id, items: [], discount: 0, total: 0, subtotal: 0, currentCoupon: false };
     },
     loadCart(state, action) {
       saveInStorage("shoppingCart", action.payload);
-
       state.id = action.payload.id || null;
       state.items = action.payload.items || [];
       state.subtotal = calculateSubtotal(state.items);
