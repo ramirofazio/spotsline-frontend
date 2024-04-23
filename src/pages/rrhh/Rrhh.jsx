@@ -1,5 +1,3 @@
-import { assets } from "src/assets";
-import AwsImage from "src/components/images/AwsImage";
 import { Contact } from "./Contact.jsx";
 
 export function Rrhh() {

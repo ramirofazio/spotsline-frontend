@@ -1,4 +1,4 @@
-import { Textarea, Input } from "@nextui-org/react";
+import { Textarea } from "@nextui-org/react";
 import { useState } from "react";
 import { BasicInput, DefaultButton } from "src/components";
 import { toast } from "sonner";
