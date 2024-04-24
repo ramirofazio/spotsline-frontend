@@ -10,13 +10,13 @@ export function ProductCard({ description, codigo, pathImage }) {
       className="col-span-2 mx-auto w-[250px]  sm:col-span-1 lg:col-span-1 s:w-full  s:max-w-[300px]"
       to={`/producto/${codigo}`}
     >
-      <Card className="maxHeight aspect-square max-h-[400px] w-full overflow-visible  bg-white shadow-xl transition hover:scale-105">
-        <CardBody className="flex items-center justify-center overflow-visible p-0">
+      <Card className="aspect-square max-h-[400px] min-h-[300px] w-full overflow-visible  bg-white shadow-xl transition hover:scale-105">
+        <CardBody className="flex min-h-[100px] items-center justify-center overflow-hidden p-0">
           <Image
             loading="lazy"
-            className="drop-shadow-xl"
-            width={200}
-            height={200}
+            className="w-full max-w-[200px]"
+            width={150}
+            height={150}
             alt={description}
             src={pathImage || assets.logos.logoBlack}
           />

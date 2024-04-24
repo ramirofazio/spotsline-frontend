@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
-import { DarkModal, DefaultButton } from "src/components";
+import { DarkModal, DefaultButton, ShoppingCartSkeleton } from "src/components";
 import { actionsShoppingCart } from "src/redux/reducers";
 import { formatPrices } from "src/utils";
 import { saveInStorage } from "src/utils/localStorage";
@@ -20,7 +20,7 @@ export default function ShoppingCart() {
   const { managedClient } = useSelector((state) => state.seller);
 
   const [discountCode, setDiscountCode] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const handleUpdateCart = useDebouncedCallback(async () => {
@@ -91,9 +91,6 @@ export default function ShoppingCart() {
 
   useEffect(() => {
     document.title = "SPOTSLINE - Carrito de compras";
-    if (!web_role) {
-      setLoading(true);
-    }
   }, [document]);
 
   useEffect(() => {
@@ -372,14 +369,3 @@ function PickDateModal({ isOpen, onOpenChange, items, coupon, discount }) {
     </DarkModal>
   );
 }
-
-const ShoppingCartSkeleton = () => {
-  const className = "animate-pulse bg-gradient-to-r from-dark to-primary opacity-20 rounded-xl ";
-
-  //TODO HACER SKELETON
-  return (
-    <div className="my-20 flex flex-col px-20">
-      <div className={`${className} h-10 w-full`} />
-    </div>
-  );
-};

@@ -1,11 +1,12 @@
-import { Avatar, Button, Divider, Spinner } from "@nextui-org/react";
-import { useState } from "react";
+import { Button, Divider, Image, Spinner } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
 import ProfileData from "./ProfileData";
 import ProfileOrders from "./ProfileOrders";
 import { getOfStorage, saveInStorage } from "src/utils/localStorage";
+import { ProfileSkeleton } from "src/components";
 
 const selectButtonsData = [
   { name: "MI PERFIL", startIcon: "user", component: <ProfileData /> },
@@ -13,11 +14,9 @@ const selectButtonsData = [
 ];
 
 export function Profile() {
-  //TODO crear avatar en tabla CLIENTE
-
   const { userData } = useLoaderData();
   const [avatar, setAvatar] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [selectedSection, setSelectedSection] = useState(() => {
     const local = getOfStorage("profileSelectedSection");
     if (local) {
@@ -53,6 +52,16 @@ export function Profile() {
     saveInStorage("profileSelectedSection", name);
   };
 
+  useEffect(() => {
+    document.title = "SPOTSLINE - Perfil de usuario";
+  }, [document]);
+
+  setTimeout(() => {
+    setLoading(false);
+  }, 800);
+
+  if (loading) return <ProfileSkeleton />;
+
   return (
     <main className="pt-16 md:pt-20">
       <header className="relative hidden flex-col items-center justify-center md:flex md:h-40">
@@ -62,7 +71,8 @@ export function Profile() {
       <div className="md:grid md:grid-cols-2">
         <section className="flex flex-col items-center justify-start gap-2 p-10 pt-10">
           <div className="relative ">
-            <Avatar
+            <Image
+              loading="lazy"
               src={avatar ? avatar.url : userData.avatar}
               name={userData.fantasyName}
               className="mx-auto h-44 w-44 "

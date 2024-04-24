@@ -53,7 +53,7 @@ export function Products() {
             ))}
           </ul>
         </article>
-        <section className="my-10 grid flex-1 grid-cols-1 place-items-center gap-y-8   ">
+        <section className="my-10 grid flex-1 grid-cols-1 place-items-center gap-y-8">
           <Heading />
           <ProductsView />
           {totalPages !== 1 && (
@@ -93,8 +93,11 @@ function ProductsView() {
   }, [page, search]);
 
   if (loading || !products[page]) {
-    const fake = new Array(TAKE_PRODUCTS).fill(null).map((_x, i) => "fake-card-" + (i + 1));
-    return fake.map((fake) => <SkeletonCard key={fake} />);
+    return Array.from({ length: 12 }).map((_, index) => (
+      <div className="grid w-[90%] grid-cols-2 gap-4  p-2 lg:w-full lg:grid-cols-3" key={index}>
+        <SkeletonCard />
+      </div>
+    ));
   }
 
   return (
