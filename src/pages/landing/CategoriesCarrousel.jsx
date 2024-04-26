@@ -1,12 +1,15 @@
 import { Button } from "@nextui-org/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
-import { useLoaderData, Link } from "react-router-dom";
+import { useRouteLoaderData, Link } from "react-router-dom";
 import { getOfStorage } from "src/utils/localStorage";
 import AwsImage from "src/components/images/AwsImage";
+import { useDispatch } from "react-redux";
+import { actionProducts } from "../../redux/reducers";
 
 export default function CategoriesCarrousel() {
-  const categories = getOfStorage("categories") || useLoaderData();
+  const dispatch = useDispatch();
+  const categories = /* getOfStorage("categories") || */ useRouteLoaderData("root");
 
   return (
     <section id="landing-categories-carrousel" className="relative my-10  w-screen">
@@ -46,11 +49,11 @@ export default function CategoriesCarrousel() {
                 radius="full"
                 className="group-[]: relative h-full w-full overflow-hidden text-center text-xs font-bold uppercase text-black/70 shadow shadow-black  transition hover:scale-125"
               >
-                <Link to={`/products/cat/${c}`}>
+                <Link onClick={() => dispatch(actionProducts(c.value))} to={`/productos/1?category=${c.value}`}>
                   <AwsImage type="lights" identify={"light"} className="-z-10 w-full bg-secondary/30" />
                   <div className="absolute inset-0 flex items-center justify-center transition hover:backdrop-blur-sm">
                     <span className="md:text-md w-[80%] whitespace-normal break-words font-secondary font-extrabold group-hover:text-dark">
-                      {c}
+                      {c.name}
                     </span>
                   </div>
                 </Link>

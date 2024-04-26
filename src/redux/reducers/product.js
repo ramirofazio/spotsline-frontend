@@ -54,6 +54,15 @@ const product = createSlice({
         };
       }
     },
+    setCategory: function (state, action) {
+      if (state.filters.category !== action.payload) {
+        return {
+          ...state,
+          products: {},
+          filters: { ...state.filters, category: action.payload },
+        };
+      }
+    },
     resetFilters: function (state) {
       return {
         ...state,
@@ -64,5 +73,5 @@ const product = createSlice({
 });
 
 export const productRdr = product.reducer;
-export const { setPageProducts, setSearch, resetPageProducts, setTotalPages, setFilters, resetFilters } =
+export const { setPageProducts, setSearch, resetPageProducts, setTotalPages, setFilters, resetFilters, setCategory } =
   product.actions;

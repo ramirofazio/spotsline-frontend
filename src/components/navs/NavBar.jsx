@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AwsImage from "../images/AwsImage";
 import { toast } from "sonner";
 import { removeAuthWithToken } from "src/api";
-import { actionsAuth, actionsUser } from "src/redux/reducers";
+import { actionsAuth, actionsUser, actionProducts } from "src/redux/reducers";
 import Loader from "../Loader";
 
 export default function NavBar() {
@@ -33,7 +33,7 @@ export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [blur, setBlur] = React.useState(false);
 
-  const categories = getOfStorage("categories") || useLoaderData();
+  const categories = /* getOfStorage("categories") || */ useLoaderData();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -97,7 +97,11 @@ export default function NavBar() {
                   <DropdownItem
                     className="group my-[1px]  bg-gradient-to-tl  from-primary to-background p-0 uppercase transition"
                     startContent={
-                      <NavLink className="flex w-full items-center gap-2 p-1.5 " to="/productos/0">
+                      <NavLink
+                        onClick={() => dispatch(actionProducts.setCategory(""))}
+                        className="flex w-full items-center gap-2 p-1.5 "
+                        to="/productos/0"
+                      >
                         <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
                         <p>todos</p>
                       </NavLink>
@@ -109,9 +113,13 @@ export default function NavBar() {
                       key={index}
                       className="group my-[1px] bg-gradient-to-tl from-primary  to-background p-0 uppercase transition"
                       startContent={
-                        <NavLink className="flex w-full items-center gap-2 p-1.5 " to={`/productos/${c}`}>
+                        <NavLink
+                          onClick={() => dispatch(actionProducts.setCategory(c.value))}
+                          className="flex w-full items-center gap-2 p-1.5 "
+                          to={`/productos/1/?category=${c.value}`}
+                        >
                           <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
-                          <p>{c}</p>
+                          <p>{c.name}</p>
                         </NavLink>
                       }
                       //? Algo asi habria que hacer aca para filtrar automaticamente por categoria
