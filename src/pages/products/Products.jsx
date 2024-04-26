@@ -14,7 +14,6 @@ const TAKE_PRODUCTS = 28;
 export function Products() {
   const navigate = useNavigate();
   const categories = useRouteLoaderData("root");
-  console.log(categories);
   const { page } = useParams();
   const { totalPages, filters } = useSelector((state) => state.product);
 
