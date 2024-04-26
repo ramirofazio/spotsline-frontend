@@ -13,7 +13,7 @@ import {
   cn,
   useDisclosure,
 } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionProducts } from "src/redux/reducers";
 
@@ -41,10 +41,6 @@ export function FilterProducts({ categories }) {
       return { ...cur, [key]: value };
     });
   };
-
-  useEffect(() => {
-    console.log(filters);
-  }, [filters]);
 
   return (
     <>

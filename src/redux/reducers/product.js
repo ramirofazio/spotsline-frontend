@@ -45,10 +45,14 @@ const product = createSlice({
       };
     },
     setFilters: function (state, action) {
-      return {
-        ...state,
-        filters: action.payload,
-      };
+      console.log(action.payload);
+      if (state.filters.category !== action.payload.category || state.filters.order !== action.payload.order) {
+        return {
+          ...state,
+          products: {},
+          filters: action.payload,
+        };
+      }
     },
     resetFilters: function (state) {
       return {

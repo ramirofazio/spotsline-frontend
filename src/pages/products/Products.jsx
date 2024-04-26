@@ -14,6 +14,7 @@ const TAKE_PRODUCTS = 28;
 export function Products() {
   const navigate = useNavigate();
   const categories = useRouteLoaderData("root");
+  console.log(categories);
   const { page } = useParams();
   const { totalPages, filters } = useSelector((state) => state.product);
 
@@ -36,7 +37,7 @@ export function Products() {
           <h2 className="text-lg font-semibold ">Categoria de Productos</h2>
           <ul className="pl-4">
             {categories.map((cat, i) => (
-              <li key={i} className={cat.value === filters.category && "font-semibold"}>
+              <li key={i} className={cat.value.toString() === filters.category && "font-semibold"}>
                 {cat.name}
               </li>
             ))}
@@ -82,7 +83,7 @@ function ProductsView() {
           toast.error(response.data.message);
         });
     }
-  }, [page, search]);
+  }, [page, search, filters]);
 
   if (loading || !products[page]) {
     const fake = new Array(TAKE_PRODUCTS).fill(null).map((_x, i) => "fake-card-" + (i + 1));
