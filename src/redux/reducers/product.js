@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 //import { deleteOfStorage, getOfStorage, saveInStorage } from "../../utils/localStorage";
 
 const initialFilters = {
-  orderBy: "",
+  order: "",
   category: "",
   colors: [],
 };
@@ -10,9 +10,9 @@ const initialFilters = {
 const product = createSlice({
   name: "product",
   initialState: {
-    products: {},
     search: "",
     filters: initialFilters,
+    products: {},
     totalPages: 0,
   },
   reducers: {

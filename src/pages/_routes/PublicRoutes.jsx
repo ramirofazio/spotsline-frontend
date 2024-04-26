@@ -30,9 +30,11 @@ export const publicRoutesPaths = [
         <Footer />
       </Layout>
     ),
+    id: "root",
     loader: async () => {
       try {
-        return await APISpot.product.getCategories();
+        const categories = await APISpot.product.getCategories();
+        return categories;
       } catch (e) {
         console.log("Db no conectada", e);
         return null;

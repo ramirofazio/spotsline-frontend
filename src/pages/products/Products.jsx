@@ -3,26 +3,17 @@ import { PaginationComponent } from "components/index";
 import { Input } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { APISpot } from "src/api";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useRouteLoaderData } from "react-router-dom";
 import { SkeletonCard } from "src/components/cards/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import { actionProducts } from "src/redux/reducers";
 import { toast } from "sonner";
 import { FilterProducts } from "./FilterProducts";
 const TAKE_PRODUCTS = 28;
-const categories = [
-  "Accesorios",
-  "Apliques",
-  "Artefactos para tubos led",
-  "Cabezales",
-  "Colgantes",
-  "Empotrables",
-  "Exterior",
-  "Veladores y Apliques",
-];
 
 export function Products() {
   const navigate = useNavigate();
+  const categories = useRouteLoaderData("root");
   const { page } = useParams();
   const { totalPages, filters } = useSelector((state) => state.product);
 
@@ -44,13 +35,15 @@ export function Products() {
         <article className="my-10 hidden pl-5 font-secondary md:block">
           <h2 className="text-lg font-semibold ">Categoria de Productos</h2>
           <ul className="pl-4">
-            {categories.map((cat) => (
-              <li key={cat} className={cat === filters.category && 'font-semibold'}>{cat}</li>
+            {categories.map((cat, i) => (
+              <li key={i} className={cat.value === filters.category && "font-semibold"}>
+                {cat.name}
+              </li>
             ))}
           </ul>
         </article>
         <section className="my-10 grid flex-1 grid-cols-1 place-items-center gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          <Heading />
+          <Heading categories={categories} />
           <ProductsView />
           {totalPages !== 1 && (
             <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4">
@@ -67,14 +60,17 @@ function ProductsView() {
   const dispatch = useDispatch();
   const { page } = useParams();
   const [loading, setLoading] = useState(false);
-  const { products, search } = useSelector((state) => state.product);
+  const { products, search, filters } = useSelector((state) => state.product);
 
   useEffect(() => {
     setLoading(true);
     if (products[page]) setLoading(false);
     else {
+      const { order, category } = filters;
+      const productsQuery = { page, take: TAKE_PRODUCTS, search: !search.length ? null : search, order, category };
+
       APISpot.product
-        .getAll({ page, take: TAKE_PRODUCTS, search: !search.length ? null : search })
+        .getAll(productsQuery)
         .then(({ data }) => {
           dispatch(actionProducts.setTotalPages(data.metadata.total_pages));
           dispatch(actionProducts.setPageProducts({ page, products: data.rows }));
@@ -103,7 +99,7 @@ function ProductsView() {
   );
 }
 
-function Heading() {
+function Heading({ categories }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [_search, set_Search] = useState("");
@@ -150,7 +146,6 @@ function Heading() {
             if (_search.length && search !== _search) {
               toast.info('Presiona "Enter" para buscar');
             }
-            console.log(_search, search);
             if (!_search.length && search !== _search) {
               dispatch(actionProducts.resetPageProducts());
               dispatch(actionProducts.setSearch(""));
