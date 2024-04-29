@@ -6,7 +6,6 @@ import { calculateTotal } from "src/redux/reducers/shoppingCart";
 
 export default function OrderDetail() {
   const order = useLoaderData();
-  console.log(order);
   const { id, date, coupon, mobbexId, total, type, products } = order;
 
   return (

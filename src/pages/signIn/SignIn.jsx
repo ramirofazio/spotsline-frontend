@@ -8,7 +8,6 @@ import { toast } from "sonner";
 import { InitChangePasswordModal } from "./InitChangePasswordModal";
 import { BasicInput, PasswordInput, DefaultButton } from "src/components/index";
 import AwsImage from "src/components/images/AwsImage";
-import { getOfStorage } from "src/utils/localStorage";
 
 export function SignIn() {
   const dispatch = useDispatch();
@@ -25,6 +24,7 @@ export function SignIn() {
       return newData;
     });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -34,34 +34,29 @@ export function SignIn() {
         addAuthWithToken(access_token);
         dispatch(actionsAuth.setAccessToken(access_token));
         dispatch(actionsUser.setUser(user));
-        if (Object.keys(shoppingCart)?.length) {
-          dispatch(actionsShoppingCart.loadCart(shoppingCart));
-        } else {
-          let storageCart = getOfStorage("shoppingCart");
-          storageCart && delete storageCart.id;
-          const emptyCart = {
-            userId: user.id,
-            discount: 0,
-            subtotal: 0,
-            total: 0,
-            coupon: false,
-            items: [],
-          };
-          await APISpot.cart.createCart(
-            storageCart && Object.values(storageCart)?.length ? { ...storageCart, userId: user.id } : emptyCart
-          );
+
+        if (user.web_role !== Number(import.meta.env.VITE_SELLER_ROLE)) {
+          //? Si el user no es vendedor se le crea/carga un carrito. Sino no hace falta porque se carga el del cliente a gestionar que elija
+          if (shoppingCart) {
+            //? Si tiene shoppingCart lo cargo
+            dispatch(actionsShoppingCart.loadCart(shoppingCart));
+          } else {
+            //? Creo shopping cart vacio
+            await APISpot.cart.createEmptyCart(user.id);
+          }
         }
 
         if (!user.firstSignIn) {
           toast.info(`Bienvenido de nuevo ${user.email.split("@")[0]}`, {
             description: "¡Estamos contentos de que hayas vuelto a nuestra web!",
           });
+
           navigate("/");
         }
       }
     } catch (e) {
-      toast.error("Hubo un error al iniciar la sesion.", { description: e.response.data.message });
       console.log(e);
+      toast.error("Hubo un error al iniciar la sesion.", { description: e.response.data.message });
     } finally {
       setIsLoading(false);
     }

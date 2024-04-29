@@ -290,9 +290,9 @@ export function VariantPage() {
         );
       case "description":
         return (
-          <div>
-            <Tooltip content={cellValue} delay={200} color="primary">
-              <p className="line-clamp-1 text-left">{cellValue}</p>
+          <div className="w-[200px]">
+            <Tooltip className="min-w-fit" content={cellValue} delay={200} color="primary">
+              <p className="line-clamp-1  text-left">{cellValue}</p>
             </Tooltip>
           </div>
         );

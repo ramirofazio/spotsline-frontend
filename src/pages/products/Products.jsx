@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { actionProducts } from "src/redux/reducers";
 import { toast } from "sonner";
 import { FilterProducts } from "./FilterProducts";
+
 const TAKE_PRODUCTS = 28;
 
 export function Products() {
@@ -23,6 +24,7 @@ export function Products() {
 
   function handleChangePage(page) {
     navigate("/productos/" + page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   return (
@@ -85,17 +87,19 @@ function ProductsView() {
   }, [page, search, filters]);
 
   if (loading || !products[page]) {
-    const fake = new Array(TAKE_PRODUCTS).fill(null).map((_x, i) => "fake-card-" + (i + 1));
-    return fake.map((fake) => <SkeletonCard key={fake} />);
+    return Array.from({ length: 12 }).map((_, index) => (
+      <div className="grid w-[90%] grid-cols-2 gap-4  p-2 lg:w-full lg:grid-cols-3" key={index}>
+        <SkeletonCard />
+      </div>
+    ));
   }
 
   return (
-    <>
-      {" "}
+    <div className="grid w-[90%] grid-cols-2  gap-4  p-2 lg:w-full lg:grid-cols-3">
       {products[page].map((p, index) => (
         <ProductCard {...p} key={index} />
       ))}
-    </>
+    </div>
   );
 }
 

@@ -1,14 +1,12 @@
-import { Avatar, Button, Divider, Spinner } from "@nextui-org/react";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { Button, Divider, Image, Spinner } from "@nextui-org/react";
+import { useEffect, useState } from "react";
+import { useLoaderData } from "react-router-dom";
 import { toast } from "sonner";
-import { APISpot, removeAuthWithToken } from "src/api";
-import { actionsAuth, actionsUser } from "src/redux/reducers";
+import { APISpot } from "src/api";
 import ProfileData from "./ProfileData";
 import ProfileOrders from "./ProfileOrders";
-import { DefaultButton } from "src/components";
 import { getOfStorage, saveInStorage } from "src/utils/localStorage";
+import { ProfileSkeleton } from "src/components";
 
 const selectButtonsData = [
   { name: "MI PERFIL", startIcon: "user", component: <ProfileData /> },
@@ -16,12 +14,9 @@ const selectButtonsData = [
 ];
 
 export function Profile() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
   const { userData } = useLoaderData();
   const [avatar, setAvatar] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [selectedSection, setSelectedSection] = useState(() => {
     const local = getOfStorage("profileSelectedSection");
     if (local) {
@@ -57,34 +52,27 @@ export function Profile() {
     saveInStorage("profileSelectedSection", name);
   };
 
+  useEffect(() => {
+    document.title = "SPOTSLINE - Perfil de usuario";
+  }, [document]);
+
+  setTimeout(() => {
+    setLoading(false);
+  }, 800);
+
+  if (loading) return <ProfileSkeleton />;
+
   return (
     <main className="pt-16 md:pt-20">
       <header className="relative hidden flex-col items-center justify-center md:flex md:h-40">
         <h1 className="text-2xl font-bold lg:text-3xl">MI CUENTA</h1>
-        <DefaultButton
-          className="absolute right-10 bg-gradient-to-r from-primary to-yellow-200 font-bold"
-          radius="full"
-          endContent={<i className="ri-logout-circle-line icons text-xl font-bold text-black" />}
-          onPress={() => {
-            navigate("/");
-            toast.info("Sesión cerrada con exito", { description: "¡Esperamos verte pronto!" });
-            setTimeout(() => {
-              //? Para evitar salto y que aparezca el errorBundler
-              //TODO ANALIZAR ESTO
-              removeAuthWithToken();
-              dispatch(actionsUser.cleanUser());
-              dispatch(actionsAuth.cleanAuth());
-            }, 1000);
-          }}
-        >
-          CERRAR SESIÓN
-        </DefaultButton>
         <Divider className="absolute bottom-0 mx-auto h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
       </header>
       <div className="md:grid md:grid-cols-2">
         <section className="flex flex-col items-center justify-start gap-2 p-10 pt-10">
           <div className="relative ">
-            <Avatar
+            <Image
+              loading="lazy"
               src={avatar ? avatar.url : userData.avatar}
               name={userData.fantasyName}
               className="mx-auto h-44 w-44 "

@@ -3,7 +3,9 @@ import { assets } from "src/assets";
 
 const imagePerPage = 5;
 
-export function VariantsProduct({ variants, current }) {
+export function Images({ variants, currentVariant, setCurrentVariant }) {
+  //! Hay qeu conectar el currentVariant con las imagenes para que se cambien solas. lo missmo si apretan una imagen, hay que setear el currentVariant!
+
   const [state, setState] = useState({
     currentSlide: 0,
     currentPage: 1,
@@ -24,13 +26,13 @@ export function VariantsProduct({ variants, current }) {
 
     return currentPage;
   }
+
   function handleClick(to) {
     setState((prevState) => ({
       ...prevState,
       currentSlide: to,
       currentPage: getChangeOfPage(to, prevState.currentPage),
     }));
-    current.set({ ...variants[to] });
   }
 
   function getPointIndexes() {
@@ -48,7 +50,7 @@ export function VariantsProduct({ variants, current }) {
             className={`absolute left-1/2 h-full w-full -translate-x-1/2 bg-slate-50 transition-all ${
               index === state.currentSlide ? "opacity-100" : "opacity-0"
             }`}
-            src={pathImage || assets.lights.light2}
+            src={pathImage || assets.logos.logoBlack}
             alt={description}
             title={description}
           />
@@ -64,7 +66,7 @@ export function VariantsProduct({ variants, current }) {
             <img
               key={"variants" + index}
               className={`object-cover transition-all ease-in-out ${index === state.currentSlide && "brightness-75"}`}
-              src={variants[index].pathImage || assets.lights.light2}
+              src={variants[index].pathImage || assets.logos.logoBlack}
               onClick={() => handleClick(index)}
               style={{
                 cursor: "pointer",
