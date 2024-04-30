@@ -69,7 +69,7 @@ export default function Layout({ children }) {
   }, []);
 
   return (
-    <Suspense fallback={<Spinner color="primary" className="absolute inset-0 !z-50 bg-dark/50 text-xl" size="lg" />}>
+    <Suspense fallback={<Spinner color="primary" className="absolute inset-0 !z-50 bg-dark/20 text-2xl" size="lg" />}>
       <AuthValidationModal />
       {children}
     </Suspense>

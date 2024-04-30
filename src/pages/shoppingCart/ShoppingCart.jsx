@@ -106,18 +106,10 @@ export default function ShoppingCart() {
   return (
     <main className="text-center">
       <section className="relative grid place-items-center gap-6 p-6">
-        {reduxCart.items.length === 0 && (
-          <div className="flex flex-col items-center gap-6">
-            <h3 className="font-semibold">NO HAY NINGUN PRODUCTO EN TU CARRITO</h3>
-            <DefaultButton as={Link} to="/productos/0" className={"w-fit"}>
-              VER PRODUCTOS
-            </DefaultButton>
-          </div>
-        )}
         <DefaultButton
           isIconOnly={true}
           onPress={() => resetCart(reduxCart.id)}
-          disabled={!reduxCart.items.length && true}
+          isDisabled={Boolean(!reduxCart.items.length)}
           className="invisible absolute bottom-4 right-4 w-4 from-red-600 to-red-600 !px-0 disabled:pointer-events-none disabled:opacity-40 xl:visible"
         >
           <i className="ri-delete-bin-line text-2xl"></i>
@@ -130,6 +122,15 @@ export default function ShoppingCart() {
             </h1>
             <Divider className="h-1 bg-primary" />
           </>
+        )}
+
+        {reduxCart.items.length === 0 && (
+          <div className="flex flex-col items-center gap-6">
+            <h3 className="font-semibold">NO HAY NINGUN PRODUCTO EN TU CARRITO</h3>
+            <DefaultButton as={Link} to="/productos/0" className={"w-fit"}>
+              VER PRODUCTOS
+            </DefaultButton>
+          </div>
         )}
 
         {reduxCart.items.map(({ img, name, price, qty, id, productId }, index) => (

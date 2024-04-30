@@ -13,6 +13,7 @@ const route = {
   AWS: "aws-s3-upload",
   ORDERS: "orders",
   MAIL: "mailing",
+  CURRENT_ACCOUNT: "current-account",
 };
 
 export const APISpot = {
@@ -162,6 +163,10 @@ export const APISpot = {
   },
 
   user: {
+    getCurrentAccounts: async () => {
+      const res = await BASE_API.get(`/${route.CURRENT_ACCOUNT}/one`);
+      return res.data;
+    },
     createOrder: async (body) => {
       const res = await BASE_API.post(`/${route.USER}/create-order`, body);
       return res.data;

@@ -7,14 +7,11 @@ import ProfileData from "./ProfileData";
 import ProfileOrders from "./ProfileOrders";
 import { getOfStorage, saveInStorage } from "src/utils/localStorage";
 import { ProfileSkeleton } from "src/components";
-
-const selectButtonsData = [
-  { name: "MI PERFIL", startIcon: "user", component: <ProfileData /> },
-  { name: "MIS COMPRAS", startIcon: "shopping-cart-2", component: <ProfileOrders /> },
-];
+import CurrentAccount from "./CurrentAccount";
 
 export function Profile() {
-  const { userData } = useLoaderData();
+  const { userData, userCA } = useLoaderData();
+
   const [avatar, setAvatar] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedSection, setSelectedSection] = useState(() => {
@@ -25,6 +22,10 @@ export function Profile() {
 
     return "MI PERFIL";
   });
+  const [selectButtonsData, setSelectButtonsData] = useState([
+    { name: "MI PERFIL", startIcon: "user", component: <ProfileData /> },
+    { name: "MIS COMPRAS", startIcon: "shopping-cart-2", component: <ProfileOrders /> },
+  ]);
 
   async function updateAvatar() {
     try {
@@ -51,6 +52,21 @@ export function Profile() {
     setSelectedSection(name);
     saveInStorage("profileSelectedSection", name);
   };
+
+  useEffect(() => {
+    if (userCA?.data?.length > 0) {
+      setSelectButtonsData((prev) => {
+        return [
+          ...prev,
+          {
+            name: "MI CUENTA CORRIENTE",
+            startIcon: "money-dollar-circle",
+            component: <CurrentAccount />,
+          },
+        ];
+      });
+    }
+  }, [userCA]);
 
   useEffect(() => {
     document.title = "SPOTSLINE - Perfil de usuario";
@@ -133,8 +149,8 @@ export function Profile() {
                 startContent={<i className={`ri-${startIcon}-fill text-xl text-dark transition`} />}
                 endContent={
                   <i
-                    className={`ri-arrow-right-s-line text-xl text-dark transition ${
-                      selectedSection === name && "rotate-90"
+                    className={`ri-arrow-right-s-line text-xl text-dark transition lg:rotate-90 ${
+                      selectedSection === name && "rotate-90 lg:rotate-0"
                     }`}
                   />
                 }
