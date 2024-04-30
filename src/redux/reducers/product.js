@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialFilters = {
-  orderBy: "",
+  order: "",
   category: "",
   colors: [],
 };
@@ -9,9 +9,9 @@ const initialFilters = {
 const product = createSlice({
   name: "product",
   initialState: {
-    products: {},
     search: "",
     filters: initialFilters,
+    products: {},
     totalPages: 0,
   },
   reducers: {
@@ -44,10 +44,23 @@ const product = createSlice({
       };
     },
     setFilters: function (state, action) {
-      return {
-        ...state,
-        filters: action.payload,
-      };
+      console.log(action.payload);
+      if (state.filters.category !== action.payload.category || state.filters.order !== action.payload.order) {
+        return {
+          ...state,
+          products: {},
+          filters: action.payload,
+        };
+      }
+    },
+    setCategory: function (state, action) {
+      if (state.filters.category !== action.payload) {
+        return {
+          ...state,
+          products: {},
+          filters: { ...state.filters, category: action.payload },
+        };
+      }
     },
     resetFilters: function (state) {
       return {
@@ -59,5 +72,5 @@ const product = createSlice({
 });
 
 export const productRdr = product.reducer;
-export const { setPageProducts, setSearch, resetPageProducts, setTotalPages, setFilters, resetFilters } =
+export const { setPageProducts, setSearch, resetPageProducts, setTotalPages, setFilters, resetFilters, setCategory } =
   product.actions;

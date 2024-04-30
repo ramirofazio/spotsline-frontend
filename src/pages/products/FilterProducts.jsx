@@ -12,7 +12,7 @@ import {
   cn,
   useDisclosure,
 } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionProducts } from "src/redux/reducers";
 
@@ -38,9 +38,9 @@ export function FilterProducts({ categories }) {
 
   const handleFilters = (key, value) => setFilters((cur) => ({ ...cur, [key]: value }));
 
-  useEffect(() => {
-    setFilters(product.filters);
-  }, [product.filters]);
+  // useEffect(() => {
+  //   setFilters(product.filters);
+  // }, [product.filters]);
 
   return (
     <>
@@ -50,7 +50,7 @@ export function FilterProducts({ categories }) {
         isIconOnly
         aria-label="Like"
       >
-        <i className="ri-equalizer-line scale-125"></i>
+        <i className="ri-equalizer-line scale-125 text-xl"></i>
       </Button>
       <Modal
         scrollBehavior="inside"
@@ -68,12 +68,12 @@ export function FilterProducts({ categories }) {
               <ModalBody>
                 <Divider />
                 <RadioGroup
-                  value={filters.orderBy}
+                  value={filters.order}
                   label="Ordenar por"
-                  onChange={({ target }) => handleFilters("orderBy", target.value)}
+                  onChange={({ target }) => handleFilters("order", target.value)}
                 >
-                  <CustomRadio value="Lowest">Menor precio</CustomRadio>
-                  <CustomRadio value="Highest">Mayor precio</CustomRadio>
+                  <CustomRadio value="asc">Menor precio</CustomRadio>
+                  <CustomRadio value="desc">Mayor precio</CustomRadio>
                 </RadioGroup>
                 <Divider />
 
@@ -82,11 +82,12 @@ export function FilterProducts({ categories }) {
                   onChange={({ target }) => handleFilters("category", target.value)}
                   label="Categorias"
                 >
-                  {categories.map((category) => (
-                    <CustomRadio key={category} value={category}>
-                      {category}
-                    </CustomRadio>
-                  ))}
+                  {categories?.length &&
+                    categories.map(({ name, value }, i) => (
+                      <CustomRadio key={i} value={value.toString()}>
+                        {name}
+                      </CustomRadio>
+                    ))}
                 </RadioGroup>
                 <Divider />
                 {/* <CheckboxGroup
@@ -137,7 +138,6 @@ export function FilterProducts({ categories }) {
 
 export const CustomRadio = (props) => {
   const { children, ...otherProps } = props;
-
   return (
     <Radio
       {...otherProps}
