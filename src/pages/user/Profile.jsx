@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { APISpot } from "src/api";
 import ProfileData from "./ProfileData";
 import ProfileOrders from "./ProfileOrders";
-import { getOfStorage, saveInStorage } from "src/utils/localStorage";
+import { deleteOfStorage, getOfStorage, saveInStorage } from "src/utils/localStorage";
 import { ProfileSkeleton } from "src/components";
 import CurrentAccount from "./CurrentAccount";
 
@@ -56,10 +56,11 @@ export function Profile() {
   useEffect(() => {
     if (userCA?.data?.length > 0) {
       setSelectButtonsData((prev) => {
+        if (prev.find(({ name }) => name === "MI CC")) return prev;
         return [
           ...prev,
           {
-            name: "MI CUENTA CORRIENTE",
+            name: "MI CC",
             startIcon: "money-dollar-circle",
             component: <CurrentAccount />,
           },
@@ -70,6 +71,10 @@ export function Profile() {
 
   useEffect(() => {
     document.title = "SPOTSLINE - Perfil de usuario";
+
+    return () => {
+      deleteOfStorage("profileSelectedSection");
+    };
   }, [document]);
 
   setTimeout(() => {
@@ -91,7 +96,7 @@ export function Profile() {
               loading="lazy"
               src={avatar ? avatar.url : userData.avatar}
               name={userData.fantasyName}
-              className="mx-auto h-44 w-44 "
+              className="mx-auto h-44 w-44 rounded-full"
               classNames={{ base: "bg-white" }}
             />
 
@@ -137,7 +142,7 @@ export function Profile() {
               </span>
             )}
           </div>
-          <h1 className="underliner mt-10 rounded-full bg-gradient-to-r from-primary to-yellow-200 p-2 px-4 text-center font-bold md:text-xl lg:w-80">
+          <h1 className="underliner mt-10 w-60 rounded-full bg-gradient-to-r from-primary to-yellow-200 p-2 px-4 text-center font-bold md:text-xl lg:w-80">
             {userData.fantasyName}
           </h1>
 
@@ -150,7 +155,7 @@ export function Profile() {
                 endContent={
                   <i
                     className={`ri-arrow-right-s-line text-xl text-dark transition lg:rotate-90 ${
-                      selectedSection === name && "rotate-90 lg:rotate-0"
+                      selectedSection === name && "rotate-90 lg:!rotate-0"
                     }`}
                   />
                 }
@@ -162,14 +167,14 @@ export function Profile() {
               </Button>
             ))}
           </div>
-          <Divider className="mt-10 h-[3px] w-[60vw] rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:hidden" />
         </section>
+        <Divider className="mx-auto my-8 h-[3px] w-screen rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:hidden" />
         <section className="md:col-start-2">
           {selectButtonsData.map(({ name, component }, index) => (
             <div key={index}>{name === selectedSection && component}</div>
           ))}
         </section>
-        <Divider className="mx-auto mb-10 h-[3px] w-[60vw] rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:hidden" />
+        <Divider className="mx-auto my-8 h-[3px] w-screen rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:hidden" />
       </div>
     </main>
   );
