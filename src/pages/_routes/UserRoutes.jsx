@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
 import { Profile } from "pages/user/Profile.jsx";
 import Layout from "../Layout";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import NavBar from "src/components/navs/NavBar";
 import { APISpot, addAuthWithToken } from "src/api";
 import { getOfStorage } from "src/utils/localStorage";

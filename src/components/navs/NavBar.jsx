@@ -132,7 +132,7 @@ export default function NavBar() {
                     }
                   ></DropdownItem>
 
-                  {categories.map((c, index) => (
+                  {categories?.map((c, index) => (
                     <DropdownItem
                       key={index}
                       className="group my-[1px] bg-gradient-to-tl from-primary  to-background p-0 uppercase transition"
