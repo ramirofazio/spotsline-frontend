@@ -30,7 +30,7 @@ export const userRoutesPaths = [
         loader: async () => {
           try {
             const userData = await APISpot.user.getProfile();
-            const userOrders = await APISpot.user.getOrders(Number(getOfStorage("user").id));
+            const userOrders = await APISpot.user.getOrders();
             const userCA = await APISpot.user.getCurrentAccounts();
             return { userData, userOrders, userCA };
           } catch (e) {
@@ -70,7 +70,7 @@ export function UserRoot() {
 
       const { web_role } = await loadUserData(dispatch, access_token, user.email);
 
-      if (web_role === Number(import.meta.env.VITE_USER_ROLE)) {
+      if (web_role !== Number(import.meta.env.VITE_USER_ROLE)) {
         setIsUser(true);
       } else {
         setIsUser(false);

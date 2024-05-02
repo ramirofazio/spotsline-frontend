@@ -79,9 +79,9 @@ export default function NavBar() {
   ) : (
     <Navbar
       shouldHideOnScroll
-      className={`xl:rounded-bl-2xl xl:rounded-br-2xl ${
-        pathname !== "/" ? "bg-dark/30 shadow-xl" : "bg-transparent"
-      }  md:py-4 ${pathname === "/carrito" ? "block" : "fixed"}`}
+      className={`} bg-dark/30 shadow-xl md:py-4 xl:rounded-bl-2xl  xl:rounded-br-2xl ${
+        pathname === "/carrito" ? "block" : "fixed"
+      }`}
       isBlurred={blur}
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
@@ -212,11 +212,12 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
           size="md"
           isIconOnly
         >
-          <i className={`ri-link text-2xl ${managedClient.id && "animate-pulse text-success"}`} />
+          <i className={`ri-link text-2xl ${managedClient.id && "animate-pulse text-green-600"}`} />
         </Button>
       )}
 
-      {web_role === Number(import.meta.env.VITE_USER_ROLE) && (
+      {web_role !== Number(import.meta.env.VITE_ADMIN_ROLE) && (
+        //? Solo seller y user tiene acceso aca
         <Button
           as={Link}
           to={"/user/profile"}
@@ -226,7 +227,7 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
           size="md"
           isIconOnly
         >
-          <i className="ri-user-fill text-2xl" />
+          <i className={`ri-user-line text-2xl ${managedClient.id && "animate-pulse text-green-600"}`} />
         </Button>
       )}
 
@@ -241,7 +242,7 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
             size="md"
             isIconOnly
           >
-            <i className="ri-shopping-cart-2-fill text-2xl" />
+            <i className={`ri-shopping-cart-2-line text-2xl ${managedClient.id && "animate-pulse text-green-600"}`} />
           </Button>
 
           <Button
@@ -317,27 +318,27 @@ function MobileContent({
               setIsMenuOpen(false);
               handleManageClients();
             }}
-            className={`bg-gradient-to-tl from-primary to-background shadow-xl ${
-              managedClient.id && "animate-pulse from-success to-success"
-            }`}
+            className={`bg-gradient-to-tl from-primary to-background shadow-xl`}
             size="lg"
             isIconOnly
           >
-            <i className="ri-customer-service-fill text-2xl" />
+            <i className={`ri-link text-2xl ${managedClient.id && "animate-pulse text-green-600"}`} />
           </Button>
         )}
 
-        {web_role === Number(import.meta.env.VITE_USER_ROLE) && (
+        {web_role !== Number(import.meta.env.VITE_ADMIN_ROLE) && (
+          //? Solo seller y user tiene acceso aca
           <Button
             as={Link}
             to={"/user/profile"}
+            onPress={() => setIsMenuOpen(false)}
             className={`bg-gradient-to-tl from-primary to-background shadow-xl ${
               pathname === "/user/profile" && "pointer-events-none from-background"
             }`}
             size="lg"
             isIconOnly
           >
-            <i className="ri-user-fill text-2xl" />
+            <i className={`ri-user-line text-2xl ${managedClient.id && "animate-pulse text-green-600"}`} />
           </Button>
         )}
 
@@ -353,7 +354,7 @@ function MobileContent({
               size="lg"
               isIconOnly
             >
-              <i className="ri-shopping-cart-2-fill text-2xl" />
+              <i className={`ri-shopping-cart-2-line text-2xl ${managedClient.id && "animate-pulse text-green-600"}`} />
             </Button>
             <Button
               className="bg-gradient-to-tl from-primary to-background shadow-xl"
@@ -366,11 +367,11 @@ function MobileContent({
           </>
         )}
       </div>
-      <div className="bottom-0 mx-auto mt-10 text-center">
+      <div className="bottom-0 mx-auto mt-10 text-center z-20">
         <h1 className="text-3xl">SPOTSLINE</h1>
         <p className="-mt-2 font-slogan text-2xl">Se ve bien.</p>
       </div>
-      <div className="absolute -bottom-20 -left-28">
+      <div className="absolute -bottom-20 -left-28 blur-sm">
         <AwsImage type="logos" identify="logoWhite" className="w-[400px] rotate-12" />
       </div>
     </NavbarMenu>

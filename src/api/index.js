@@ -164,7 +164,20 @@ export const APISpot = {
 
   user: {
     getCurrentAccounts: async () => {
-      const res = await BASE_API.get(`/${route.CURRENT_ACCOUNT}/one`);
+      const localUser = getOfStorage("user");
+      let id;
+
+      if (localUser) {
+        if (localUser.web_role !== import.meta.env.VITE_USER_ROLE) {
+          //? Es vendedor
+          id = Number(getOfStorage("managedClient").id);
+        } else {
+          //? Es user normal
+          id = localUser.id;
+        }
+      }
+
+      const res = await BASE_API.get(`/${route.CURRENT_ACCOUNT}/one/${id}`);
       return res.data;
     },
     createOrder: async (body) => {
@@ -173,10 +186,37 @@ export const APISpot = {
     },
     getProfile: async () => {
       addAuthWithToken(getOfStorage("access_token"));
-      const res = await BASE_API.get(`/${route.USER}/profile`);
+      //ACA
+      const localUser = getOfStorage("user");
+      let id;
+
+      if (localUser) {
+        if (localUser.web_role !== import.meta.env.VITE_USER_ROLE) {
+          //? Es vendedor
+          id = Number(getOfStorage("managedClient").id);
+        } else {
+          //? Es user normal
+          id = localUser.id;
+        }
+      }
+
+      const res = await BASE_API.get(`/${route.USER}/profile/${id}`);
       return res.data;
     },
-    getOrders: async (id) => {
+    getOrders: async () => {
+      const localUser = getOfStorage("user");
+      let id;
+
+      if (localUser) {
+        if (localUser.web_role !== import.meta.env.VITE_USER_ROLE) {
+          //? Es vendedor
+          id = Number(getOfStorage("managedClient").id);
+        } else {
+          //? Es user normal
+          id = localUser.id;
+        }
+      }
+
       const res = await BASE_API.get(`/${route.USER}/orders/${id}`);
       return res.data;
     },
@@ -191,7 +231,6 @@ export const APISpot = {
       return res.data;
     },
     updateAvatar: ({ userId, web_role, formData }) => {
-      addAuthWithToken(getOfStorage("access_token"));
       return BASE_API.post(`/${route.AWS}/avatar/${userId}?web_role=${web_role}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });

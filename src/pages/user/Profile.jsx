@@ -1,6 +1,6 @@
-import { Button, Divider, Image, Spinner } from "@nextui-org/react";
+import { Avatar, Button, Divider, Spinner } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
 import ProfileData from "./ProfileData";
@@ -8,9 +8,12 @@ import ProfileOrders from "./ProfileOrders";
 import { deleteOfStorage, getOfStorage, saveInStorage } from "src/utils/localStorage";
 import { ProfileSkeleton } from "src/components";
 import CurrentAccount from "./CurrentAccount";
+import { useSelector } from "react-redux";
 
 export function Profile() {
+  const navigate = useNavigate();
   const { userData, userCA } = useLoaderData();
+  const { managedClient } = useSelector((state) => state.seller);
 
   const [avatar, setAvatar] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -30,7 +33,12 @@ export function Profile() {
   async function updateAvatar() {
     try {
       setLoading(true);
-      await APISpot.user.updateAvatar({ formData: avatar.formData, userId: userData.id, web_role: "client" });
+      await APISpot.user.updateAvatar({
+        formData: avatar.formData,
+        //? Si es un vendedor gestionando manda el id del managedClient
+        userId: managedClient.id ? managedClient.id : userData.id,
+        web_role: "client",
+      });
       toast.success("Avatar actualizado!");
       userData.avatar = avatar.url;
       setAvatar(null);
@@ -77,9 +85,19 @@ export function Profile() {
     };
   }, [document]);
 
-  setTimeout(() => {
-    setLoading(false);
-  }, 800);
+  useEffect(() => {
+    navigate();
+    setLoading(true);
+  }, [managedClient]);
+
+  useEffect(() => {
+    setTimeout(
+      () => {
+        setLoading(false);
+      },
+      managedClient.id ? 1200 : 800
+    );
+  }, [loading]);
 
   if (loading) return <ProfileSkeleton />;
 
@@ -92,11 +110,11 @@ export function Profile() {
       <div className="md:grid md:grid-cols-2">
         <section className="flex flex-col items-center justify-start gap-2 p-10 pt-10">
           <div className="relative ">
-            <Image
+            <Avatar
               loading="lazy"
               src={avatar ? avatar.url : userData.avatar}
               name={userData.fantasyName}
-              className="mx-auto h-44 w-44 rounded-full"
+              className="mx-auto h-44 w-44 rounded-full border-3"
               classNames={{ base: "bg-white" }}
             />
 

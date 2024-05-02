@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { BasicInput, DefaultButton } from "src/components";
 import { ChangePasswordModal } from "../signIn/ChangePasswordModal";
 import { APISpot } from "src/api";
+import { useSelector } from "react-redux";
 
 const inputFields = [
   { name: "username", startIcon: "ri-user-fill", label: "NOMBRE COMPLETO" },
@@ -15,13 +16,16 @@ const inputFields = [
 
 //TODO Alerta cuando navegan hacia atras para avisar que sus datos no se guardaran o algo asi, puede ser un modal con un boton para que los
 export default function ProfileData() {
-  const { userData } = useLoaderData();
   const navigate = useNavigate();
+  const { userData } = useLoaderData();
+
+  const { managedClient } = useSelector((state) => state.seller);
+
   const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure();
 
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
-    id: userData.id,
+    id: managedClient.id ? managedClient.id : userData.id,
     username: userData.fantasyName,
     cuit: userData.cuit || "xxxxxxxxxxxx",
     email: userData.email,

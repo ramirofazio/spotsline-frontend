@@ -34,10 +34,10 @@ export default function ManageClientsModal({ isOpen, onClose, onOpenChange }) {
         await APISpot.cart.createEmptyCart(client.id);
       }
 
-      dispatch(actionSeller.selectClientToManage(client));
       await loadUserData(dispatch, access_token, email, client);
-      toast.success(`${client.fantasyName} seleccionado con exito`);
       onClose();
+      dispatch(actionSeller.selectClientToManage(client));
+      toast.success(`${client.fantasyName} seleccionado con exito`);
     } catch (e) {
       console.log(e);
     } finally {
