@@ -71,11 +71,14 @@ export default function ProfileData() {
             <BasicInput
               name={name}
               startContentIcon={startIcon}
-              endContent={pencil && <i className="ri-pencil-line icons text-xl text-dark" onClick={() => onOpen()} />}
+              endContent={
+                !managedClient.id &&
+                pencil && <i className="ri-pencil-line icons text-xl text-dark" onClick={() => onOpen()} />
+              }
               label={label}
               onChange={handleOnChange}
               value={data[name]}
-              disabled={name === "password" || name === "email"}
+              disabled={name === "password" || name === "email" || managedClient.id}
               labelClass="text-dark font-bold mt-1 text-sm"
               inputWrapperClass="bg-white border-none"
             />
@@ -84,7 +87,12 @@ export default function ProfileData() {
             )}
           </div>
         ))}
-        <DefaultButton type="submit" className={"mt-6 font-bold lg:mx-auto"} isLoading={loading}>
+        <DefaultButton
+          isDisabled={loading || managedClient.id}
+          type="submit"
+          className={"mt-6 font-bold lg:mx-auto "}
+          isLoading={loading}
+        >
           GUARDAR CAMBIOS
         </DefaultButton>
       </form>

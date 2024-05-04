@@ -58,7 +58,7 @@ export default function NavBar() {
   useEffect(() => {
     if (!managedClient.id && web_role === Number(import.meta.env.VITE_SELLER_ROLE)) {
       const button = document.getElementById("manage-clients-button");
-      if (button && !isOpen) {
+      if (button && !isOpen && !managedClient.id) {
         button.click();
       }
     }
@@ -79,7 +79,7 @@ export default function NavBar() {
   ) : (
     <Navbar
       shouldHideOnScroll
-      className={`} bg-dark/30 shadow-xl md:py-4 xl:rounded-bl-2xl  xl:rounded-br-2xl ${
+      className={`bg-dark/30 shadow-xl md:py-4 xl:rounded-bl-2xl  xl:rounded-br-2xl ${
         pathname === "/carrito" ? "block" : "fixed"
       }`}
       isBlurred={blur}
@@ -87,26 +87,23 @@ export default function NavBar() {
       onMenuOpenChange={setIsMenuOpen}
       maxWidth="full"
     >
-      <NavbarContent justify="start">
-        <Link to="/">
-          <AwsImage
-            type="logos"
-            identify="logoWhite"
-            className="mr-20 w-20  transition hover:scale-110 hover:animate-pulse hover:cursor-pointer sm:w-24 md:w-32"
-            hidden={isMenuOpen ? true : false}
-          />
-        </Link>
-      </NavbarContent>
+      <Link to="/">
+        <AwsImage
+          type="logos"
+          identify="logoWhite"
+          className="w-20 transition hover:scale-110 hover:animate-pulse hover:cursor-pointer sm:w-24 md:w-32"
+          hidden={isMenuOpen ? true : false}
+        />
+      </Link>
 
-      <NavbarContent className="hidden gap-4  sm:flex xl:gap-24 " justify="center">
+      <NavbarContent className="hidden items-center justify-start gap-4 sm:flex">
         {links.map(({ name, path }, index) => (
-          <NavbarItem
-            key={index}
-            className={`group flex h-full items-center gap-2 border-b-4 border-transparent  px-2 ${
-              name === "inicio" && "hidden"
-            } ${pathname === path && " border-primary"}`}
-          >
-            <i className="ri-arrow-down-s-line yellow-neon text-xl font-bold transition group-hover:scale-125"></i>
+          <NavbarItem key={index} className={`group flex h-full items-center ${name === "inicio" && "hidden"}`}>
+            <i
+              className={`ri-arrow-down-s-line yellow-neon text-xl font-bold transition group-hover:scale-125 ${
+                pathname === path && "pointer-events-none opacity-50"
+              }`}
+            ></i>
             {name === "productos" ? (
               <Dropdown className="bg-transparent shadow-none backdrop-blur-xl" key={index}>
                 <DropdownTrigger className="text-background hover:cursor-pointer xl:text-xl">PRODUCTOS</DropdownTrigger>
@@ -126,6 +123,7 @@ export default function NavBar() {
                   ></DropdownItem>
 
                   {categories.map((c, index) => (
+                    //TODO DEJAR MAS LINDO ESTO
                     <DropdownItem
                       key={index}
                       className="group my-[1px] bg-gradient-to-tl from-primary  to-background p-0 uppercase transition"
@@ -135,13 +133,17 @@ export default function NavBar() {
                           <p>{c}</p>
                         </NavLink>
                       }
-                      //? Algo asi habria que hacer aca para filtrar automaticamente por categoria
                     ></DropdownItem>
                   ))}
                 </DropdownMenu>
               </Dropdown>
             ) : (
-              <Link className={`text-md w-full  uppercase text-background xl:text-xl`} to={path}>
+              <Link
+                className={`text-md w-full uppercase text-background xl:text-xl ${
+                  pathname === path && "pointer-events-none opacity-50"
+                }`}
+                to={path}
+              >
                 {name}
               </Link>
             )}
@@ -180,7 +182,7 @@ export default function NavBar() {
 function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, handleManageClients }) {
   const { managedClient } = useSelector((state) => state.seller);
   return (
-    <NavbarContent justify="end" className="hidden sm:flex">
+    <NavbarContent justify="end" className="hidden !justify-end sm:flex">
       {!id && !access_token && (
         <DefaultButton
           as={Link}
@@ -216,7 +218,8 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
         </Button>
       )}
 
-      {web_role !== Number(import.meta.env.VITE_ADMIN_ROLE) && (
+      {(web_role === Number(import.meta.env.VITE_USER_ROLE) ||
+        web_role === Number(import.meta.env.VITE_SELLER_ROLE)) && (
         //? Solo seller y user tiene acceso aca
         <Button
           as={Link}
@@ -367,7 +370,7 @@ function MobileContent({
           </>
         )}
       </div>
-      <div className="bottom-0 mx-auto mt-10 text-center z-20">
+      <div className="bottom-0 z-20 mx-auto mt-10 text-center">
         <h1 className="text-3xl">SPOTSLINE</h1>
         <p className="-mt-2 font-slogan text-2xl">Se ve bien.</p>
       </div>

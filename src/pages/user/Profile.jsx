@@ -11,7 +11,6 @@ import CurrentAccount from "./CurrentAccount";
 import { useSelector } from "react-redux";
 
 export function Profile() {
-  const navigate = useNavigate();
   const { userData, userCA } = useLoaderData();
   const { managedClient } = useSelector((state) => state.seller);
 
@@ -36,7 +35,7 @@ export function Profile() {
       await APISpot.user.updateAvatar({
         formData: avatar.formData,
         //? Si es un vendedor gestionando manda el id del managedClient
-        userId: managedClient.id ? managedClient.id : userData.id,
+        userId: managedClient.id ?? userData.id,
         web_role: "client",
       });
       toast.success("Avatar actualizado!");
@@ -86,17 +85,9 @@ export function Profile() {
   }, [document]);
 
   useEffect(() => {
-    navigate();
-    setLoading(true);
-  }, [managedClient]);
-
-  useEffect(() => {
-    setTimeout(
-      () => {
-        setLoading(false);
-      },
-      managedClient.id ? 1200 : 800
-    );
+    setTimeout(() => {
+      setLoading(false);
+    }, 800);
   }, [loading]);
 
   if (loading) return <ProfileSkeleton />;
@@ -104,7 +95,9 @@ export function Profile() {
   return (
     <main className="pt-16 md:pt-20">
       <header className="relative hidden flex-col items-center justify-center md:flex md:h-40">
-        <h1 className="text-2xl font-bold lg:text-3xl">MI CUENTA</h1>
+        <h1 className="text-2xl font-bold lg:text-3xl">
+          {managedClient.id ? `CUENTA DE ${managedClient.fantasyName}` : "MI CUENTA"}
+        </h1>
         <Divider className="absolute bottom-0 mx-auto h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
       </header>
       <div className="md:grid md:grid-cols-2">

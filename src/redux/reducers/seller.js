@@ -9,6 +9,7 @@ const seller = createSlice({
       avatar: "",
       fantasyName: "",
       email: "",
+      priceList: "",
     },
   },
   reducers: {

@@ -18,7 +18,7 @@ export default function ProfileOrders() {
         {Boolean(!userOrders.length) && (
           <div className="space-y-4">
             <h3 className="font-semibold">¡No hay nada que ver aqui!</h3>
-            <DefaultButton as={Link} to={"/productos/0"}>
+            <DefaultButton as={Link} to={"/productos/1"}>
               VER PRODUCTOS
             </DefaultButton>
           </div>
