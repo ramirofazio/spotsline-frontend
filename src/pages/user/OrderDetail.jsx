@@ -80,7 +80,7 @@ function ProductsSection({ products, coupon, total, subtotal }) {
           </div>
         </article>
       ))}
-      {coupon && <DiscountDetail coupon={coupon} total={total} subtotal={subtotal} />}
+      {coupon && subtotal && <DiscountDetail coupon={coupon} total={total} subtotal={subtotal} />}
     </section>
   );
 }
@@ -127,7 +127,7 @@ function PaymentDetailSection({ type, total, date, mobbexId }) {
       <div className="flex flex-col gap-4 md:w-full md:flex-row md:gap-0 md:shadow-md">
         <CustomTable
           title="MÉTODO"
-          value={type}
+          value={type ? type : "--"}
           className={"md:rounded-br-none md:rounded-tr-none md:border-r-3 md:shadow-none "}
         />
         <CustomTable
