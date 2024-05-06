@@ -38,6 +38,7 @@ export const userRoutesPaths = [
         element: <OrderDetail />,
         loader: async ({ params }) => {
           try {
+            console.log(params.order_id);
             return await APISpot.user.getOrder(params.order_id);
           } catch (e) {
             console.log(e);
