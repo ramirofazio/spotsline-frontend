@@ -5,7 +5,6 @@ import { convertISOToDate } from "src/utils";
 
 export default function ProfileOrders() {
   const { userOrders } = useLoaderData();
-  console.log(userOrders);
   return (
     <main className="relative flex flex-col items-center gap-6 py-10 text-center">
       <header className="md:w-full md:text-left">

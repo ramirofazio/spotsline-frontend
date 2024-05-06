@@ -32,7 +32,6 @@ export function DetailProduct() {
       .getOne({ id })
       .then(({ data }) => {
         const map = {};
-        console.log(data);
         let variants = [];
         data.variants.map((variant, description) => {
           const { subRub } = variant;

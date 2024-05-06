@@ -7,8 +7,6 @@ import { calculateTotal } from "src/redux/reducers/shoppingCart";
 export default function OrderDetail() {
   const order = useLoaderData();
   const { id, date, mobbexId, total, products, subtotal, coupon, type } = order;
-  console.log(order);
-  console.log(subtotal);
 
   return (
     <main className="relative flex flex-col items-center gap-6 py-10 pt-20 text-center">
