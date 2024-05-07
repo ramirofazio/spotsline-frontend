@@ -21,6 +21,7 @@ export function DetailProduct() {
 
   const { email, priceList } = useSelector((state) => state.user);
   const { managedClient } = useSelector((state) => state.seller);
+  const { items } = useSelector((state) => state.cart);
 
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState(null);
@@ -43,6 +44,7 @@ export function DetailProduct() {
           }
         });
         data.variants = variants;
+        console.log(data);
         setProduct(data);
         const localVariant = getOfStorage("currentVariant");
 
@@ -102,9 +104,11 @@ export function DetailProduct() {
   };
 
   if (isLoading) return <SkeletonDetail />;
+  const isInCart = items.find((i) => i.productId === currentVariant.id);
 
   return (
     <main className="mt-30 mb-10 min-h-[500px] max-w-7xl flex-wrap px-6 md:mt-32 md:flex md:gap-6 lg:mx-auto lg:gap-10 lg:px-12">
+      {console.log(currentVariant)}
       <Images variants={product.variants} currentVariant={currentVariant} setCurrentVariant={setCurrentVariant} />
       <section className="my-10 md:my-0 md:flex-1">
         <h1 className="mb-8 font-primary text-3xl font-bold">{product?.description}</h1>
@@ -127,6 +131,11 @@ export function DetailProduct() {
           <h3 className="mb-4 text-lg font-bold">Colores</h3>
           <ColorPalette variants={product.variants} />
         </div>
+        {isInCart && (
+          <h1 className="mx-auto my-2 w-fit">
+            Ya dispones de <strong>{isInCart.qty}</strong> de estos productos en tu carrito
+          </h1>
+        )}
         <DefaultButton
           isLoading={loading}
           isDisabled={email ? !qty && true : false}
