@@ -81,7 +81,6 @@ function ProductsView() {
       }
 
       const productsQuery = { page, take: TAKE_PRODUCTS, search: !search.length ? null : search, order, category };
-      console.log(productsQuery);
 
       APISpot.product
         .getAll(productsQuery)
