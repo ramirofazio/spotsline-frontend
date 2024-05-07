@@ -3,7 +3,7 @@ import { PaginationComponent } from "components/index";
 import { Input } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { APISpot } from "src/api";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useRouteLoaderData } from "react-router-dom";
 import { SkeletonCard } from "src/components/cards/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import { actionProducts } from "src/redux/reducers";
@@ -11,19 +11,10 @@ import { toast } from "sonner";
 import { FilterProducts } from "./FilterProducts";
 
 const TAKE_PRODUCTS = 28;
-const categories = [
-  "Accesorios",
-  "Apliques",
-  "Artefactos para tubos led",
-  "Cabezales",
-  "Colgantes",
-  "Empotrables",
-  "Exterior",
-  "Veladores y Apliques",
-];
 
 export function Products() {
   const navigate = useNavigate();
+  const categories = useRouteLoaderData("root");
   const { page } = useParams();
   const { totalPages, filters } = useSelector((state) => state.product);
 
@@ -42,19 +33,19 @@ export function Products() {
         <h1 className="z-20 font-primary text-5xl font-bold uppercase ">Productos</h1>
         <p className="z-20 font-secondary text-3xl">Encontra todo lo que necesites...</p>
       </header>
-      <main className="flex gap-x-4  bg-[#D9D9D9] p-1">
-        <article className="mx-auto my-10 hidden border-r-2 p-6 font-secondary md:block">
-          <h2 className="mb-4 text-lg font-semibold">CATEGORIA DE PRODUCTOS</h2>
-          <ul>
-            {categories.map((cat) => (
-              <li key={cat} className={cat === filters.category && "font-semibold"}>
-                {cat}
+      <main className="flex gap-x-4 bg-[#D9D9D9] p-10">
+        <article className="my-10 hidden pl-5 font-secondary md:block">
+          <h2 className="text-lg font-semibold ">Categoria de Productos</h2>
+          <ul className="pl-4">
+            {categories.map((cat, i) => (
+              <li key={i} className={cat.value.toString() === filters.category && "font-semibold"}>
+                {cat.name}
               </li>
             ))}
           </ul>
         </article>
-        <section className="my-10 grid flex-1 grid-cols-1 place-items-center gap-y-8">
-          <Heading />
+        <section className="my-10 grid flex-1 grid-cols-1 place-items-center gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <Heading categories={categories} />
           <ProductsView />
           {totalPages !== 1 && (
             <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4">
@@ -71,14 +62,17 @@ function ProductsView() {
   const dispatch = useDispatch();
   const { page } = useParams();
   const [loading, setLoading] = useState(false);
-  const { products, search } = useSelector((state) => state.product);
+  const { products, search, filters } = useSelector((state) => state.product);
 
   useEffect(() => {
     setLoading(true);
     if (products[page]) setLoading(false);
     else {
+      const { order, category } = filters;
+      const productsQuery = { page, take: TAKE_PRODUCTS, search: !search.length ? null : search, order, category };
+
       APISpot.product
-        .getAll({ page, search: !search.length ? null : search })
+        .getAll(productsQuery)
         .then(({ data }) => {
           dispatch(actionProducts.setTotalPages(data.metadata.total_pages));
           dispatch(actionProducts.setPageProducts({ page, products: data.rows }));
@@ -90,7 +84,7 @@ function ProductsView() {
           toast.error(response.data.message);
         });
     }
-  }, [page, search]);
+  }, [page, search, filters]);
 
   if (loading || !products[page]) {
     return Array.from({ length: 12 }).map((_, index) => (
@@ -109,7 +103,7 @@ function ProductsView() {
   );
 }
 
-function Heading() {
+function Heading({ categories }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [_search, set_Search] = useState("");

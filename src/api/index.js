@@ -85,8 +85,10 @@ export const APISpot = {
   },
 
   product: {
-    getAll: ({ take, page, search = null }) => {
-      return BASE_API.get(`/${route.PRODUCTS}?take=${take}&&page=${page}&&search=${search}`);
+    getAll: ({ take, page, search = "", category = "", order = "" }) => {
+      return BASE_API.get(
+        `/${route.PRODUCTS}?take=${take}&&page=${page}&&search=${search}&&category=${category}&&order=${order}`
+      );
     },
     getOne: ({ id }) => {
       return BASE_API.get(`/${route.PRODUCTS}/detail/${id}`);
@@ -100,7 +102,6 @@ export const APISpot = {
     getCategories: async () => {
       const res = await BASE_API.get(`/${route.PRODUCTS}/categories`);
       saveInStorage("categories", res.data);
-
       return res.data;
     },
   },

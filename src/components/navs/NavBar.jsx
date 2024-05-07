@@ -25,7 +25,6 @@ import Loader from "../Loader";
 
 export default function NavBar() {
   const { pathname } = useLocation();
-
   const { access_token } = useSelector((state) => state.auth);
   const { id, web_role } = useSelector((state) => state.user);
 
@@ -35,8 +34,9 @@ export default function NavBar() {
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [blur, setBlur] = React.useState(false);
+
+  const categories = /* getOfStorage("categories") || */ useLoaderData();
   const [loading, setLoading] = React.useState(false);
-  const categories = getOfStorage("categories") || useLoaderData();
 
   useEffect(() => {
     isMenuOpen ? setBlur(true) : window.scrollY < 250 && setBlur(false);
