@@ -71,7 +71,6 @@ function ProductsView() {
     else {
       let { order, category } = filters;
       if (searchParams) {
-        // const queryOrder = searchParams.get("order");
         const queryCategory = searchParams.get("category");
         if (queryCategory) {
           console.log("a", queryCategory);
@@ -109,11 +108,6 @@ function ProductsView() {
         ))}
       </div>
     );
-    // return Array.from({ length: 12 }).map((_, index) => (
-    //   <div className="grid w-[90%] grid-cols-2 gap-6  p-2 lg:w-full lg:grid-cols-3" key={index}>
-    //     <SkeletonCard />
-    //   </div>
-    // ));
   }
 
   return (
