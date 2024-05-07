@@ -38,8 +38,6 @@ export default function NavBar() {
 
   const categories = getOfStorage("categories") || useLoaderData();
 
-  console.log(categories);
-
   const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
@@ -158,6 +156,7 @@ export default function NavBar() {
 
 function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, handleManageClients }) {
   const { managedClient } = useSelector((state) => state.seller);
+  const { items } = useSelector((state) => state.cart);
   return (
     <NavbarContent justify="end" className="hidden !justify-end sm:flex lg:mr-6">
       {!id && !access_token && (
@@ -213,18 +212,26 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
 
       {id && access_token && (
         <>
-          <Button
-            as={Link}
-            to="/carrito"
-            className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
-              pathname === "/carrito" && "pointer-events-none from-background"
-            }`}
-            size="md"
-            isIconOnly
-          >
-            <i className={`ri-shopping-cart-2-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`} />
-          </Button>
-
+          <div className="relative flex items-center justify-center">
+            <Button
+              as={Link}
+              to="/carrito"
+              className={`relative bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
+                pathname === "/carrito" && "pointer-events-none from-background"
+              }`}
+              size="md"
+              isIconOnly
+            >
+              <i
+                className={`ri-shopping-cart-2-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`}
+              />
+            </Button>
+            {items?.length && (
+              <span className="absolute -bottom-2 -right-3 z-50 flex h-6 w-6 items-center justify-center rounded-full bg-white font-bold">
+                <p>{items.length}</p>
+              </span>
+            )}
+          </div>
           <Button
             className={`bg-gradient-to-br from-primary to-background transition hover:scale-110`}
             size="md"
@@ -250,7 +257,7 @@ function MobileContent({
   handleManageClients,
 }) {
   const { managedClient } = useSelector((state) => state.seller);
-
+  const { items } = useSelector((state) => state.cart);
   return (
     <NavbarMenu className="gap-4 overflow-hidden bg-gradient-to-br from-primary to-white/20">
       <div className="absolute -right-48 -top-10 -z-40 opacity-50">
@@ -324,30 +331,26 @@ function MobileContent({
         )}
 
         {id && access_token && (
-          <>
+          <div className="relative flex items-center justify-center">
             <Button
               as={Link}
-              to={"/carrito"}
-              onPress={() => setIsMenuOpen(false)}
-              className={`bg-gradient-to-tl  from-primary to-background shadow-xl ${
+              to="/carrito"
+              className={`relative bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
                 pathname === "/carrito" && "pointer-events-none from-background"
               }`}
-              size="lg"
+              size="md"
               isIconOnly
             >
               <i
                 className={`ri-shopping-cart-2-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`}
               />
             </Button>
-            <Button
-              className="bg-gradient-to-tl from-primary to-background shadow-xl"
-              size="lg"
-              isIconOnly
-              onPress={handleLogOut}
-            >
-              <i className="ri-logout-circle-r-line text-2xl" />
-            </Button>
-          </>
+            {items?.length && (
+              <span className="absolute -bottom-2 -right-3 z-50 flex h-6 w-6 items-center justify-center rounded-full bg-white font-bold">
+                <p>{items.length}</p>
+              </span>
+            )}
+          </div>
         )}
       </div>
       <div className="bottom-0 z-20 mx-auto mt-10 text-center">
@@ -373,7 +376,11 @@ function ProductsTab({ index, categories }) {
         <DropdownItem
           className="group my-[1px]  bg-gradient-to-tl  from-primary to-background p-0 uppercase transition"
           startContent={
-            <NavLink className="flex w-full items-center gap-2 p-1.5 " to="/productos/0">
+            <NavLink
+              onClick={() => dispatch(actionProducts.setCategory(""))}
+              className="flex w-full items-center gap-2 p-1.5 "
+              to="/productos/0"
+            >
               <i className="ri-arrow-right-s-line  text-secondary transition group-hover:text-white"></i>
               <p>todos</p>
             </NavLink>
@@ -388,7 +395,7 @@ function ProductsTab({ index, categories }) {
               <NavLink
                 onClick={() => dispatch(actionProducts.setCategory(c.value))}
                 className="flex w-full items-center gap-2 p-1.5 "
-                to={`/productos/1/?category=${c.value}`}
+                to={`/productos/1?category=${c.value}`}
               >
                 <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
                 <p>{c.name}</p>

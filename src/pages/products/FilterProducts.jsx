@@ -12,7 +12,7 @@ import {
   cn,
   useDisclosure,
 } from "@nextui-org/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionProducts } from "src/redux/reducers";
 
@@ -38,15 +38,15 @@ export function FilterProducts({ categories }) {
 
   const handleFilters = (key, value) => setFilters((cur) => ({ ...cur, [key]: value }));
 
-  // useEffect(() => {
-  //   setFilters(product.filters);
-  // }, [product.filters]);
+  useEffect(() => {
+    setFilters(product.filters);
+  }, [product.filters]);
 
   return (
     <>
       <Button
         onClick={onOpen}
-        className="bg-transparent hover:bg-secondary hover:text-white"
+        className="mx-auto bg-transparent hover:bg-secondary hover:text-white"
         isIconOnly
         aria-label="Like"
       >
@@ -78,7 +78,7 @@ export function FilterProducts({ categories }) {
                 <Divider />
 
                 <RadioGroup
-                  value={filters.category}
+                  value={filters.category.toString()}
                   onChange={({ target }) => handleFilters("category", target.value)}
                   label="Categorias"
                 >

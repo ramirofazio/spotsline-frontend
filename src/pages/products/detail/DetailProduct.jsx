@@ -21,12 +21,17 @@ export function DetailProduct() {
 
   const { email, priceList } = useSelector((state) => state.user);
   const { managedClient } = useSelector((state) => state.seller);
+  const { items } = useSelector((state) => state.cart);
 
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [currentVariant, setCurrentVariant] = useState(getOfStorage("currentVariant"));
   const [qty, setQty] = useState(getOfStorage("qty") || 1);
+
+  useEffect(() => {
+    console.log(currentVariant);
+  }, [currentVariant]);
 
   useEffect(() => {
     document.title = "SPOTSLINE - Cargando...";
@@ -73,12 +78,14 @@ export function DetailProduct() {
 
   function addProductToShoppingCart() {
     setLoading(true);
+    const currentPrice = `precio${managedClient.priceList ? managedClient.priceList : priceList}`;
     dispatch(
       addItemToCart({
         productId: currentVariant.id,
         name: currentVariant.description,
         img: currentVariant.pathImage || assets.logos.logoBlack,
-        price: Number(currentVariant["precio" + (managedClient.priceList ?? priceList)]),
+        price:
+          currentVariant[currentPrice] /* Number(currentVariant["precio" + (managedClient.priceList ?? priceList)]) */,
         qty: Number(qty),
       })
     );
@@ -94,10 +101,13 @@ export function DetailProduct() {
   }
 
   const getVariantPrice = () => {
-    return formatPrices(currentVariant["precio" + (managedClient.priceList ?? priceList)] * qty);
+    const currentPrice = `precio${managedClient.priceList ? managedClient.priceList : priceList}`;
+    const format = formatPrices(currentVariant[currentPrice] * qty);
+    return format;
   };
 
   if (isLoading) return <SkeletonDetail />;
+  const isInCart = items.find((i) => i.productId === currentVariant.id);
 
   return (
     <main className="mt-30 mb-10 min-h-[500px] max-w-7xl flex-wrap px-6 md:mt-32 md:flex md:gap-6 lg:mx-auto lg:gap-10 lg:px-12">
@@ -123,6 +133,11 @@ export function DetailProduct() {
           <h3 className="mb-4 text-lg font-bold">Colores</h3>
           <ColorPalette variants={product.variants} />
         </div>
+        {isInCart && (
+          <h1 className="mx-auto my-2 w-fit">
+            Ya dispones de <strong>{isInCart.qty}</strong> de estos productos en tu carrito
+          </h1>
+        )}
         <DefaultButton
           isLoading={loading}
           isDisabled={email ? !qty && true : false}

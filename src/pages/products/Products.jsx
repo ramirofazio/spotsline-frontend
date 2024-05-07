@@ -3,7 +3,7 @@ import { PaginationComponent } from "components/index";
 import { Input } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { APISpot } from "src/api";
-import { useNavigate, useParams, useRouteLoaderData } from "react-router-dom";
+import { useNavigate, useParams, useRouteLoaderData, useSearchParams } from "react-router-dom";
 import { SkeletonCard } from "src/components/cards/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import { actionProducts } from "src/redux/reducers";
@@ -38,17 +38,17 @@ export function Products() {
           <h2 className="text-lg font-semibold ">Categoria de Productos</h2>
           <ul className="pl-4">
             {categories.map((cat, i) => (
-              <li key={i} className={cat.value.toString() === filters.category && "font-semibold"}>
+              <li key={i} className={cat.value.toString() === filters.category.toString() && "font-bold underline "}>
                 {cat.name}
               </li>
             ))}
           </ul>
         </article>
-        <section className="my-10 grid flex-1 grid-cols-1 place-items-center gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <section className="mx-auto  my-10 gap-3  lg:grid-cols-3 xl:grid-cols-4">
           <Heading categories={categories} />
           <ProductsView />
           {totalPages !== 1 && (
-            <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4">
+            <div className=" lg:col-span-3 xl:col-span-4">
               <PaginationComponent qty={totalPages} page={parseInt(page)} onChange={handleChangePage} />
             </div>
           )}
@@ -63,12 +63,23 @@ function ProductsView() {
   const { page } = useParams();
   const [loading, setLoading] = useState(false);
   const { products, search, filters } = useSelector((state) => state.product);
+  let [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     setLoading(true);
     if (products[page]) setLoading(false);
     else {
-      const { order, category } = filters;
+      let { order, category } = filters;
+      if (searchParams) {
+        const queryCategory = searchParams.get("category");
+        if (queryCategory) {
+          console.log("a", queryCategory);
+          category = parseInt(queryCategory);
+          dispatch(actionProducts.setCategory(category));
+          console.log("new", category);
+        }
+      }
+
       const productsQuery = { page, take: TAKE_PRODUCTS, search: !search.length ? null : search, order, category };
 
       APISpot.product
@@ -87,15 +98,19 @@ function ProductsView() {
   }, [page, search, filters]);
 
   if (loading || !products[page]) {
-    return Array.from({ length: 12 }).map((_, index) => (
-      <div className="grid w-[90%] grid-cols-2 gap-4  p-2 lg:w-full lg:grid-cols-3" key={index}>
-        <SkeletonCard />
+    return (
+      <div className="grid w-full grid-cols-2  gap-8   p-2 lg:w-full lg:grid-cols-3">
+        {Array.from({ length: 12 }).map((_, index) => (
+          <div className="grid w-[90%] grid-cols-2 gap-6  p-2 lg:w-full lg:grid-cols-3" key={index}>
+            <SkeletonCard />
+          </div>
+        ))}
       </div>
-    ));
+    );
   }
 
   return (
-    <div className="grid w-[90%] grid-cols-2  gap-4  p-2 lg:w-full lg:grid-cols-3">
+    <div className="grid w-full grid-cols-2  gap-8   p-2 lg:w-full lg:grid-cols-3">
       {products[page].map((p, index) => (
         <ProductCard {...p} key={index} />
       ))}
@@ -136,14 +151,14 @@ function Heading({ categories }) {
   }
   return (
     <>
-      <div d className=" mb-5 flex w-full items-center gap-1 sm:col-span-2 md:w-10/12 lg:col-span-3 xl:col-span-4">
+      <div d className="mb-5 flex w-full items-center gap-1 sm:col-span-2 md:w-full lg:col-span-3 xl:col-span-4">
         <Input
           value={_search}
           onChange={handleChange}
           onKeyDown={handleSearch}
           isClearable
           radius="full"
-          className=""
+          className="md:w-[80%]"
           labelPlacement=""
           onClear={onClear}
           onBlur={() => {

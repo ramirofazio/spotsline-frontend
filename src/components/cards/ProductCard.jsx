@@ -7,7 +7,7 @@ import AwsImage from "../images/AwsImage";
 export function ProductCard({ description, codigo, pathImage }) {
   return (
     <NavLink
-      className="col-span-2 mx-auto w-[250px]  sm:col-span-1 lg:col-span-1 s:w-full  s:max-w-[300px]"
+      className="col-span-2 mx-auto w-[90%]  sm:col-span-1 lg:col-span-1 s:w-full  s:max-w-[300px]"
       to={`/producto/${codigo}`}
     >
       <Card className="aspect-square max-h-[400px] min-h-[300px] w-full overflow-visible  bg-white shadow-xl transition hover:scale-105">
@@ -24,7 +24,12 @@ export function ProductCard({ description, codigo, pathImage }) {
         <CardFooter className="relative flex flex-col items-start gap-3 border-t-8 border-background bg-gradient-to-tr from-dark/30 to-primary/30">
           <AwsImage type="logos" identify={"logoBlack"} className={"absolute -right-28 -top-20 -z-10 blur-sm"} />
           <p className="line-clamp-1 font-semibold text-dark">{description}</p>
-          <DefaultButton className={"-ml-1 w-full py-2"} endContent={<i className="ri-arrow-right-s-line" />}>
+          <DefaultButton
+            as={NavLink}
+            to={`/producto/${codigo}`}
+            className={"-ml-1 w-full  py-2"}
+            endContent={<i className="ri-arrow-right-s-line" />}
+          >
             VER MÁS
           </DefaultButton>
         </CardFooter>

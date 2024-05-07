@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { assets } from "src/assets";
 
 const imagePerPage = 5;
@@ -13,6 +13,10 @@ export function Images({ variants, currentVariant, setCurrentVariant }) {
     cycles: 0,
     timerId: null,
   });
+
+  useEffect(() => {
+    console.log("IMNG", state);
+  }, [state]);
 
   function getChangeOfPage(currentSlide, currentPage) {
     const { totalPages } = state;
@@ -37,11 +41,13 @@ export function Images({ variants, currentVariant, setCurrentVariant }) {
 
   function getPointIndexes() {
     const { currentPage } = state;
-    return [...Array(imagePerPage).keys()].map((x) => x + (imagePerPage - 1) * (currentPage - 1));
+    const a = [...Array(imagePerPage).keys()].map((x) => x + (imagePerPage - 1) * (currentPage - 1));
+    console.log(a);
+    return a;
   }
 
   return (
-    <div className="md:w-[55%] lg:w-3/5">
+    <div className="mx-auto mt-4 max-w-[450px]  md:mt-0 md:w-[55%] lg:w-3/5 lg:max-w-[580px]">
       <div className="relative aspect-[10/8] overflow-hidden rounded-lg">
         {variants.map(({ id, description, pathImage }, index) => (
           <img
