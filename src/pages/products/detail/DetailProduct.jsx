@@ -19,8 +19,10 @@ export function DetailProduct() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
   const { email, priceList } = useSelector((state) => state.user);
+  const { managedClient } = useSelector((state) => state.seller);
+
+  const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [currentVariant, setCurrentVariant] = useState(getOfStorage("currentVariant"));
@@ -76,7 +78,7 @@ export function DetailProduct() {
         productId: currentVariant.id,
         name: currentVariant.description,
         img: currentVariant.pathImage || assets.logos.logoBlack,
-        price: parseFloat(currentVariant["precio" + (priceList || 0)]),
+        price: Number(currentVariant["precio" + (managedClient.priceList ?? priceList)]),
         qty: Number(qty),
       })
     );
@@ -92,7 +94,7 @@ export function DetailProduct() {
   }
 
   const getVariantPrice = () => {
-    return formatPrices(currentVariant["precio" + (priceList || 1)] * qty);
+    return formatPrices(currentVariant["precio" + (managedClient.priceList ?? priceList)] * qty);
   };
 
   if (isLoading) return <SkeletonDetail />;

@@ -3,7 +3,7 @@ import { defaultClassName } from ".";
 
 export const ProfileSkeleton = () => {
   return (
-    <main className="pt-16 md:pt-20">
+    <main className="">
       <header className="relative hidden flex-col items-center justify-center md:flex md:h-40">
         <h1 className={`${defaultClassName} h-10 w-60`}></h1>
         <Divider className="absolute bottom-0 mx-auto h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />

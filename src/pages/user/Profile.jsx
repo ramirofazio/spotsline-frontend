@@ -1,20 +1,21 @@
-import { Button, Divider, Image, Spinner } from "@nextui-org/react";
+import { Avatar, Button, Divider, Spinner } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
 import ProfileData from "./ProfileData";
 import ProfileOrders from "./ProfileOrders";
-import { getOfStorage, saveInStorage } from "src/utils/localStorage";
+import { deleteOfStorage, getOfStorage, saveInStorage } from "src/utils/localStorage";
 import { ProfileSkeleton } from "src/components";
-
-const selectButtonsData = [
-  { name: "MI PERFIL", startIcon: "user", component: <ProfileData /> },
-  { name: "MIS COMPRAS", startIcon: "shopping-cart-2", component: <ProfileOrders /> },
-];
+import CurrentAccount from "./CurrentAccount";
+import { useSelector } from "react-redux";
 
 export function Profile() {
-  const { userData } = useLoaderData();
+  const navigate = useNavigate();
+
+  const { userData, userCA } = useLoaderData();
+  const { managedClient } = useSelector((state) => state.seller);
+
   const [avatar, setAvatar] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedSection, setSelectedSection] = useState(() => {
@@ -25,11 +26,20 @@ export function Profile() {
 
     return "MI PERFIL";
   });
+  const [selectButtonsData, setSelectButtonsData] = useState([
+    { name: "MI PERFIL", startIcon: "user", component: <ProfileData /> },
+    { name: "MIS COMPRAS", startIcon: "shopping-cart-2", component: <ProfileOrders /> },
+  ]);
 
   async function updateAvatar() {
     try {
       setLoading(true);
-      await APISpot.user.updateAvatar({ formData: avatar.formData, userId: userData.id, web_role: "client" });
+      await APISpot.user.updateAvatar({
+        formData: avatar.formData,
+        //? Si es un vendedor gestionando manda el id del managedClient
+        userId: managedClient.id ?? userData.id,
+        web_role: "client",
+      });
       toast.success("Avatar actualizado!");
       userData.avatar = avatar.url;
       setAvatar(null);
@@ -53,35 +63,62 @@ export function Profile() {
   };
 
   useEffect(() => {
+    if (userCA?.data?.length > 0) {
+      setSelectButtonsData((prev) => {
+        if (prev.find(({ name }) => name === "MI CC")) return prev;
+        return [
+          ...prev,
+          {
+            name: "MI CC",
+            startIcon: "money-dollar-circle",
+            component: <CurrentAccount />,
+          },
+        ];
+      });
+    }
+  }, [userCA]);
+
+  useEffect(() => {
     document.title = "SPOTSLINE - Perfil de usuario";
+
+    return () => {
+      deleteOfStorage("profileSelectedSection");
+    };
   }, [document]);
 
-  setTimeout(() => {
-    setLoading(false);
-  }, 800);
+  useEffect(() => {
+    setLoading(true);
+    navigate();
+  }, [managedClient]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 800);
+  }, [loading]);
 
   if (loading) return <ProfileSkeleton />;
 
   return (
-    <main className="pt-16 md:pt-20">
+    <main className="">
       <header className="relative hidden flex-col items-center justify-center md:flex md:h-40">
-        <h1 className="text-2xl font-bold lg:text-3xl">MI CUENTA</h1>
+        <h1 className="text-2xl font-bold lg:text-3xl">{`CUENTA DE ${managedClient.fantasyName ?? "MI CUENTA"}`}</h1>
         <Divider className="absolute bottom-0 mx-auto h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
       </header>
       <div className="md:grid md:grid-cols-2">
         <section className="flex flex-col items-center justify-start gap-2 p-10 pt-10">
           <div className="relative ">
-            <Image
+            <Avatar
               loading="lazy"
-              src={avatar ? avatar.url : userData.avatar}
-              name={userData.fantasyName}
-              className="mx-auto h-44 w-44 "
+              src={avatar ? avatar.url : managedClient.avatar ?? userData.avatar}
+              name={managedClient.fantasyName ?? userData.fantasyName}
+              className="mx-auto h-44 w-44 rounded-full border-3"
               classNames={{ base: "bg-white" }}
             />
 
             <Button
               isIconOnly
-              className=" absolute bottom-0 left-0 rounded-full bg-gradient-to-r from-primary to-yellow-200 font-bold text-black  "
+              className="absolute bottom-0 left-0 rounded-full bg-gradient-to-r from-primary to-yellow-200 font-bold text-black  "
               startContent={
                 <div className={`relative ${loading && "hidden"}`}>
                   <label htmlFor="upload-avatar" className=" cursor-pointer rounded px-4 py-2 font-bold">
@@ -121,8 +158,8 @@ export function Profile() {
               </span>
             )}
           </div>
-          <h1 className="underliner mt-10 rounded-full bg-gradient-to-r from-primary to-yellow-200 p-2 px-4 text-center font-bold md:text-xl lg:w-80">
-            {userData.fantasyName}
+          <h1 className="underliner mt-10 w-60 rounded-full bg-gradient-to-r from-primary to-yellow-200 p-2 px-4 text-center font-bold md:text-xl lg:w-80">
+            {managedClient.fantasyName ?? userData.fantasyName}
           </h1>
 
           <div className="mt-10 flex flex-col items-center justify-around gap-3">
@@ -133,8 +170,8 @@ export function Profile() {
                 startContent={<i className={`ri-${startIcon}-fill text-xl text-dark transition`} />}
                 endContent={
                   <i
-                    className={`ri-arrow-right-s-line text-xl text-dark transition ${
-                      selectedSection === name && "rotate-90"
+                    className={`ri-arrow-right-s-line text-xl text-dark transition lg:rotate-90 ${
+                      selectedSection === name && "rotate-90 lg:!rotate-0"
                     }`}
                   />
                 }
@@ -146,14 +183,14 @@ export function Profile() {
               </Button>
             ))}
           </div>
-          <Divider className="mt-10 h-[3px] w-[60vw] rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:hidden" />
         </section>
+        <Divider className="mx-auto my-8 h-[3px] w-screen rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:hidden" />
         <section className="md:col-start-2">
           {selectButtonsData.map(({ name, component }, index) => (
             <div key={index}>{name === selectedSection && component}</div>
           ))}
         </section>
-        <Divider className="mx-auto mb-10 h-[3px] w-[60vw] rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:hidden" />
+        <Divider className="mx-auto my-8 h-[3px] w-screen rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:hidden" />
       </div>
     </main>
   );

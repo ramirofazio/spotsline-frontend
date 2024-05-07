@@ -1,5 +1,6 @@
 import { Divider } from "@nextui-org/react";
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
+import { DefaultButton } from "src/components";
 import BorderedWhiteCard from "src/components/cards/BorderedWhiteCard";
 import { convertISOToDate } from "src/utils";
 
@@ -14,6 +15,15 @@ export default function ProfileOrders() {
         <p className="text-xs">Consulta tu historial de compras Spotsline.</p>
       </header>
       <section className="flex flex-col gap-10 p-10 md:mr-10 md:p-0 lg:w-full">
+        {Boolean(!userOrders.length) && (
+          <div className="space-y-4">
+            <h3 className="font-semibold">¡No hay nada que ver aqui!</h3>
+            <DefaultButton as={Link} to={"/productos/1"}>
+              VER PRODUCTOS
+            </DefaultButton>
+          </div>
+        )}
+
         {userOrders.map((order, index) => (
           <BorderedWhiteCard
             key={index}

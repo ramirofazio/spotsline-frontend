@@ -9,7 +9,7 @@ export default function AwsImage({ type, identify, className, ...props }) {
       width={200}
       height={200}
       alt={identify}
-      className={`${className} max-w-[500px]`}
+      className={`${className} pointer-events-none max-w-[500px]`}
       {...props}
     />
   );

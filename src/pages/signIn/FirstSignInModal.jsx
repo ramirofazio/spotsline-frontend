@@ -82,7 +82,7 @@ export function FirstSignInModal({ navigate }) {
       title={"¿PRIMERA VEZ?"}
       description={"¡Actualicemos tu contraseña!"}
     >
-      <i className="ri-logout-circle-line icons absolute left-0 top-0 text-xl text-red-500" onClick={handleLogOut} />
+      <i className="ri-logout-circle-line icons absolute left-4 top-4 text-xl text-red-500" onClick={handleLogOut} />
       <form className="mb-20 flex flex-col items-center justify-start gap-4" onSubmit={(e) => handleSubmit(e)}>
         {inputFields.map(({ name, label }, index) => (
           <PasswordInput
