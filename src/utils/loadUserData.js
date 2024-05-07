@@ -7,7 +7,7 @@ export const loadUserData = async (dispatch, access_token, email, managedClient)
     const { user, shoppingCart } = await APISpot.auth.jwtAutoSignIn({
       jwt: access_token,
       email,
-      managedClient: managedClient?.id !== "" ? managedClient : false,
+      managedClient: managedClient ?? false,
     });
 
     if (user.web_role === null) {

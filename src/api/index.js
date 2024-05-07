@@ -164,19 +164,19 @@ export const APISpot = {
 
   user: {
     getCurrentAccounts: async () => {
+      addAuthWithToken(getOfStorage("access_token"));
+      //ACA
       const localUser = getOfStorage("user");
+      const managedClient = getOfStorage("managedClient");
       let id;
 
-      if (localUser) {
-        if (localUser.web_role !== import.meta.env.VITE_USER_ROLE) {
-          //? Es vendedor
-          id = Number(getOfStorage("managedClient").id);
-        } else {
-          //? Es user normal
-          id = localUser.id;
-        }
+      if (localUser.web_role === Number(import.meta.env.VITE_SELLER_ROLE)) {
+        //? Es vendedor
+        id = Number(managedClient.id);
+      } else {
+        //? Es user normal
+        id = localUser.id;
       }
-
       const res = await BASE_API.get(`/${route.CURRENT_ACCOUNT}/one/${id}`);
       return res.data;
     },
@@ -188,33 +188,33 @@ export const APISpot = {
       addAuthWithToken(getOfStorage("access_token"));
       //ACA
       const localUser = getOfStorage("user");
+      const managedClient = getOfStorage("managedClient");
       let id;
 
-      if (localUser) {
-        if (localUser.web_role !== import.meta.env.VITE_USER_ROLE) {
-          //? Es vendedor
-          id = Number(getOfStorage("managedClient").id);
-        } else {
-          //? Es user normal
-          id = localUser.id;
-        }
+      if (localUser.web_role === Number(import.meta.env.VITE_SELLER_ROLE)) {
+        //? Es vendedor
+        id = Number(managedClient.id);
+      } else {
+        //? Es user normal
+        id = localUser.id;
       }
 
       const res = await BASE_API.get(`/${route.USER}/profile/${id}`);
       return res.data;
     },
     getOrders: async () => {
+      addAuthWithToken(getOfStorage("access_token"));
+      //ACA
       const localUser = getOfStorage("user");
+      const managedClient = getOfStorage("managedClient");
       let id;
 
-      if (localUser) {
-        if (localUser.web_role !== import.meta.env.VITE_USER_ROLE) {
-          //? Es vendedor
-          id = Number(getOfStorage("managedClient").id);
-        } else {
-          //? Es user normal
-          id = localUser.id;
-        }
+      if (localUser.web_role === Number(import.meta.env.VITE_SELLER_ROLE)) {
+        //? Es vendedor
+        id = Number(managedClient.id);
+      } else {
+        //? Es user normal
+        id = localUser.id;
       }
 
       const res = await BASE_API.get(`/${route.USER}/orders/${id}`);

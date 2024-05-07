@@ -1,5 +1,5 @@
 import { Divider, useDisclosure } from "@nextui-org/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { BasicInput, DefaultButton } from "src/components";
@@ -24,10 +24,11 @@ export default function ProfileData() {
   const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure();
 
   const [loading, setLoading] = useState(false);
+
   const [data, setData] = useState({
-    id: managedClient.id ? managedClient.id : userData.id,
+    id: userData.id,
     username: userData.fantasyName,
-    cuit: userData.cuit || "xxxxxxxxxxxx",
+    cuit: userData.cuit ?? "xxxxxxxxxxxx",
     email: userData.email,
     password: "***********",
   });
@@ -57,6 +58,15 @@ export default function ProfileData() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    setData({
+      email: managedClient.email,
+      id: managedClient.id,
+      username: managedClient.fantasyName,
+      cuit: managedClient.cuit ?? "xxxxxxxxxxxx",
+    });
+  }, [managedClient]);
 
   return (
     <main className="relative flex flex-col items-center gap-6 py-10 text-center">

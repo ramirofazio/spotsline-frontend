@@ -70,7 +70,10 @@ export function UserRoot() {
 
       const { web_role } = await loadUserData(dispatch, access_token, user.email);
 
-      if (web_role !== Number(import.meta.env.VITE_USER_ROLE)) {
+      if (
+        web_role === Number(import.meta.env.VITE_USER_ROLE) ||
+        web_role === Number(import.meta.env.VITE_SELLER_ROLE)
+      ) {
         setIsUser(true);
       } else {
         setIsUser(false);

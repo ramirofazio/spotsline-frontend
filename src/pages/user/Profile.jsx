@@ -11,6 +11,8 @@ import CurrentAccount from "./CurrentAccount";
 import { useSelector } from "react-redux";
 
 export function Profile() {
+  const navigate = useNavigate();
+
   const { userData, userCA } = useLoaderData();
   const { managedClient } = useSelector((state) => state.seller);
 
@@ -85,6 +87,11 @@ export function Profile() {
   }, [document]);
 
   useEffect(() => {
+    setLoading(true);
+    navigate();
+  }, [managedClient]);
+
+  useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 800);
@@ -93,11 +100,9 @@ export function Profile() {
   if (loading) return <ProfileSkeleton />;
 
   return (
-    <main className="pt-16 md:pt-20">
+    <main className="">
       <header className="relative hidden flex-col items-center justify-center md:flex md:h-40">
-        <h1 className="text-2xl font-bold lg:text-3xl">
-          {managedClient.id ? `CUENTA DE ${managedClient.fantasyName}` : "MI CUENTA"}
-        </h1>
+        <h1 className="text-2xl font-bold lg:text-3xl">{`CUENTA DE ${managedClient.fantasyName ?? "MI CUENTA"}`}</h1>
         <Divider className="absolute bottom-0 mx-auto h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
       </header>
       <div className="md:grid md:grid-cols-2">
@@ -105,15 +110,15 @@ export function Profile() {
           <div className="relative ">
             <Avatar
               loading="lazy"
-              src={avatar ? avatar.url : userData.avatar}
-              name={userData.fantasyName}
+              src={avatar ? avatar.url : managedClient.avatar ?? userData.avatar}
+              name={managedClient.fantasyName ?? userData.fantasyName}
               className="mx-auto h-44 w-44 rounded-full border-3"
               classNames={{ base: "bg-white" }}
             />
 
             <Button
               isIconOnly
-              className=" absolute bottom-0 left-0 rounded-full bg-gradient-to-r from-primary to-yellow-200 font-bold text-black  "
+              className="absolute bottom-0 left-0 rounded-full bg-gradient-to-r from-primary to-yellow-200 font-bold text-black  "
               startContent={
                 <div className={`relative ${loading && "hidden"}`}>
                   <label htmlFor="upload-avatar" className=" cursor-pointer rounded px-4 py-2 font-bold">
@@ -154,7 +159,7 @@ export function Profile() {
             )}
           </div>
           <h1 className="underliner mt-10 w-60 rounded-full bg-gradient-to-r from-primary to-yellow-200 p-2 px-4 text-center font-bold md:text-xl lg:w-80">
-            {userData.fantasyName}
+            {managedClient.fantasyName ?? userData.fantasyName}
           </h1>
 
           <div className="mt-10 flex flex-col items-center justify-around gap-3">
