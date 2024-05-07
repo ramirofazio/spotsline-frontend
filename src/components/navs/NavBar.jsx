@@ -16,12 +16,13 @@ import {
 import { links } from ".";
 import { Link, NavLink, useLoaderData, useLocation } from "react-router-dom";
 import { getOfStorage } from "src/utils/localStorage";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AwsImage from "../images/AwsImage";
 import { toast } from "sonner";
 import { DefaultButton } from "..";
 import ManageClientsModal from "../modals/ManageClientsModal";
 import Loader from "../Loader";
+import { actionProducts } from "src/redux/reducers";
 
 export default function NavBar() {
   const { pathname } = useLocation();
@@ -35,7 +36,10 @@ export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [blur, setBlur] = React.useState(false);
 
-  const categories = /* getOfStorage("categories") || */ useLoaderData();
+  const categories = getOfStorage("categories") || useLoaderData();
+
+  console.log(categories);
+
   const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
@@ -358,6 +362,8 @@ function MobileContent({
 }
 
 function ProductsTab({ index, categories }) {
+  const dispatch = useDispatch();
+
   return (
     <Dropdown className="bg-transparent shadow-none backdrop-blur-xl" key={index}>
       <DropdownTrigger className="font-primary text-sm text-background hover:cursor-pointer lg:text-[15px]">
@@ -375,16 +381,20 @@ function ProductsTab({ index, categories }) {
         ></DropdownItem>
 
         {categories.map((c, index) => (
-          //TODO DEJAR MAS LINDO ESTO
           <DropdownItem
             key={index}
             className="group my-[1px] bg-gradient-to-tl from-primary  to-background p-0 uppercase transition"
             startContent={
-              <NavLink className="flex w-full items-center gap-2 p-1.5 " to={`/productos/${c}`}>
-                <i className="ri-arrow-right-s-line text-secondary transition group-hover:text-white"></i>
-                <p>{c}</p>
+              <NavLink
+                onClick={() => dispatch(actionProducts.setCategory(c.value))}
+                className="flex w-full items-center gap-2 p-1.5 "
+                to={`/productos/1/?category=${c.value}`}
+              >
+                <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
+                <p>{c.name}</p>
               </NavLink>
             }
+            //? Algo asi habria que hacer aca para filtrar automaticamente por categoria
           ></DropdownItem>
         ))}
       </DropdownMenu>
