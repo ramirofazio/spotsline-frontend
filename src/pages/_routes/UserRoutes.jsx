@@ -10,7 +10,7 @@ import { actionsAuth } from "src/redux/reducers";
 import { useDebouncedCallback } from "use-debounce";
 const NavBar = lazy(() => import("components/navs/NavBar.jsx"));
 const Profile = lazy(() => import("pages/user/Profile").then((module) => ({ default: module.Profile })));
-const OrderDetail = lazy(() => import("pages/user/OrderDetail").then((module) => ({ default: module.OrderDetail })));
+const OrderDetail = lazy(() => import("pages/user/OrderDetail").then((module) => ({ default: module.default })));
 
 export const userRoutesPaths = [
   {
