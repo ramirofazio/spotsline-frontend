@@ -49,7 +49,10 @@ export default function CategoriesCarrousel() {
                 radius="full"
                 className="group-[]: relative h-full w-full overflow-hidden text-center text-xs font-bold uppercase text-black/70 shadow shadow-black  transition hover:scale-125"
               >
-                <Link onClick={() => dispatch(actionProducts(c.value))} to={`/productos/1?category=${c.value}`}>
+                <Link
+                  onClick={() => dispatch(actionProducts.setCategory(c.value))}
+                  to={`/productos/1?category=${c.value}`}
+                >
                   <AwsImage type="lights" identify={"light"} className="-z-10 w-full bg-secondary/30" />
                   <div className="absolute inset-0 flex items-center justify-center transition hover:backdrop-blur-sm">
                     <span className="md:text-md w-[80%] whitespace-normal break-words font-secondary font-extrabold group-hover:text-dark">

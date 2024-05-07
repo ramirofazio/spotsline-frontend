@@ -38,8 +38,6 @@ export default function NavBar() {
 
   const categories = getOfStorage("categories") || useLoaderData();
 
-  console.log(categories);
-
   const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
@@ -373,7 +371,11 @@ function ProductsTab({ index, categories }) {
         <DropdownItem
           className="group my-[1px]  bg-gradient-to-tl  from-primary to-background p-0 uppercase transition"
           startContent={
-            <NavLink className="flex w-full items-center gap-2 p-1.5 " to="/productos/0">
+            <NavLink
+              onClick={() => dispatch(actionProducts.setCategory(""))}
+              className="flex w-full items-center gap-2 p-1.5 "
+              to="/productos/0"
+            >
               <i className="ri-arrow-right-s-line  text-secondary transition group-hover:text-white"></i>
               <p>todos</p>
             </NavLink>
@@ -388,7 +390,7 @@ function ProductsTab({ index, categories }) {
               <NavLink
                 onClick={() => dispatch(actionProducts.setCategory(c.value))}
                 className="flex w-full items-center gap-2 p-1.5 "
-                to={`/productos/1/?category=${c.value}`}
+                to={`/productos/1?category=${c.value}`}
               >
                 <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
                 <p>{c.name}</p>
