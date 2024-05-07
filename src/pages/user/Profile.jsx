@@ -100,8 +100,13 @@ export function Profile() {
 
   if (loading) return <ProfileSkeleton />;
 
-  const avatarSrc = () => {};
-
+  const avatarSrc = () => {
+    if (avatar) return avatar;
+    else if (managedClient.avatar) return managedClient.avatar;
+    else if (userData.avatar) return userData.avatar;
+    return "";
+  };
+  console.log("avv", avatarSrc());
   return (
     <main className="">
       <header className="relative hidden flex-col items-center justify-center md:flex md:h-40">
@@ -114,7 +119,8 @@ export function Profile() {
             {console.log(avatar)}
             <Avatar
               loading="lazy"
-              src={avatar ? avatar : "" /* : managedClient.avatar ?? userData.avatar */}
+              src={() => avatarSrc()}
+              // src={avatar ? avatar : "" /* : managedClient.avatar ?? userData.avatar */}
               name={managedClient.fantasyName ?? userData.fantasyName}
               className="mx-auto h-44 w-44 rounded-full border-3"
               classNames={{ base: "bg-white" }}
