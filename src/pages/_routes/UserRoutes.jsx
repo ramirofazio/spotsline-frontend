@@ -1,16 +1,16 @@
 import { lazy, useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
-import { APISpot, addAuthWithToken } from "src/api";
+import { DefaultError } from "pages/error/DefaultError";
+import Layout from "../Layout";
 import { useDispatch } from "react-redux";
+import { APISpot, addAuthWithToken } from "src/api";
 import { getOfStorage } from "src/utils/localStorage";
 import { loadUserData } from "src/utils/loadUserData";
 import { actionsAuth } from "src/redux/reducers";
 import { useDebouncedCallback } from "use-debounce";
-import { DefaultError } from "pages/error/DefaultError";
-import Layout from "../Layout";
 const NavBar = lazy(() => import("components/navs/NavBar.jsx"));
 const Profile = lazy(() => import("pages/user/Profile").then((module) => ({ default: module.Profile })));
-const OrderDetail = lazy(() => import("pages/user/OrderDetail").then((module) => ({ default: module.OrderDetail })));
+const OrderDetail = lazy(() => import("pages/user/OrderDetail").then((module) => ({ default: module.default })));
 
 export const userRoutesPaths = [
   {
