@@ -6,7 +6,6 @@ import { convertISOToDate } from "src/utils";
 
 export default function ProfileOrders() {
   const { userOrders } = useLoaderData();
-
   return (
     <main className="relative flex flex-col items-center gap-6 py-10 text-center">
       <header className="md:w-full md:text-left">
@@ -28,7 +27,7 @@ export default function ProfileOrders() {
           <BorderedWhiteCard
             key={index}
             title={convertISOToDate(order.date)}
-            description={order.mobbexId.slice(0, 8) + "..."}
+            description={order.mobbexId}
             text="DETALLES"
             link={`${order.id}`}
             type="order"

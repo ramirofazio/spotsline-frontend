@@ -1,4 +1,4 @@
-import { Input, Button, Divider, Image, useDisclosure } from "@nextui-org/react";
+import { Input, Button, Divider, Image, useDisclosure, Textarea } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -309,6 +309,7 @@ function PickDateModal({ isOpen, onOpenChange, items, coupon, discount }) {
   const [error, setError] = useState(false);
 
   const [date, setDate] = useState("");
+  const [description, setDescription] = useState("");
 
   const handleCreateCheckout = async () => {
     if (date === "") {
@@ -321,6 +322,7 @@ function PickDateModal({ isOpen, onOpenChange, items, coupon, discount }) {
       const body = {
         userId: user.id,
         discount,
+        description: description || "",
         coupon: coupon || false,
         items: items.map(({ id, qty, productId }) => {
           return { productId: id ?? productId, qty: qty };
@@ -376,6 +378,15 @@ function PickDateModal({ isOpen, onOpenChange, items, coupon, discount }) {
           className={`${
             error && "border-2 border-red-500"
           } w-60 rounded-full bg-background p-2 text-center font-bold tracking-widest text-dark transition hover:cursor-pointer focus:outline-none`}
+        />
+        <Textarea
+          maxRows={3}
+          maxLength={250}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          label="Observaciones"
+          placeholder="Escriba detalles de la compra de ser necesario"
+          className="max-w-xs"
         />
         <DefaultButton onPress={handleCreateCheckout} className={"mx-auto lg:mx-0"} isLoading={loading}>
           IR A PAGAR
