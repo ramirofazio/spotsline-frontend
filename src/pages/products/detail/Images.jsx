@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { assets } from "src/assets";
 
 const imagePerPage = 5;
@@ -13,6 +13,10 @@ export function Images({ variants, currentVariant, setCurrentVariant }) {
     cycles: 0,
     timerId: null,
   });
+
+  useEffect(() => {
+    console.log("IMNG", state);
+  }, [state]);
 
   function getChangeOfPage(currentSlide, currentPage) {
     const { totalPages } = state;
@@ -37,7 +41,9 @@ export function Images({ variants, currentVariant, setCurrentVariant }) {
 
   function getPointIndexes() {
     const { currentPage } = state;
-    return [...Array(imagePerPage).keys()].map((x) => x + (imagePerPage - 1) * (currentPage - 1));
+    const a = [...Array(imagePerPage).keys()].map((x) => x + (imagePerPage - 1) * (currentPage - 1));
+    console.log(a);
+    return a;
   }
 
   return (

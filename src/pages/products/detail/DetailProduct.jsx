@@ -30,6 +30,10 @@ export function DetailProduct() {
   const [qty, setQty] = useState(getOfStorage("qty") || 1);
 
   useEffect(() => {
+    console.log(currentVariant);
+  }, [currentVariant]);
+
+  useEffect(() => {
     document.title = "SPOTSLINE - Cargando...";
     APISpot.product // TODO estaria bueno fetchear la data en el loader de react-router
       .getOne({ id })
@@ -44,7 +48,6 @@ export function DetailProduct() {
           }
         });
         data.variants = variants;
-        console.log(data);
         setProduct(data);
         const localVariant = getOfStorage("currentVariant");
 
@@ -108,7 +111,6 @@ export function DetailProduct() {
 
   return (
     <main className="mt-30 mb-10 min-h-[500px] max-w-7xl flex-wrap px-6 md:mt-32 md:flex md:gap-6 lg:mx-auto lg:gap-10 lg:px-12">
-      {console.log(currentVariant)}
       <Images variants={product.variants} currentVariant={currentVariant} setCurrentVariant={setCurrentVariant} />
       <section className="my-10 md:my-0 md:flex-1">
         <h1 className="mb-8 font-primary text-3xl font-bold">{product?.description}</h1>

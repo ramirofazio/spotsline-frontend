@@ -257,7 +257,7 @@ function MobileContent({
   handleManageClients,
 }) {
   const { managedClient } = useSelector((state) => state.seller);
-
+  const { items } = useSelector((state) => state.cart);
   return (
     <NavbarMenu className="gap-4 overflow-hidden bg-gradient-to-br from-primary to-white/20">
       <div className="absolute -right-48 -top-10 -z-40 opacity-50">
@@ -331,30 +331,26 @@ function MobileContent({
         )}
 
         {id && access_token && (
-          <>
+          <div className="relative flex items-center justify-center">
             <Button
               as={Link}
-              to={"/carrito"}
-              onPress={() => setIsMenuOpen(false)}
-              className={`bg-gradient-to-tl  from-primary to-background shadow-xl ${
+              to="/carrito"
+              className={`relative bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
                 pathname === "/carrito" && "pointer-events-none from-background"
               }`}
-              size="lg"
+              size="md"
               isIconOnly
             >
               <i
                 className={`ri-shopping-cart-2-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`}
               />
             </Button>
-            <Button
-              className="bg-gradient-to-tl from-primary to-background shadow-xl"
-              size="lg"
-              isIconOnly
-              onPress={handleLogOut}
-            >
-              <i className="ri-logout-circle-r-line text-2xl" />
-            </Button>
-          </>
+            {items?.length && (
+              <span className="absolute -bottom-2 -right-3 z-50 flex h-6 w-6 items-center justify-center rounded-full bg-white font-bold">
+                <p>{items.length}</p>
+              </span>
+            )}
+          </div>
         )}
       </div>
       <div className="bottom-0 z-20 mx-auto mt-10 text-center">
