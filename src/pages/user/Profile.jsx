@@ -15,7 +15,7 @@ export function Profile() {
 
   const { userData, userCA } = useLoaderData();
   const { managedClient } = useSelector((state) => state.seller);
-
+  console.log(userData);
   const [avatar, setAvatar] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedSection, setSelectedSection] = useState(() => {
@@ -34,15 +34,16 @@ export function Profile() {
   async function updateAvatar() {
     try {
       setLoading(true);
-      await APISpot.user.updateAvatar({
+      const res = await APISpot.user.updateAvatar({
         formData: avatar.formData,
         //? Si es un vendedor gestionando manda el id del managedClient
-        userId: managedClient.id ?? userData.id,
+        userId: managedClient.id ? managedClient.id : userData.id,
         web_role: "client",
       });
+      console.log(res);
       toast.success("Avatar actualizado!");
       userData.avatar = avatar.url;
-      setAvatar(null);
+      // setAvatar(null);
     } catch (err) {
       console.log(err);
     } finally {
@@ -99,6 +100,8 @@ export function Profile() {
 
   if (loading) return <ProfileSkeleton />;
 
+  const avatarSrc = () => {};
+
   return (
     <main className="">
       <header className="relative hidden flex-col items-center justify-center md:flex md:h-40">
@@ -108,9 +111,10 @@ export function Profile() {
       <div className="md:grid md:grid-cols-2">
         <section className="flex flex-col items-center justify-start gap-2 p-10 pt-10">
           <div className="relative ">
+            {console.log(avatar)}
             <Avatar
               loading="lazy"
-              src={avatar ? avatar.url : managedClient.avatar ?? userData.avatar}
+              src={avatar ? avatar : "" /* : managedClient.avatar ?? userData.avatar */}
               name={managedClient.fantasyName ?? userData.fantasyName}
               className="mx-auto h-44 w-44 rounded-full border-3"
               classNames={{ base: "bg-white" }}

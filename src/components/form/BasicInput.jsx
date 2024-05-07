@@ -18,7 +18,7 @@ export function BasicInput({
       classNames={{
         label: labelClass,
         inputWrapper: inputWrapperClass,
-        input: " lg:ml-4",
+        input: " lg:ml-4 disabled:opacity-50",
       }}
       color="secondary"
       name={name}

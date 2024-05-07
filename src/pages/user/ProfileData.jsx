@@ -18,7 +18,6 @@ const inputFields = [
 export default function ProfileData() {
   const navigate = useNavigate();
   const { userData } = useLoaderData();
-
   const { managedClient } = useSelector((state) => state.seller);
 
   const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure();
@@ -60,13 +59,30 @@ export default function ProfileData() {
   };
 
   useEffect(() => {
-    setData({
-      email: managedClient.email,
-      id: managedClient.id,
-      username: managedClient.fantasyName,
-      cuit: managedClient.cuit ?? "xxxxxxxxxxxx",
-    });
+    if (managedClient.id) {
+      setData({
+        email: managedClient.email,
+        id: managedClient.id,
+        username: managedClient.fantasyName,
+        cuit: managedClient.cuit ?? "xxxxxxxxxxxx",
+      });
+    }
   }, [managedClient]);
+
+  const isDisabled = (name) => {
+    if (name === "email") {
+      return true;
+    }
+    if (managedClient.id) {
+      if (name === "email") {
+        return true;
+      }
+      if (name === "password") {
+        return true;
+      }
+    }
+    return false;
+  };
 
   return (
     <main className="relative flex flex-col items-center gap-6 py-10 text-center">
@@ -76,27 +92,31 @@ export default function ProfileData() {
         <p className="text-xs">Edita los datos de tu perfil de usuario.</p>
       </header>
       <form className="flex flex-col gap-4 lg:w-[80%] lg:self-start lg:pr-10" onSubmit={handleSubmit}>
-        {inputFields.map(({ name, startIcon, label, pencil }) => (
-          <div key={name} className="relative">
-            <BasicInput
-              name={name}
-              startContentIcon={startIcon}
-              endContent={
-                !managedClient.id &&
-                pencil && <i className="ri-pencil-line icons text-xl text-dark" onClick={() => onOpen()} />
-              }
-              label={label}
-              onChange={handleOnChange}
-              value={data[name]}
-              disabled={name === "password" || name === "email" || managedClient.id}
-              labelClass="text-dark font-bold mt-1 text-sm"
-              inputWrapperClass="bg-white border-none"
-            />
-            {name === "email" && (
-              <p className="absolute right-0 mt-1 text-right text-[9px]">*Esta información no puede editarse.</p>
-            )}
-          </div>
-        ))}
+        {inputFields.map(({ name, startIcon, label, pencil }) => {
+          console.log(data);
+          return (
+            <div key={name} className="relative">
+              <BasicInput
+                name={name}
+                startContentIcon={startIcon}
+                endContent={
+                  !managedClient.id &&
+                  pencil && <i className="ri-pencil-line icons text-xl text-dark" onClick={() => onOpen()} />
+                }
+                label={label}
+                onChange={handleOnChange}
+                value={data[name]}
+                disabled={isDisabled(name)}
+                // disabled={name === "password" || name === "email" || managedClient.id}
+                labelClass="text-dark font-bold mt-1 text-sm"
+                inputWrapperClass="bg-white border-none disabled:bg-red-500"
+              />
+              {name === "email" && (
+                <p className="absolute right-0 mt-1 text-right text-[9px]">*Esta información no puede editarse.</p>
+              )}
+            </div>
+          );
+        })}
         <DefaultButton
           isDisabled={loading || managedClient.id}
           type="submit"

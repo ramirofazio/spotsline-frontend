@@ -226,7 +226,7 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
                 className={`ri-shopping-cart-2-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`}
               />
             </Button>
-            {items?.length && (
+            {items?.length > 0 && (
               <span className="absolute -bottom-2 -right-3 z-50 flex h-6 w-6 items-center justify-center rounded-full bg-white font-bold">
                 <p>{items.length}</p>
               </span>
