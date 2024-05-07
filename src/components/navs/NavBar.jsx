@@ -19,31 +19,35 @@ import { getOfStorage } from "src/utils/localStorage";
 import { useDispatch, useSelector } from "react-redux";
 import AwsImage from "../images/AwsImage";
 import { toast } from "sonner";
-import { removeAuthWithToken } from "src/api";
-import { actionsAuth, actionsUser, actionProducts } from "src/redux/reducers";
 import { DefaultButton } from "..";
 import ManageClientsModal from "../modals/ManageClientsModal";
 import Loader from "../Loader";
+import { actionProducts } from "src/redux/reducers";
 
 export default function NavBar() {
   const { pathname } = useLocation();
-  const dispatch = useDispatch();
   const { access_token } = useSelector((state) => state.auth);
   const { id, web_role } = useSelector((state) => state.user);
-  const { managedClient } = useSelector((state) => state.seller);
+
+  const managedClient = getOfStorage("managedClient");
 
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [blur, setBlur] = React.useState(false);
 
-  const categories = /* getOfStorage("categories") || */ useLoaderData();
+  const categories = getOfStorage("categories") || useLoaderData();
+
+  console.log(categories);
+
   const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
+    isMenuOpen ? setBlur(true) : window.scrollY < 250 && setBlur(false);
+
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      if (scrollY > 250 || isMenuOpen || (window.innerWidth > 700 && window.innerWidth < 1000)) {
+      if (scrollY > 250 || isMenuOpen) {
         setBlur(true);
       } else {
         setBlur(false);
@@ -59,8 +63,8 @@ export default function NavBar() {
   }, [isMenuOpen, pathname]);
 
   useEffect(() => {
-    if (!managedClient.id && web_role === Number(import.meta.env.VITE_SELLER_ROLE)) {
-      const button = document.getElementById("manage-clients-button");
+    const button = document.getElementById("manage-clients-button");
+    if (!managedClient?.id && web_role === Number(import.meta.env.VITE_SELLER_ROLE)) {
       if (button && !isOpen) {
         button.click();
       }
@@ -81,87 +85,51 @@ export default function NavBar() {
     <Loader />
   ) : (
     <Navbar
-      shouldHideOnScroll
-      className={`xl:rounded-bl-2xl xl:rounded-br-2xl ${
-        pathname !== "/" ? "bg-dark/30 shadow-xl" : "bg-transparent"
-      }  md:py-4 ${pathname === "/carrito" ? "block" : "fixed"}`}
+      shouldHideOnScroll={pathname !== "/" ? false : true}
+      className={`bg-transparent py-2 transition ${pathname !== "/" ? "block bg-dark/60" : "fixed"} ${
+        blur && "bg-dark/20 hover:bg-dark/60"
+      } ${isMenuOpen && "py-0"}`}
       isBlurred={blur}
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
       maxWidth="full"
     >
-      <NavbarContent justify="start">
-        <Link to="/">
-          <AwsImage
-            type="logos"
-            identify="logoWhite"
-            className="mr-20 w-20  transition hover:scale-110 hover:animate-pulse hover:cursor-pointer sm:w-24 md:w-32"
-            hidden={isMenuOpen ? true : false}
-          />
-        </Link>
-      </NavbarContent>
+      <Link to="/">
+        <AwsImage
+          type="logos"
+          identify="logoWhite"
+          className={`w-24 transition hover:scale-110 hover:animate-pulse hover:cursor-pointer sm:w-24 md:w-32`}
+          hidden={isMenuOpen ? true : false}
+        />
+      </Link>
 
-      <NavbarContent className="hidden gap-4  sm:flex xl:gap-24 " justify="center">
+      <div className="hidden items-center justify-start gap-3 sm:flex">
         {links.map(({ name, path }, index) => (
-          <NavbarItem
-            key={index}
-            className={`group flex h-full items-center gap-2 border-b-4 border-transparent  px-2 ${
-              name === "inicio" && "hidden"
-            } ${pathname === path && " border-primary"}`}
-          >
-            <i className="ri-arrow-down-s-line yellow-neon text-xl font-bold transition group-hover:scale-125"></i>
+          <NavbarItem key={index} className={`group flex h-full items-center ${name === "inicio" && "hidden"}`}>
+            <i
+              className={`ri-arrow-down-s-line yellow-neon transition group-hover:scale-125 ${
+                pathname === path && "pointer-events-none opacity-50"
+              }`}
+            ></i>
             {name === "productos" ? (
-              <Dropdown className="bg-transparent shadow-none backdrop-blur-xl" key={index}>
-                <DropdownTrigger className="text-background hover:cursor-pointer xl:text-xl">PRODUCTOS</DropdownTrigger>
-                <DropdownMenu
-                  variant="solid"
-                  aria-label="Dropdown menu with icons"
-                  className="max-h-[50vh] overflow-scroll"
-                >
-                  <DropdownItem
-                    className="group my-[1px]  bg-gradient-to-tl  from-primary to-background p-0 uppercase transition"
-                    startContent={
-                      <NavLink
-                        onClick={() => dispatch(actionProducts.setCategory(""))}
-                        className="flex w-full items-center gap-2 p-1.5 "
-                        to="/productos/0"
-                      >
-                        <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
-                        <p>todos</p>
-                      </NavLink>
-                    }
-                  ></DropdownItem>
-
-                  {categories?.map((c, index) => (
-                    <DropdownItem
-                      key={index}
-                      className="group my-[1px] bg-gradient-to-tl from-primary  to-background p-0 uppercase transition"
-                      startContent={
-                        <NavLink
-                          onClick={() => dispatch(actionProducts.setCategory(c.value))}
-                          className="flex w-full items-center gap-2 p-1.5 "
-                          to={`/productos/1/?category=${c.value}`}
-                        >
-                          <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
-                          <p>{c.name}</p>
-                        </NavLink>
-                      }
-                      //? Algo asi habria que hacer aca para filtrar automaticamente por categoria
-                    ></DropdownItem>
-                  ))}
-                </DropdownMenu>
-              </Dropdown>
+              <ProductsTab index={index} categories={categories} />
             ) : (
-              <Link className={`text-md w-full  uppercase text-background xl:text-xl`} to={path}>
+              <Link
+                className={`w-full text-sm uppercase text-background lg:text-[15px]  ${
+                  pathname === path && "pointer-events-none opacity-50"
+                }`}
+                to={path}
+              >
                 {name}
               </Link>
             )}
           </NavbarItem>
         ))}
-      </NavbarContent>
-      <NavbarContent justify="end" className="sm:hidden">
+      </div>
+
+      <div className="sm:hidden">
         <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className={`ml-20 text-background`} />
-      </NavbarContent>
+      </div>
 
       <MobileContent
         web_role={web_role}
@@ -191,7 +159,7 @@ export default function NavBar() {
 function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, handleManageClients }) {
   const { managedClient } = useSelector((state) => state.seller);
   return (
-    <NavbarContent justify="end" className="hidden sm:flex">
+    <NavbarContent justify="end" className="hidden !justify-end sm:flex lg:mr-6">
       {!id && !access_token && (
         <DefaultButton
           as={Link}
@@ -223,11 +191,13 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
           size="md"
           isIconOnly
         >
-          <i className={`ri-link text-2xl ${managedClient.id && "animate-pulse text-success"}`} />
+          <i className={`ri-link text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`} />
         </Button>
       )}
 
-      {web_role === Number(import.meta.env.VITE_USER_ROLE) && (
+      {(web_role === Number(import.meta.env.VITE_USER_ROLE) ||
+        web_role === Number(import.meta.env.VITE_SELLER_ROLE)) && (
+        //? Solo seller y user tiene acceso aca
         <Button
           as={Link}
           to={"/user/profile"}
@@ -237,7 +207,7 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
           size="md"
           isIconOnly
         >
-          <i className="ri-user-fill text-2xl" />
+          <i className={`ri-user-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`} />
         </Button>
       )}
 
@@ -252,7 +222,7 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
             size="md"
             isIconOnly
           >
-            <i className="ri-shopping-cart-2-fill text-2xl" />
+            <i className={`ri-shopping-cart-2-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`} />
           </Button>
 
           <Button
@@ -328,27 +298,28 @@ function MobileContent({
               setIsMenuOpen(false);
               handleManageClients();
             }}
-            className={`bg-gradient-to-tl from-primary to-background shadow-xl ${
-              managedClient.id && "animate-pulse from-success to-success"
-            }`}
+            className={`bg-gradient-to-tl from-primary to-background shadow-xl`}
             size="lg"
             isIconOnly
           >
-            <i className="ri-customer-service-fill text-2xl" />
+            <i className={`ri-link text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`} />
           </Button>
         )}
 
-        {web_role === Number(import.meta.env.VITE_USER_ROLE) && (
+        {(web_role === Number(import.meta.env.VITE_USER_ROLE) ||
+          web_role === Number(import.meta.env.VITE_SELLER_ROLE)) && (
+          //? Solo seller y user tiene acceso aca
           <Button
             as={Link}
             to={"/user/profile"}
+            onPress={() => setIsMenuOpen(false)}
             className={`bg-gradient-to-tl from-primary to-background shadow-xl ${
               pathname === "/user/profile" && "pointer-events-none from-background"
             }`}
             size="lg"
             isIconOnly
           >
-            <i className="ri-user-fill text-2xl" />
+            <i className={`ri-user-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`} />
           </Button>
         )}
 
@@ -364,7 +335,9 @@ function MobileContent({
               size="lg"
               isIconOnly
             >
-              <i className="ri-shopping-cart-2-fill text-2xl" />
+              <i
+                className={`ri-shopping-cart-2-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`}
+              />
             </Button>
             <Button
               className="bg-gradient-to-tl from-primary to-background shadow-xl"
@@ -377,13 +350,54 @@ function MobileContent({
           </>
         )}
       </div>
-      <div className="bottom-0 mx-auto mt-10 text-center">
+      <div className="bottom-0 z-20 mx-auto mt-10 text-center">
         <h1 className="text-3xl">SPOTSLINE</h1>
         <p className="-mt-2 font-slogan text-2xl">Se ve bien.</p>
       </div>
-      <div className="absolute -bottom-20 -left-28">
+      <div className="absolute -bottom-20 -left-28 blur-sm">
         <AwsImage type="logos" identify="logoWhite" className="w-[400px] rotate-12" />
       </div>
     </NavbarMenu>
+  );
+}
+
+function ProductsTab({ index, categories }) {
+  const dispatch = useDispatch();
+
+  return (
+    <Dropdown className="bg-transparent shadow-none backdrop-blur-xl" key={index}>
+      <DropdownTrigger className="font-primary text-sm text-background hover:cursor-pointer lg:text-[15px]">
+        PRODUCTOS
+      </DropdownTrigger>
+      <DropdownMenu variant="solid" aria-label="Dropdown menu with icons" className="max-h-[50vh] overflow-scroll">
+        <DropdownItem
+          className="group my-[1px]  bg-gradient-to-tl  from-primary to-background p-0 uppercase transition"
+          startContent={
+            <NavLink className="flex w-full items-center gap-2 p-1.5 " to="/productos/0">
+              <i className="ri-arrow-right-s-line  text-secondary transition group-hover:text-white"></i>
+              <p>todos</p>
+            </NavLink>
+          }
+        ></DropdownItem>
+
+        {categories.map((c, index) => (
+          <DropdownItem
+            key={index}
+            className="group my-[1px] bg-gradient-to-tl from-primary  to-background p-0 uppercase transition"
+            startContent={
+              <NavLink
+                onClick={() => dispatch(actionProducts.setCategory(c.value))}
+                className="flex w-full items-center gap-2 p-1.5 "
+                to={`/productos/1/?category=${c.value}`}
+              >
+                <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
+                <p>{c.name}</p>
+              </NavLink>
+            }
+            //? Algo asi habria que hacer aca para filtrar automaticamente por categoria
+          ></DropdownItem>
+        ))}
+      </DropdownMenu>
+    </Dropdown>
   );
 }

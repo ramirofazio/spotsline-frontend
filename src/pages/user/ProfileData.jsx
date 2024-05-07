@@ -1,10 +1,11 @@
 import { Divider, useDisclosure } from "@nextui-org/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { BasicInput, DefaultButton } from "src/components";
 import { ChangePasswordModal } from "../signIn/ChangePasswordModal";
 import { APISpot } from "src/api";
+import { useSelector } from "react-redux";
 
 const inputFields = [
   { name: "username", startIcon: "ri-user-fill", label: "NOMBRE COMPLETO" },
@@ -15,15 +16,19 @@ const inputFields = [
 
 //TODO Alerta cuando navegan hacia atras para avisar que sus datos no se guardaran o algo asi, puede ser un modal con un boton para que los
 export default function ProfileData() {
-  const { userData } = useLoaderData();
   const navigate = useNavigate();
+  const { userData } = useLoaderData();
+
+  const { managedClient } = useSelector((state) => state.seller);
+
   const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure();
 
   const [loading, setLoading] = useState(false);
+
   const [data, setData] = useState({
     id: userData.id,
     username: userData.fantasyName,
-    cuit: userData.cuit || "xxxxxxxxxxxx",
+    cuit: userData.cuit ?? "xxxxxxxxxxxx",
     email: userData.email,
     password: "***********",
   });
@@ -54,6 +59,15 @@ export default function ProfileData() {
     }
   };
 
+  useEffect(() => {
+    setData({
+      email: managedClient.email,
+      id: managedClient.id,
+      username: managedClient.fantasyName,
+      cuit: managedClient.cuit ?? "xxxxxxxxxxxx",
+    });
+  }, [managedClient]);
+
   return (
     <main className="relative flex flex-col items-center gap-6 py-10 text-center">
       <header className="md:w-full md:text-left">
@@ -67,11 +81,14 @@ export default function ProfileData() {
             <BasicInput
               name={name}
               startContentIcon={startIcon}
-              endContent={pencil && <i className="ri-pencil-line icons text-xl text-dark" onClick={() => onOpen()} />}
+              endContent={
+                !managedClient.id &&
+                pencil && <i className="ri-pencil-line icons text-xl text-dark" onClick={() => onOpen()} />
+              }
               label={label}
               onChange={handleOnChange}
               value={data[name]}
-              disabled={name === "password" || name === "email"}
+              disabled={name === "password" || name === "email" || managedClient.id}
               labelClass="text-dark font-bold mt-1 text-sm"
               inputWrapperClass="bg-white border-none"
             />
@@ -80,7 +97,12 @@ export default function ProfileData() {
             )}
           </div>
         ))}
-        <DefaultButton type="submit" className={"mt-6 font-bold lg:mx-auto"} isLoading={loading}>
+        <DefaultButton
+          isDisabled={loading || managedClient.id}
+          type="submit"
+          className={"mt-6 font-bold lg:mx-auto "}
+          isLoading={loading}
+        >
           GUARDAR CAMBIOS
         </DefaultButton>
       </form>

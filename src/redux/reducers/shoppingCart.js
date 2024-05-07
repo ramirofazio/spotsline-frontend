@@ -29,6 +29,8 @@ const shoppingCartSlice = createSlice({
 
       console.log("EXISTE?", existingItem);
 
+      console.log(newItem);
+
       if (existingItem) {
         existingItem.qty += newItem.qty;
       } else {
