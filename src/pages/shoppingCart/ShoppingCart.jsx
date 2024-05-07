@@ -296,11 +296,6 @@ function PickDateModal({ isOpen, onOpenChange, items, coupon, discount }) {
   const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
 
-  const hanldeDescription = () => {};
-
-  // useEffect(() => {
-  //   console.log(description);
-  // }, [description]);
   const handleCreateCheckout = async () => {
     if (date === "") {
       toast.error("Debe seleccionar la fecha de entrega");
@@ -312,7 +307,7 @@ function PickDateModal({ isOpen, onOpenChange, items, coupon, discount }) {
       const body = {
         userId: user.id,
         discount,
-        // description: description || "",
+        description: description || "",
         coupon: coupon || false,
         items: items.map(({ id, qty, productId }) => {
           return { productId: id ?? productId, qty: qty };
@@ -370,6 +365,9 @@ function PickDateModal({ isOpen, onOpenChange, items, coupon, discount }) {
           } w-60 rounded-full bg-background p-2 text-center font-bold tracking-widest text-dark transition hover:cursor-pointer focus:outline-none`}
         />
         <Textarea
+          maxRows={3}
+          maxLength={250}
+          value={description}
           onChange={(e) => setDescription(e.target.value)}
           label="Observaciones"
           placeholder="Escriba detalles de la compra de ser necesario"
