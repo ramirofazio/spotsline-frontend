@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
 import { DarkModal, DefaultButton, ShoppingCartSkeleton } from "src/components";
+import AwsImage from "src/components/images/AwsImage";
 import { actionsShoppingCart } from "src/redux/reducers";
 import { formatPrices } from "src/utils";
 import { saveInStorage } from "src/utils/localStorage";
@@ -20,7 +21,9 @@ export default function ShoppingCart() {
   const { managedClient } = useSelector((state) => state.seller);
 
   const [discountCode, setDiscountCode] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [SkeletonLoading, setSkeletonLoading] = useState(true);
+
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const handleUpdateCart = useDebouncedCallback(async () => {
@@ -97,39 +100,40 @@ export default function ShoppingCart() {
     handleUpdateCart();
   }, [reduxCart]);
 
-  setTimeout(() => {
-    setLoading(false);
-  }, 800);
+  useEffect(() => {
+    setTimeout(() => {
+      setSkeletonLoading(false);
+    }, 800);
+  }, [SkeletonLoading]);
 
-  if (loading) return <ShoppingCartSkeleton />;
+  if (SkeletonLoading) return <ShoppingCartSkeleton />;
 
   return (
     <main className="text-center">
-      <section className="relative grid place-items-center gap-6 p-6">
-        {reduxCart.items.length === 0 && (
-          <div className="flex flex-col items-center gap-6">
-            <h3 className="font-semibold">NO HAY NINGUN PRODUCTO EN TU CARRITO</h3>
-            <DefaultButton as={Link} to="/productos/0" className={"w-fit"}>
-              VER PRODUCTOS
-            </DefaultButton>
-          </div>
-        )}
+      <section className="relative grid place-items-center gap-10 p-6">
         <DefaultButton
           isIconOnly={true}
           onPress={() => resetCart(reduxCart.id)}
-          disabled={!reduxCart.items.length && true}
+          isDisabled={Boolean(!reduxCart.items.length)}
           className="invisible absolute bottom-4 right-4 w-4 from-red-600 to-red-600 !px-0 disabled:pointer-events-none disabled:opacity-40 xl:visible"
         >
           <i className="ri-delete-bin-line text-2xl"></i>
         </DefaultButton>
 
         {managedClient.fantasyName && (
-          <>
-            <h1 className="text-3xl font-bold text-dark drop-shadow-xl">
-              CARRITO DE <strong className="yellowGradient">{managedClient.fantasyName}</strong>{" "}
-            </h1>
-            <Divider className="h-1 bg-primary" />
-          </>
+          <h1 className="text-3xl font-bold text-dark drop-shadow-xl">
+            CARRITO DE <strong className="yellowGradient">{managedClient.fantasyName}</strong>{" "}
+          </h1>
+        )}
+
+        {reduxCart.items.length === 0 && (
+          //? Esto se muestra durante unos segundos aunque haya productos en el carrito
+          <div className="flex flex-col items-center gap-6">
+            <h3 className="font-semibold">NO HAY NINGUN PRODUCTO EN TU CARRITO</h3>
+            <DefaultButton as={Link} to="/productos/0" className={"w-fit"}>
+              VER PRODUCTOS
+            </DefaultButton>
+          </div>
         )}
 
         {reduxCart.items.map(({ img, name, price, qty, id, productId }, index) => (
@@ -194,7 +198,18 @@ export default function ShoppingCart() {
         ))}
       </section>
       <Divider className="h-1 bg-primary" />
-      <section className="relative m-6 mx-auto flex max-w-[80vw] flex-col  items-start gap-6 rounded-xl border-2 border-primary/50 bg-dark/50 p-6 font-secondary font-bold text-white xl:max-w-[60vw]">
+      <section className="relative m-6 mx-auto flex max-w-[80vw] flex-col items-start  gap-6 overflow-hidden rounded-xl bg-dark/50 p-6 font-secondary font-bold text-white shadow-xl xl:max-w-[60vw]">
+        <AwsImage
+          type={"logos"}
+          identify={"logoYellow"}
+          className={"absolute -right-20 -top-10 w-60 rotate-12 blur-sm"}
+        />
+        <AwsImage
+          type={"logos"}
+          identify={"logoYellow"}
+          className={"absolute -bottom-10 -left-20 w-60 -rotate-12 blur-sm"}
+        />
+
         <h2 className="yellow-neon text-xl font-bold tracking-wider">RESUMEN</h2>
         <div className="z-10 flex w-full items-center justify-between">
           <h3>SUBTOTAL</h3>
@@ -263,10 +278,10 @@ export default function ShoppingCart() {
           </div>
         )}
         {web_role === Number(import.meta.env.VITE_SELLER_ROLE) && (
-          <div className="mx-auto flex w-full flex-col justify-center gap-6 lg:flex-row ">
+          <div className="mx-auto flex w-full flex-col justify-center gap-6 lg:flex-row">
             <DefaultButton
               onPress={handleAddCartToClient}
-              className={"mx-auto !w-80 lg:mx-0"}
+              className={"mx-auto !w-60 text-xs lg:mx-0 lg:!w-80 lg:text-sm"}
               isLoading={loading}
               isDisabled={reduxCart.items.length === 0 || loading}
             >

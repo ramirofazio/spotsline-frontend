@@ -1,22 +1,27 @@
+import { lazy, useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
-import { Profile } from "pages/user/Profile.jsx";
 import Layout from "../Layout";
-import { useDispatch, useSelector } from "react-redux";
-import NavBar from "src/components/navs/NavBar";
+import { useDispatch } from "react-redux";
 import { APISpot, addAuthWithToken } from "src/api";
 import { getOfStorage } from "src/utils/localStorage";
-import OrderDetail from "../user/OrderDetail";
-import { useEffect, useState } from "react";
 import { loadUserData } from "src/utils/loadUserData";
 import { actionsAuth } from "src/redux/reducers";
 import { useDebouncedCallback } from "use-debounce";
+const NavBar = lazy(() => import("components/navs/NavBar.jsx"));
+const Profile = lazy(() => import("pages/user/Profile").then((module) => ({ default: module.Profile })));
+const OrderDetail = lazy(() => import("pages/user/OrderDetail").then((module) => ({ default: module.default })));
 
 export const userRoutesPaths = [
   {
     path: "/",
     errorElement: <DefaultError />,
-    element: <UserRoot />,
+    element: (
+      <Layout>
+        <NavBar />
+        <UserRoot />
+      </Layout>
+    ),
 
     children: [
       {
@@ -25,8 +30,9 @@ export const userRoutesPaths = [
         loader: async () => {
           try {
             const userData = await APISpot.user.getProfile();
-            const userOrders = await APISpot.user.getOrders(Number(getOfStorage("user").id));
-            return { userData, userOrders };
+            const userOrders = await APISpot.user.getOrders();
+            const userCA = await APISpot.user.getCurrentAccounts();
+            return { userData, userOrders, userCA };
           } catch (e) {
             console.log(e);
             return null;
@@ -64,7 +70,10 @@ export function UserRoot() {
 
       const { web_role } = await loadUserData(dispatch, access_token, user.email);
 
-      if (web_role === Number(import.meta.env.VITE_USER_ROLE)) {
+      if (
+        web_role === Number(import.meta.env.VITE_USER_ROLE) ||
+        web_role === Number(import.meta.env.VITE_SELLER_ROLE)
+      ) {
         setIsUser(true);
       } else {
         setIsUser(false);
@@ -78,10 +87,9 @@ export function UserRoot() {
 
   if (isUser) {
     return (
-      <Layout>
-        <NavBar />
+      <main className="overflow-hidden">
         <Outlet />
-      </Layout>
+      </main>
     );
   }
 

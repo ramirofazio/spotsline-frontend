@@ -6,7 +6,7 @@ import { calculateTotal } from "src/redux/reducers/shoppingCart";
 
 export default function OrderDetail() {
   const order = useLoaderData();
-  const { id, date, coupon, mobbexId, total, type, products } = order;
+  const { id, date, mobbexId, total, products, subtotal, coupon, type } = order;
 
   return (
     <main className="relative flex flex-col items-center gap-6 py-10 pt-20 text-center">
@@ -19,7 +19,7 @@ export default function OrderDetail() {
       />
       <Divider className="h-[3px] w-[60vw] rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:hidden" />
 
-      <ProductsSection products={products} coupon={coupon} total={total} />
+      <ProductsSection products={products} coupon={coupon} total={total} subtotal={subtotal} />
       <Divider className="h-[3px] w-[60vw] rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:hidden" />
       <PaymentDetailSection type={type} total={total} date={convertISOToDate(date)} mobbexId={mobbexId} />
     </main>
@@ -41,7 +41,8 @@ function Header({ type = false, title, subTitle, id, date }) {
         <p className="line-clamp-2 text-xs">
           {subTitle}{" "}
           <strong className="yellowGradient icons" onClick={() => copyToClipboard(id)}>
-            <i className="ri-clipboard-line icons yellowGradient mx-1 animate-pulse text-sm" />#{id.slice(0, 8) + "..."}
+            <i className="ri-clipboard-line icons yellowGradient mx-1 animate-pulse text-sm" />#
+            {`${id}`.slice(0, 8) + "..."}
           </strong>
         </p>
         {type && <p className="text-xs">{convertISOToDate(date)}</p>}
@@ -50,17 +51,18 @@ function Header({ type = false, title, subTitle, id, date }) {
   );
 }
 
-function ProductsSection({ products, coupon, total }) {
+function ProductsSection({ products, coupon, total, subtotal }) {
+  console.log("COUPON", coupon);
   return (
-    <section className="gap-10 md:grid md:grid-cols-2 md:place-items-center">
+    <section className=" gap-10 md:grid md:grid-cols-2 md:place-items-center">
       {products.map(({ description, quantity, total, image }, index) => (
         <article
-          className="flex w-[70vw] flex-col items-center justify-between gap-4 md:col-span-2 md:flex-row md:items-stretch"
+          className="flex max-h-fit w-[70vw] flex-col items-center justify-between gap-4 md:col-span-2 md:flex-row md:items-stretch"
           key={index}
         >
           <div className="flex items-center space-x-4 rounded-md border-3 border-primary bg-white p-6 text-left shadow-xl">
             <Image
-              src={image !== "imagen" ? image : assets.lights.light}
+              src={image?.length ? image : assets.lights.light}
               alt={description}
               width={500}
               height={500}
@@ -76,24 +78,27 @@ function ProductsSection({ products, coupon, total }) {
           </div>
         </article>
       ))}
-      {coupon && <DiscountDetail coupon={coupon} total={total} />}
+      {coupon && subtotal && <DiscountDetail coupon={coupon} total={total} subtotal={subtotal} />}
     </section>
   );
 }
 
-function DiscountDetail({ total, coupon }) {
+function DiscountDetail({ total, coupon, subtotal }) {
   const { name, discountPercentaje } = coupon;
-  const totalDiscount = calculateTotal(total, discountPercentaje);
+  const totalDiscount = subtotal - calculateTotal(subtotal, discountPercentaje);
+
   return (
     <section className="mt-10 flex w-[70vw] flex-col items-center gap-4 rounded-md border-3 border-primary p-4 shadow-md md:col-start-2 md:mt-0 md:w-full">
-      (
       <div className="flex w-full items-start justify-between text-left">
         <p className="text-xs">
           Cúpon <strong>{name}</strong> aplicado <br />%{discountPercentaje} OFF
         </p>
-        <p className="line-through">{formatPrices(totalDiscount)}</p>
+        <span>
+          <p className="line-through">{formatPrices(subtotal)}</p>
+          <p className="line-through">{formatPrices(totalDiscount)}</p>
+        </span>
       </div>
-      )
+
       <div className="flex  w-full items-center justify-between bg-background text-left text-xl font-bold tracking-wider  md:text-2xl">
         <p className="yellowGradient from-yellow-500 to-yellow-700 drop-shadow-lg">TOTAL</p>
         <p className="yellowGradient from-yellow-500 to-yellow-700 drop-shadow-lg">{formatPrices(total)}</p>
@@ -120,7 +125,7 @@ function PaymentDetailSection({ type, total, date, mobbexId }) {
       <div className="flex flex-col gap-4 md:w-full md:flex-row md:gap-0 md:shadow-md">
         <CustomTable
           title="MÉTODO"
-          value={type}
+          value={type ? type : "--"}
           className={"md:rounded-br-none md:rounded-tr-none md:border-r-3 md:shadow-none "}
         />
         <CustomTable

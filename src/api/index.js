@@ -13,6 +13,7 @@ const route = {
   AWS: "aws-s3-upload",
   ORDERS: "orders",
   MAIL: "mailing",
+  CURRENT_ACCOUNT: "current-account",
 };
 
 export const APISpot = {
@@ -163,16 +164,60 @@ export const APISpot = {
   },
 
   user: {
+    getCurrentAccounts: async () => {
+      addAuthWithToken(getOfStorage("access_token"));
+      //ACA
+      const localUser = getOfStorage("user");
+      const managedClient = getOfStorage("managedClient");
+      let id;
+
+      if (localUser.web_role === Number(import.meta.env.VITE_SELLER_ROLE)) {
+        //? Es vendedor
+        id = Number(managedClient.id);
+      } else {
+        //? Es user normal
+        id = localUser.id;
+      }
+      const res = await BASE_API.get(`/${route.CURRENT_ACCOUNT}/one/${id}`);
+      return res.data;
+    },
     createOrder: async (body) => {
       const res = await BASE_API.post(`/${route.USER}/create-order`, body);
       return res.data;
     },
     getProfile: async () => {
       addAuthWithToken(getOfStorage("access_token"));
-      const res = await BASE_API.get(`/${route.USER}/profile`);
+      //ACA
+      const localUser = getOfStorage("user");
+      const managedClient = getOfStorage("managedClient");
+      let id;
+
+      if (localUser.web_role === Number(import.meta.env.VITE_SELLER_ROLE)) {
+        //? Es vendedor
+        id = Number(managedClient.id);
+      } else {
+        //? Es user normal
+        id = localUser.id;
+      }
+
+      const res = await BASE_API.get(`/${route.USER}/profile/${id}`);
       return res.data;
     },
-    getOrders: async (id) => {
+    getOrders: async () => {
+      addAuthWithToken(getOfStorage("access_token"));
+      //ACA
+      const localUser = getOfStorage("user");
+      const managedClient = getOfStorage("managedClient");
+      let id;
+
+      if (localUser.web_role === Number(import.meta.env.VITE_SELLER_ROLE)) {
+        //? Es vendedor
+        id = Number(managedClient.id);
+      } else {
+        //? Es user normal
+        id = localUser.id;
+      }
+
       const res = await BASE_API.get(`/${route.USER}/orders/${id}`);
       return res.data;
     },
@@ -187,7 +232,6 @@ export const APISpot = {
       return res.data;
     },
     updateAvatar: ({ userId, web_role, formData }) => {
-      addAuthWithToken(getOfStorage("access_token"));
       return BASE_API.post(`/${route.AWS}/avatar/${userId}?web_role=${web_role}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
