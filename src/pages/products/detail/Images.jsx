@@ -41,7 +41,7 @@ export function Images({ variants, currentVariant, setCurrentVariant }) {
   }
 
   return (
-    <div className="md:w-[55%] lg:w-3/5">
+    <div className="mx-auto mt-4 max-w-[450px]  md:mt-0 md:w-[55%] lg:w-3/5 lg:max-w-[580px]">
       <div className="relative aspect-[10/8] overflow-hidden rounded-lg">
         {variants.map(({ id, description, pathImage }, index) => (
           <img

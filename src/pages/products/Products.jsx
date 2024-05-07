@@ -27,10 +27,6 @@ export function Products() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  useEffect(() => {
-    console.log(filters);
-  }, [filters]);
-
   return (
     <>
       <header className="relative hidden min-h-[400px] flex-col items-center justify-center gap-2 bg-signIn bg-contain bg-bottom pt-16 text-white shadow-medium before:absolute before:inset-0 before:z-10 before:bg-black/50  before:content-[''] sm:flex">
@@ -104,11 +100,20 @@ function ProductsView() {
   }, [page, search, filters]);
 
   if (loading || !products[page]) {
-    return Array.from({ length: 12 }).map((_, index) => (
-      <div className="grid w-[90%] grid-cols-2 gap-6  p-2 lg:w-full lg:grid-cols-3" key={index}>
-        <SkeletonCard />
+    return (
+      <div className="grid w-full grid-cols-2  gap-8   p-2 lg:w-full lg:grid-cols-3">
+        {Array.from({ length: 12 }).map((_, index) => (
+          <div className="grid w-[90%] grid-cols-2 gap-6  p-2 lg:w-full lg:grid-cols-3" key={index}>
+            <SkeletonCard />
+          </div>
+        ))}
       </div>
-    ));
+    );
+    // return Array.from({ length: 12 }).map((_, index) => (
+    //   <div className="grid w-[90%] grid-cols-2 gap-6  p-2 lg:w-full lg:grid-cols-3" key={index}>
+    //     <SkeletonCard />
+    //   </div>
+    // ));
   }
 
   return (

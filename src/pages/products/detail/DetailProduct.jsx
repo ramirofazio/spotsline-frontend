@@ -94,7 +94,9 @@ export function DetailProduct() {
   }
 
   const getVariantPrice = () => {
-    return formatPrices(currentVariant["precio" + (managedClient.priceList ?? priceList)] * qty);
+    const currentPrice = `precio${managedClient.priceList ? managedClient.priceList : priceList}`;
+    const format = formatPrices(currentVariant[currentPrice] * qty);
+    return format;
   };
 
   if (isLoading) return <SkeletonDetail />;
