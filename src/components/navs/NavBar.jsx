@@ -156,6 +156,7 @@ export default function NavBar() {
 
 function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, handleManageClients }) {
   const { managedClient } = useSelector((state) => state.seller);
+  const { items } = useSelector((state) => state.cart);
   return (
     <NavbarContent justify="end" className="hidden !justify-end sm:flex lg:mr-6">
       {!id && !access_token && (
@@ -211,18 +212,26 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
 
       {id && access_token && (
         <>
-          <Button
-            as={Link}
-            to="/carrito"
-            className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
-              pathname === "/carrito" && "pointer-events-none from-background"
-            }`}
-            size="md"
-            isIconOnly
-          >
-            <i className={`ri-shopping-cart-2-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`} />
-          </Button>
-
+          <div className="relative flex items-center justify-center">
+            <Button
+              as={Link}
+              to="/carrito"
+              className={`relative bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
+                pathname === "/carrito" && "pointer-events-none from-background"
+              }`}
+              size="md"
+              isIconOnly
+            >
+              <i
+                className={`ri-shopping-cart-2-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`}
+              />
+            </Button>
+            {items?.length && (
+              <span className="absolute -bottom-2 -right-3 z-50 flex h-6 w-6 items-center justify-center rounded-full bg-white font-bold">
+                <p>{items.length}</p>
+              </span>
+            )}
+          </div>
           <Button
             className={`bg-gradient-to-br from-primary to-background transition hover:scale-110`}
             size="md"
