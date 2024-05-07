@@ -73,12 +73,14 @@ export function DetailProduct() {
 
   function addProductToShoppingCart() {
     setLoading(true);
+    const currentPrice = `precio${managedClient.priceList ? managedClient.priceList : priceList}`;
     dispatch(
       addItemToCart({
         productId: currentVariant.id,
         name: currentVariant.description,
         img: currentVariant.pathImage || assets.logos.logoBlack,
-        price: Number(currentVariant["precio" + (managedClient.priceList ?? priceList)]),
+        price:
+          currentVariant[currentPrice] /* Number(currentVariant["precio" + (managedClient.priceList ?? priceList)]) */,
         qty: Number(qty),
       })
     );
