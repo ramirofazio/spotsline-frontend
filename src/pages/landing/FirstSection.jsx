@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import { DefaultButton } from "src/components";
 import AwsImage from "src/components/images/AwsImage";
+import { motion } from "framer-motion";
+import { fadeIn } from "src/styles/framerVariants";
 
 export default function FirstSection() {
   return (
-    <section
+    <motion.section
+      {...fadeIn(1)}
       id="landing-first"
       className="grid  h-screen w-screen place-items-center bg-landingbg bg-cover bg-center bg-no-repeat"
     >
@@ -29,6 +32,6 @@ export default function FirstSection() {
           <strong className="yellow-neon">DESDE EL PRIMER DÍA.</strong>
         </h3>
       </div>
-    </section>
+    </motion.section>
   );
 }

@@ -28,7 +28,7 @@ export default function FloatingLogos({
         <AwsImage
           identify={`logo${Array.isArray(logoColour) ? logoColour[i] : logoColour}`}
           type="logos"
-          className={`${rotationIndexes[i]} w-80 !opacity-50 lg:w-[40vw] ${size}`}
+          className={`${rotationIndexes[i]} w-80 !opacity-50 blur-sm lg:w-[40vw] ${size}`}
         />
       </div>
     );

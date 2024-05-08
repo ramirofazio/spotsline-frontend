@@ -2,17 +2,18 @@ import { Button } from "@nextui-org/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import { useRouteLoaderData, Link } from "react-router-dom";
-import { getOfStorage } from "src/utils/localStorage";
 import AwsImage from "src/components/images/AwsImage";
 import { useDispatch } from "react-redux";
 import { actionProducts } from "../../redux/reducers";
+import { motion } from "framer-motion";
+import { fadeIn } from "src/styles/framerVariants";
 
 export default function CategoriesCarrousel() {
   const dispatch = useDispatch();
   const categories = /* getOfStorage("categories") || */ useRouteLoaderData("root");
 
   return (
-    <section id="landing-categories-carrousel" className="relative my-10  w-screen">
+    <motion.section {...fadeIn} id="landing-categories-carrousel" className="relative my-10  w-screen">
       <Swiper
         id="carrousel-container"
         modules={[Autoplay]}
@@ -35,7 +36,7 @@ export default function CategoriesCarrousel() {
             spaceBetween: 40,
           },
           1024: {
-            slidesPerView: 5,
+            slidesPerView: 4,
             spaceBetween: 50,
           },
         }}
@@ -53,7 +54,7 @@ export default function CategoriesCarrousel() {
                   onClick={() => dispatch(actionProducts.setCategory(c.value))}
                   to={`/productos/1?category=${c.value}`}
                 >
-                  <AwsImage type="lights" identify={"light"} className="-z-10 w-full bg-secondary/30" />
+                  <AwsImage type="lights" identify={"light"} className="-z-10 w-full bg-secondary/30 blur-sm" />
                   <div className="absolute inset-0 flex items-center justify-center transition hover:backdrop-blur-sm">
                     <span className="md:text-md w-[80%] whitespace-normal break-words font-secondary font-extrabold group-hover:text-dark">
                       {c.name}
@@ -65,6 +66,6 @@ export default function CategoriesCarrousel() {
           </SwiperSlide>
         ))}
       </Swiper>
-    </section>
+    </motion.section>
   );
 }

@@ -91,7 +91,6 @@ export default function ProfileData() {
       </header>
       <form className="flex flex-col gap-4 lg:w-[80%] lg:self-start lg:pr-10" onSubmit={handleSubmit}>
         {inputFields.map(({ name, startIcon, label, pencil }) => {
-          console.log(data);
           return (
             <div key={name} className="relative">
               <BasicInput

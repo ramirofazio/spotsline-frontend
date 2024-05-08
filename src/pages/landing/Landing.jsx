@@ -6,6 +6,7 @@ import { PaymentOk } from "src/components";
 import { useSelector } from "react-redux";
 import { PaymentFailed } from "src/components/checkout/PaymentFailed";
 import { useLoaderData } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 
 export function Landing() {
   const _featuredProducts = useLoaderData();
@@ -19,7 +20,7 @@ export function Landing() {
   const mobbex_transaction_id = params.get("transactionId");
 
   return (
-    <section className="grid w-full place-content-center">
+    <AnimatePresence className="grid w-full place-content-center">
       <FirstSection />
       <CategoriesCarrousel />
       <FeaturedProducts products={_featuredProducts} />
@@ -29,6 +30,6 @@ export function Landing() {
       ) : (
         mobbex_status === "0" && <PaymentFailed />
       )}
-    </section>
+    </AnimatePresence>
   );
 }
