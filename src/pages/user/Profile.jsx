@@ -9,6 +9,8 @@ import { deleteOfStorage, getOfStorage, saveInStorage } from "src/utils/localSto
 import { ProfileSkeleton } from "src/components";
 import CurrentAccount from "./CurrentAccount";
 import { useSelector } from "react-redux";
+import { AnimatePresence, motion } from "framer-motion";
+import { fadeInLeft, fadeInRight, fadeInTop } from "src/styles/framerVariants";
 
 export function Profile() {
   const navigate = useNavigate();
@@ -92,7 +94,6 @@ export function Profile() {
     navigate();
   }, [managedClient]);
 
-  //? Porque este Loading?
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
@@ -107,17 +108,17 @@ export function Profile() {
     else if (userData.avatar) return userData.avatar;
     return "";
   };
-  console.log("avv", avatarSrc());
+
   return (
     <main className="">
       <header className="relative hidden flex-col items-center justify-center md:flex md:h-40">
-        <h1 className="text-2xl font-bold lg:text-3xl">{`CUENTA DE ${
+        <motion.h1 {...fadeInTop} className="text-2xl font-bold lg:text-3xl">{`CUENTA DE ${
           managedClient.fantasyName ? managedClient.fantasyName : userData.fantasyName
-        }`}</h1>
+        }`}</motion.h1>
         <Divider className="absolute bottom-0 mx-auto h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
       </header>
       <div className="md:grid md:grid-cols-2">
-        <section className="flex flex-col items-center justify-start gap-2 p-10 pt-10">
+        <motion.section {...fadeInLeft()} className="flex flex-col items-center justify-start gap-2 p-10 pt-10">
           <div className="relative ">
             <Avatar
               loading="lazy"
@@ -172,7 +173,7 @@ export function Profile() {
             )}
           </div>
           <h1 className="underliner mt-10 w-60 rounded-full bg-gradient-to-r from-primary to-yellow-200 p-2 px-4 text-center font-bold md:text-xl lg:w-80">
-            {managedClient.fantasyName ?? userData.fantasyName}
+            {managedClient.fantasyName ? managedClient.fantasyName : userData.fantasyName}
           </h1>
 
           <div className="mt-10 flex flex-col items-center justify-around gap-3">
@@ -196,13 +197,13 @@ export function Profile() {
               </Button>
             ))}
           </div>
-        </section>
+        </motion.section>
         <Divider className="mx-auto my-8 h-[3px] w-screen rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:hidden" />
-        <section className="md:col-start-2">
+        <motion.section {...fadeInRight()} className="md:col-start-2">
           {selectButtonsData.map(({ name, component }, index) => (
             <div key={index}>{name === selectedSection && component}</div>
           ))}
-        </section>
+        </motion.section>
         <Divider className="mx-auto my-8 h-[3px] w-screen rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:hidden" />
       </div>
     </main>

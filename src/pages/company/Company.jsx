@@ -74,7 +74,7 @@ export function Company() {
           LA <br className="md:hidden" /> <span className="text-primary">EMPRESA</span>
         </motion.h2>
 
-        <motion.article {...fadeInLeft} className="mx-auto flex w-fit items-center gap-2  lg:gap-3 ">
+        <motion.article {...fadeInLeft()} className="mx-auto flex w-fit items-center gap-2  lg:gap-3 ">
           <picture className="h-fit max-w-[200px]  md:max-w-[250px] ">
             <Image
               className="w-full"
@@ -94,7 +94,7 @@ export function Company() {
           </p>
         </motion.article>
 
-        <motion.article {...fadeInRight} className="mx-auto flex w-fit items-center justify-end gap-2  lg:gap-3">
+        <motion.article {...fadeInRight()} className="mx-auto flex w-fit items-center justify-end gap-2  lg:gap-3">
           <p className="max-w-[450px] text-start text-[11px] leading-[11px] sm:text-sm md:max-w-[520px] md:text-base lg:max-w-[580px] lg:text-lg">
             Nuestra empresa posee <strong>más de 2000 m2</strong> destinados al área de producción, los cuales nos
             permiten realizar prácticamente todos los proceso de fabricación internamente. Nuestro departamento
@@ -112,7 +112,7 @@ export function Company() {
           </picture>
         </motion.article>
 
-        <motion.article {...fadeInLeft} className=" mx-auto flex w-fit items-center justify-end gap-2  lg:gap-3">
+        <motion.article {...fadeInLeft()} className=" mx-auto flex w-fit items-center justify-end gap-2  lg:gap-3">
           <picture className="h-fit max-w-[200px]  md:max-w-[250px] ">
             <Image
               className="w-full"

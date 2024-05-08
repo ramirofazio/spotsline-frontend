@@ -9,8 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { actionProducts } from "src/redux/reducers";
 import { toast } from "sonner";
 import { FilterProducts } from "./FilterProducts";
-import { motion } from "framer-motion";
-import { fadeInLeft } from "src/styles/framerVariants";
 
 const TAKE_PRODUCTS = 28;
 
@@ -36,16 +34,19 @@ export function Products() {
         <p className="z-20 font-secondary text-3xl">Encontra todo lo que necesites...</p>
       </header>
       <main className="flex gap-x-4 bg-[#D9D9D9] p-10">
-        <motion.article {...fadeInLeft} className="my-10 hidden pl-5 font-secondary md:inline">
-          <h2 className="text-lg font-semibold ">Categoria de Productos</h2>
-          <ul className="pl-4">
+        <article className="my-10 hidden pl-5 font-secondary md:inline">
+          <h2 className="text-xl font-semibold">Categorías de Productos</h2>
+          <ul className="text-md mt-6 flex flex-col gap-2 pl-4 text-dark/80">
             {categories.map((cat, i) => (
-              <li key={i} className={cat.value.toString() === filters.category.toString() && "font-bold underline "}>
+              <li
+                key={i}
+                className={cat.value.toString() === filters.category.toString() && "animate-pulse font-bold "}
+              >
                 {cat.name}
               </li>
             ))}
           </ul>
-        </motion.article>
+        </article>
 
         <section className="mx-auto  my-10 gap-3  lg:grid-cols-3 xl:grid-cols-4">
           <Heading categories={categories} />

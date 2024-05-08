@@ -7,7 +7,7 @@ import { fadeIn } from "src/styles/framerVariants";
 export default function FirstSection() {
   return (
     <motion.section
-      {...fadeIn(1)}
+      {...fadeIn(1, 0)}
       id="landing-first"
       className="grid  h-screen w-screen place-items-center bg-landingbg bg-cover bg-center bg-no-repeat"
     >

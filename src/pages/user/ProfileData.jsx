@@ -6,6 +6,8 @@ import { BasicInput, DefaultButton } from "src/components";
 import { ChangePasswordModal } from "../signIn/ChangePasswordModal";
 import { APISpot } from "src/api";
 import { useSelector } from "react-redux";
+import { AnimatePresence, motion } from "framer-motion";
+import { zoomIn } from "src/styles/framerVariants";
 
 const inputFields = [
   { name: "username", startIcon: "ri-user-fill", label: "NOMBRE COMPLETO" },
@@ -83,53 +85,55 @@ export default function ProfileData() {
   };
 
   return (
-    <main className="relative flex flex-col items-center gap-6 py-10 text-center">
-      <header className="md:w-full md:text-left">
-        <h2 className="text-xl font-bold">DATOS PERSONALES</h2>
-        <Divider className="my-2 hidden h-[2px] rounded-xl bg-dark md:flex lg:w-80" />
-        <p className="text-xs">Edita los datos de tu perfil de usuario.</p>
-      </header>
-      <form className="flex flex-col gap-4 lg:w-[80%] lg:self-start lg:pr-10" onSubmit={handleSubmit}>
-        {inputFields.map(({ name, startIcon, label, pencil }) => {
-          return (
-            <div key={name} className="relative">
-              <BasicInput
-                name={name}
-                startContentIcon={startIcon}
-                endContent={
-                  !managedClient.id &&
-                  pencil && <i className="ri-pencil-line icons text-xl text-dark" onClick={() => onOpen()} />
-                }
-                label={label}
-                onChange={handleOnChange}
-                value={data[name]}
-                disabled={isDisabled(name)}
-                labelClass="text-dark font-bold mt-1 text-sm"
-                inputWrapperClass="bg-white border-none disabled:bg-red-500"
-              />
-              {name === "email" && (
-                <p className="absolute right-0 mt-1 text-right text-[9px]">*Esta información no puede editarse.</p>
-              )}
-            </div>
-          );
-        })}
-        <DefaultButton
-          isDisabled={loading || managedClient.id}
-          type="submit"
-          className={"mt-6 font-bold lg:mx-auto "}
-          isLoading={loading}
-        >
-          GUARDAR CAMBIOS
-        </DefaultButton>
-      </form>
-      <ChangePasswordModal
-        isDismissable={true}
-        isOpen={isOpen}
-        navigate={navigate}
-        onClose={onClose}
-        onOpenChange={onOpenChange}
-        email={userData.email}
-      />
-    </main>
+    <AnimatePresence mode="wait">
+      <motion.main {...zoomIn} className="relative flex flex-col items-center gap-6 py-10 text-center">
+        <header className="md:w-full md:text-left">
+          <h2 className="text-xl font-bold">DATOS PERSONALES</h2>
+          <Divider className="my-2 hidden h-[2px] rounded-xl bg-dark md:flex lg:w-80" />
+          <p className="text-xs">Edita los datos de tu perfil de usuario.</p>
+        </header>
+        <form className="flex flex-col gap-4 lg:w-[80%] lg:self-start lg:pr-10" onSubmit={handleSubmit}>
+          {inputFields.map(({ name, startIcon, label, pencil }) => {
+            return (
+              <div key={name} className="relative">
+                <BasicInput
+                  name={name}
+                  startContentIcon={startIcon}
+                  endContent={
+                    !managedClient.id &&
+                    pencil && <i className="ri-pencil-line icons text-xl text-dark" onClick={() => onOpen()} />
+                  }
+                  label={label}
+                  onChange={handleOnChange}
+                  value={data[name]}
+                  disabled={isDisabled(name)}
+                  labelClass="text-dark font-bold mt-1 text-sm"
+                  inputWrapperClass="bg-white border-none disabled:bg-red-500"
+                />
+                {name === "email" && (
+                  <p className="absolute right-0 mt-1 text-right text-[9px]">*Esta información no puede editarse.</p>
+                )}
+              </div>
+            );
+          })}
+          <DefaultButton
+            isDisabled={loading || managedClient.id}
+            type="submit"
+            className={"mt-6 font-bold lg:mx-auto "}
+            isLoading={loading}
+          >
+            GUARDAR CAMBIOS
+          </DefaultButton>
+        </form>
+        <ChangePasswordModal
+          isDismissable={true}
+          isOpen={isOpen}
+          navigate={navigate}
+          onClose={onClose}
+          onOpenChange={onOpenChange}
+          email={userData.email}
+        />
+      </motion.main>
+    </AnimatePresence>
   );
 }

@@ -61,6 +61,8 @@ export function DetailProduct() {
         setIsLoading(false);
       });
 
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     return () => (document.title = "SPOTSLINE");
   }, [id]);
 

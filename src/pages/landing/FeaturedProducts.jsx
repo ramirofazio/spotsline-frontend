@@ -15,18 +15,18 @@ export default function FeaturedProducts({ products }) {
     <motion.section
       {...fadeIn}
       id="landing-featured-products"
-      className="relative grid place-content-center gap-6 overflow-hidden border-t-[8px] border-secondary bg-gradient-to-b from-background px-4 py-6 sm:px-6 xl:px-20"
+      className="relative my-4 grid place-content-center gap-10 overflow-hidden border-t-[8px] border-secondary bg-gradient-to-b from-background px-4 py-6 sm:px-6 lg:gap-20 xl:px-20"
     >
       <FloatingLogos positions={["-top-20 -right-40", "-top-32 -left-40"]} qty={2} />
       <motion.h1 {...fadeInTop} className="mx-auto w-full text-center text-2xl font-bold sm:mt-4 sm:text-4xl">
         PRODUCTOS DESTACADOS
       </motion.h1>
-      <article className="mt-10 grid grid-cols-2 grid-rows-3 gap-4   sm:mt-14 md:grid-flow-row md:grid-cols-4 md:grid-rows-4">
+      <article className="grid grid-cols-2 grid-rows-3 gap-4 md:grid-flow-row md:grid-cols-4 md:grid-rows-4">
         {products?.map(({ identify, pathfoto, codigo }, index) => (
           <motion.div
             {...fadeInBottom}
             key={index}
-            className={`relative flex items-center rounded-lg bg-gradient-to-br from-primary to-yellow-400 p-1 md:row-span-2  lg:min-h-[200px] lg:min-w-[250px] ${
+            className={`relative flex items-center bg-gradient-to-br from-primary to-yellow-400 p-1 shadow-md md:row-span-2  lg:min-h-[200px] lg:min-w-[250px] ${
               index === 2
                 ? "col-span-2 md:col-span-1  md:row-span-2"
                 : index === 1 && "md:grid-rows-subgrid md:col-span-2 md:row-span-4"
@@ -34,7 +34,7 @@ export default function FeaturedProducts({ products }) {
           >
             <NavLink
               to={`/producto/${codigo}`}
-              className="group flex h-full w-full items-center justify-center rounded-lg bg-slate-50 transition hover:cursor-pointer"
+              className="group flex h-full w-full items-center justify-center overflow-hidden bg-slate-50 transition hover:cursor-pointer"
             >
               <AwsImage
                 type={"lights"}

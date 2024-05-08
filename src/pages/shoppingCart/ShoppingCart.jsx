@@ -1,12 +1,14 @@
 import { Input, Button, Divider, Image, useDisclosure, Textarea } from "@nextui-org/react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
 import { DarkModal, DefaultButton, ShoppingCartSkeleton } from "src/components";
 import AwsImage from "src/components/images/AwsImage";
 import { actionsShoppingCart } from "src/redux/reducers";
+import { fadeIn, fadeInBottom, fadeInTop, zoomIn } from "src/styles/framerVariants";
 import { formatPrices } from "src/utils";
 import { saveInStorage } from "src/utils/localStorage";
 import { useDebouncedCallback } from "use-debounce";
@@ -14,10 +16,11 @@ import { useDebouncedCallback } from "use-debounce";
 const MAX_AMOUNT = 15;
 
 export default function ShoppingCart() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const reduxCart = useSelector((state) => state.cart);
-  const { web_role } = useSelector((state) => state.user);
+  const { web_role, fantasyName } = useSelector((state) => state.user);
   const { managedClient } = useSelector((state) => state.seller);
 
   const [discountCode, setDiscountCode] = useState("");
@@ -106,6 +109,11 @@ export default function ShoppingCart() {
     }, 800);
   }, [SkeletonLoading]);
 
+  useEffect(() => {
+    setSkeletonLoading(true);
+    navigate();
+  }, [managedClient]);
+
   if (SkeletonLoading) return <ShoppingCartSkeleton />;
 
   return (
@@ -120,24 +128,32 @@ export default function ShoppingCart() {
           <i className="ri-delete-bin-line text-2xl"></i>
         </DefaultButton>
 
+        {web_role === Number(import.meta.env.VITE_USER_ROLE) && (
+          <motion.h1 {...fadeInTop} className="text-3xl font-bold text-dark drop-shadow-xl">
+            MI CARRITO
+          </motion.h1>
+        )}
+
         {managedClient.fantasyName && (
-          <h1 className="text-3xl font-bold text-dark drop-shadow-xl">
+          <motion.h1 {...fadeInTop} className="text-3xl font-bold text-dark drop-shadow-xl">
             CARRITO DE <strong className="yellowGradient">{managedClient.fantasyName}</strong>{" "}
-          </h1>
+          </motion.h1>
         )}
 
         {reduxCart.items.length === 0 && (
           //? Esto se muestra durante unos segundos aunque haya productos en el carrito
-          <div className="flex flex-col items-center gap-6">
+          <motion.div {...fadeInTop} className="flex flex-col items-center gap-6">
             <h3 className="font-semibold">NO HAY NINGUN PRODUCTO EN TU CARRITO</h3>
             <DefaultButton as={Link} to="/productos/0" className={"w-fit"}>
               VER PRODUCTOS
             </DefaultButton>
-          </div>
+          </motion.div>
         )}
 
         {reduxCart.items.map(({ img, name, price, qty, id, productId }, index) => (
-          <article
+          //TODO @Tomi Aca se puede hacer una orquestacion de variants para que quede tipo acordion de arriba hacia abajo. https://www.framer.com/motion/animation/#variants
+          <motion.article
+            {...zoomIn}
             key={index}
             className="z-10 flex min-w-[80vw] max-w-[50vw] flex-col items-center  gap-6 rounded-xl bg-gradient-to-b from-yellow-200 to-white p-6 md:flex-row md:bg-gradient-to-r xl:min-w-[60vw]"
           >
@@ -194,11 +210,14 @@ export default function ShoppingCart() {
                 </div>
               </div>
             </div>
-          </article>
+          </motion.article>
         ))}
       </section>
       <Divider className="h-1 bg-primary" />
-      <section className="relative m-6 mx-auto flex max-w-[80vw] flex-col items-start  gap-6 overflow-hidden rounded-xl bg-dark/50 p-6 font-secondary font-bold text-white shadow-xl xl:max-w-[60vw]">
+      <motion.section
+        {...fadeIn(0.8, 0.2)}
+        className="relative m-6 mx-auto flex max-w-[80vw] flex-col items-start  gap-6 overflow-hidden rounded-xl bg-dark/50 p-6 font-secondary font-bold text-white shadow-xl xl:max-w-[60vw]"
+      >
         <AwsImage
           type={"logos"}
           identify={"logoYellow"}
@@ -218,18 +237,20 @@ export default function ShoppingCart() {
         {reduxCart.discount !== 0 && (
           <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
         )}
-        {reduxCart.discount !== 0 && Object.values(reduxCart.coupon)?.length && (
-          <div className="relative z-10 flex w-full items-center justify-between">
-            <h3 className="text-md">
-              CUPÓN <strong className="yellow-neon">{reduxCart.coupon.name}</strong>
-            </h3>
-            <h3 className="mr-10 font-bold text-white">{reduxCart.coupon.discountPercentaje} %</h3>
-            <i
-              className="ri-delete-bin-line icons absolute right-0 text-lg text-red-600"
-              onClick={() => dispatch(actionsShoppingCart.removeDiscount())}
-            />
-          </div>
-        )}
+        <AnimatePresence mode="wait" key="cupon">
+          {reduxCart.discount !== 0 && Object.values(reduxCart.coupon)?.length && (
+            <motion.div {...zoomIn} className="relative z-10 flex w-full items-center justify-between">
+              <h3 className="text-md">
+                CUPÓN <strong className="yellow-neon">{reduxCart.coupon.name}</strong>
+              </h3>
+              <h3 className="mr-10 font-bold text-white">{reduxCart.coupon.discountPercentaje} %</h3>
+              <i
+                className="ri-delete-bin-line icons absolute right-0 text-lg text-red-600"
+                onClick={() => dispatch(actionsShoppingCart.removeDiscount())}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
         <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
         <div className="z-10 flex w-full items-center justify-between">
           <h3>TOTAL A PAGAR</h3>
@@ -238,7 +259,10 @@ export default function ShoppingCart() {
         <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
 
         {web_role === Number(import.meta.env.VITE_USER_ROLE) && (
-          <div className="mx-auto flex w-full flex-col justify-between gap-6 lg:flex-row lg:items-end">
+          <motion.div
+            {...fadeInBottom(0.8, 0.3)}
+            className="mx-auto flex w-full flex-col justify-between gap-6 lg:flex-row lg:items-end"
+          >
             <div className="flex flex-col">
               <p className="mx-auto text-left font-thin lg:mx-0">Tengo un código promocional</p>
               <form
@@ -275,10 +299,10 @@ export default function ShoppingCart() {
             >
               CONTINUAR
             </DefaultButton>
-          </div>
+          </motion.div>
         )}
         {web_role === Number(import.meta.env.VITE_SELLER_ROLE) && (
-          <div className="mx-auto flex w-full flex-col justify-center gap-6 lg:flex-row">
+          <motion.div {...fadeInBottom()} className="mx-auto flex w-full flex-col justify-center gap-6 lg:flex-row">
             <DefaultButton
               onPress={handleAddCartToClient}
               className={"mx-auto !w-60 text-xs lg:mx-0 lg:!w-80 lg:text-sm"}
@@ -287,9 +311,9 @@ export default function ShoppingCart() {
             >
               AGREGAR CARRITO AL CLIENTE
             </DefaultButton>
-          </div>
+          </motion.div>
         )}
-      </section>
+      </motion.section>
       {isOpen && (
         <PickDateModal
           onOpenChange={onOpenChange}
