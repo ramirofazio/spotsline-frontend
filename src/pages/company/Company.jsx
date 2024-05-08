@@ -5,7 +5,7 @@ import { Autoplay } from "swiper/modules";
 import { SwiperSlide, Swiper } from "swiper/react";
 import { Image } from "@nextui-org/react";
 import { motion } from "framer-motion";
-import { fadeInLeft, fadeInRight } from "src/styles/framerVariants";
+import { fadeInLeft, fadeInRight, zoomIn } from "src/styles/framerVariants";
 
 export function Company() {
   useEffect(() => {
@@ -67,9 +67,12 @@ export function Company() {
         <div className="absolute -right-14 -top-6">
           <AwsImage type="logos" identify="logoBlack" className="w-48 -rotate-12" />
         </div>
-        <h2 className="w- mt-4 w-fit text-4xl font-bold tracking-wider text-black drop-shadow-xl md:mx-auto md:text-5xl">
+        <motion.h2
+          {...zoomIn}
+          className="w- mt-4 w-fit text-4xl font-bold tracking-wider text-black drop-shadow-xl md:mx-auto md:text-5xl"
+        >
           LA <br className="md:hidden" /> <span className="text-primary">EMPRESA</span>
-        </h2>
+        </motion.h2>
 
         <motion.article {...fadeInLeft} className="mx-auto flex w-fit items-center gap-2  lg:gap-3 ">
           <picture className="h-fit max-w-[200px]  md:max-w-[250px] ">
