@@ -7,7 +7,7 @@ import { fadeInBottom } from "src/styles/framerVariants";
 export default function SecondSection() {
   return (
     <motion.section
-      {...fadeInBottom}
+      {...fadeInBottom()}
       className="relative grid w-full place-items-center bg-gradient-to-b from-background to-primary  px-4  sm:px-6 md:px-20"
     >
       <div className="absolute inset-x-0 top-0 z-20 h-2 !w-screen bg-secondary" />

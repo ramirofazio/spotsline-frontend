@@ -12,7 +12,7 @@ export function ProductCard({ description, codigo, pathImage }) {
       className="col-span-2 mx-auto w-[90%]  sm:col-span-1 lg:col-span-1 s:w-full  s:max-w-[300px]"
       to={`/producto/${codigo}`}
     >
-      <motion.div {...fadeInBottom}>
+      <motion.div {...fadeInBottom()}>
         <Card className="aspect-square max-h-[400px] min-h-[300px] w-full overflow-visible  bg-white shadow-xl transition hover:scale-105">
           <CardBody className="flex min-h-[100px] items-center justify-center overflow-hidden p-0">
             <Image

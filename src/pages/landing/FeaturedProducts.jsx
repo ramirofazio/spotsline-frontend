@@ -13,7 +13,7 @@ const featuredFooter = [
 export default function FeaturedProducts({ products }) {
   return (
     <motion.section
-      {...fadeIn}
+      {...fadeIn()}
       id="landing-featured-products"
       className="relative my-4 grid place-content-center gap-10 overflow-hidden border-t-[8px] border-secondary bg-gradient-to-b from-background px-4 py-6 sm:px-6 lg:gap-20 xl:px-20"
     >
@@ -24,7 +24,7 @@ export default function FeaturedProducts({ products }) {
       <article className="grid grid-cols-2 grid-rows-3 gap-4 md:grid-flow-row md:grid-cols-4 md:grid-rows-4">
         {products?.map(({ identify, pathfoto, codigo }, index) => (
           <motion.div
-            {...fadeInBottom}
+            {...fadeInBottom()}
             key={index}
             className={`relative flex items-center bg-gradient-to-br from-primary to-yellow-400 p-1 shadow-md md:row-span-2  lg:min-h-[200px] lg:min-w-[250px] ${
               index === 2

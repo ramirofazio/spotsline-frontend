@@ -13,7 +13,7 @@ export default function CategoriesCarrousel() {
   const categories = /* getOfStorage("categories") || */ useRouteLoaderData("root");
 
   return (
-    <motion.section {...fadeInBottom} id="landing-categories-carrousel" className="relative my-10  w-screen">
+    <motion.section {...fadeInBottom()} id="landing-categories-carrousel" className="relative my-10  w-screen">
       <Swiper
         id="carrousel-container"
         modules={[Autoplay]}
