@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { actionProducts } from "src/redux/reducers";
 import { toast } from "sonner";
 import { FilterProducts } from "./FilterProducts";
+import { motion } from "framer-motion";
+import { fadeInLeft } from "src/styles/framerVariants";
 
 const TAKE_PRODUCTS = 28;
 
@@ -34,7 +36,7 @@ export function Products() {
         <p className="z-20 font-secondary text-3xl">Encontra todo lo que necesites...</p>
       </header>
       <main className="flex gap-x-4 bg-[#D9D9D9] p-10">
-        <article className="my-10 hidden pl-5 font-secondary md:block">
+        <motion.article {...fadeInLeft} className="my-10 hidden pl-5 font-secondary md:inline">
           <h2 className="text-lg font-semibold ">Categoria de Productos</h2>
           <ul className="pl-4">
             {categories.map((cat, i) => (
@@ -43,12 +45,18 @@ export function Products() {
               </li>
             ))}
           </ul>
-        </article>
+        </motion.article>
+
         <section className="mx-auto  my-10 gap-3  lg:grid-cols-3 xl:grid-cols-4">
           <Heading categories={categories} />
+          {totalPages !== 1 && (
+            <div className=" mx-auto w-fit lg:col-span-3 xl:col-span-4">
+              <PaginationComponent qty={totalPages} page={parseInt(page)} onChange={handleChangePage} />
+            </div>
+          )}
           <ProductsView />
           {totalPages !== 1 && (
-            <div className=" lg:col-span-3 xl:col-span-4">
+            <div className=" mx-auto w-fit lg:col-span-3 xl:col-span-4">
               <PaginationComponent qty={totalPages} page={parseInt(page)} onChange={handleChangePage} />
             </div>
           )}
@@ -73,10 +81,8 @@ function ProductsView() {
       if (searchParams) {
         const queryCategory = searchParams.get("category");
         if (queryCategory) {
-          console.log("a", queryCategory);
           category = parseInt(queryCategory);
           dispatch(actionProducts.setCategory(category));
-          console.log("new", category);
         }
       }
 

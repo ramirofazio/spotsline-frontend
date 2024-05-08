@@ -29,3 +29,10 @@ export const fadeInBottom: MotionProps = {
   transition: { type: "spring", duration: 0.5, delay: 0.06 },
   viewport: { once: true },
 };
+
+export const fadeInLeft: MotionProps = {
+  initial: { opacity: 0, x: -50 },
+  whileInView: { opacity: 1, x: 0 },
+  transition: { type: "spring", duration: 1.5, delay: 0.5 },
+  viewport: { once: true },
+};

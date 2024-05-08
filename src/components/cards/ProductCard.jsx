@@ -3,6 +3,8 @@ import { NavLink } from "react-router-dom";
 import { assets } from "src/assets";
 import { DefaultButton } from "..";
 import AwsImage from "../images/AwsImage";
+import { fadeInBottom } from "src/styles/framerVariants";
+import { motion } from "framer-motion";
 
 export function ProductCard({ description, codigo, pathImage }) {
   return (
@@ -10,30 +12,32 @@ export function ProductCard({ description, codigo, pathImage }) {
       className="col-span-2 mx-auto w-[90%]  sm:col-span-1 lg:col-span-1 s:w-full  s:max-w-[300px]"
       to={`/producto/${codigo}`}
     >
-      <Card className="aspect-square max-h-[400px] min-h-[300px] w-full overflow-visible  bg-white shadow-xl transition hover:scale-105">
-        <CardBody className="flex min-h-[100px] items-center justify-center overflow-hidden p-0">
-          <Image
-            loading="lazy"
-            className="w-full max-w-[200px]"
-            width={150}
-            height={150}
-            alt={description}
-            src={pathImage || assets.logos.logoBlack}
-          />
-        </CardBody>
-        <CardFooter className="relative flex flex-col items-start gap-3 border-t-8 border-background bg-gradient-to-tr from-dark/30 to-primary/30">
-          <AwsImage type="logos" identify={"logoBlack"} className={"absolute -right-28 -top-20 -z-10 blur-sm"} />
-          <p className="line-clamp-1 font-semibold text-dark">{description}</p>
-          <DefaultButton
-            as={NavLink}
-            to={`/producto/${codigo}`}
-            className={"-ml-1 w-full  py-2"}
-            endContent={<i className="ri-arrow-right-s-line" />}
-          >
-            VER MÁS
-          </DefaultButton>
-        </CardFooter>
-      </Card>
+      <motion.div {...fadeInBottom}>
+        <Card className="aspect-square max-h-[400px] min-h-[300px] w-full overflow-visible  bg-white shadow-xl transition hover:scale-105">
+          <CardBody className="flex min-h-[100px] items-center justify-center overflow-hidden p-0">
+            <Image
+              loading="lazy"
+              className="w-full max-w-[200px]"
+              width={150}
+              height={150}
+              alt={description}
+              src={pathImage || assets.logos.logoBlack}
+            />
+          </CardBody>
+          <CardFooter className="relative flex flex-col items-start gap-3 border-t-8 border-background bg-gradient-to-tr from-dark/30 to-primary/30">
+            <AwsImage type="logos" identify={"logoBlack"} className={"absolute -right-28 -top-20 -z-10 blur-sm"} />
+            <p className="line-clamp-1 font-semibold text-dark">{description}</p>
+            <DefaultButton
+              as={NavLink}
+              to={`/producto/${codigo}`}
+              className={"-ml-1 w-full  py-2"}
+              endContent={<i className="ri-arrow-right-s-line" />}
+            >
+              VER MÁS
+            </DefaultButton>
+          </CardFooter>
+        </Card>
+      </motion.div>
     </NavLink>
   );
 }
