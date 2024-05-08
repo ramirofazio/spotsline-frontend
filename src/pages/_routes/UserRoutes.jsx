@@ -82,6 +82,7 @@ export function UserRoot() {
   }, [100]);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     loadUser();
   }, [document]);
 

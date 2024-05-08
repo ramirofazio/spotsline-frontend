@@ -1,4 +1,4 @@
-import { lazy } from "react";
+import { lazy, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
 import { APISpot } from "src/api/index.js";
@@ -77,6 +77,9 @@ export const publicRoutesPaths = [
 ];
 
 export function PublicRoot() {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
   return (
     <main className="overflow-hidden">
       <Outlet />
