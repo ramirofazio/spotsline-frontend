@@ -1,5 +1,6 @@
 import { Contact } from "./Contact.jsx";
 
+import { motion } from "framer-motion";
 export function Rrhh() {
   return (
     <section className="min-h-screen ">
@@ -14,9 +15,9 @@ export function Rrhh() {
         </span>
       </figure>
       <article className="mx-auto mt-5 flex w-[90%] flex-col items-start  ">
-        <h2 className=" mt-4 w-fit text-4xl font-bold tracking-wider text-black drop-shadow-xl lg:text-5xl">
+        <motion.h2 className=" mt-4 w-fit text-4xl font-bold tracking-wider text-black drop-shadow-xl lg:text-5xl">
           RECURSOS <br /> <span className="text-primary">HUMANOS</span>
-        </h2>
+        </motion.h2>
         <span className="my-6  w-fit max-w-[550px] sm:text-xl  lg:max-w-[650px] lg:text-2xl">
           <strong>
             <p className="text-xl sm:text-2xl lg:text-3xl">¿Queres unirte?</p>
@@ -41,10 +42,10 @@ export function Rrhh() {
                 className="h-full w-full"
                 id="gmap_canvas"
                 src="https://maps.google.com/maps?q=Spotsline+Srl%2C+CGA%2C+Pedro+Ignacio+de+Rivera+5915%2C+B1606+Munro%2C+Provincia+de+Buenos+Aires&t=&z=15&ie=UTF8&iwloc=&output=embed"
-                frameBorder="0"
-                scrolling="no"
-                marginHeight="0"
-                marginWidth="0"
+                // frameBorder="0"
+                // scrolling="no"
+                // marginHeight="0"
+                // marginWidth="0"
                 title="Google Maps"
               ></iframe>
             </div>
