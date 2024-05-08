@@ -331,26 +331,38 @@ function MobileContent({
         )}
 
         {id && access_token && (
-          <div className="relative flex items-center justify-center">
+          <>
+            <div className="relative flex items-center justify-center">
+              <Button
+                as={Link}
+                to="/carrito"
+                className={`relative bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
+                  pathname === "/carrito" && "pointer-events-none from-background"
+                }`}
+                size="md"
+                isIconOnly
+              >
+                <i
+                  className={`ri-shopping-cart-2-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`}
+                />
+              </Button>
+              {items?.length && (
+                <span className="absolute -bottom-2 -right-3 z-50 flex h-6 w-6 items-center justify-center rounded-full bg-white font-bold">
+                  <p>{items.length}</p>
+                </span>
+              )}
+            </div>
             <Button
               as={Link}
-              to="/carrito"
-              className={`relative bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
-                pathname === "/carrito" && "pointer-events-none from-background"
-              }`}
+              to="/"
+              className={`relative bg-gradient-to-br from-primary to-background transition hover:scale-110`}
               size="md"
               isIconOnly
+              onClick={handleLogOut}
             >
-              <i
-                className={`ri-shopping-cart-2-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`}
-              />
+              <i className="ri-logout-circle-r-line text-2xl" />
             </Button>
-            {items?.length && (
-              <span className="absolute -bottom-2 -right-3 z-50 flex h-6 w-6 items-center justify-center rounded-full bg-white font-bold">
-                <p>{items.length}</p>
-              </span>
-            )}
-          </div>
+          </>
         )}
       </div>
       <div className="bottom-0 z-20 mx-auto mt-10 text-center">

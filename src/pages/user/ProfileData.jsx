@@ -73,13 +73,11 @@ export default function ProfileData() {
     if (name === "email") {
       return true;
     }
+    if (name === "password") {
+      return true;
+    }
     if (managedClient.id) {
-      if (name === "email") {
-        return true;
-      }
-      if (name === "password") {
-        return true;
-      }
+      return true;
     }
     return false;
   };
@@ -107,7 +105,6 @@ export default function ProfileData() {
                 onChange={handleOnChange}
                 value={data[name]}
                 disabled={isDisabled(name)}
-                // disabled={name === "password" || name === "email" || managedClient.id}
                 labelClass="text-dark font-bold mt-1 text-sm"
                 inputWrapperClass="bg-white border-none disabled:bg-red-500"
               />

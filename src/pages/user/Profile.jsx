@@ -18,6 +18,7 @@ export function Profile() {
   console.log(userData);
   const [avatar, setAvatar] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [avatarLoading, setAvatarLoading] = useState(false);
   const [selectedSection, setSelectedSection] = useState(() => {
     const local = getOfStorage("profileSelectedSection");
     if (local) {
@@ -33,21 +34,20 @@ export function Profile() {
 
   async function updateAvatar() {
     try {
-      setLoading(true);
-      const res = await APISpot.user.updateAvatar({
+      setAvatarLoading(true);
+      await APISpot.user.updateAvatar({
         formData: avatar.formData,
         //? Si es un vendedor gestionando manda el id del managedClient
         userId: managedClient.id ? managedClient.id : userData.id,
         web_role: "client",
       });
-      console.log(res);
+      setAvatarLoading(false);
       toast.success("Avatar actualizado!");
       userData.avatar = avatar.url;
-      // setAvatar(null);
+      setAvatar(null);
     } catch (err) {
       console.log(err);
-    } finally {
-      setLoading(false);
+      toast.error("error al actualizar");
     }
   }
 
@@ -92,6 +92,7 @@ export function Profile() {
     navigate();
   }, [managedClient]);
 
+  //? Porque este Loading?
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
@@ -101,7 +102,7 @@ export function Profile() {
   if (loading) return <ProfileSkeleton />;
 
   const avatarSrc = () => {
-    if (avatar) return avatar;
+    if (avatar) return avatar.url;
     else if (managedClient.avatar) return managedClient.avatar;
     else if (userData.avatar) return userData.avatar;
     return "";
@@ -110,27 +111,29 @@ export function Profile() {
   return (
     <main className="">
       <header className="relative hidden flex-col items-center justify-center md:flex md:h-40">
-        <h1 className="text-2xl font-bold lg:text-3xl">{`CUENTA DE ${managedClient.fantasyName ?? "MI CUENTA"}`}</h1>
+        <h1 className="text-2xl font-bold lg:text-3xl">{`CUENTA DE ${
+          managedClient.fantasyName ? managedClient.fantasyName : userData.fantasyName
+        }`}</h1>
         <Divider className="absolute bottom-0 mx-auto h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
       </header>
       <div className="md:grid md:grid-cols-2">
         <section className="flex flex-col items-center justify-start gap-2 p-10 pt-10">
           <div className="relative ">
-            {console.log(avatar)}
             <Avatar
               loading="lazy"
-              src={() => avatarSrc()}
-              // src={avatar ? avatar : "" /* : managedClient.avatar ?? userData.avatar */}
-              name={managedClient.fantasyName ?? userData.fantasyName}
+              src={avatarSrc()}
+              name={managedClient.fantasyName ? managedClient.fantasyName : userData.fantasyName}
               className="mx-auto h-44 w-44 rounded-full border-3"
               classNames={{ base: "bg-white" }}
             />
 
             <Button
               isIconOnly
-              className="absolute bottom-0 left-0 rounded-full bg-gradient-to-r from-primary to-yellow-200 font-bold text-black  "
+              className={`absolute bottom-0 left-0 rounded-full bg-gradient-to-r from-primary to-yellow-200 font-bold text-black  ${
+                managedClient?.id && "hidden"
+              }`}
               startContent={
-                <div className={`relative ${loading && "hidden"}`}>
+                <div className={`relative ${avatarLoading && "hidden"}`}>
                   <label htmlFor="upload-avatar" className=" cursor-pointer rounded px-4 py-2 font-bold">
                     <i className={`ri-pencil-line icons text-2xl font-bold text-black`}></i>
 
@@ -145,7 +148,7 @@ export function Profile() {
                   </label>
                 </div>
               }
-              isLoading={loading}
+              isLoading={avatarLoading}
               loadingContent={
                 <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
               }
