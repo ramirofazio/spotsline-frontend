@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import { InitChangePasswordModal } from "./InitChangePasswordModal";
 import { BasicInput, PasswordInput, DefaultButton } from "src/components/index";
 import AwsImage from "src/components/images/AwsImage";
+import { motion } from "framer-motion";
+import { fadeIn, zoomIn } from "src/styles/framerVariants";
 
 export function SignIn() {
   const dispatch = useDispatch();
@@ -69,7 +71,10 @@ export function SignIn() {
           <i className="ri-arrow-left-s-line yellow-neon  animate-pulse text-4xl" />
           <p className="white-neon font-secondary">VOLVER</p>
         </NavLink>
-        <section className="relative flex min-h-[60vh] min-w-[60vw] flex-col items-center gap-4 overflow-hidden rounded-xl bg-black/10 p-12  shadow-md">
+        <motion.section
+          {...zoomIn}
+          className=" relative flex min-h-[60vh] min-w-[60vw] flex-col items-center gap-4 overflow-hidden rounded-xl bg-black/10 p-12  shadow-md"
+        >
           <div className="absolute -right-40 -top-14 -z-10 xl:-right-60 xl:-top-20">
             <AwsImage type="logos" identify="logoBlack" className="!-z-10 w-80 rotate-12 !opacity-50 xl:w-[30vw]" />
           </div>
@@ -110,7 +115,7 @@ export function SignIn() {
           <div className="absolute -bottom-14 -left-40 -z-10 xl:-bottom-32 xl:-left-64">
             <AwsImage type="logos" identify="logoBlack" className="!-z-10 w-80 -rotate-12 !opacity-50 xl:w-[30vw]" />
           </div>
-        </section>
+        </motion.section>
       </div>
 
       <InitChangePasswordModal isOpen={isOpen} onOpenChange={onOpenChange} />
