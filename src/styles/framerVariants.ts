@@ -12,20 +12,20 @@ export const fadeIn = (duration: number = 0.5): MotionProps => {
 export const zoomIn: MotionProps = {
   initial: { opacity: 0, scale: 0 },
   whileInView: { opacity: 1, scale: 1 },
-  transition: { type: "spring", duration: 0.5 },
+  transition: { type: "spring", duration: 0.5, delay: 0.06 },
   viewport: { once: true },
 };
 
 export const fadeInTop: MotionProps = {
   initial: { opacity: 0, y: -50 },
   whileInView: { opacity: 1, y: 0 },
-  transition: { type: "spring", duration: 0.5 },
+  transition: { type: "spring", duration: 0.5, delay: 0.06 },
   viewport: { once: true },
 };
 
 export const fadeInBottom: MotionProps = {
   initial: { opacity: 0, y: 50 },
   whileInView: { opacity: 1, y: 0 },
-  transition: { type: "spring", duration: 0.5 },
+  transition: { type: "spring", duration: 0.5, delay: 0.06 },
   viewport: { once: true },
 };
