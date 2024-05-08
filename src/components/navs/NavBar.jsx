@@ -135,6 +135,7 @@ export default function NavBar() {
         access_token={access_token}
         pathname={pathname}
         isMenuOpen={isMenuOpen}
+        categories={categories}
         setIsMenuOpen={setIsMenuOpen}
         handleManageClients={handleManageClients}
         handleLogOut={handleLogOut}
@@ -255,6 +256,7 @@ function MobileContent({
   isMenuOpen,
   setIsMenuOpen,
   handleManageClients,
+  categories,
 }) {
   const { managedClient } = useSelector((state) => state.seller);
   const { items } = useSelector((state) => state.cart);
@@ -264,14 +266,31 @@ function MobileContent({
         <AwsImage type="logos" identify="logoBlack" hidden={isMenuOpen ? false : true} className="rotate-12" />
       </div>
 
-      {links.map(({ name, path }, i) => (
-        <NavbarMenuItem onClick={() => setIsMenuOpen(false)} className="w-fit " key={i}>
-          <NavLink className="flex h-full w-[12rem] items-center gap-1.5 border-b-2  border-dark/50 p-1" to={path}>
+      {links.map(({ name, path }, i) => {
+        console.log(name);
+        return name === "productos" ? (
+          <NavbarMenuItem
+            onClick={() => setIsMenuOpen(false)}
+            className="flex w-[12rem] items-center gap-1.5 border-b-2  border-dark/50 p-1"
+            key={i}
+          >
             <i className="ri-arrow-right-s-line text-md  !text-secondary"></i>
-            <p className="w-full font-primary text-lg uppercase text-white">{name}</p>
-          </NavLink>
-        </NavbarMenuItem>
-      ))}
+            <ProductsTab
+              index={i}
+              className=" font-primary text-lg uppercase text-white"
+              categories={categories}
+              setIsMenuOpen={setIsMenuOpen}
+            />
+          </NavbarMenuItem>
+        ) : (
+          <NavbarMenuItem onClick={() => setIsMenuOpen(false)} className="w-fit " key={i}>
+            <NavLink className="flex h-full w-[12rem] items-center gap-1.5 border-b-2  border-dark/50 p-1" to={path}>
+              <i className="ri-arrow-right-s-line text-md  !text-secondary"></i>
+              <p className="w-full font-primary text-lg uppercase text-white">{name}</p>
+            </NavLink>
+          </NavbarMenuItem>
+        );
+      })}
 
       <div className="mt-10 flex items-center justify-evenly">
         {!id && !access_token && (
@@ -376,12 +395,14 @@ function MobileContent({
   );
 }
 
-function ProductsTab({ index, categories }) {
+function ProductsTab({ index, categories, className, setIsMenuOpen }) {
   const dispatch = useDispatch();
 
   return (
-    <Dropdown className="bg-transparent shadow-none backdrop-blur-xl" key={index}>
-      <DropdownTrigger className="font-primary text-sm text-background hover:cursor-pointer lg:text-[15px]">
+    <Dropdown className={`bg-transparent shadow-none backdrop-blur-xl `} key={index}>
+      <DropdownTrigger
+        className={`font-primary text-sm text-background hover:cursor-pointer lg:text-[15px] ${className}`}
+      >
         PRODUCTOS
       </DropdownTrigger>
       <DropdownMenu variant="solid" aria-label="Dropdown menu with icons" className="max-h-[50vh] overflow-scroll">
@@ -389,7 +410,10 @@ function ProductsTab({ index, categories }) {
           className="group my-[1px]  bg-gradient-to-tl  from-primary to-background p-0 uppercase transition"
           startContent={
             <NavLink
-              onClick={() => dispatch(actionProducts.setCategory(""))}
+              onClick={() => {
+                setIsMenuOpen(false);
+                dispatch(actionProducts.setCategory(""));
+              }}
               className="flex w-full items-center gap-2 p-1.5 "
               to="/productos/0"
             >
@@ -405,7 +429,10 @@ function ProductsTab({ index, categories }) {
             className="group my-[1px] bg-gradient-to-tl from-primary  to-background p-0 uppercase transition"
             startContent={
               <NavLink
-                onClick={() => dispatch(actionProducts.setCategory(c.value))}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  dispatch(actionProducts.setCategory(c.value));
+                }}
                 className="flex w-full items-center gap-2 p-1.5 "
                 to={`/productos/1?category=${c.value}`}
               >
