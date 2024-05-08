@@ -9,7 +9,7 @@ import { InitChangePasswordModal } from "./InitChangePasswordModal";
 import { BasicInput, PasswordInput, DefaultButton } from "src/components/index";
 import AwsImage from "src/components/images/AwsImage";
 import { motion } from "framer-motion";
-import { fadeIn, zoomIn } from "src/styles/framerVariants";
+import { zoomIn } from "src/styles/framerVariants";
 
 export function SignIn() {
   const dispatch = useDispatch();
