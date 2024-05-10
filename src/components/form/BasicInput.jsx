@@ -20,6 +20,7 @@ export function BasicInput({
         inputWrapper: inputWrapperClass,
         input: " lg:ml-4 disabled:opacity-50",
       }}
+      maxLength={80}
       color="secondary"
       name={name}
       isRequired={isRequired}

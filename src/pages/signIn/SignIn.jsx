@@ -11,6 +11,7 @@ import AwsImage from "src/components/images/AwsImage";
 import { motion } from "framer-motion";
 import { zoomIn } from "src/styles/framerVariants";
 import { GoBackButton } from "src/components/buttons/GoBackButton";
+import { isValidEmail } from "src/utils/validation";
 
 export function SignIn() {
   const dispatch = useDispatch();
@@ -19,10 +20,14 @@ export function SignIn() {
   const { onOpen, onOpenChange, isOpen } = useDisclosure();
 
   const [signInData, setSignInData] = useState(false);
+  const [errs, setErrs] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = ({ target: { name, value } }) => {
     setSignInData((prev) => {
+      if (name === "email") {
+        setErrs(isValidEmail(value));
+      }
       const newData = { ...prev, [name]: value };
       return newData;
     });
@@ -84,6 +89,8 @@ export function SignIn() {
           <form onSubmit={handleSubmit} className="z-20 flex flex-col items-center gap-4 md:w-[30vw]">
             <BasicInput
               name="email"
+              isInvalid={Boolean(errs)}
+              errorMessage={errs}
               type="email"
               label="Correo electrónico"
               startContentIcon="ri-mail-fill text-xl text-secondary"
