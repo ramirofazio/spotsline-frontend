@@ -267,7 +267,6 @@ function MobileContent({
       </div>
 
       {links.map(({ name, path }, i) => {
-        console.log(name);
         return name === "productos" ? (
           <NavbarMenuItem
             onClick={() => setIsMenuOpen(false)}

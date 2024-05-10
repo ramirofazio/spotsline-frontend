@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { APISpot, addAuthWithToken } from "../../api";
 import { actionsAuth, actionsShoppingCart, actionsUser } from "../../redux/reducers";
@@ -10,6 +10,7 @@ import { BasicInput, PasswordInput, DefaultButton } from "src/components/index";
 import AwsImage from "src/components/images/AwsImage";
 import { motion } from "framer-motion";
 import { zoomIn } from "src/styles/framerVariants";
+import { GoBackButton } from "src/components/buttons/GoBackButton";
 
 export function SignIn() {
   const dispatch = useDispatch();
@@ -67,10 +68,7 @@ export function SignIn() {
   return (
     <main className="relative h-screen overflow-hidden bg-signIn bg-cover bg-center bg-no-repeat">
       <div className="grid h-full w-full place-content-center place-items-center bg-black/30 backdrop-blur-md ">
-        <NavLink to="/" className="icons absolute left-4 top-4 flex items-center">
-          <i className="ri-arrow-left-s-line yellow-neon  animate-pulse text-4xl" />
-          <p className="white-neon font-secondary">VOLVER</p>
-        </NavLink>
+        <GoBackButton className="absolute left-4 top-4" />
         <motion.section
           {...zoomIn}
           className=" relative flex min-h-[60vh] min-w-[60vw] flex-col items-center gap-4 overflow-hidden rounded-xl bg-black/10 p-12  shadow-md"

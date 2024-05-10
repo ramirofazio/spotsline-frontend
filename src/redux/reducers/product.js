@@ -44,7 +44,6 @@ const product = createSlice({
       };
     },
     setFilters: function (state, action) {
-      console.log(action.payload);
       if (state.filters.category !== action.payload.category || state.filters.order !== action.payload.order) {
         return {
           ...state,
