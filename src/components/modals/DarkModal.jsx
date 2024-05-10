@@ -25,7 +25,7 @@ export function DarkModal({
       backdrop={backdrop}
       size={size}
     >
-      <ModalContent className="relative">
+      <ModalContent onClose={onClose} className="relative">
         {() => (
           <main>
             {isDismissable && Boolean(onClose) && (
