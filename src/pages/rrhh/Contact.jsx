@@ -1,5 +1,5 @@
 import { Textarea } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BasicInput, DefaultButton } from "src/components";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
@@ -49,10 +49,6 @@ export function Contact() {
       } else return { ...prev, [target.name]: target.value };
     });
   }
-
-  useEffect(() => {
-    console.log(emailErr);
-  }, [emailErr]);
 
   return (
     <form className="mx-auto my-4 w-[90%] max-w-[650px]" onSubmit={(e) => handleSubmit(e)}>
