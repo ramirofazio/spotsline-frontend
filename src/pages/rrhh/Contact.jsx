@@ -1,22 +1,34 @@
 import { Textarea } from "@nextui-org/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BasicInput, DefaultButton } from "src/components";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
+import { getOfStorage, saveInStorage } from "src/utils/localStorage";
+import { isValidEmail } from "src/utils/validation";
 
 export function Contact() {
   const _defaultData = { name: "", email: "", subject: "", message: "", file: null };
   const [emailData, setEmailData] = useState(_defaultData);
+  const [emailErr, setEmailErr] = useState(false);
   const [loading, setLoading] = useState(false);
   async function handleSubmit(e) {
     e.preventDefault();
     try {
+      const emailsApllied = getOfStorage("emailsApllied");
+      if (emailsApllied && emailsApllied[emailData.email]) {
+        throw new Error("Usted ya aplico anteriormente");
+      }
       setLoading(true);
       await APISpot.mail.sendRrhhRequest(emailData);
+
+      saveInStorage("emailsApllied", {
+        ...emailsApllied,
+        [emailData.email]: true,
+      });
       toast.success("Se envio email con sus datos!");
       setEmailData(_defaultData);
     } catch (err) {
-      toast.error("Error" + err.message);
+      toast.error(err.message);
       console.log(err);
     } finally {
       setLoading(false);
@@ -31,9 +43,16 @@ export function Contact() {
         if (file.size >= sizeLimit) {
           toast.error("el archivo es muy grande");
         } else return { ...prev, file };
+      } else if (target.name === "email") {
+        setEmailErr(isValidEmail(target.value));
+        return { ...prev, [target.name]: target.value };
       } else return { ...prev, [target.name]: target.value };
     });
   }
+
+  useEffect(() => {
+    console.log(emailErr);
+  }, [emailErr]);
 
   return (
     <form className="mx-auto my-4 w-[90%] max-w-[650px]" onSubmit={(e) => handleSubmit(e)}>
@@ -46,7 +65,6 @@ export function Contact() {
           onChange={handleChange}
           name="name"
           variant="flat"
-          
           label="Nombre y Apellido"
           labelClass="text-black ml-2 "
           isRequired={true}
@@ -61,6 +79,8 @@ export function Contact() {
           variant="flat"
           labelClass="text-black ml-2"
           isRequired={true}
+          isInvalid={Boolean(emailErr)}
+          errorMessage={emailErr}
           maxLength={70}
         />
         <BasicInput
@@ -93,7 +113,7 @@ export function Contact() {
         />
         <label
           htmlFor="upload-avatar"
-          className={`relative mx-auto mt-4 flex w-fit max-w-full cursor-pointer items-center gap-2 overflow-hidden rounded border-2 px-4 py-2 ${
+          className={`relative mx-auto mt-4 flex w-fit max-w-full cursor-pointer items-center gap-2 overflow-hidden rounded border-2 bg-primary/30 px-4 py-2 hover:bg-secondary/20 ${
             emailData.file && " border-green-600"
           }`}
         >
@@ -133,7 +153,7 @@ export function Contact() {
           className="mx-auto my-3 w-fit"
           type="submit"
           onDisabled="opacity-30"
-          isDisabled={!emailData.message || (!emailData.file && true)}
+          isDisabled={!emailData.message || (!emailData.file && true) || emailErr}
         >
           <p>Enviar solicitud</p>
         </DefaultButton>

@@ -14,7 +14,6 @@ export function BasicInput({
   maxLength,
   ...props
 }) {
-  console.log("MAX LENGTHH", maxLength);
   return (
     <Input
       classNames={{
