@@ -46,9 +46,11 @@ export function Contact() {
           onChange={handleChange}
           name="name"
           variant="flat"
+          
           label="Nombre y Apellido"
           labelClass="text-black ml-2 "
           isRequired={true}
+          maxLength={65}
         />
 
         <BasicInput
@@ -59,6 +61,7 @@ export function Contact() {
           variant="flat"
           labelClass="text-black ml-2"
           isRequired={true}
+          maxLength={70}
         />
         <BasicInput
           value={emailData.subject}
@@ -67,17 +70,20 @@ export function Contact() {
           label="Asunto"
           variant="flat"
           labelClass="text-black ml-2"
+          className
           isRequired={false}
         />
         <Textarea
+          variant="underlined"
           value={emailData.message}
           onChange={handleChange}
           isRequired
           name="message"
           label="Su mensaje"
+          maxLength={1020}
           classNames={{
             label: "text-black ml-2 text-md",
-            input: "bg-primary/30 rounded-lg min-h-[180px] p-2 md:placeholder:text-lg",
+            input: "bg-primary/10 focus:bg-primary/30 rounded-lg min-h-[180px] p-2 md:placeholder:text-lg",
             inputWrapper: "bg-primary/30 p-0 ",
           }}
           color="bg-red-500"
