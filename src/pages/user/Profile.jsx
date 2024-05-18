@@ -9,7 +9,7 @@ import { deleteOfStorage, getOfStorage, saveInStorage } from "src/utils/localSto
 import { ProfileSkeleton } from "src/components";
 import CurrentAccount from "./CurrentAccount";
 import { useSelector } from "react-redux";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { fadeInLeft, fadeInRight, fadeInTop } from "src/styles/framerVariants";
 
 export function Profile() {
@@ -17,7 +17,6 @@ export function Profile() {
 
   const { userData, userCA } = useLoaderData();
   const { managedClient } = useSelector((state) => state.seller);
-  console.log(userData);
   const [avatar, setAvatar] = useState(null);
   const [loading, setLoading] = useState(true);
   const [avatarLoading, setAvatarLoading] = useState(false);
@@ -110,7 +109,7 @@ export function Profile() {
   };
 
   return (
-    <main className="">
+    <main className="h-screen">
       <header className="relative hidden flex-col items-center justify-center md:flex md:h-40">
         <motion.h1 {...fadeInTop} className="text-2xl font-bold lg:text-3xl">{`CUENTA DE ${
           managedClient.fantasyName ? managedClient.fantasyName : userData.fantasyName

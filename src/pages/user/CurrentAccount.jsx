@@ -1,12 +1,22 @@
 import { Divider, ScrollShadow } from "@nextui-org/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useLoaderData } from "react-router-dom";
+import { useEffect } from "react";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import CurrentAccountCard from "src/components/cards/CurrentAccountCard";
-import { zoomIn } from "src/styles/framerVariants";
+import { fadeIn } from "src/styles/framerVariants";
 import { formatPrices } from "src/utils";
 
-export default function CurrentAccount() {
+export default function CurrentAccount({ redirect }) {
   const { userCA } = useLoaderData();
+  const navigate = useNavigate();
+
+  console.log(userCA);
+
+  useEffect(() => {
+    console.log(redirect);
+
+    if (!redirect) navigate("cc");
+  }, []);
 
   //? Esto es para saber cuanto debe y cuanto tiene de saldo, pero esto tiene impacto general en lo que trae el backend (10 items). En el backend lo calcula global con todas...
   //   const ccsDue = userCA.data.map(({ due }) => due);
@@ -23,13 +33,13 @@ export default function CurrentAccount() {
 
   return (
     <AnimatePresence>
-      <motion.main {...zoomIn} className="relative flex flex-col items-center gap-6 py-10 text-center">
-        <header className="md:w-full md:text-left">
+      <motion.main {...fadeIn()} className="flex max-h-screen w-full flex-col items-center">
+        <header className="my-10 w-full text-center">
           <h2 className="text-xl font-bold">CUENTA CORRIENTE</h2>
-          <Divider className="my-2 hidden h-[2px] rounded-xl bg-dark md:flex lg:w-80" />
+          <Divider className="my-2 h-[2px] w-full rounded-xl bg-dark" />
           <p className="text-xs">Consulta tu de cuenta corriente.</p>
         </header>
-        <section className="space-y-2 md:w-full md:text-left lg:flex lg:items-center lg:space-x-10 lg:space-y-0">
+        <section className="mx-auto my-4 w-full space-y-2 pl-20 sm:flex sm:items-center sm:justify-around sm:space-y-0 sm:pl-0">
           <h3 className="font-semibold md:font-bold">
             TOTAL BONIFICADO: <strong className="text-green-600">{formatPrices(userCA.totalBalance)}</strong>
           </h3>
@@ -37,12 +47,10 @@ export default function CurrentAccount() {
             TOTAL ADEUDADO: <strong className="text-red-600">{formatPrices(userCA.totalDue)}</strong>
           </h3>
         </section>
-        <h3 className="mx-auto font-bold md:mx-0 md:w-full md:text-left">Ultimos 10 comprobantes emitidos:</h3>
-        <ScrollShadow
-          hideScrollBar
-          size={20}
-          className="flex h-[400px] flex-col items-center gap-10 overflow-y-scroll p-10 !pt-10 md:ml-6 md:mr-10 md:items-start md:p-0 lg:w-full"
-        >
+
+        <h3 className="text-md mx-auto mt-10 font-bold">Ultimos 10 comprobantes emitidos:</h3>
+        <Divider className="my-2 h-[2px] w-full rounded-xl bg-dark" />
+        <ScrollShadow hideScrollBar size={20} className="flex w-full flex-col gap-6 p-6">
           {userCA.data.map((CC, index) => (
             <CurrentAccountCard {...CC} key={index} />
           ))}
