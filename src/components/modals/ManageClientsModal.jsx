@@ -8,6 +8,8 @@ import { assets } from "src/assets";
 import { actionSeller } from "src/redux/reducers";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUserData } from "src/utils/loadUserData";
+import { motion } from "framer-motion";
+import { fadeIn } from "src/styles/framerVariants";
 
 export default function ManageClientsModal({ isOpen, onClose, onOpenChange }) {
   const dispatch = useDispatch();
@@ -71,7 +73,11 @@ export default function ManageClientsModal({ isOpen, onClose, onOpenChange }) {
       isDismissable={managedClient.fantasyName ? true : false}
       onClose={onClose}
     >
-      <form className={`z-20 flex flex-col items-center justify-start gap-10`} onSubmit={(e) => handleSubmit(e)}>
+      <motion.form
+        {...fadeIn()}
+        className={`z-20 flex flex-col items-center justify-start gap-10`}
+        onSubmit={(e) => handleSubmit(e)}
+      >
         <CustomSelect
           items={clients}
           label="Selecciona un cliente"
@@ -112,7 +118,7 @@ export default function ManageClientsModal({ isOpen, onClose, onOpenChange }) {
         >
           GESTIONAR
         </DefaultButton>
-      </form>
+      </motion.form>
     </DarkModal>
   );
 }

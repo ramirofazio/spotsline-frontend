@@ -27,7 +27,7 @@ export const fadeInBottom = (duration: number = 0.5, delay: number = 0.06): Moti
   return {
     initial: { opacity: 0, y: 50 },
     whileInView: { opacity: 1, y: 0 },
-    transition: { type: "spring", duration, delay },
+    transition: { type: "spring", duration, delay, mass: 0.4, bounce: 0.5, velocity: 0.5 },
     viewport: { once: true },
   };
 };
@@ -45,7 +45,7 @@ export const fadeInRight = (duration: number = 0.5, delay: number = 0.06): Motio
   return {
     initial: { opacity: 0, x: 50 },
     whileInView: { opacity: 1, x: 0 },
-    transition: { type: "spring", duration, delay },
+    transition: { type: "spring", duration, delay, mass: 0.4, bounce: 0.5, velocity: 0.5 },
     viewport: { once: true },
   };
 };

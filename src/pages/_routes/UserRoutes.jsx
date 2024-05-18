@@ -8,9 +8,11 @@ import { getOfStorage } from "src/utils/localStorage";
 import { loadUserData } from "src/utils/loadUserData";
 import { actionsAuth } from "src/redux/reducers";
 import { useDebouncedCallback } from "use-debounce";
+const CurrentAccount = lazy(() => import("../user/CurrentAccount"));
 const NavBar = lazy(() => import("components/navs/NavBar.jsx"));
 const Profile = lazy(() => import("pages/user/Profile").then((module) => ({ default: module.Profile })));
 const OrderDetail = lazy(() => import("pages/user/OrderDetail").then((module) => ({ default: module.default })));
+const ShoppingCart = lazy(() => import("pages/shoppingCart/ShoppingCart.jsx"));
 
 export const userRoutesPaths = [
   {
@@ -44,13 +46,29 @@ export const userRoutesPaths = [
         element: <OrderDetail />,
         loader: async ({ params }) => {
           try {
-            return await APISpot.user.getOrder(params.order_id);
+            await APISpot.user.getOrder(params.order_id);
           } catch (e) {
             console.log(e);
             return null;
           }
         },
       },
+
+      {
+        path: "/user/profile/cc",
+        element: <CurrentAccount redirect={true} />,
+        loader: async () => {
+          try {
+            const userCA = await APISpot.user.getCurrentAccounts();
+            return { userCA };
+          } catch (e) {
+            console.log(e);
+            return null;
+          }
+        },
+      },
+
+      { path: "/carrito", element: <ShoppingCart /> },
     ],
   },
 ];
