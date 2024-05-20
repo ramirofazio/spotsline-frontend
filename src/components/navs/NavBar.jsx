@@ -126,7 +126,7 @@ export default function NavBar() {
       </div>
 
       <div className="sm:hidden">
-        <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className={`ml-20 text-background`} />
+        <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className={`text-background`} />
       </div>
 
       <MobileContent

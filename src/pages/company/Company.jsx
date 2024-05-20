@@ -6,6 +6,7 @@ import { SwiperSlide, Swiper } from "swiper/react";
 import { Image } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { fadeInLeft, fadeInRight, zoomIn } from "src/styles/framerVariants";
+import { assets } from "src/assets";
 
 export function Company() {
   useEffect(() => {
@@ -25,7 +26,14 @@ export function Company() {
         className="mySwiper"
       >
         <SwiperSlide>
-          <picture className="grid min-h-[40vh] w-screen place-items-center bg-empresa2  bg-cover bg-left-top bg-no-repeat xl:min-h-[50vh]">
+          <picture className="grid h-[300px] w-screen place-items-center">
+            <img
+              src={assets.backgrounds[1]}
+              className="absolute -z-10 w-screen blur-md"
+              alt="landingBackground"
+              loading="eager"
+            />
+
             <div className="grid h-full w-full place-items-center bg-black/60 px-6 text-white">
               <div className="mx-10 w-full xl:pl-40 xl:tracking-wider">
                 <h2 className="text-xl md:text-3xl xl:text-5xl xl:font-semibold">ACTUALIDAD</h2>
@@ -38,7 +46,14 @@ export function Company() {
           </picture>
         </SwiperSlide>
         <SwiperSlide>
-          <picture className="relative grid min-h-[40vh] w-screen place-items-center  bg-empresa2 bg-cover bg-left-top bg-no-repeat xl:min-h-[50vh]">
+          <picture className="relative grid h-[300px] w-screen place-items-center ">
+            <img
+              src={assets.backgrounds[2]}
+              className="absolute -z-10 w-screen blur-md"
+              alt="landingBackground"
+              loading="eager"
+            />
+
             <div className="grid h-full w-full place-items-center bg-black/60 px-6 text-white">
               <div className="absolute bottom-10 right-5 text-center text-white xl:bottom-32  xl:right-20">
                 <h2 className="-mt-6 text-2xl font-thin tracking-widest xl:-mt-10 xl:text-5xl xl:font-semibold">
@@ -50,7 +65,14 @@ export function Company() {
           </picture>
         </SwiperSlide>
         <SwiperSlide>
-          <picture className="grid min-h-[40vh] w-screen place-items-center bg-empresa2  bg-cover bg-left-top bg-no-repeat xl:min-h-[50vh]">
+          <picture className="grid h-[300px] w-screen place-items-center">
+            <img
+              src={assets.backgrounds[1]}
+              className="absolute -z-10 w-screen blur-md"
+              alt="landingBackground"
+              loading="eager"
+            />
+
             <div className="grid h-full w-full place-items-center bg-black/60 px-6 text-white">
               <div className="mx-10 w-full xl:pl-40 xl:tracking-wider">
                 <h2 className="text-xl md:text-3xl xl:text-5xl xl:font-semibold">CREYENDO</h2>

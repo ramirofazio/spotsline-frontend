@@ -12,6 +12,7 @@ import { motion } from "framer-motion";
 import { zoomIn } from "src/styles/framerVariants";
 import { GoBackButton } from "src/components/buttons/GoBackButton";
 import { isValidEmail } from "src/utils/validation";
+import { assets } from "src/assets";
 
 export function SignIn() {
   const dispatch = useDispatch();
@@ -71,8 +72,15 @@ export function SignIn() {
   };
 
   return (
-    <main className="relative h-screen overflow-hidden bg-signIn bg-cover bg-center bg-no-repeat">
-      <div className="grid h-full w-full place-content-center place-items-center bg-black/30 backdrop-blur-md ">
+    <main className="relative h-screen w-screen overflow-hidden">
+      <img
+        src={assets.backgrounds[5]}
+        className="absolute h-screen  lg:w-screen"
+        alt="singInBackground"
+        loading="eager"
+      />
+
+      <div className="grid h-full w-full place-content-center place-items-center bg-black/30 backdrop-blur-md">
         <GoBackButton className="absolute left-4 top-4" />
         <motion.section
           {...zoomIn}

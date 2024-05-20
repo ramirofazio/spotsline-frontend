@@ -4,7 +4,7 @@ import { assets } from "src/assets/index";
 export default function AwsImage({ type, identify, className, ...props }) {
   return (
     <Image
-      loading="lazy"
+      loading="eager"
       radius="none"
       disableSkeleton
       src={assets[type][identify]}

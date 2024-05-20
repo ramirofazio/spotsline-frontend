@@ -10,7 +10,7 @@ export function BasicInput({
   isInvalid,
   errorMessage,
   labelClass = "text-white",
-  inputWrapperClass = "bg-primary/30 rounded-full",
+  inputWrapperClass = "bg-primary/30 rounded-xl",
   maxLength,
   ...props
 }) {
@@ -29,7 +29,6 @@ export function BasicInput({
       label={label}
       variant="bordered"
       labelPlacement="outside"
-      radius="full"
       isInvalid={isInvalid}
       errorMessage={errorMessage}
       startContent={<i className={startContentIcon} />}

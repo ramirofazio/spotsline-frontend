@@ -3,15 +3,23 @@ import { DefaultButton } from "src/components";
 import AwsImage from "src/components/images/AwsImage";
 import { motion } from "framer-motion";
 import { fadeIn } from "src/styles/framerVariants";
+import { assets } from "src/assets";
 
 export default function FirstSection() {
   return (
     <motion.section
-      {...fadeIn(1, 0)}
+      {...fadeIn()}
       id="landing-first"
-      className="grid  h-screen w-screen place-items-center bg-landingbg bg-cover bg-center bg-no-repeat"
+      className="relative grid  h-screen w-screen place-items-center overflow-hidden"
     >
-      <div className="grid h-full w-full place-content-center place-items-center bg-black/30 backdrop-blur-sm">
+      <img
+        src={assets.backgrounds[1]}
+        className="absolute h-screen lg:h-auto lg:w-screen"
+        alt="landingBackground"
+        loading="eager"
+      />
+
+      <div className="grid h-full w-full place-content-center place-items-center bg-black/30 backdrop-blur-md">
         <AwsImage
           type="lights"
           identify={"hole7"}
