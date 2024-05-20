@@ -214,6 +214,7 @@ function AddEmailModal({ isOpen, onOpenChange, onClose, seller, navigate }) {
           type="submit"
           endContent={<i className="ri-mail-add-line text-xl" />}
           className={"hover:scale-100"}
+          isDisabled={Boolean(errs)}
           isLoading={loading}
         >
           AGREGAR

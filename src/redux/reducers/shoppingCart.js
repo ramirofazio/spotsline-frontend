@@ -27,10 +27,6 @@ const shoppingCartSlice = createSlice({
       const newItem = action.payload;
       const existingItem = state.items.find((item) => item.productId === newItem.productId);
 
-      console.log("EXISTE?", existingItem);
-
-      console.log(newItem);
-
       if (existingItem) {
         existingItem.qty += newItem.qty;
       } else {

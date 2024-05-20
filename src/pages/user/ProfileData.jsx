@@ -37,7 +37,7 @@ export default function ProfileData() {
   const handleOnChange = (e) => {
     setData({
       ...data,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value?.trim(),
     });
   };
 
@@ -98,6 +98,7 @@ export default function ProfileData() {
               <div key={name} className="relative">
                 <BasicInput
                   name={name}
+                  maxLength={name === "cuit" ? 20 : 45}
                   startContentIcon={startIcon}
                   endContent={
                     !managedClient.id &&
