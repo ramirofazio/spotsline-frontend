@@ -30,6 +30,7 @@ export default function Layout({ children }) {
   }, [1000]);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") {
         // La pestaña está oculta

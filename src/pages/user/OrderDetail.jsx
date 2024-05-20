@@ -52,7 +52,6 @@ function Header({ type = false, title, subTitle, id, date }) {
 }
 
 function ProductsSection({ products, coupon, total, subtotal }) {
-  console.log("COUPON", coupon);
   return (
     <section className=" gap-10 md:grid md:grid-cols-2 md:place-items-center">
       {products.map(({ description, quantity, total, image }, index) => (

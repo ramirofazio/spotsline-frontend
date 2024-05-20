@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { APISpot, addAuthWithToken } from "../../api";
 import { actionsAuth, actionsShoppingCart, actionsUser } from "../../redux/reducers";
@@ -10,6 +10,8 @@ import { BasicInput, PasswordInput, DefaultButton } from "src/components/index";
 import AwsImage from "src/components/images/AwsImage";
 import { motion } from "framer-motion";
 import { zoomIn } from "src/styles/framerVariants";
+import { GoBackButton } from "src/components/buttons/GoBackButton";
+import { isValidEmail } from "src/utils/validation";
 
 export function SignIn() {
   const dispatch = useDispatch();
@@ -18,10 +20,14 @@ export function SignIn() {
   const { onOpen, onOpenChange, isOpen } = useDisclosure();
 
   const [signInData, setSignInData] = useState(false);
+  const [errs, setErrs] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = ({ target: { name, value } }) => {
     setSignInData((prev) => {
+      if (name === "email") {
+        setErrs(isValidEmail(value));
+      }
       const newData = { ...prev, [name]: value };
       return newData;
     });
@@ -67,10 +73,7 @@ export function SignIn() {
   return (
     <main className="relative h-screen overflow-hidden bg-signIn bg-cover bg-center bg-no-repeat">
       <div className="grid h-full w-full place-content-center place-items-center bg-black/30 backdrop-blur-md ">
-        <NavLink to="/" className="icons absolute left-4 top-4 flex items-center">
-          <i className="ri-arrow-left-s-line yellow-neon  animate-pulse text-4xl" />
-          <p className="white-neon font-secondary">VOLVER</p>
-        </NavLink>
+        <GoBackButton className="absolute left-4 top-4" />
         <motion.section
           {...zoomIn}
           className=" relative flex min-h-[60vh] min-w-[60vw] flex-col items-center gap-4 overflow-hidden rounded-xl bg-black/10 p-12  shadow-md"
@@ -86,6 +89,8 @@ export function SignIn() {
           <form onSubmit={handleSubmit} className="z-20 flex flex-col items-center gap-4 md:w-[30vw]">
             <BasicInput
               name="email"
+              isInvalid={Boolean(errs)}
+              errorMessage={errs}
               type="email"
               label="Correo electrónico"
               startContentIcon="ri-mail-fill text-xl text-secondary"

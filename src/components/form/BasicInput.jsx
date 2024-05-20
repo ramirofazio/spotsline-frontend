@@ -11,6 +11,7 @@ export function BasicInput({
   errorMessage,
   labelClass = "text-white",
   inputWrapperClass = "bg-primary/30 rounded-full",
+  maxLength,
   ...props
 }) {
   return (
@@ -18,7 +19,7 @@ export function BasicInput({
       classNames={{
         label: labelClass,
         inputWrapper: inputWrapperClass,
-        input: " lg:ml-4 disabled:opacity-50",
+        input: "lg:ml-4 disabled:opacity-50",
       }}
       color="secondary"
       name={name}
@@ -33,6 +34,7 @@ export function BasicInput({
       errorMessage={errorMessage}
       startContent={<i className={startContentIcon} />}
       onChange={onChange}
+      maxLength={maxLength ? maxLength : 80}
       {...props}
     />
   );

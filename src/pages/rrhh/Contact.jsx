@@ -3,20 +3,32 @@ import { useState } from "react";
 import { BasicInput, DefaultButton } from "src/components";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
+import { getOfStorage, saveInStorage } from "src/utils/localStorage";
+import { isValidEmail } from "src/utils/validation";
 
 export function Contact() {
   const _defaultData = { name: "", email: "", subject: "", message: "", file: null };
   const [emailData, setEmailData] = useState(_defaultData);
+  const [emailErr, setEmailErr] = useState(false);
   const [loading, setLoading] = useState(false);
   async function handleSubmit(e) {
     e.preventDefault();
     try {
+      const emailsApllied = getOfStorage("emailsApllied");
+      if (emailsApllied && emailsApllied[emailData.email]) {
+        throw new Error("Usted ya aplico anteriormente");
+      }
       setLoading(true);
       await APISpot.mail.sendRrhhRequest(emailData);
+
+      saveInStorage("emailsApllied", {
+        ...emailsApllied,
+        [emailData.email]: true,
+      });
       toast.success("Se envio email con sus datos!");
       setEmailData(_defaultData);
     } catch (err) {
-      toast.error("Error" + err.message);
+      toast.error(err.message);
       console.log(err);
     } finally {
       setLoading(false);
@@ -31,6 +43,9 @@ export function Contact() {
         if (file.size >= sizeLimit) {
           toast.error("el archivo es muy grande");
         } else return { ...prev, file };
+      } else if (target.name === "email") {
+        setEmailErr(isValidEmail(target.value));
+        return { ...prev, [target.name]: target.value };
       } else return { ...prev, [target.name]: target.value };
     });
   }
@@ -49,6 +64,7 @@ export function Contact() {
           label="Nombre y Apellido"
           labelClass="text-black ml-2 "
           isRequired={true}
+          maxLength={65}
         />
 
         <BasicInput
@@ -59,6 +75,9 @@ export function Contact() {
           variant="flat"
           labelClass="text-black ml-2"
           isRequired={true}
+          isInvalid={Boolean(emailErr)}
+          errorMessage={emailErr}
+          maxLength={70}
         />
         <BasicInput
           value={emailData.subject}
@@ -67,17 +86,20 @@ export function Contact() {
           label="Asunto"
           variant="flat"
           labelClass="text-black ml-2"
+          className
           isRequired={false}
         />
         <Textarea
+          variant="underlined"
           value={emailData.message}
           onChange={handleChange}
           isRequired
           name="message"
           label="Su mensaje"
+          maxLength={1020}
           classNames={{
             label: "text-black ml-2 text-md",
-            input: "bg-primary/30 rounded-lg min-h-[180px] p-2 md:placeholder:text-lg",
+            input: "bg-primary/10 focus:bg-primary/30 rounded-lg min-h-[180px] p-2 md:placeholder:text-lg",
             inputWrapper: "bg-primary/30 p-0 ",
           }}
           color="bg-red-500"
@@ -87,7 +109,7 @@ export function Contact() {
         />
         <label
           htmlFor="upload-avatar"
-          className={`relative mx-auto mt-4 flex w-fit max-w-full cursor-pointer items-center gap-2 overflow-hidden rounded border-2 px-4 py-2 ${
+          className={`relative mx-auto mt-4 flex w-fit max-w-full cursor-pointer items-center gap-2 overflow-hidden rounded border-2 bg-primary/30 px-4 py-2 hover:bg-secondary/20 ${
             emailData.file && " border-green-600"
           }`}
         >
@@ -127,7 +149,7 @@ export function Contact() {
           className="mx-auto my-3 w-fit"
           type="submit"
           onDisabled="opacity-30"
-          isDisabled={!emailData.message || (!emailData.file && true)}
+          isDisabled={!emailData.message || (!emailData.file && true) || emailErr}
         >
           <p>Enviar solicitud</p>
         </DefaultButton>

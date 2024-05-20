@@ -30,10 +30,6 @@ export function DetailProduct() {
   const [qty, setQty] = useState(getOfStorage("qty") || 1);
 
   useEffect(() => {
-    console.log(currentVariant);
-  }, [currentVariant]);
-
-  useEffect(() => {
     document.title = "SPOTSLINE - Cargando...";
     APISpot.product // TODO estaria bueno fetchear la data en el loader de react-router
       .getOne({ id })
@@ -81,9 +77,11 @@ export function DetailProduct() {
   function addProductToShoppingCart() {
     setLoading(true);
     const currentPrice = `precio${managedClient.priceList ? managedClient.priceList : priceList}`;
+
     dispatch(
       addItemToCart({
         productId: currentVariant.id,
+        marcaId: parseInt(id),
         name: currentVariant.description,
         img: currentVariant.pathImage || assets.logos.logoBlack,
         price:

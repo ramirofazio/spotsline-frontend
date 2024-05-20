@@ -24,7 +24,7 @@ export function isValidEmail(email) {
   if (!email) return "ingrese un email";
   else if (!regex.isValidEmail.test(email)) return "ingrese un email valido";
   else if (!regex.containSpace.test(email)) return "borre los espacios";
-  else if (email.length > 45) return "email demasiado largo";
+  else if (email.length > 65) return "email demasiado largo";
   return false;
 }
 

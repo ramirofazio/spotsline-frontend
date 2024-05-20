@@ -2,7 +2,7 @@ import { Input, Button, Divider, Image, useDisclosure, Textarea } from "@nextui-
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
 import { DarkModal, DefaultButton, ShoppingCartSkeleton } from "src/components";
@@ -150,20 +150,22 @@ export default function ShoppingCart() {
           </motion.div>
         )}
 
-        {reduxCart.items.map(({ img, name, price, qty, id, productId }, index) => (
+        {reduxCart.items.map(({ img, name, price, qty, id, productId, marcaId }, index) => (
           //TODO @Tomi Aca se puede hacer una orquestacion de variants para que quede tipo acordion de arriba hacia abajo. https://www.framer.com/motion/animation/#variants
           <motion.article
             {...zoomIn}
             key={index}
             className="z-10 flex min-w-[80vw] max-w-[50vw] flex-col items-center  gap-6 rounded-xl bg-gradient-to-b from-yellow-200 to-white p-6 md:flex-row md:bg-gradient-to-r xl:min-w-[60vw]"
           >
-            <Image
-              src={img}
-              width={200}
-              height={200}
-              alt={`${name} img`}
-              className="aspect-square bg-white shadow-inner"
-            />
+            <NavLink className="w-fit" to={`/producto/${marcaId}`}>
+              <Image
+                src={img}
+                width={200}
+                height={200}
+                alt={`${name} img`}
+                className="aspect-square bg-white shadow-inner"
+              />
+            </NavLink>
             <div className="flex w-60 flex-col items-center gap-6 md:w-full md:items-start">
               <h4 className="line-clamp-1 w-auto text-lg font-bold md:line-clamp-none">{name}</h4>
               <div className="flex w-80 flex-col items-center space-y-4 text-left text-sm">

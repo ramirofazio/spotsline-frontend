@@ -14,10 +14,6 @@ export function Images({ variants, currentVariant, setCurrentVariant }) {
     timerId: null,
   });
 
-  useEffect(() => {
-    console.log("IMNG", state);
-  }, [state]);
-
   function getChangeOfPage(currentSlide, currentPage) {
     const { totalPages } = state;
     if (currentSlide === 0) return 1;
@@ -42,7 +38,6 @@ export function Images({ variants, currentVariant, setCurrentVariant }) {
   function getPointIndexes() {
     const { currentPage } = state;
     const a = [...Array(imagePerPage).keys()].map((x) => x + (imagePerPage - 1) * (currentPage - 1));
-    console.log(a);
     return a;
   }
 

@@ -224,7 +224,7 @@ function CreateNewCouponModal({ isOpen, onOpenChange, onClose }) {
 
   return (
     <DarkModal
-      isDismissable={false}
+      isDismissable={true}
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       title={`CREAR UN NUEVO CUPON DE DESCUENTO`}
@@ -240,12 +240,13 @@ function CreateNewCouponModal({ isOpen, onOpenChange, onClose }) {
           value={thisCoupon.name}
         />
         <BasicInput
-          type="number"
           label={"Descuento (1-100)"}
           name={"discountPercentaje"}
           startContentIcon={"ri-percent-line font-bold text-xl"}
           onChange={(e) => setThisCoupon({ ...thisCoupon, [e.target.name]: e.target.value.trim() })}
           value={thisCoupon.discountPercentaje}
+          maxLength={2}
+          className="z-50"
         />
 
         <div className="flex items-center justify-center gap-1">
