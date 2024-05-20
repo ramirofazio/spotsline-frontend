@@ -16,6 +16,7 @@ const Coupons = lazy(() => import("../dashboard/Coupons").then((module) => ({ de
 const ClientsPage = lazy(() => import("../dashboard/Clients").then((module) => ({ default: module.ClientsPage })));
 const Orders = lazy(() => import("../dashboard/Orders").then((module) => ({ default: module.Orders })));
 const SellersPage = lazy(() => import("../dashboard/Sellers").then((module) => ({ default: module.SellersPage })));
+const ShoppingCart = lazy(() => import("pages/shoppingCart/ShoppingCart.jsx"));
 
 export const adminRoutesPaths = [
   {
@@ -97,6 +98,7 @@ export const adminRoutesPaths = [
       },
     ],
   },
+  { path: "/carrito", element: <ShoppingCart /> },
 ];
 
 export function AdminRoot() {

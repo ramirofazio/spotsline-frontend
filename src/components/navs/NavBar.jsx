@@ -416,8 +416,8 @@ function ProductsTab({ index, categories, className, setIsMenuOpen }) {
               className="flex w-full items-center gap-2 p-1.5 "
               to="/productos/0"
             >
-              <i className="ri-arrow-right-s-line  text-secondary transition group-hover:text-white"></i>
-              <p>todos</p>
+              <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
+              <p>TODOS</p>
             </NavLink>
           }
         ></DropdownItem>

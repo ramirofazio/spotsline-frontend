@@ -13,11 +13,6 @@ const Company = lazy(() => import("pages/company/Company.jsx").then((module) => 
 const Products = lazy(() => import("pages/products/Products.jsx").then((module) => ({ default: module.Products })));
 const SignIn = lazy(() => import("pages/signIn/SignIn").then((module) => ({ default: module.SignIn })));
 const Rrhh = lazy(() => import("pages/rrhh/Rrhh.jsx").then((module) => ({ default: module.Rrhh })));
-const ChangePassword = lazy(() =>
-  import("pages/signIn/ChangePassword").then((module) => ({ default: module.ChangePassword }))
-);
-
-const ShoppingCart = lazy(() => import("pages/shoppingCart/ShoppingCart.jsx"));
 
 export const publicRoutesPaths = [
   {
@@ -56,13 +51,11 @@ export const publicRoutesPaths = [
       },
       { path: "/empresa", element: <Company /> },
       { path: "/rrhh", element: <Rrhh /> },
-      { path: "/change-password", element: <ChangePassword /> },
       {
         path: "/productos/:page",
         element: <Products />,
       },
       { path: "/producto/:id", element: <DetailProduct /> },
-      { path: "/carrito", element: <ShoppingCart /> },
     ],
   },
   {
