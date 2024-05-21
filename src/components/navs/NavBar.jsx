@@ -198,21 +198,18 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
       {(web_role === Number(import.meta.env.VITE_USER_ROLE) ||
         web_role === Number(import.meta.env.VITE_SELLER_ROLE)) && (
         //? Solo seller y user tiene acceso aca
-        <Button
-          as={Link}
-          to={"/user/profile"}
-          className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
-            pathname === "/user/profile" && "pointer-events-none from-background"
-          }`}
-          size="md"
-          isIconOnly
-        >
-          <i className={`ri-user-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`} />
-        </Button>
-      )}
-
-      {id && access_token && (
         <>
+          <Button
+            as={Link}
+            to={"/user/profile"}
+            className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
+              pathname === "/user/profile" && "pointer-events-none from-background"
+            }`}
+            size="md"
+            isIconOnly
+          >
+            <i className={`ri-user-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`} />
+          </Button>
           <div className="relative flex items-center justify-center">
             <Button
               as={Link}
@@ -228,20 +225,23 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
               />
             </Button>
             {items?.length > 0 && (
-              <span className="absolute -bottom-2 -right-3 z-50 flex h-6 w-6 items-center justify-center rounded-full bg-white font-bold">
+              <span className="absolute -bottom-2 -right-3 z-50 flex h-5 w-5 items-center justify-center rounded-full bg-background font-bold outline outline-primary">
                 <p>{items.length}</p>
               </span>
             )}
           </div>
-          <Button
-            className={`bg-gradient-to-br from-primary to-background transition hover:scale-110`}
-            size="md"
-            isIconOnly
-            onPress={handleLogOut}
-          >
-            <i className="ri-logout-circle-r-line text-2xl" />
-          </Button>
         </>
+      )}
+
+      {id && access_token && (
+        <Button
+          className={`bg-gradient-to-br from-primary to-background transition hover:scale-110`}
+          size="md"
+          isIconOnly
+          onPress={handleLogOut}
+        >
+          <i className="ri-logout-circle-r-line text-2xl" />
+        </Button>
       )}
     </NavbarContent>
   );
@@ -297,7 +297,7 @@ function MobileContent({
             as={Link}
             to={"/sign-in"}
             className="bg-gradient-to-tl from-primary to-background shadow-xl"
-            size="md"
+            size="lg"
             startContent={<i className="ri-user-fill mr-2 text-lg" />}
           >
             INICIAR SESION
@@ -334,30 +334,27 @@ function MobileContent({
         {(web_role === Number(import.meta.env.VITE_USER_ROLE) ||
           web_role === Number(import.meta.env.VITE_SELLER_ROLE)) && (
           //? Solo seller y user tiene acceso aca
-          <Button
-            as={Link}
-            to={"/user/profile"}
-            onPress={() => setIsMenuOpen(false)}
-            className={`bg-gradient-to-tl from-primary to-background shadow-xl ${
-              pathname === "/user/profile" && "pointer-events-none from-background"
-            }`}
-            size="lg"
-            isIconOnly
-          >
-            <i className={`ri-user-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`} />
-          </Button>
-        )}
-
-        {id && access_token && (
           <>
+            <Button
+              as={Link}
+              to={"/user/profile"}
+              onPress={() => setIsMenuOpen(false)}
+              className={`bg-gradient-to-tl from-primary to-background shadow-xl ${
+                pathname === "/user/profile" && "pointer-events-none from-background"
+              }`}
+              size="lg"
+              isIconOnly
+            >
+              <i className={`ri-user-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`} />
+            </Button>
             <div className="relative flex items-center justify-center">
               <Button
                 as={Link}
                 to="/carrito"
-                className={`relative bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
+                className={`relative bg-gradient-to-tl from-primary to-background transition hover:scale-110 ${
                   pathname === "/carrito" && "pointer-events-none from-background"
                 }`}
-                size="md"
+                size="lg"
                 isIconOnly
               >
                 <i
@@ -365,22 +362,25 @@ function MobileContent({
                 />
               </Button>
               {items?.length && (
-                <span className="absolute -bottom-2 -right-3 z-50 flex h-6 w-6 items-center justify-center rounded-full bg-white font-bold">
+                <span className="absolute -bottom-2 -right-3 z-50 flex h-6 w-6 items-center justify-center rounded-full bg-background font-bold outline outline-primary">
                   <p>{items.length}</p>
                 </span>
               )}
             </div>
-            <Button
-              as={Link}
-              to="/"
-              className={`relative bg-gradient-to-br from-primary to-background transition hover:scale-110`}
-              size="md"
-              isIconOnly
-              onClick={handleLogOut}
-            >
-              <i className="ri-logout-circle-r-line text-2xl" />
-            </Button>
           </>
+        )}
+
+        {id && access_token && (
+          <Button
+            as={Link}
+            to="/"
+            className={`relative bg-gradient-to-tl from-primary to-background transition hover:scale-110`}
+            size="lg"
+            isIconOnly
+            onClick={handleLogOut}
+          >
+            <i className="ri-logout-circle-r-line text-2xl" />
+          </Button>
         )}
       </div>
       <div className="bottom-0 z-20 mx-auto mt-10 text-center">
