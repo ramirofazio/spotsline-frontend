@@ -113,6 +113,10 @@ function SelectButtons({ loading, setLoading }) {
     } else {
       navigate(link);
     }
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 5000);
   };
 
   useEffect(() => {
