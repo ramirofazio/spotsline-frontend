@@ -46,7 +46,8 @@ export function SelectVariant({ variants, currentVariant, setCurrentVariant }) {
           >
             <div className="flex items-center gap-2">
               <div className="flex-grow-1">
-                <Image
+                <img
+                  loading="eager"
                   alt={variant.description}
                   className="aspect-square w-10 rounded-full border-1 border-dark/50 bg-background shadow-xl"
                   src={variant.pathImage || assets.logos.logoBlack}

@@ -158,12 +158,11 @@ export default function ShoppingCart() {
             className="z-10 flex min-w-[80vw] max-w-[50vw] flex-col items-center  gap-6 rounded-xl bg-gradient-to-b from-yellow-200 to-white p-6 md:flex-row md:bg-gradient-to-r xl:min-w-[60vw]"
           >
             <NavLink className="w-fit" to={`/producto/${marcaId}`}>
-              <Image
+              <img
+                loading="lazy"
                 src={img}
-                width={200}
-                height={200}
                 alt={`${name} img`}
-                className="aspect-square bg-white shadow-inner"
+                className="aspect-square w-[250px] bg-white object-cover shadow-inner"
               />
             </NavLink>
             <div className="flex w-60 flex-col items-center gap-6 md:w-full md:items-start">

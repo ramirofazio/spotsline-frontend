@@ -484,7 +484,7 @@ function ImagesModal({ isOpen, onOpenChange, onClose, variant, navigate }) {
               <motion.div
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1, transition: { duration: 0.2 } }}
-                className="relative flex aspect-square h-[150px] items-center justify-center rounded-xl bg-background/50"
+                className="relative flex aspect-square h-[150px] items-center justify-center rounded-xl bg-background/40"
               >
                 <Tooltip content="Eliminar esta imagen" delay={1000} color="primary">
                   <Chip
@@ -494,7 +494,12 @@ function ImagesModal({ isOpen, onOpenChange, onClose, variant, navigate }) {
                     <i className="ri-close-fill text-lg" />
                   </Chip>
                 </Tooltip>
-                <Image src={image.url || image} width={200} height={200} alt={variant.description + " " + image.url} />
+                <img
+                  loading="lazy"
+                  className="h-full w-full  object-cover"
+                  src={image.url || image}
+                  alt={variant.description + " " + image.url}
+                />
               </motion.div>
             )}
           </div>

@@ -1,7 +1,5 @@
 import { useEffect } from "react";
 import { DefaultButton } from "src/components";
-import AwsImage from "src/components/images/AwsImage";
-import { Image, image } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { fadeInLeft, fadeInRight, zoomIn } from "src/styles/framerVariants";
 import { images } from "src/assets";
@@ -29,11 +27,11 @@ export function Company() {
           {...fadeInLeft()}
           className="mx-auto flex max-h-[300px] w-fit items-start gap-6 overflow-hidden lg:gap-20"
         >
-          <Image
+          <img
+            loading="lazy"
             className="h-[250px] min-w-[150px] md:min-w-[250px]"
-            src={"https://spotsline-bucket.s3.amazonaws.com/empresa-trabajador.jpg"}
-            alt=""
-            isZoomed
+            src={images.empresaTrabajador}
+            alt="empreasa-trabajador"
           />
           <p className="max-w-[450px] text-start text-[11px] leading-[11px] sm:text-sm md:max-w-[520px] md:text-base lg:max-w-[580px] lg:text-lg">
             Desde <strong>1986</strong> nos dedicamos al <strong>diseño</strong>, <strong>produción</strong> y{" "}
@@ -57,11 +55,11 @@ export function Company() {
             en las áreas antes mencionadas, le brindarán la <strong>solución adecuada</strong> a todos sus problemas e
             inquietudes lumínicas.
           </p>
-          <Image
+          <img
+            loading="lazy"
             className="h-[250px] min-w-[150px] md:min-w-[250px]"
-            src={"https://spotsline-bucket.s3.amazonaws.com/empresa-trabajador.jpg"}
-            alt=""
-            isZoomed
+            src={images.empresaTrabajador}
+            alt="empreasa-trabajador"
           />
         </motion.article>
 
@@ -69,11 +67,11 @@ export function Company() {
           {...fadeInLeft()}
           className="mx-auto flex max-h-[300px] w-fit items-start gap-6 overflow-hidden lg:gap-20"
         >
-          <Image
+          <img
+            loading="lazy"
             className="h-[250px] min-w-[150px] md:min-w-[250px]"
-            src={"https://spotsline-bucket.s3.amazonaws.com/empresa-trabajador.jpg"}
-            alt=""
-            isZoomed
+            src={images.empresaTrabajador}
+            alt="empreasa-trabajador"
           />
           <p className="max-w-[450px] text-start text-[11px] leading-[11px] sm:text-sm md:max-w-[520px] md:text-base lg:max-w-[580px] lg:text-lg">
             Como hemos mencionado anteriormente, somos una empresa nacional que desde el día de su fundación, ha crecido

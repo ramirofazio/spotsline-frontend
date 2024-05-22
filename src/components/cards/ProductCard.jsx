@@ -51,12 +51,10 @@ export function SkeletonCard() {
         className={`${className} aspect-square max-h-[400px] min-h-[300px] w-full overflow-visible  bg-white shadow-xl transition hover:scale-105`}
       >
         <CardBody className="flex min-h-[100px] items-center justify-center overflow-hidden p-0">
-          <Image
-            loading="lazy"
-            className="w-full max-w-[200px] animate-pulse"
-            width={150}
-            height={150}
-            alt={"skeleton Image"}
+          <img
+            loading="eager"
+            className="w-full max-w-[250px] object-cover"
+            alt={`skeleton-product-image`}
             src={images.logoBlack}
           />
         </CardBody>

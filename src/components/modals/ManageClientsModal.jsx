@@ -95,7 +95,7 @@ export default function ManageClientsModal({ isOpen, onClose, onOpenChange }) {
             >
               <div className="flex items-center gap-2">
                 <div className="flex-grow-1">
-                  <Image
+                  <img
                     loading="lazy"
                     alt={client.fantasyName}
                     className="aspect-square w-10 rounded-full border-1 border-dark/50 bg-background shadow-xl"

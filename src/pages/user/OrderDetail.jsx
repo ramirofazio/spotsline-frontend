@@ -60,13 +60,11 @@ function ProductsSection({ products, coupon, total, subtotal }) {
           key={index}
         >
           <div className="flex items-center space-x-4 rounded-md border-3 border-primary bg-white p-6 text-left shadow-xl">
-            <Image
+            <img
+              loading="lazy"
               src={image?.length ? image : assets.lights.light}
               alt={description}
-              width={500}
-              height={500}
-              shadow="sm"
-              className="w-24 md:w-40"
+              className="w-[300px] object-cover"
             />
             <h4>{description}</h4>
           </div>
