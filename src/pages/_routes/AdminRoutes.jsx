@@ -137,7 +137,7 @@ export function AdminRoot() {
 
   if (isAdmin) {
     return (
-      <Suspense fallback={<Spinner color="primary" className="absolute inset-0 !z-50 text-xl" />}>
+      <Suspense fallback={<Spinner color="secondary" className="absolute inset-0 !z-50 text-xl" />}>
         <Dashboard>
           <Outlet />
         </Dashboard>

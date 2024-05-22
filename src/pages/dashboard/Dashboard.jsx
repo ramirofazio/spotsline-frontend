@@ -4,8 +4,7 @@ import { DefaultButton } from "src/components";
 import FloatingLogos from "src/components/images/FloatingLogos";
 import { Button, Divider, Spinner } from "@nextui-org/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { fadeIn, fadeInTop, zoomIn } from "src/styles/framerVariants";
-import Loader from "src/components/Loader";
+import { fadeIn, fadeInTop } from "src/styles/framerVariants";
 
 const selectButtonsData = [
   { name: "VENDEDORES", startIcon: "customer-service", link: "/dashboard/vendedores" },
@@ -119,13 +118,14 @@ function SelectButtons({ loading, setLoading }) {
   useEffect(() => {
     setLoading(false);
   }, [pathname]);
+
   return (
     <>
       {selectButtonsData.map(({ name, startIcon, link }) => (
         <DefaultButton
           key={name}
           onPress={() => handlePress(name, link)}
-          isDisabled={loading === name}
+          isDisabled={loading === name || pathname.includes(link)}
           startContent={
             <AnimatePresence mode="wait">
               {loading === name ? (

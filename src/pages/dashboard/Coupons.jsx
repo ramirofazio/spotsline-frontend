@@ -181,7 +181,7 @@ export function Coupons() {
             items={coupons}
             isLoading={loading}
             loadingContent={
-              <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
+              <Spinner color="secondary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
             }
           >
             {(item) => (
