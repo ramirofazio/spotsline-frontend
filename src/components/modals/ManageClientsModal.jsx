@@ -4,7 +4,7 @@ import { APISpot } from "src/api";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import CustomSelect from "../form/CustomSelect";
-import { assets } from "src/assets";
+import { assets, images } from "src/assets";
 import { actionSeller } from "src/redux/reducers";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUserData } from "src/utils/loadUserData";
@@ -96,9 +96,10 @@ export default function ManageClientsModal({ isOpen, onClose, onOpenChange }) {
               <div className="flex items-center gap-2">
                 <div className="flex-grow-1">
                   <Image
+                    loading="lazy"
                     alt={client.fantasyName}
                     className="aspect-square w-10 rounded-full border-1 border-dark/50 bg-background shadow-xl"
-                    src={client.avatar || assets.logos.logoBlack}
+                    src={client.avatar || images.logoBlack}
                   />
                 </div>
                 <div className="flex w-20 flex-col">

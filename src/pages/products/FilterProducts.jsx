@@ -100,8 +100,9 @@ export function FilterProducts({ categories }) {
                       {color}
                     </CustomCheck>
                   ))}
-                </CheckboxGroup> */}
+                </CheckboxGroup>
                 <Divider />
+*/}
               </ModalBody>
               <ModalFooter>
                 <Button

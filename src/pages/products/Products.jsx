@@ -9,6 +9,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { actionProducts } from "src/redux/reducers";
 import { toast } from "sonner";
 import { FilterProducts } from "./FilterProducts";
+import { images } from "src/assets";
+import { AnimatePresence, motion } from "framer-motion";
+import { fadeIn } from "src/styles/framerVariants";
+import PageSimpleHeader from "src/components/PageHeader";
 
 const TAKE_PRODUCTS = 28;
 
@@ -29,10 +33,7 @@ export function Products() {
 
   return (
     <>
-      <header className="relative hidden min-h-[400px] flex-col items-center justify-center gap-2 bg-signIn bg-contain bg-bottom pt-16 text-white shadow-medium before:absolute before:inset-0 before:z-10 before:bg-black/50  before:content-[''] sm:flex">
-        <h1 className="z-20 font-primary text-5xl font-bold uppercase ">Productos</h1>
-        <p className="z-20 font-secondary text-3xl">Encontra todo lo que necesites...</p>
-      </header>
+      <PageSimpleHeader image={images.empresa} title={"NUESTROS PRODUCTOS"} subtitle={"Descubre nuestros productos"} />
       <main className="flex gap-x-4 bg-[#D9D9D9] p-10">
         <article className="my-10 hidden pl-5 font-secondary md:inline">
           <h2 className="text-xl font-semibold">Categorías de Productos</h2>
@@ -106,22 +107,22 @@ function ProductsView() {
 
   if (loading || !products[page]) {
     return (
-      <div className="grid w-full grid-cols-2  gap-8   p-2 lg:w-full lg:grid-cols-3">
+      <div className="grid w-full grid-cols-2 gap-8 p-2 lg:w-full lg:grid-cols-3">
         {Array.from({ length: 12 }).map((_, index) => (
-          <div className="grid w-[90%] grid-cols-2 gap-6  p-2 lg:w-full lg:grid-cols-3" key={index}>
-            <SkeletonCard />
-          </div>
+          <SkeletonCard key={index} />
         ))}
       </div>
     );
   }
 
   return (
-    <div className="grid w-full grid-cols-2  gap-8   p-2 lg:w-full lg:grid-cols-3">
-      {products[page].map((p, index) => (
-        <ProductCard {...p} key={index} />
-      ))}
-    </div>
+    <AnimatePresence key={page} mode="wait">
+      <motion.div {...fadeIn()} className="grid w-full grid-cols-2 gap-8 p-2 lg:w-full lg:grid-cols-3">
+        {products[page].map((p, index) => (
+          <ProductCard {...p} key={index} />
+        ))}
+      </motion.div>
+    </AnimatePresence>
   );
 }
 

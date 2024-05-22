@@ -129,20 +129,20 @@ export default function ShoppingCart() {
         </DefaultButton>
 
         {web_role === Number(import.meta.env.VITE_USER_ROLE) && (
-          <motion.h1 {...fadeInTop} className="text-3xl font-bold text-dark drop-shadow-xl">
+          <motion.h1 {...fadeInTop()} className="text-3xl font-bold text-dark drop-shadow-xl">
             MI CARRITO
           </motion.h1>
         )}
 
         {managedClient.fantasyName && (
-          <motion.h1 {...fadeInTop} className="text-3xl font-bold text-dark drop-shadow-xl">
+          <motion.h1 {...fadeInTop()} className="text-3xl font-bold text-dark drop-shadow-xl">
             CARRITO DE <strong className="yellowGradient">{managedClient.fantasyName}</strong>{" "}
           </motion.h1>
         )}
 
         {reduxCart.items.length === 0 && (
           //? Esto se muestra durante unos segundos aunque haya productos en el carrito
-          <motion.div {...fadeInTop} className="flex flex-col items-center gap-6">
+          <motion.div {...fadeInTop()} className="flex flex-col items-center gap-6">
             <h3 className="font-semibold">NO HAY NINGUN PRODUCTO EN TU CARRITO</h3>
             <DefaultButton as={Link} to="/productos/0" className={"w-fit"}>
               VER PRODUCTOS

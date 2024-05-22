@@ -84,9 +84,9 @@ export default function NavBar() {
   ) : (
     <Navbar
       shouldHideOnScroll={pathname !== "/" ? false : true}
-      className={`bg-transparent py-2 transition ${pathname !== "/" ? "block bg-dark/60" : "fixed"} ${
+      className={`bg-transparent py-4 transition ${pathname !== "/" ? "block bg-background" : "fixed"} ${
         blur && "bg-dark/20 hover:bg-dark/60"
-      } ${isMenuOpen && "py-0"}`}
+      } ${isMenuOpen && ""}`}
       isBlurred={blur}
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
@@ -95,15 +95,15 @@ export default function NavBar() {
       <Link to="/">
         <AwsImage
           type="logos"
-          identify="logoWhite"
+          identify="logoBlack"
           className={`w-24 transition hover:scale-110 hover:animate-pulse hover:cursor-pointer sm:w-24 md:w-32`}
           hidden={isMenuOpen ? true : false}
         />
       </Link>
 
-      <div className="hidden items-center justify-start gap-3 sm:flex">
+      <div className="hidden items-center justify-start gap-6 sm:flex">
         {links.map(({ name, path }, index) => (
-          <NavbarItem key={index} className={`group flex h-full items-center ${name === "inicio" && "hidden"}`}>
+          <NavbarItem key={index} className={`group flex h-full items-center gap-1 ${name === "inicio" && "hidden"}`}>
             <i
               className={`ri-arrow-down-s-line yellow-neon transition group-hover:scale-125 ${
                 pathname === path && "pointer-events-none opacity-50"
@@ -113,9 +113,9 @@ export default function NavBar() {
               <ProductsTab index={index} categories={categories} />
             ) : (
               <Link
-                className={`w-full text-sm uppercase text-background lg:text-[15px]  ${
-                  pathname === path && "pointer-events-none opacity-50"
-                }`}
+                className={`w-full text-sm font-bold uppercase text-background lg:text-[15px] ${
+                  pathname !== "/" && "text-dark"
+                } ${pathname === path && "pointer-events-none opacity-50"}`}
                 to={path}
               >
                 {name}
@@ -126,7 +126,7 @@ export default function NavBar() {
       </div>
 
       <div className="sm:hidden">
-        <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className={`ml-20 text-background`} />
+        <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className={`text-dark`} />
       </div>
 
       <MobileContent
@@ -198,6 +198,20 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
       {(web_role === Number(import.meta.env.VITE_USER_ROLE) ||
         web_role === Number(import.meta.env.VITE_SELLER_ROLE)) && (
         //? Solo seller y user tiene acceso aca
+        <Button
+          as={Link}
+          to={"/user/profile"}
+          className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
+            pathname === "/user/profile" && "pointer-events-none to-dark/50 !opacity-50"
+          }`}
+          size="md"
+          isIconOnly
+        >
+          <i className={`ri-user-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`} />
+        </Button>
+      )}
+
+      {id && access_token && (
         <>
           <Button
             as={Link}
@@ -215,7 +229,7 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
               as={Link}
               to="/carrito"
               className={`relative bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
-                pathname === "/carrito" && "pointer-events-none from-background"
+                pathname === "/carrito" && "pointer-events-none to-dark/50 !opacity-50"
               }`}
               size="md"
               isIconOnly
@@ -260,10 +274,11 @@ function MobileContent({
 }) {
   const { managedClient } = useSelector((state) => state.seller);
   const { items } = useSelector((state) => state.cart);
+
   return (
-    <NavbarMenu className="gap-4 overflow-hidden bg-gradient-to-br from-primary to-white/20">
-      <div className="absolute -right-48 -top-10 -z-40 opacity-50">
-        <AwsImage type="logos" identify="logoBlack" hidden={isMenuOpen ? false : true} className="rotate-12" />
+    <NavbarMenu className="mt-8 gap-6 overflow-hidden bg-gradient-to-br from-primary to-white/20">
+      <div className={`absolute -right-48 -top-10 -z-40 opacity-50 ${isMenuOpen && "hidden"}`}>
+        <AwsImage type="logos" identify="logoBlack" className="rotate-12" />
       </div>
 
       {links.map(({ name, path }, i) => {
@@ -276,16 +291,21 @@ function MobileContent({
             <i className="ri-arrow-right-s-line text-md  !text-secondary"></i>
             <ProductsTab
               index={i}
-              className=" font-primary text-lg uppercase text-white"
+              className="font-primary text-lg font-semibold"
               categories={categories}
               setIsMenuOpen={setIsMenuOpen}
             />
           </NavbarMenuItem>
         ) : (
-          <NavbarMenuItem onClick={() => setIsMenuOpen(false)} className="w-fit " key={i}>
-            <NavLink className="flex h-full w-[12rem] items-center gap-1.5 border-b-2  border-dark/50 p-1" to={path}>
+          <NavbarMenuItem onClick={() => setIsMenuOpen(false)} className="w-fit" key={i}>
+            <NavLink
+              className={`flex h-full w-[12rem] items-center gap-1.5 border-b-2  border-dark/50 p-1 ${
+                pathname.includes(name) && "pointer-events-none opacity-50"
+              }`}
+              to={path}
+            >
               <i className="ri-arrow-right-s-line text-md  !text-secondary"></i>
-              <p className="w-full font-primary text-lg uppercase text-white">{name}</p>
+              <p className="w-full font-primary text-lg uppercase text-dark">{name}</p>
             </NavLink>
           </NavbarMenuItem>
         );
@@ -334,6 +354,21 @@ function MobileContent({
         {(web_role === Number(import.meta.env.VITE_USER_ROLE) ||
           web_role === Number(import.meta.env.VITE_SELLER_ROLE)) && (
           //? Solo seller y user tiene acceso aca
+          <Button
+            as={Link}
+            to={"/user/profile"}
+            onPress={() => setIsMenuOpen(false)}
+            className={`bg-gradient-to-tl from-primary to-background shadow-xl ${
+              pathname === "/user/profile" && "pointer-events-none to-dark/50 !opacity-50"
+            }`}
+            size="lg"
+            isIconOnly
+          >
+            <i className={`ri-user-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`} />
+          </Button>
+        )}
+
+        {id && access_token && (
           <>
             <Button
               as={Link}
@@ -351,8 +386,9 @@ function MobileContent({
               <Button
                 as={Link}
                 to="/carrito"
-                className={`relative bg-gradient-to-tl from-primary to-background transition hover:scale-110 ${
-                  pathname === "/carrito" && "pointer-events-none from-background"
+                onPress={() => setIsMenuOpen(false)}
+                className={`relative bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
+                  pathname === "/carrito" && "pointer-events-none to-dark/50 !opacity-50"
                 }`}
                 size="lg"
                 isIconOnly
@@ -396,11 +432,14 @@ function MobileContent({
 
 function ProductsTab({ index, categories, className, setIsMenuOpen }) {
   const dispatch = useDispatch();
+  const { pathname } = useLocation();
 
   return (
-    <Dropdown className={`bg-transparent shadow-none backdrop-blur-xl `} key={index}>
+    <Dropdown className={`bg-transparent shadow-none backdrop-blur-xl`} key={index}>
       <DropdownTrigger
-        className={`font-primary text-sm text-background hover:cursor-pointer lg:text-[15px] ${className}`}
+        className={`font-primary text-sm font-bold text-background hover:cursor-pointer lg:text-[15px] ${
+          pathname !== "/" && "text-dark"
+        } ${pathname.includes("/productos") && "opacity-50"}  ${className}`}
       >
         PRODUCTOS
       </DropdownTrigger>
@@ -414,7 +453,7 @@ function ProductsTab({ index, categories, className, setIsMenuOpen }) {
                 dispatch(actionProducts.setCategory(""));
               }}
               className="flex w-full items-center gap-2 p-1.5 "
-              to="/productos/0"
+              to="/productos/1"
             >
               <i className="ri-arrow-right-s-line text-lg font-bold text-secondary transition group-hover:text-white"></i>
               <p>TODOS</p>

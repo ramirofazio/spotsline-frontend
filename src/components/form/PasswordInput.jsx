@@ -6,7 +6,7 @@ export function PasswordInput({ name, isRequired = true, label, onChange, isInva
 
   return (
     <Input
-      classNames={{ label: "text-white", inputWrapper: "bg-primary/30 rounded-full" }}
+      classNames={{ label: "text-white", inputWrapper: "bg-primary/30 rounded-xl" }}
       color="secondary"
       name={name}
       isRequired={isRequired}
@@ -15,7 +15,6 @@ export function PasswordInput({ name, isRequired = true, label, onChange, isInva
       label={label}
       variant="bordered"
       labelPlacement="outside"
-      radius="full"
       isInvalid={isInvalid}
       errorMessage={errorMessage}
       startContent={<i className="ri-key-fill text-xl text-secondary" />}
