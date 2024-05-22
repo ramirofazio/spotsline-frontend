@@ -25,7 +25,7 @@ export function ProductCard({ description, codigo, pathfoto }) {
             </CardBody>
             <CardFooter className="relative flex flex-col items-start gap-3 border-t-8 border-background bg-gradient-to-tr from-dark/30 to-primary/30">
               <AwsImage type="logos" identify={"logoBlack"} className={"absolute -right-28 -top-20 -z-10 blur-sm"} />
-              <p className="line-clamp-1 font-semibold text-dark">{description}</p>
+              <p className="line-clamp-1 font-semibold uppercase text-dark">{description}</p>
               <DefaultButton
                 as={NavLink}
                 to={`/producto/${codigo}`}
