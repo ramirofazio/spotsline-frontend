@@ -45,7 +45,7 @@ export default function Dashboard({ children }) {
           exit="hidden"
           variants={sidebarVariants}
         >
-          <SelectButtons loading={loading} setLoading={setLoading} />
+          <SelectButtons loading={loading} setLoading={setLoading} children={children} />
         </motion.div>
         <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600 lg:hidden" />
         <div
@@ -102,7 +102,7 @@ export function DashboardNavBar({ hide, setHide }) {
   );
 }
 
-function SelectButtons({ loading, setLoading }) {
+function SelectButtons({ loading, setLoading, children }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -114,11 +114,15 @@ function SelectButtons({ loading, setLoading }) {
     } else {
       navigate(link);
     }
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 5000);
   };
 
   useEffect(() => {
     setLoading(false);
-  }, [pathname]);
+  }, [children, pathname]);
   return (
     <>
       {selectButtonsData.map(({ name, startIcon, link }) => (
