@@ -1,12 +1,12 @@
 import { Card, CardBody, CardFooter, Image } from "@nextui-org/react";
 import { NavLink } from "react-router-dom";
-import { assets, images } from "src/assets";
+import { images } from "src/assets";
 import { DefaultButton } from "..";
 import AwsImage from "../images/AwsImage";
 import { fadeInBottom } from "src/styles/framerVariants";
 import { AnimatePresence, motion } from "framer-motion";
 
-export function ProductCard({ description, codigo, pathImage }) {
+export function ProductCard({ description, codigo, pathfoto }) {
   return (
     <AnimatePresence>
       <NavLink
@@ -17,12 +17,12 @@ export function ProductCard({ description, codigo, pathImage }) {
           <Card className="aspect-square max-h-[400px] min-h-[300px] w-full overflow-visible  bg-white shadow-xl transition hover:scale-105">
             <CardBody className="flex min-h-[100px] items-center justify-center overflow-hidden p-0">
               <Image
-                loading="lazy"
-                className="w-full max-w-[200px]"
-                width={150}
-                height={150}
-                alt={description}
-                src={pathImage || assets.logos.logoBlack}
+                loading="eager"
+                className="w-full max-w-[250px] object-cover"
+                width={250}
+                height={250}
+                alt={`product-image-${description}`}
+                src={pathfoto || images.logoBlack}
               />
             </CardBody>
             <CardFooter className="relative flex flex-col items-start gap-3 border-t-8 border-background bg-gradient-to-tr from-dark/30 to-primary/30">
