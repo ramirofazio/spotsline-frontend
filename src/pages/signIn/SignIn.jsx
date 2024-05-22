@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 import { zoomIn } from "src/styles/framerVariants";
 import { GoBackButton } from "src/components/buttons/GoBackButton";
 import { isValidEmail } from "src/utils/validation";
-import { assets } from "src/assets";
+import { images } from "src/assets";
 
 export function SignIn() {
   const dispatch = useDispatch();
@@ -74,8 +74,8 @@ export function SignIn() {
   return (
     <main className="relative h-screen w-screen overflow-hidden">
       <img
-        src={assets.backgrounds[5]}
-        className="absolute h-screen  lg:w-screen"
+        src={images.signInBackground}
+        className="absolute h-full w-full object-cover"
         alt="singInBackground"
         loading="eager"
       />

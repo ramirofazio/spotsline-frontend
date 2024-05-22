@@ -18,7 +18,7 @@ export default function FeaturedProducts({ products }) {
       className="relative my-4 grid place-content-center gap-10 overflow-hidden border-t-[8px] border-secondary bg-gradient-to-b from-background px-4 py-6 sm:px-6 lg:gap-20 xl:px-20"
     >
       <FloatingLogos positions={["-top-20 -right-40", "-top-32 -left-40"]} qty={2} />
-      <motion.h1 {...fadeInTop} className="mx-auto w-full text-center text-2xl font-bold sm:mt-4 sm:text-4xl">
+      <motion.h1 {...fadeInTop()} className="mx-auto w-full text-center text-2xl font-bold sm:mt-4 sm:text-4xl">
         PRODUCTOS DESTACADOS
       </motion.h1>
       <article className="grid grid-cols-2 grid-rows-3 gap-4 md:grid-flow-row md:grid-cols-4 md:grid-rows-4">

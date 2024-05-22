@@ -1,4 +1,4 @@
-import { Textarea } from "@nextui-org/react";
+import { Textarea, Tooltip } from "@nextui-org/react";
 import { useState } from "react";
 import { BasicInput, DefaultButton } from "src/components";
 import { toast } from "sonner";
@@ -54,32 +54,42 @@ export function Contact() {
   }
 
   return (
-    <section className="flex flex-col gap-10 px-6">
-      <article className="">
-        <motion.h2 className=" mt-4 w-fit text-4xl font-bold tracking-wider text-black drop-shadow-xl lg:text-5xl">
-          RECURSOS <br /> <span className="text-primary">HUMANOS</span>
-        </motion.h2>
-        <span className="p-2">
+    <section className="flex flex-col gap-10 p-8 px-10 md:items-start lg:flex-row">
+      <article className="mx-auto w-full text-center md:flex md:!min-h-[700px] md:flex-1 md:flex-col md:justify-between md:p-3">
+        <span className="p-2 md:p-0 md:text-justify">
           <strong>
-            <p className="">¿Queres unirte?</p>
+            <p className="mb-2 text-center text-lg font-bold text-dark md:text-left md:text-2xl">Recursos Humanos</p>
           </strong>
-          <p>
-            En <strong>Spotsline</strong> somos un gran equipo humano y profesional.
-          </p>
-          <p>
+          <p className="lg:text-lg">
             La esencia de nuestro trabajo es <strong>conectar</strong> con los clientes y sus
-            <strong>necesidades</strong>.
-          </p>
-          <p>
-            Si te gustan los <strong>desafíos</strong>, tenés ganas de aprender y querés formar parte de
-            <strong>nuestro equipo</strong>, adjuntá tu <strong>CV</strong> o escribinos a <u>rrhh@spotsline.com.ar</u>
+            <strong> necesidades</strong>. Si te gustan los <strong>desafíos</strong>, tenés ganas de aprender y querés
+            formar parte de <strong>nuestro equipo</strong>, adjuntá tu <strong>CV</strong> o escribinos a{" "}
+            <u
+              className="transition hover:opacity-50"
+              onClick={() => navigator.clipboard.writeText("rrhh@spotsline.com.ar")}
+            >
+              rrhh@spotsline.com.ar
+              <i className="ri-file-copy-fill yellowGradient icons h-4 w-4" />
+            </u>
           </p>
         </span>
+        <div className="hidden items-center justify-center border-2 border-primary text-right md:flex">
+          <iframe
+            className="min-h-[500px] w-full"
+            id="gmap_canvas"
+            src="https://maps.google.com/maps?q=Spotsline+Srl%2C+CGA%2C+Pedro+Ignacio+de+Rivera+5915%2C+B1606+Munro%2C+Provincia+de+Buenos+Aires&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            // frameBorder="0"
+            // scrolling="no"
+            // marginHeight="0"
+            // marginWidth="0"
+            title="Google Maps"
+          ></iframe>
+        </div>
       </article>
 
-      <form className="w-full" onSubmit={(e) => handleSubmit(e)}>
+      <form className="w-full md:flex-1 md:p-3" onSubmit={(e) => handleSubmit(e)}>
         <strong>
-          <h1 className="mx-auto w-fit text-xl">DEJANOS TU MENSAJE</h1>
+          <p className="mb-2 text-center text-lg font-bold text-dark md:text-left md:text-2xl">Dejanos un mensaje</p>
         </strong>
         <article className="mt-4 flex flex-col gap-3">
           <BasicInput

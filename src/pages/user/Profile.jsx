@@ -111,7 +111,7 @@ export function Profile() {
   return (
     <main className="h-screen">
       <header className="relative hidden flex-col items-center justify-center md:flex md:h-40">
-        <motion.h1 {...fadeInTop} className="text-2xl font-bold lg:text-3xl">{`CUENTA DE ${
+        <motion.h1 {...fadeInTop()} className="text-2xl font-bold lg:text-3xl">{`CUENTA DE ${
           managedClient.fantasyName ? managedClient.fantasyName : userData.fantasyName
         }`}</motion.h1>
         <Divider className="absolute bottom-0 mx-auto h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
@@ -179,7 +179,9 @@ export function Profile() {
             {selectButtonsData.map(({ name, startIcon }) => (
               <Button
                 key={name}
-                onPress={() => handleSelect(name)}
+                onPress={() =>
+                  name === "MI CC" ? toast.warning("Este modulo todavia no esta disponible") : handleSelect(name)
+                }
                 startContent={<i className={`ri-${startIcon}-fill text-xl text-dark transition`} />}
                 endContent={
                   <i

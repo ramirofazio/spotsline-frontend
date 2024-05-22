@@ -30,3 +30,16 @@ export const assets = {
     7: `${BASE_AWS_URL}/rrhh/rrhh-07.jpg`,
   },
 };
+//! LO DE ARRIBA ESTA DEPRECADO
+
+export const images = {
+  landingBg: "/images/landing-background.jpg",
+  signInBackground: "/images/sign-in-background.png",
+  logoWhite: "/images/logoWhite.png",
+  logoBlack: "/images/logoBlack.png",
+  logoYellow: "/images/logoYellow.png",
+  logoWithDescription: "/images/logoWithDescription.png",
+  empresa: "/images/empresa.png",
+  empresaScaled: "/images/empresa-scaled.jpg",
+  empresaTrabajador: "/images/empresa-trabajador.jpg",
+};

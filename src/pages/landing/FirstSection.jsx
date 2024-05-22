@@ -3,7 +3,7 @@ import { DefaultButton } from "src/components";
 import AwsImage from "src/components/images/AwsImage";
 import { motion } from "framer-motion";
 import { fadeIn } from "src/styles/framerVariants";
-import { assets } from "src/assets";
+import { images } from "src/assets";
 
 export default function FirstSection() {
   return (
@@ -13,8 +13,8 @@ export default function FirstSection() {
       className="relative grid  h-screen w-screen place-items-center overflow-hidden"
     >
       <img
-        src={assets.backgrounds[1]}
-        className="absolute h-screen lg:h-auto lg:w-screen"
+        src={images.landingBg}
+        className="absolute h-full w-full object-cover"
         alt="landingBackground"
         loading="eager"
       />

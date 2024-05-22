@@ -18,11 +18,13 @@ export const zoomIn: MotionProps = {
   viewport: { once: true },
 };
 
-export const fadeInTop: MotionProps = {
-  initial: { opacity: 0, y: -50 },
-  whileInView: { opacity: 1, y: 0 },
-  transition: { type: "spring", duration: 0.5, delay: 0.06 },
-  viewport: { once: true },
+export const fadeInTop = (duration: number = 0.5, delay: number = 0.06): MotionProps => {
+  return {
+    initial: { opacity: 0, y: -50 },
+    whileInView: { opacity: 1, y: 0 },
+    transition: { type: "spring", duration: duration, delay: delay },
+    viewport: { once: true },
+  };
 };
 
 export const fadeInBottom = (duration: number = 0.5, delay: number = 0.06): MotionProps => {

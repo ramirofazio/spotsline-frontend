@@ -10,11 +10,7 @@ export default function CurrentAccount({ redirect }) {
   const { userCA } = useLoaderData();
   const navigate = useNavigate();
 
-  console.log(userCA);
-
   useEffect(() => {
-    console.log(redirect);
-
     if (!redirect) navigate("cc");
   }, []);
 

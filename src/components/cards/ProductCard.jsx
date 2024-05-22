@@ -1,6 +1,6 @@
 import { Card, CardBody, CardFooter, Image } from "@nextui-org/react";
 import { NavLink } from "react-router-dom";
-import { assets } from "src/assets";
+import { assets, images } from "src/assets";
 import { DefaultButton } from "..";
 import AwsImage from "../images/AwsImage";
 import { fadeInBottom } from "src/styles/framerVariants";
@@ -10,7 +10,7 @@ export function ProductCard({ description, codigo, pathImage }) {
   return (
     <AnimatePresence>
       <NavLink
-        className="col-span-2 mx-auto w-[90%]  sm:col-span-1 lg:col-span-1 s:w-full  s:max-w-[300px]"
+        className="col-span-2 mx-auto w-[90%] sm:col-span-1 lg:col-span-1 s:w-full  s:max-w-[300px]"
         to={`/producto/${codigo}`}
       >
         <motion.div {...fadeInBottom()}>
@@ -45,14 +45,29 @@ export function ProductCard({ description, codigo, pathImage }) {
 }
 
 export function SkeletonCard() {
-  const className = "animate-pulse bg-gradient-to-r from-dark to-primary opacity-20 ";
+  const className = "animate-pulse bg-gradient-to-r from-dark/50 to-primary/50 opacity-20";
 
   return (
-    <Card className="max-h-[400px] w-[250px]  space-y-3 bg-transparent py-2 shadow-none" radius="none">
-      <div className={`${className} mb-1 h-[180px] rounded-lg`}></div>
-      <div className={`${className} h-5 rounded-md`}></div>
-      <div className={`${className} h-5 w-11/12 rounded-md`}></div>
-      <div className={`${className} h-8 w-1/2 rounded-full`}></div>
-    </Card>
+    <NavLink className="col-span-2 mx-auto w-[90%] sm:col-span-1 lg:col-span-1 s:w-full  s:max-w-[300px]">
+      <Card
+        className={`${className} aspect-square max-h-[400px] min-h-[300px] w-full overflow-visible  bg-white shadow-xl transition hover:scale-105`}
+      >
+        <CardBody className="flex min-h-[100px] items-center justify-center overflow-hidden p-0">
+          <Image
+            loading="lazy"
+            className="w-full max-w-[200px] animate-pulse"
+            width={150}
+            height={150}
+            alt={"skeleton Image"}
+            src={images.logoBlack}
+          />
+        </CardBody>
+        <CardFooter className="relative flex flex-col items-start gap-3 border-t-8 border-background bg-gradient-to-tr from-dark/30 to-primary/30">
+          <AwsImage type="logos" identify={"logoBlack"} className={"absolute -right-28 -top-20 -z-10 blur-sm"} />
+          <p className="line-clamp-1 w-20 font-semibold text-dark"></p>
+          <DefaultButton className={"flex w-full items-center justify-center py-2"}>Cargando...</DefaultButton>
+        </CardFooter>
+      </Card>
+    </NavLink>
   );
 }
