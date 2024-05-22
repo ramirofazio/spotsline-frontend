@@ -21,7 +21,7 @@ const ShoppingCart = lazy(() => import("pages/shoppingCart/ShoppingCart.jsx"));
 export const adminRoutesPaths = [
   {
     path: "/dashboard",
-    errorElement: <DefaultError link={"/dashboard/productos/1"} />,
+    errorElement: <DefaultError link={"/dashboard/vendedores"} />,
     element: <AdminRoot />,
     children: [
       {

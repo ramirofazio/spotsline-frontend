@@ -16,6 +16,8 @@ import { toast } from "sonner";
 import { BasicInput, DarkModal, DefaultButton } from "src/components";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { copyToClipboard } from "src/utils";
+import { AnimatePresence, motion } from "framer-motion";
+import { zoomIn } from "src/styles/framerVariants";
 
 const columns = [
   { label: "codigo", key: "name" },
@@ -147,49 +149,51 @@ export function Coupons() {
   };
 
   return (
-    <>
-      <Table
-        aria-label="Example table with custom cells"
-        isStriped
-        removeWrapper
-        isHeaderSticky
-        bottomContent={
-          <DefaultButton
-            className={"text-md mx-auto mt-10"}
-            onPress={() => onOpen()}
-            endContent={<i className="ri-add-line text-md" />}
-          >
-            CREAR CUPON
-          </DefaultButton>
-        }
-        classNames={{
-          th: "bg-primary",
-          base: "overflow-y-scroll rounded-md max-h-[800px] backdrop-blur-sm",
-        }}
-      >
-        <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn key={column.key} className="text-sm uppercase !text-dark">
-              {renderCol(column.key, column.label)}
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody
-          items={coupons}
-          isLoading={loading}
-          loadingContent={
-            <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
+    <AnimatePresence key={"dashboard-coupons"} mode="wait">
+      <motion.main {...zoomIn} className="flex flex-col items-center">
+        <Table
+          aria-label="Example table with custom cells"
+          isStriped
+          removeWrapper
+          isHeaderSticky
+          bottomContent={
+            <DefaultButton
+              className={"text-md mx-auto mt-10"}
+              onPress={() => onOpen()}
+              endContent={<i className="ri-add-line text-md" />}
+            >
+              CREAR CUPON
+            </DefaultButton>
           }
+          classNames={{
+            th: "bg-primary",
+            base: "overflow-y-scroll rounded-md max-h-[800px] backdrop-blur-sm",
+          }}
         >
-          {(item) => (
-            <TableRow key={item.id}>
-              {(columnKey) => <TableCell className="relative">{renderCell(item, columnKey)}</TableCell>}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-      {isOpen && <CreateNewCouponModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} />}
-    </>
+          <TableHeader columns={columns}>
+            {(column) => (
+              <TableColumn key={column.key} className="text-sm uppercase !text-dark">
+                {renderCol(column.key, column.label)}
+              </TableColumn>
+            )}
+          </TableHeader>
+          <TableBody
+            items={coupons}
+            isLoading={loading}
+            loadingContent={
+              <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
+            }
+          >
+            {(item) => (
+              <TableRow key={item.id}>
+                {(columnKey) => <TableCell className="relative">{renderCell(item, columnKey)}</TableCell>}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+        {isOpen && <CreateNewCouponModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} />}
+      </motion.main>
+    </AnimatePresence>
   );
 }
 

@@ -1,8 +1,11 @@
+/* eslint-disable */
 import React, { useCallback } from "react";
 import { useLoaderData } from "react-router-dom";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
 
 import { convertISOToDate, copyToClipboard } from "src/utils";
+import { AnimatePresence, motion } from "framer-motion";
+import { zoomIn } from "src/styles/framerVariants";
 
 export function Orders() {
   const orders = useLoaderData();
@@ -64,33 +67,35 @@ export function Orders() {
   }, []);
 
   return (
-    <main className="flex flex-col items-center">
-      <Table
-        aria-label="Example table with custom cells"
-        isStriped
-        removeWrapper
-        isHeaderSticky
-        className="!z-20"
-        classNames={{
-          th: "bg-gradient-to-b from-primary to-yellow-600",
-          base: "overflow-y-scroll rounded-md min-h-[600px] max-h-[600px] backdrop-blur-sm",
-        }}
-      >
-        <TableHeader columns={orders_columns}>
-          {(column) => (
-            <TableColumn key={column.key} className="text-sm uppercase !text-dark">
-              {renderCol(column.key, column.label)}
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody items={orders}>
-          {(item) => (
-            <TableRow key={item.codigo}>
-              {(columnKey) => <TableCell className="relative font-medium">{renderCell(item, columnKey)}</TableCell>}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </main>
+    <AnimatePresence key={"dashboard-clients"} mode="wait">
+      <motion.main {...zoomIn} className="flex flex-col items-center">
+        <Table
+          aria-label="Example table with custom cells"
+          isStriped
+          removeWrapper
+          isHeaderSticky
+          className="!z-20"
+          classNames={{
+            th: "bg-gradient-to-b from-primary to-yellow-600",
+            base: "overflow-y-scroll rounded-md min-h-[600px] max-h-[600px] backdrop-blur-sm",
+          }}
+        >
+          <TableHeader columns={orders_columns}>
+            {(column) => (
+              <TableColumn key={column.key} className="text-sm uppercase !text-dark">
+                {renderCol(column.key, column.label)}
+              </TableColumn>
+            )}
+          </TableHeader>
+          <TableBody items={orders}>
+            {(item) => (
+              <TableRow key={item.codigo}>
+                {(columnKey) => <TableCell className="relative font-medium">{renderCell(item, columnKey)}</TableCell>}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </motion.main>
+    </AnimatePresence>
   );
 }

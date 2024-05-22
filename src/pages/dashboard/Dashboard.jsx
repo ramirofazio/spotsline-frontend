@@ -1,9 +1,11 @@
-import { useState } from "react";
-import { useLocation, useNavigate, Link } from "react-router-dom";
+import { Suspense, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { DefaultButton } from "src/components";
 import FloatingLogos from "src/components/images/FloatingLogos";
-import { Button, Divider } from "@nextui-org/react";
-import { motion } from "framer-motion";
+import { Button, Divider, Spinner } from "@nextui-org/react";
+import { AnimatePresence, motion } from "framer-motion";
+import { fadeIn, fadeInTop, zoomIn } from "src/styles/framerVariants";
+import Loader from "src/components/Loader";
 
 const selectButtonsData = [
   { name: "VENDEDORES", startIcon: "customer-service", link: "/dashboard/vendedores" },
@@ -20,6 +22,7 @@ const sidebarVariants = {
 
 export default function Dashboard({ children }) {
   const [hide, setHide] = useState(false);
+  const [loading, setLoading] = useState("");
 
   return (
     <main>
@@ -36,21 +39,21 @@ export default function Dashboard({ children }) {
           size={"w-80 lg:w-[30vw]"}
         />
         <motion.div
-          className="flex flex-col items-center gap-2 p-6 text-center lg:col-span-1 lg:p-20"
+          className="flex flex-col items-center gap-2 p-6 text-center lg:col-span-1 lg:pt-20"
           initial={hide ? "hidden" : "visible"}
           animate={hide ? "hidden" : "visible"}
           exit="hidden"
           variants={sidebarVariants}
         >
-          <SelectButtons />
+          <SelectButtons loading={loading} setLoading={setLoading} />
         </motion.div>
         <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600 lg:hidden" />
         <div
-          className={`min-h-[80vh] px-2 pt-6  lg:py-10 lg:pr-10 lg:pt-20 ${
+          className={`pt-61 min-h-[80vh] px-2 lg:py-10 lg:pr-10 lg:pt-20 ${
             hide ? "pl-10 lg:col-span-4" : "lg:col-span-3"
-          }`}
+          } ${loading && "flex items-center justify-center"}`}
         >
-          {children}
+          <Suspense key={children}>{loading ? <Spinner color="secondary" /> : children}</Suspense>
         </div>
       </section>
     </main>
@@ -99,31 +102,67 @@ export function DashboardNavBar({ hide, setHide }) {
   );
 }
 
-function SelectButtons() {
+function SelectButtons({ loading, setLoading }) {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
-  return selectButtonsData.map(({ name, startIcon, link }) => (
-    <DefaultButton
-      key={name}
-      startContent={
-        <i
-          className={`ri-${startIcon}-fill absolute left-10 text-xl text-dark ${
-            pathname.includes(link) && "animate-pulse"
-          }`}
-        />
-      }
-      endContent={
-        <i
-          className={`ri-arrow-right-s-line absolute right-10 text-xl text-dark transition lg:rotate-90 ${
-            pathname.includes(link) && "rotate-90 animate-pulse lg:!rotate-0"
-          }`}
-        />
-      }
-      className={`xl:!w-80 ${pathname.includes(link) && "from-yellow-200 to-primary "}`}
-      as={Link}
-      to={name === "PRODUCTOS" ? `${link}/1` : link}
-    >
-      {name}
-    </DefaultButton>
-  ));
+  const handlePress = (name, link) => {
+    setLoading(name);
+
+    if (name === "PRODUCTOS") {
+      navigate(`${link}/1`);
+    } else {
+      navigate(link);
+    }
+  };
+
+  useEffect(() => {
+    setLoading(false);
+  }, [pathname]);
+  return (
+    <>
+      {selectButtonsData.map(({ name, startIcon, link }) => (
+        <DefaultButton
+          key={name}
+          onPress={() => handlePress(name, link)}
+          isDisabled={loading === name}
+          startContent={
+            <AnimatePresence mode="wait">
+              {loading === name ? (
+                <motion.div className="absolute left-10 flex items-center justify-center" {...fadeIn()}>
+                  <Spinner color="secondary" />
+                </motion.div>
+              ) : (
+                <motion.div className="absolute left-10 flex items-center justify-center" {...fadeIn()}>
+                  <i
+                    className={`ri-${startIcon}-fill  text-xl text-dark ${pathname.includes(link) && "animate-pulse"}`}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          }
+          endContent={
+            <i
+              className={`ri-arrow-right-s-line absolute right-10 text-xl text-dark transition lg:rotate-90 ${
+                pathname.includes(link) && "rotate-90 animate-pulse lg:!rotate-0"
+              }`}
+            />
+          }
+          className={`xl:!w-80 ${pathname.includes(link) && "from-yellow-200 to-primary"}`}
+        >
+          {name}
+        </DefaultButton>
+      ))}
+      {pathname.includes("ordenes") && (
+        <motion.p
+          {...fadeInTop()}
+          className="mt-4 flex w-full items-center gap-4 rounded-md border-2 border-primary bg-primary/20 p-2 text-left text-sm"
+        >
+          <i className="ri-information-line animate-pulse text-2xl" />
+          Estas ordenes no estan sincronizadas con el sistema, son ordenes creadas desde esta WEB. Para consultar todas
+          las ordenes revisar el sistema.
+        </motion.p>
+      )}
+    </>
+  );
 }

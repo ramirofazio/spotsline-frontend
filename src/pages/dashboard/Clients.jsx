@@ -16,6 +16,8 @@ import { toast } from "sonner";
 import { BasicInput, DarkModal, DefaultButton } from "src/components";
 import { Link, useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { isValidEmail } from "src/utils/validation";
+import { AnimatePresence, motion } from "framer-motion";
+import { zoomIn } from "src/styles/framerVariants";
 
 const clients_columns = [
   { label: "CUIT", key: "cuit" },
@@ -110,71 +112,73 @@ export function ClientsPage() {
   }, []);
 
   return (
-    <main className="flex flex-col items-center">
-      <Table
-        aria-label="Example table with custom cells"
-        isStriped
-        removeWrapper
-        isHeaderSticky
-        className="!z-20"
-        classNames={{
-          th: "bg-gradient-to-b from-primary to-yellow-600",
-          base: "overflow-y-scroll rounded-md min-h-[600px] max-h-[600px] backdrop-blur-sm",
-        }}
-      >
-        <TableHeader columns={clients_columns}>
-          {(column) => (
-            <TableColumn key={column.key} className="text-sm uppercase !text-dark">
-              {renderCol(column.key, column.label)}
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody
-          items={clients}
-          isLoading={loading}
-          loadingContent={
-            <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
-          }
+    <AnimatePresence key={"dashboard-clients"} mode="wait">
+      <motion.main {...zoomIn} className="flex flex-col items-center">
+        <Table
+          aria-label="Example table with custom cells"
+          isStriped
+          removeWrapper
+          isHeaderSticky
+          className="!z-20"
+          classNames={{
+            th: "bg-gradient-to-b from-primary to-yellow-600",
+            base: "overflow-y-scroll rounded-md min-h-[600px] max-h-[600px] backdrop-blur-sm",
+          }}
         >
-          {(item) => (
-            <TableRow key={item.codigo}>
-              {(columnKey) => <TableCell className="relative font-medium">{renderCell(item, columnKey)}</TableCell>}
-            </TableRow>
+          <TableHeader columns={clients_columns}>
+            {(column) => (
+              <TableColumn key={column.key} className="text-sm uppercase !text-dark">
+                {renderCol(column.key, column.label)}
+              </TableColumn>
+            )}
+          </TableHeader>
+          <TableBody
+            items={clients}
+            isLoading={loading}
+            loadingContent={
+              <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
+            }
+          >
+            {(item) => (
+              <TableRow key={item.codigo}>
+                {(columnKey) => <TableCell className="relative font-medium">{renderCell(item, columnKey)}</TableCell>}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+        <div>
+          {page > 1 && (
+            <DefaultButton
+              startContent={<i className="ri-arrow-left-s-fill text-xl" />}
+              className={"mx-auto mt-10 hover:scale-100"}
+              as={Link}
+              to={`/dashboard/clientes/${Number(page) - 1}`}
+            >
+              ANTERIOR
+            </DefaultButton>
           )}
-        </TableBody>
-      </Table>
-      <div>
-        {page > 1 && (
-          <DefaultButton
-            startContent={<i className="ri-arrow-left-s-fill text-xl" />}
-            className={"mx-auto mt-10 hover:scale-100"}
-            as={Link}
-            to={`/dashboard/clientes/${Number(page) - 1}`}
-          >
-            ANTERIOR
-          </DefaultButton>
+          {hasMore && (
+            <DefaultButton
+              endContent={<i className="ri-arrow-right-s-fill text-xl" />}
+              className={"mx-auto mt-10 hover:scale-100"}
+              as={Link}
+              to={`/dashboard/clientes/${Number(page) + 1}`}
+            >
+              SIGUENTE
+            </DefaultButton>
+          )}
+        </div>
+        {isOpen && selectedClient && (
+          <AddEmailModal
+            isOpen={isOpen}
+            onOpenChange={onOpenChange}
+            onClose={onClose}
+            client={selectedClient}
+            navigate={navigate}
+          />
         )}
-        {hasMore && (
-          <DefaultButton
-            endContent={<i className="ri-arrow-right-s-fill text-xl" />}
-            className={"mx-auto mt-10 hover:scale-100"}
-            as={Link}
-            to={`/dashboard/clientes/${Number(page) + 1}`}
-          >
-            SIGUENTE
-          </DefaultButton>
-        )}
-      </div>
-      {isOpen && selectedClient && (
-        <AddEmailModal
-          isOpen={isOpen}
-          onOpenChange={onOpenChange}
-          onClose={onClose}
-          client={selectedClient}
-          navigate={navigate}
-        />
-      )}
-    </main>
+      </motion.main>
+    </AnimatePresence>
   );
 }
 

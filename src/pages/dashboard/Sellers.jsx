@@ -16,6 +16,8 @@ import { toast } from "sonner";
 import { BasicInput, DarkModal, DefaultButton } from "src/components";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { isValidEmail } from "src/utils/validation";
+import { AnimatePresence, motion } from "framer-motion";
+import { zoomIn } from "src/styles/framerVariants";
 
 const sellers_columns = [
   { label: "Codigo", key: "sellerId" },
@@ -110,50 +112,51 @@ export function SellersPage() {
   }, []);
 
   return (
-    <main className="flex flex-col items-center">
-      <Table
-        aria-label="Example table with custom cells"
-        isStriped
-        removeWrapper
-        isHeaderSticky
-        className="!z-20"
-        classNames={{
-          th: "bg-gradient-to-b from-primary to-yellow-600",
-          base: "overflow-y-scroll rounded-md min-h-[600px] max-h-[600px] backdrop-blur-sm",
-        }}
-      >
-        <TableHeader columns={sellers_columns}>
-          {(column) => (
-            <TableColumn key={column.key} className="text-sm uppercase !text-dark">
-              {renderCol(column.key, column.label)}
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody
-          items={sellers}
-          isLoading={loading}
-          loadingContent={
-            <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
-          }
+    <AnimatePresence key={"dashboard-clients"} mode="wait">
+      <motion.main {...zoomIn} className="flex flex-col items-center">
+        <Table
+          aria-label="Example table with custom cells"
+          isStriped
+          removeWrapper
+          isHeaderSticky
+          className="!z-20"
+          classNames={{
+            th: "bg-gradient-to-b from-primary to-yellow-600",
+            base: "overflow-y-scroll rounded-md min-h-[600px] max-h-[600px] backdrop-blur-sm",
+          }}
         >
-          {(item) => (
-            <TableRow key={item.codigo}>
-              {(columnKey) => <TableCell className="relative font-medium">{renderCell(item, columnKey)}</TableCell>}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-
-      {isOpen && selectedSeller && (
-        <AddEmailModal
-          isOpen={isOpen}
-          onOpenChange={onOpenChange}
-          onClose={onClose}
-          seller={selectedSeller}
-          navigate={navigate}
-        />
-      )}
-    </main>
+          <TableHeader columns={sellers_columns}>
+            {(column) => (
+              <TableColumn key={column.key} className="text-sm uppercase !text-dark">
+                {renderCol(column.key, column.label)}
+              </TableColumn>
+            )}
+          </TableHeader>
+          <TableBody
+            items={sellers}
+            isLoading={loading}
+            loadingContent={
+              <Spinner color="primary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
+            }
+          >
+            {(item) => (
+              <TableRow key={item.codigo}>
+                {(columnKey) => <TableCell className="relative font-medium">{renderCell(item, columnKey)}</TableCell>}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+        {isOpen && selectedSeller && (
+          <AddEmailModal
+            isOpen={isOpen}
+            onOpenChange={onOpenChange}
+            onClose={onClose}
+            seller={selectedSeller}
+            navigate={navigate}
+          />
+        )}
+      </motion.main>
+    </AnimatePresence>
   );
 }
 
