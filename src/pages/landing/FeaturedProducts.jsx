@@ -40,7 +40,7 @@ export default function FeaturedProducts({ products }) {
                 type={"lights"}
                 identify={identify}
                 src={pathfoto}
-                className={`z-20 scale-75 group-hover:translate-x-6 group-hover:opacity-60 lg:scale-125 ${
+                className={`z-20 scale-75 transition group-hover:translate-x-6 group-hover:opacity-60 lg:scale-125 ${
                   index === 2 && "scale-125 lg:scale-125"
                 }  ${index === 1 && "lg:scale-150"}`}
               />
