@@ -26,11 +26,20 @@ const shoppingCartSlice = createSlice({
     addItemToCart(state, action) {
       const newItem = action.payload;
       const existingItem = state.items.find((item) => item.productId === newItem.productId);
-
+      console.log(newItem);
       if (existingItem) {
         existingItem.qty += newItem.qty;
       } else {
         state.items.push(newItem);
+        // setTimeout(() => {
+        //   toast("Producto Agregado", {
+        //     action: {
+        //       label: "Ver Carrito",
+        //       onClick: () => navigate("/carrito"),
+        //     },
+        //   });
+        //   setLoading(false);
+        // }, 250);
       }
 
       state.subtotal = calculateSubtotal(state.items);

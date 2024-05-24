@@ -75,29 +75,36 @@ export function DetailProduct() {
   }, []);
 
   function addProductToShoppingCart() {
-    setLoading(true);
-    const currentPrice = `precio${managedClient.priceList ? managedClient.priceList : priceList}`;
+    try {
+      setLoading(true);
+      const currentPrice = `precio${managedClient.priceList ? managedClient.priceList : priceList}`;
 
-    dispatch(
-      addItemToCart({
-        productId: currentVariant.id,
-        marcaId: parseInt(id),
-        name: currentVariant.description,
-        img: currentVariant.pathImage || assets.logos.logoBlack,
-        price:
-          currentVariant[currentPrice] /* Number(currentVariant["precio" + (managedClient.priceList ?? priceList)]) */,
-        qty: Number(qty),
-      })
-    );
-    setTimeout(() => {
-      toast("Producto Agregado", {
-        action: {
-          label: "Ver Carrito",
-          onClick: () => navigate("/carrito"),
-        },
-      });
-      setLoading(false);
-    }, 250);
+      dispatch(
+        addItemToCart({
+          productId: currentVariant.id,
+          marcaId: parseInt(id),
+          name: currentVariant.description,
+          img: currentVariant.pathImage || assets.logos.logoBlack,
+          price:
+            currentVariant[
+              currentPrice
+            ] /* Number(currentVariant["precio" + (managedClient.priceList ?? priceList)]) */,
+          qty: Number(qty),
+        })
+      );
+      // El tiempo que tarda el autoSaveShoppingcart en agregarlo
+      setTimeout(() => {
+        toast("Producto Agregado", {
+          action: {
+            label: "Ver Carrito",
+            onClick: () => navigate("/carrito"),
+          },
+        });
+        setLoading(false);
+      }, 100);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   const getVariantPrice = () => {

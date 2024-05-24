@@ -60,7 +60,7 @@ export default function Layout({ children }) {
     if (access_token && user) {
       addAuthWithToken(access_token);
       dispatch(actionsAuth.setAccessToken(access_token));
-
+      console.log("try to loaddd", user);
       loadUserData(dispatch, access_token, user.email, managedClient);
     }
   }, [100]);
