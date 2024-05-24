@@ -14,26 +14,28 @@ export default function Layout({ children }) {
 
   const autoSaveShoppingCart = useDebouncedCallback(() => {
     if (!reduxUser.id) return;
-
     let storageCart = getOfStorage("shoppingCart");
-
+    console.log(storageCart.items);
     return APISpot.cart.updateCart({
       ...storageCart,
-      items:
-        storageCart.items.map((item) => {
-          return { ...item, productId: item.id ?? item.productId };
-        }) ?? [],
+      items: storageCart?.items?.length
+        ? storageCart.items.map((item) => {
+            return { ...item, productId: item.id ?? item.productId };
+          })
+        : [],
       userId: reduxUser.id,
       coupon: false,
     });
     //? Para no hacer pedidos duplicados espera 1s
-  }, [1000]);
+    // ! EL motivo del bug al navegar rapido es por el tiempo del debounceCallback
+  }, [200]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") {
         // La pestaña está oculta
+        console.log("pestaña oculta");
         autoSaveShoppingCart();
       }
     };
@@ -46,8 +48,10 @@ export default function Layout({ children }) {
 
     return () => {
       clearInterval(saveInterval);
-
       window.removeEventListener("visibilitychange", handleVisibilityChange);
+      // if (reduxCart.id) {
+      //   return APISpot.cart.updateCart(reduxCart);
+      // }
     };
   }, []);
 

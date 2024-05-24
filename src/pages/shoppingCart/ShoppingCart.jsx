@@ -100,6 +100,8 @@ export default function ShoppingCart() {
   }, [document]);
 
   useEffect(() => {
+    // ? actualiza el cart cuando se monta
+    console.log("ENTRO AL EFFECT DEL CART");
     handleUpdateCart();
   }, [reduxCart]);
 
