@@ -16,9 +16,11 @@ export function ProductCard({ description, codigo, pathfoto }) {
         <motion.div {...fadeInBottom()}>
           <Card className="aspect-square max-h-[400px] min-h-[300px] w-full overflow-visible  bg-white shadow-xl transition hover:scale-105">
             <CardBody className="flex min-h-[100px] items-center justify-center overflow-hidden p-0">
-              <img
-                loading="eager"
+              <Image
+                loading="lazy"
                 className="w-full max-w-[250px] object-cover"
+                width={0}
+                height={0}
                 alt={`product-image-${description}`}
                 src={pathfoto || images.logoBlack}
               />
@@ -51,8 +53,10 @@ export function SkeletonCard() {
         className={`${className} aspect-square max-h-[400px] min-h-[300px] w-full overflow-visible  bg-white shadow-xl transition hover:scale-105`}
       >
         <CardBody className="flex min-h-[100px] items-center justify-center overflow-hidden p-0">
-          <img
+          <Image
             loading="eager"
+            width={0}
+            height={0}
             className="w-full max-w-[250px] object-cover"
             alt={`skeleton-product-image`}
             src={images.logoBlack}
