@@ -126,7 +126,7 @@ export default function NavBar() {
       </div>
 
       <div className="sm:hidden">
-        <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className={`text-dark`} />
+        <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className={` p-6 px-8 text-dark`} />
       </div>
 
       <MobileContent
