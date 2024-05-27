@@ -6,6 +6,7 @@ export default function AwsImage({ type, identify, className, ...props }) {
     <Image
       loading="lazy"
       radius="none"
+      disableSkeleton
       src={assets[type][identify]}
       width={0}
       height={0}

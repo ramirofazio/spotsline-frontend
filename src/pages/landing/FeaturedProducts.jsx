@@ -3,6 +3,7 @@ import AwsImage from "src/components/images/AwsImage";
 import FloatingLogos from "src/components/images/FloatingLogos";
 import { motion } from "framer-motion";
 import { fadeIn, fadeInBottom, fadeInTop, zoomIn } from "src/styles/framerVariants";
+import { Image } from "@nextui-org/react";
 
 const featuredFooter = [
   { icon: "ri-tools-fill", text: "fabricantes" },
@@ -22,7 +23,7 @@ export default function FeaturedProducts({ products }) {
         PRODUCTOS DESTACADOS
       </motion.h1>
       <article className="grid grid-cols-2 grid-rows-3 gap-4 md:grid-flow-row md:grid-cols-4 md:grid-rows-4">
-        {products?.map(({ identify, pathfoto, codigo }, index) => (
+        {products?.map(({ pathfoto, codigo }, index) => (
           <motion.div
             {...fadeInBottom()}
             key={index}
@@ -36,13 +37,12 @@ export default function FeaturedProducts({ products }) {
               to={`/producto/${codigo}`}
               className="group flex h-full w-full items-center justify-center overflow-hidden bg-slate-50 transition hover:cursor-pointer"
             >
-              <AwsImage
-                type={"lights"}
-                identify={identify}
+              <img
+                loading="lazy"
                 src={pathfoto}
-                className={`z-20 scale-75 transition group-hover:translate-x-6 group-hover:opacity-60 lg:scale-125 ${
+                className={`z-20 scale-90 transition group-hover:translate-x-6 group-hover:opacity-60 ${
                   index === 2 && "scale-125 lg:scale-125"
-                }  ${index === 1 && "lg:scale-150"}`}
+                }  ${index === 1 && "lg:scale-100"}`}
               />
             </NavLink>
           </motion.div>
