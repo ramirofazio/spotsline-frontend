@@ -1,23 +1,22 @@
 import { Player } from "@lottiefiles/react-lottie-player";
 import lottie from "/lottie.json?url";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 const Spinner = () => {
   return (
-    <main className="grid h-screen w-screen place-items-center">
-      <AnimatePresence mode="wait" key="spinner">
-        <motion.div
-          key="spinner-content"
-          initial={{ width: 0, height: 0, opacity: 0 }}
-          animate={{ width: "100vw", height: "100vh", opacity: 1 }}
-          exit={{ width: 0, height: 0, opacity: 0 }}
-          transition={{ duration: 0.5 }}
-          className={`mx-auto flex h-screen w-screen items-center justify-center self-center bg-gradient-to-tr from-dark/50 to-dark/20`}
-        >
-          <Player autoplay loop src={lottie} className={`w-[150px]`}></Player>
-        </motion.div>
-      </AnimatePresence>
-    </main>
+    <motion.div
+      key="spinner-content"
+      initial={{ scale: 0.2 }}
+      animate={{ scale: 1 }}
+      exit={{ scale: 0.2 }}
+      transition={{ duration: 0.2 }}
+      className={`flex h-screen w-screen flex-col items-center justify-center bg-gradient-to-tr from-dark/50 to-dark/20`}
+    >
+      <Player speed={1.5} autoplay loop src={lottie} className={`w-[150px]`}></Player>
+      <p className="font-bold">
+        Cargando<span className="animate-pulse">...</span>
+      </p>
+    </motion.div>
   );
 };
 
