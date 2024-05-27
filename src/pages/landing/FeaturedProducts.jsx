@@ -1,9 +1,7 @@
 import { NavLink } from "react-router-dom";
-import AwsImage from "src/components/images/AwsImage";
 import FloatingLogos from "src/components/images/FloatingLogos";
 import { motion } from "framer-motion";
 import { fadeIn, fadeInBottom, fadeInTop, zoomIn } from "src/styles/framerVariants";
-import { Image } from "@nextui-org/react";
 
 const featuredFooter = [
   { icon: "ri-tools-fill", text: "fabricantes" },
