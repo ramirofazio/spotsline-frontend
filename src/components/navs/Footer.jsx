@@ -71,8 +71,8 @@ export default function Footer() {
               <p className="mr-2 text-lg font-semibold">SPOTSLINE</p>
             </div>
             <span className="mt-2 w-40  text-center font-secondary text-xs">
-              Es una empresa argentina que hace 33 años se dedica al diseño, producción y comercialización de luminarias
-              para el área industrial, comercial y del hogar.
+              Es una empresa argentina que hace {new Date().getFullYear() - 1986} años se dedica al diseño, producción y
+              comercialización de luminarias para el área industrial, comercial y del hogar.
             </span>
           </div>
           <div className="flex flex-col ">

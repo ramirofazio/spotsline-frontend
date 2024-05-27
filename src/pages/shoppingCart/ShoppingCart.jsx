@@ -118,7 +118,7 @@ export default function ShoppingCart() {
 
   return (
     <main className="text-center">
-      <section className="relative grid place-items-center gap-10 p-6">
+      <section className="relative flex flex-col items-center gap-10 p-6">
         <DefaultButton
           isIconOnly={true}
           onPress={() => resetCart(reduxCart.id)}
@@ -127,18 +127,18 @@ export default function ShoppingCart() {
         >
           <i className="ri-delete-bin-line text-2xl"></i>
         </DefaultButton>
-
         {web_role === Number(import.meta.env.VITE_USER_ROLE) && (
           <motion.h1 {...fadeInTop()} className="text-3xl font-bold text-dark drop-shadow-xl">
             MI CARRITO
           </motion.h1>
         )}
-
         {managedClient.fantasyName && (
           <motion.h1 {...fadeInTop()} className="text-3xl font-bold text-dark drop-shadow-xl">
             CARRITO DE <strong className="yellowGradient">{managedClient.fantasyName}</strong>{" "}
           </motion.h1>
         )}
+
+        <Divider className="h-1 w-[105vw] bg-primary lg:-translate-x-10" />
 
         {reduxCart.items.length === 0 && (
           //? Esto se muestra durante unos segundos aunque haya productos en el carrito
@@ -149,20 +149,22 @@ export default function ShoppingCart() {
             </DefaultButton>
           </motion.div>
         )}
-
         {reduxCart.items.map(({ img, name, price, qty, id, productId, marcaId }, index) => (
           //TODO @Tomi Aca se puede hacer una orquestacion de variants para que quede tipo acordion de arriba hacia abajo. https://www.framer.com/motion/animation/#variants
           <motion.article
             {...zoomIn}
             key={index}
-            className="z-10 flex min-w-[80vw] max-w-[50vw] flex-col items-center  gap-6 rounded-xl bg-gradient-to-b from-yellow-200 to-white p-6 md:flex-row md:bg-gradient-to-r xl:min-w-[60vw]"
+            className="z-10 flex min-w-[80vw] max-w-[50vw] flex-col items-center  gap-6 rounded-xl bg-gradient-to-b from-yellow-200 to-white p-6 md:flex-row md:bg-gradient-to-r lg:gap-12 xl:min-w-[60vw]"
           >
-            <NavLink className="w-fit" to={`/producto/${marcaId}`}>
+            <NavLink
+              className="flex max-h-[200px] w-fit max-w-[200px] items-center justify-center rounded-xl bg-slate-100 p-5"
+              to={`/producto/${marcaId}`}
+            >
               <img
                 loading="lazy"
                 src={img}
                 alt={`${name} img`}
-                className="aspect-square w-[250px] bg-white object-cover shadow-inner"
+                className="mx-auto aspect-square w-full object-cover drop-shadow-xl"
               />
             </NavLink>
             <div className="flex w-60 flex-col items-center gap-6 md:w-full md:items-start">
@@ -389,8 +391,9 @@ function PickDateModal({ isOpen, onOpenChange, items, coupon, discount }) {
       title={"FECHA DE ENTREGA"}
       description={"Seleccione fecha de entrega para el pedido"}
       size="xl"
+      modalClassName={"flex items-center"}
     >
-      <form className={`z-20 mx-auto flex w-80 flex-col items-center justify-start gap-10`}>
+      <form className={`z-20 mx-auto flex w-80 flex-col items-center justify-start gap-10 px-5`}>
         <input
           type="date"
           value={date}
@@ -402,7 +405,7 @@ function PickDateModal({ isOpen, onOpenChange, items, coupon, discount }) {
           }}
           className={`${
             error && "border-2 border-red-500"
-          } w-60 rounded-full bg-background p-2 text-center font-bold tracking-widest text-dark transition hover:cursor-pointer focus:outline-none`}
+          } w-full rounded-full bg-background p-2 text-center font-bold tracking-widest text-dark transition hover:cursor-pointer focus:outline-none`}
         />
         <Textarea
           maxRows={3}

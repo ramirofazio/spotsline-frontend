@@ -4,10 +4,10 @@ import { DefaultError } from "pages/error/DefaultError";
 import { useDispatch } from "react-redux";
 import { getOfStorage } from "src/utils/localStorage";
 import { APISpot, addAuthWithToken } from "src/api";
-import { Spinner } from "@nextui-org/react";
 import { useDebouncedCallback } from "use-debounce";
 import { loadUserData } from "src/utils/loadUserData";
 import { actionsAuth } from "src/redux/reducers";
+import Spinner from "src/components/Spinner";
 
 const Dashboard = lazy(() => import("../dashboard/Dashboard"));
 const ProductsPage = lazy(() => import("../dashboard/Products").then((module) => ({ default: module.ProductsPage })));
@@ -137,7 +137,7 @@ export function AdminRoot() {
 
   if (isAdmin) {
     return (
-      <Suspense fallback={<Spinner color="secondary" className="absolute inset-0 !z-50 text-xl" />}>
+      <Suspense fallback={<Spinner />}>
         <Dashboard>
           <Outlet />
         </Dashboard>

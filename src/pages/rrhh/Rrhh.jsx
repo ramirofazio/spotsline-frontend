@@ -1,4 +1,4 @@
-import { assets, images } from "src/assets/index.js";
+import { images } from "src/assets/index.js";
 import { Contact } from "./Contact.jsx";
 import PageSimpleHeader from "src/components/PageHeader.jsx";
 

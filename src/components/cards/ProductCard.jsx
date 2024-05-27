@@ -16,17 +16,19 @@ export function ProductCard({ description, codigo, pathfoto }) {
         <motion.div {...fadeInBottom()}>
           <Card className="aspect-square max-h-[400px] min-h-[300px] w-full overflow-visible  bg-white shadow-xl transition hover:scale-105">
             <CardBody className="flex min-h-[100px] items-center justify-center overflow-hidden p-0">
-              <Image
+              <img
                 loading="lazy"
                 className="w-full max-w-[250px] object-cover"
-                width={0}
-                height={0}
                 alt={`product-image-${description}`}
                 src={pathfoto || images.logoBlack}
               />
             </CardBody>
             <CardFooter className="relative flex flex-col items-start gap-3 border-t-8 border-background bg-gradient-to-tr from-dark/30 to-primary/30">
-              <AwsImage type="logos" identify={"logoBlack"} className={"absolute -right-28 -top-20 -z-10 blur-sm"} />
+              <AwsImage
+                type="logos"
+                identify={"logoBlack"}
+                className={"absolute -right-20 -top-6 -z-10 w-40 rotate-45 blur-sm"}
+              />
               <p className="line-clamp-1 font-semibold uppercase text-dark">{description}</p>
               <DefaultButton
                 as={NavLink}

@@ -1,4 +1,4 @@
-import { Textarea, Tooltip } from "@nextui-org/react";
+import { Textarea } from "@nextui-org/react";
 import { useState } from "react";
 import { BasicInput, DefaultButton } from "src/components";
 import { toast } from "sonner";
@@ -6,6 +6,7 @@ import { APISpot } from "src/api";
 import { getOfStorage, saveInStorage } from "src/utils/localStorage";
 import { isValidEmail } from "src/utils/validation";
 import { motion } from "framer-motion";
+import { fadeInLeft, fadeInRight } from "src/styles/framerVariants";
 
 export function Contact() {
   const _defaultData = { name: "", email: "", subject: "", message: "", file: null };
@@ -55,7 +56,10 @@ export function Contact() {
 
   return (
     <section className="flex flex-col gap-10 p-8 px-10 md:items-start lg:flex-row">
-      <article className="mx-auto w-full text-center md:flex md:!min-h-[700px] md:flex-1 md:flex-col md:justify-between md:p-3">
+      <motion.article
+        {...fadeInLeft()}
+        className="mx-auto w-full text-center md:flex md:!min-h-[700px] md:flex-1 md:flex-col md:justify-between md:p-3"
+      >
         <span className="p-2 md:p-0 md:text-justify">
           <strong>
             <p className="mb-2 text-center text-lg font-bold text-dark md:text-left md:text-2xl">Recursos Humanos</p>
@@ -85,9 +89,9 @@ export function Contact() {
             title="Google Maps"
           ></iframe>
         </div>
-      </article>
+      </motion.article>
 
-      <form className="w-full md:flex-1 md:p-3" onSubmit={(e) => handleSubmit(e)}>
+      <motion.form {...fadeInRight()} className="w-full md:flex-1 md:p-3" onSubmit={(e) => handleSubmit(e)}>
         <strong>
           <p className="mb-2 text-center text-lg font-bold text-dark md:text-left md:text-2xl">Dejanos un mensaje</p>
         </strong>
@@ -193,7 +197,7 @@ export function Contact() {
             Enviar solicitud
           </DefaultButton>
         </article>
-      </form>
+      </motion.form>
     </section>
   );
 }

@@ -109,7 +109,7 @@ export function Profile() {
   };
 
   return (
-    <main className="h-screen">
+    <main className="h-full min-h-screen">
       <header className="relative hidden flex-col items-center justify-center md:flex md:h-40">
         <motion.h1 {...fadeInTop()} className="text-2xl font-bold lg:text-3xl">{`CUENTA DE ${
           managedClient.fantasyName ? managedClient.fantasyName : userData.fantasyName

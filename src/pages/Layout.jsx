@@ -2,7 +2,7 @@ import { useEffect, Suspense } from "react";
 import { getOfStorage } from "src/utils/localStorage";
 import { useDispatch, useSelector } from "react-redux";
 import { addAuthWithToken, APISpot } from "src/api";
-import { Spinner } from "@nextui-org/react";
+import Spinner from "src/components/Spinner";
 import { actionsAuth } from "src/redux/reducers";
 import AuthValidationModal from "src/components/modals/AuthValidationsModal";
 import { useDebouncedCallback } from "use-debounce";
@@ -70,7 +70,7 @@ export default function Layout({ children }) {
   }, []);
 
   return (
-    <Suspense fallback={<Spinner color="secondary" className="absolute inset-0 !z-50 bg-dark/20 text-2xl" size="lg" />}>
+    <Suspense fallback={<Spinner />}>
       <AuthValidationModal />
       {children}
     </Suspense>

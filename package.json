@@ -23,7 +23,8 @@
     "remixicon": "^4.0.0",
     "sonner": "^1.4.0",
     "swiper": "^11.0.6",
-    "use-debounce": "^10.0.0"
+    "use-debounce": "^10.0.0",
+    "@lottiefiles/react-lottie-player": "^3.5.3"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

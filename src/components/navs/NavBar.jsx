@@ -21,7 +21,7 @@ import AwsImage from "../images/AwsImage";
 import { toast } from "sonner";
 import { DefaultButton } from "..";
 import ManageClientsModal from "../modals/ManageClientsModal";
-import Loader from "../Loader";
+import Loader from "../Spinner";
 import { actionProducts } from "src/redux/reducers";
 
 export default function NavBar() {
@@ -125,9 +125,10 @@ export default function NavBar() {
         ))}
       </div>
 
-      <div className="sm:hidden">
-        <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className={`text-dark`} />
-      </div>
+      <NavbarMenuToggle
+        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+        className={`!h-10 !w-10  text-dark sm:hidden`}
+      />
 
       <MobileContent
         web_role={web_role}
@@ -277,7 +278,7 @@ function MobileContent({
             <i className="ri-arrow-right-s-line text-md  !text-secondary"></i>
             <ProductsTab
               index={i}
-              className="font-primary text-lg font-semibold"
+              className="font-primary text-lg font-semibold text-dark"
               categories={categories}
               setIsMenuOpen={setIsMenuOpen}
             />

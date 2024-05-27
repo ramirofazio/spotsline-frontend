@@ -17,7 +17,7 @@ export default function SecondSection() {
       </div>
       <div className="z-10 my-10 flex  flex-col gap-4 text-center  ">
         <h1 className="white-neon text-center text-xl font-semibold tracking-wider drop-shadow-2xl md:text-2xl  xl:text-4xl">
-          30 AÑOS
+          {new Date().getFullYear() - 1986} AÑOS
         </h1>
         <h2 className="mx-auto font-secondary font-bold text-secondary md:text-xl lg:w-[70%] xl:text-3xl">
           EVOLUCIONANDO Y DESARROLLANDO NUEVOS DISEÑOS HACIÉNDOLE HONOR A NUESTRA TRAYECTORIA.
