@@ -97,6 +97,7 @@ export function Contact() {
         </strong>
         <article className="mt-4 flex flex-col gap-3">
           <BasicInput
+            startContentIcon="ri-user-fill text-xl text-secondary"
             value={emailData.name}
             onChange={handleChange}
             placeholder="Ingrese su nombre completo"
@@ -109,6 +110,7 @@ export function Contact() {
           />
 
           <BasicInput
+            startContentIcon="ri-mail-fill text-xl text-secondary"
             value={emailData.email}
             onChange={handleChange}
             placeholder="Ingrese su email"
@@ -122,6 +124,7 @@ export function Contact() {
             maxLength={70}
           />
           <BasicInput
+            startContentIcon="ri-file-text-fill text-xl text-secondary"
             value={emailData.subject}
             onChange={handleChange}
             placeholder="Ingrese un asunto"
@@ -152,7 +155,7 @@ export function Contact() {
           />
           <label
             htmlFor="upload-avatar"
-            className={`relative mx-auto mt-4 flex w-full max-w-full cursor-pointer items-center gap-2 overflow-hidden rounded-md border-2 bg-primary/30 px-4 py-2 hover:bg-secondary/20 ${
+            className={`relative mx-auto mt-4 flex w-full max-w-full cursor-pointer items-center gap-2 overflow-hidden rounded-md border-2 bg-primary/30 px-4 py-2 transition hover:bg-secondary/20 ${
               emailData.file && " border-green-600"
             }`}
           >
