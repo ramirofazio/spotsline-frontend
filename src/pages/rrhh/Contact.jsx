@@ -77,15 +77,12 @@ export function Contact() {
             </u>
           </p>
         </span>
-        <div className="hidden items-center justify-center border-2 border-primary text-right md:flex">
+        <div className="hidden items-center justify-center overflow-hidden rounded-md border-2 border-primary text-right md:flex">
           <iframe
             className="min-h-[500px] w-full"
             id="gmap_canvas"
+            loading="lazy"
             src="https://maps.google.com/maps?q=Spotsline+Srl%2C+CGA%2C+Pedro+Ignacio+de+Rivera+5915%2C+B1606+Munro%2C+Provincia+de+Buenos+Aires&t=&z=15&ie=UTF8&iwloc=&output=embed"
-            // frameBorder="0"
-            // scrolling="no"
-            // marginHeight="0"
-            // marginWidth="0"
             title="Google Maps"
           ></iframe>
         </div>
@@ -145,13 +142,13 @@ export function Contact() {
             maxLength={1020}
             classNames={{
               label: "text-black ml-2 text-md",
-              input: "bg-primary/10 focus:bg-primary/30 rounded-md min-h-[180px] p-2 md:placeholder:text-lg",
-              inputWrapper: "bg-primary/30 p-0 ",
+              input: "bg-primary/10 focus:bg-primary/30 min-h-[180px] p-2 md:placeholder:text-lg",
+              inputWrapper: "bg-primary/30 p-0",
             }}
             color="bg-red-500"
             labelPlacement="outside"
             placeholder="Ingrese el mensaje que desea enviar"
-            className="min-h-full rounded-full"
+            className="min-h-full rounded-md transition"
           />
           <label
             htmlFor="upload-avatar"

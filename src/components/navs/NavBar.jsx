@@ -23,6 +23,7 @@ import { DefaultButton } from "..";
 import ManageClientsModal from "../modals/ManageClientsModal";
 import Loader from "../Spinner";
 import { actionProducts } from "src/redux/reducers";
+import Spinner from "../Spinner";
 
 export default function NavBar() {
   const { pathname } = useLocation();
@@ -55,10 +56,9 @@ export default function NavBar() {
     document.addEventListener("scroll", handleScroll);
 
     return () => {
-      setLoading(false);
       document.removeEventListener("scroll", handleScroll);
     };
-  }, [isMenuOpen, pathname]);
+  }, [isMenuOpen]);
 
   useEffect(() => {
     const button = document.getElementById("manage-clients-button");
@@ -68,6 +68,12 @@ export default function NavBar() {
       }
     }
   });
+
+  if (loading) {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2500);
+  }
 
   const handleLogOut = () => {
     localStorage.clear();
@@ -80,7 +86,7 @@ export default function NavBar() {
   };
 
   return loading ? (
-    <Loader />
+    <Spinner />
   ) : (
     <Navbar
       shouldHideOnScroll={pathname !== "/" ? false : true}
@@ -92,7 +98,7 @@ export default function NavBar() {
       onMenuOpenChange={setIsMenuOpen}
       maxWidth="full"
     >
-      <Link to="/">
+      <Link to="/" onClick={() => pathname !== "/" && setLoading(true)}>
         <AwsImage
           type="logos"
           identify="logoBlack"
@@ -142,6 +148,7 @@ export default function NavBar() {
         handleLogOut={handleLogOut}
       />
       <DesktopContent
+        setLoading={setLoading}
         web_role={web_role}
         id={id}
         access_token={access_token}
@@ -156,7 +163,7 @@ export default function NavBar() {
   );
 }
 
-function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, handleManageClients }) {
+function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, handleManageClients, setLoading }) {
   const { managedClient } = useSelector((state) => state.seller);
   const { items } = useSelector((state) => state.cart);
   return (
@@ -203,6 +210,7 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
           <Button
             as={Link}
             to={"/user/profile"}
+            onClick={() => setLoading(true)}
             className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
               pathname === "/user/profile" && "pointer-events-none to-dark/50 !opacity-50"
             }`}
@@ -215,6 +223,7 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
             <Button
               as={Link}
               to="/carrito"
+              onClick={() => setLoading(true)}
               className={`relative bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
                 pathname === "/carrito" && "pointer-events-none to-dark/50 !opacity-50"
               }`}

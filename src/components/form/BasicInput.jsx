@@ -10,7 +10,7 @@ export function BasicInput({
   isInvalid,
   errorMessage,
   labelClass = "text-white",
-  inputWrapperClass = "bg-primary/30 rounded-xl",
+  inputWrapperClass = "bg-primary/30",
   maxLength,
   ...props
 }) {
@@ -23,6 +23,7 @@ export function BasicInput({
       }}
       color="secondary"
       name={name}
+      radius="md"
       isRequired={isRequired}
       size="lg"
       type={type}

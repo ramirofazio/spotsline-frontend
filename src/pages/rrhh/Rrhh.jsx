@@ -11,8 +11,8 @@ export function Rrhh() {
         subtitle={"En Spotsline somos un gran equipo humano y profesional."}
       />
       <Contact />
-      <div className="mx-auto mb-6 h-fit w-full rounded-sm  p-6 md:hidden">
-        <div className="w-500 relative h-96 border-2 border-primary text-right">
+      <div className="mx-auto mb-6 h-fit w-full  p-6 md:hidden">
+        <div className="w-500 relative h-96 rounded-md border-2 border-primary text-right">
           <div className="h-full overflow-hidden bg-none">
             <iframe
               className="h-full w-full"
