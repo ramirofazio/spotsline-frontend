@@ -41,8 +41,9 @@ export default function Layout({ children }) {
     window.addEventListener("visibilitychange", handleVisibilityChange);
 
     const saveInterval = setInterval(() => {
+      //? salva el carrito cada 15min tiempo
       autoSaveShoppingCart();
-    }, 30000);
+    }, 900000);
 
     return () => {
       clearInterval(saveInterval);

@@ -212,7 +212,7 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
             to={"/user/profile"}
             onClick={() => setLoading(true)}
             className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
-              pathname === "/user/profile" && "pointer-events-none to-dark/50 !opacity-50"
+              pathname.includes("/user/profile") && "pointer-events-none to-dark/50 !opacity-50"
             }`}
             size="md"
             isIconOnly
@@ -356,14 +356,14 @@ function MobileContent({
               to={"/user/profile"}
               onPress={() => setIsMenuOpen(false)}
               className={`bg-gradient-to-tl from-primary to-background shadow-xl ${
-                pathname === "/user/profile" && "pointer-events-none to-dark/50 !opacity-50"
+                pathname.includes("/user/profile") && "pointer-events-none to-dark/50 !opacity-50"
               }`}
               size="lg"
               isIconOnly
             >
               <i className={`ri-user-line text-2xl ${managedClient?.id && "animate-pulse text-green-600"}`} />
             </Button>
-            <div className="relative flex items-center justify-center">
+            <div className="relative flex items-center justify-center drop-shadow-xl">
               <Button
                 as={Link}
                 to="/carrito"
@@ -391,7 +391,7 @@ function MobileContent({
           <Button
             as={Link}
             to="/"
-            className={`relative bg-gradient-to-tl from-primary to-background transition hover:scale-110`}
+            className={`relative bg-gradient-to-tl from-primary to-background shadow-xl transition hover:scale-110`}
             size="lg"
             isIconOnly
             onClick={handleLogOut}
