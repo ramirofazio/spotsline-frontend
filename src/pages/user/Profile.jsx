@@ -179,11 +179,7 @@ export function Profile() {
             {selectButtonsData.map(({ name, startIcon }) => (
               <Button
                 key={name}
-                onPress={() =>
-                  name === "MI CC"
-                    ? toast.warning("Este modulo todavia no esta disponible") /*navigate("cc") */
-                    : handleSelect(name)
-                }
+                onPress={() => (name === "MI CC" ? navigate("cc") : handleSelect(name))}
                 startContent={<i className={`ri-${startIcon}-fill text-xl text-dark transition`} />}
                 endContent={
                   <i
