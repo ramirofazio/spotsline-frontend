@@ -5,7 +5,7 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from 
 
 import { convertISOToDate, copyToClipboard } from "src/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { zoomIn } from "src/styles/framerVariants";
+import { onViewZoomIn } from "src/styles/framerVariants";
 
 export function Orders() {
   const orders = useLoaderData();
@@ -68,7 +68,7 @@ export function Orders() {
 
   return (
     <AnimatePresence key={"dashboard-clients"} mode="wait">
-      <motion.main {...zoomIn} className="flex flex-col items-center">
+      <motion.main {...onViewZoomIn} className="flex flex-col items-center">
         <Table
           aria-label="Example table with custom cells"
           isStriped

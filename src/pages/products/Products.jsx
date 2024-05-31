@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { FilterProducts } from "./FilterProducts";
 import { images } from "src/assets";
 import { AnimatePresence, motion } from "framer-motion";
-import { fadeIn } from "src/styles/framerVariants";
+import { onViewFadeIn } from "src/styles/framerVariants";
 import PageSimpleHeader from "src/components/PageHeader";
 
 const TAKE_PRODUCTS = 28;
@@ -117,7 +117,7 @@ function ProductsView() {
 
   return (
     <AnimatePresence key={page} mode="wait">
-      <motion.div {...fadeIn()} className="grid w-full grid-cols-2 gap-8 p-2 lg:w-full lg:grid-cols-3">
+      <motion.div {...onViewFadeIn()} className="grid w-full grid-cols-2 gap-8 p-2 lg:w-full lg:grid-cols-3">
         {products[page].map((p, index) => (
           <ProductCard {...p} key={index} />
         ))}

@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { images } from "src/assets";
 import { DefaultButton } from "..";
 import AwsImage from "../images/AwsImage";
-import { fadeInBottom } from "src/styles/framerVariants";
+import { onViewFadeInBottom } from "src/styles/framerVariants";
 import { AnimatePresence, motion } from "framer-motion";
 
 export function ProductCard({ description, codigo, pathfoto }) {
@@ -13,11 +13,11 @@ export function ProductCard({ description, codigo, pathfoto }) {
         className="col-span-2 mx-auto w-[90%] sm:col-span-1 lg:col-span-1 s:w-full  s:max-w-[300px]"
         to={`/producto/${codigo}`}
       >
-        <motion.div {...fadeInBottom()}>
+        <motion.div {...onViewFadeInBottom()}>
           <Card className="aspect-square max-h-[400px] min-h-[300px] w-full overflow-visible  bg-white shadow-xl transition hover:scale-105">
             <CardBody className="flex min-h-[100px] items-center justify-center overflow-hidden p-0">
               <img
-                loading="lazy"
+                loading="eager"
                 className="w-full max-w-[250px] object-cover"
                 alt={`product-image-${description}`}
                 src={pathfoto || images.logoBlack}

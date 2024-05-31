@@ -104,10 +104,10 @@ export default function NavBar() {
           {!isMenuOpen && (
             <motion.img
               key="navbar-icon"
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               transition={{ duration: 0.2 }}
-              exit={{ opacity: 0, scale: 0 }}
+              exit={{ opacity: 0 }}
               src={images.logoBlack}
               loading="lazy"
               className={`w-24 transition hover:scale-110 hover:animate-pulse hover:cursor-pointer sm:w-24 md:w-32`}

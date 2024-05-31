@@ -13,6 +13,7 @@ import { SelectVariant } from "./SelectVariant";
 import { DefaultButton } from "src/components";
 import { formatPrices } from "src/utils";
 import { deleteOfStorage, getOfStorage, saveInStorage } from "src/utils/localStorage";
+import { GoBackButton } from "src/components/buttons/GoBackButton";
 
 export function DetailProduct() {
   const { id } = useParams();
@@ -111,6 +112,7 @@ export function DetailProduct() {
 
   return (
     <main className="mt-30 mb-10 min-h-[500px] max-w-7xl flex-wrap px-6 md:mt-32 md:flex md:gap-6 lg:mx-auto lg:gap-10 lg:px-12">
+      <GoBackButton className={"mb-10 ml-2 mt-4 md:absolute md:left-10 md:top-28"} />
       <Images variants={product.variants} currentVariant={currentVariant} setCurrentVariant={setCurrentVariant} />
       <section className="my-10 md:my-0 md:flex-1">
         <h1 className="mb-8 font-primary text-3xl font-bold">{product?.description}</h1>

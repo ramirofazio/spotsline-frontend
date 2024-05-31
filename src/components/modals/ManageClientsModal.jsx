@@ -9,7 +9,7 @@ import { actionSeller } from "src/redux/reducers";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUserData } from "src/utils/loadUserData";
 import { motion } from "framer-motion";
-import { fadeIn } from "src/styles/framerVariants";
+import { onViewFadeIn } from "src/styles/framerVariants";
 
 export default function ManageClientsModal({ isOpen, onClose, onOpenChange }) {
   const dispatch = useDispatch();
@@ -74,7 +74,7 @@ export default function ManageClientsModal({ isOpen, onClose, onOpenChange }) {
       onClose={onClose}
     >
       <motion.form
-        {...fadeIn()}
+        {...onViewFadeIn()}
         className={`z-20 flex flex-col items-center justify-start gap-10`}
         onSubmit={(e) => handleSubmit(e)}
       >
