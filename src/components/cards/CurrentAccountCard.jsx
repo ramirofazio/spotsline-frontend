@@ -9,7 +9,7 @@ export default function CurrentAccountCard({ balance, due, date, letter, number,
     <AnimatePresence>
       <motion.div
         {...fadeInBottom()}
-        className="relative flex min-h-[150px] min-w-[300px] flex-col items-center gap-4 overflow-hidden rounded-md bg-white text-left shadow-xl md:min-h-[200px] md:text-sm lg:min-w-[400px] xl:min-w-[600px]"
+        className="relative flex min-h-[200px] min-w-[300px] flex-col items-center gap-4 overflow-hidden rounded-md bg-white text-left shadow-xl md:min-h-[200px] md:text-sm lg:min-w-[400px] xl:min-w-[600px]"
       >
         <FloatingLogos
           qty={1}
