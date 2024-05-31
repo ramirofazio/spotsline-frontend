@@ -7,7 +7,6 @@ import ProfileData from "./ProfileData";
 import ProfileOrders from "./ProfileOrders";
 import { deleteOfStorage, getOfStorage, saveInStorage } from "src/utils/localStorage";
 import { ProfileSkeleton } from "src/components";
-import CurrentAccount from "./CurrentAccount";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import { fadeInLeft, fadeInRight, fadeInTop } from "src/styles/framerVariants";
@@ -65,6 +64,7 @@ export function Profile() {
   };
 
   useEffect(() => {
+    //? Se fija si el user tiene o no CC y agrega el boton
     if (userCA?.data?.length > 0) {
       setSelectButtonsData((prev) => {
         if (prev.find(({ name }) => name === "MI CC")) return prev;
@@ -73,7 +73,7 @@ export function Profile() {
           {
             name: "MI CC",
             startIcon: "money-dollar-circle",
-            component: <CurrentAccount />,
+            component: null,
           },
         ];
       });
@@ -180,7 +180,9 @@ export function Profile() {
               <Button
                 key={name}
                 onPress={() =>
-                  /*name === "MI CC" ? toast.warning("Este modulo todavia no esta disponible") : */ handleSelect(name)
+                  name === "MI CC"
+                    ? toast.warning("Este modulo todavia no esta disponible") /*navigate("cc") */
+                    : handleSelect(name)
                 }
                 startContent={<i className={`ri-${startIcon}-fill text-xl text-dark transition`} />}
                 endContent={

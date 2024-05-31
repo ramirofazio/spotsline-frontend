@@ -33,13 +33,13 @@ export const assets = {
 //! LO DE ARRIBA ESTA DEPRECADO
 
 export const images = {
-  landingBg: "/images/landing-background.jpg",
-  signInBackground: "/images/sign-in-background.png",
-  logoWhite: "/images/logoWhite.png",
-  logoBlack: "/images/logoBlack.png",
-  logoYellow: "/images/logoYellow.png",
-  logoWithDescription: "/images/logoWithDescription.png",
-  empresa: "/images/empresa.png",
-  empresaScaled: "/images/empresa-scaled.jpg",
-  empresaTrabajador: "/images/empresa-trabajador.jpg",
+  landingBg: "/images/landing-background.webp",
+  signInBackground: "/images/sign-in-background.webp",
+  logoWhite: "/images/logoWhite.webp",
+  logoBlack: "/images/logoBlack.webp",
+  logoYellow: "/images/logoYellow.webp",
+  logoWithDescription: "/images/logoWithDescription.webp",
+  empresa: "/images/empresa.webp",
+  empresaScaled: "/images/empresa-scaled.webp",
+  empresaTrabajador: "/images/empresa-trabajador.webp",
 };

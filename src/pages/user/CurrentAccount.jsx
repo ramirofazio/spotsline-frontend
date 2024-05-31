@@ -1,21 +1,17 @@
 import { Divider, ScrollShadow } from "@nextui-org/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
+import { GoBackButton } from "src/components/buttons/GoBackButton";
 import CurrentAccountCard from "src/components/cards/CurrentAccountCard";
-import { fadeIn, fadeInBottom, fadeInTop } from "src/styles/framerVariants";
+import { fadeInBottom, fadeInTop } from "src/styles/framerVariants";
 import { formatPrices } from "src/utils";
 
-export default function CurrentAccount({ redirect }) {
+export default function CurrentAccount() {
   const { userCA } = useLoaderData();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!redirect) navigate("cc");
-  }, []);
 
   console.log(userCA);
 
+  //? UPDATE creo que esto ya esta aplicado en el back.
   //? Esto es para saber cuanto debe y cuanto tiene de saldo, pero esto tiene impacto general en lo que trae el backend (10 items). En el backend lo calcula global con todas...
   //   const ccsDue = userCA.data.map(({ due }) => due);
   //   const ccsBalance = userCA.data.map(({ balance }) => balance);
@@ -31,7 +27,8 @@ export default function CurrentAccount({ redirect }) {
 
   return (
     <AnimatePresence>
-      <motion.main {...fadeIn()} className="flex max-h-screen w-full flex-col items-center gap-6">
+      <main className="relative flex max-h-screen w-full flex-col items-center gap-6 pt-20">
+        <GoBackButton textClassName={"!text-dark font-semibold"} iconClassName={"yellowGradient !animate-none"} />
         <header className="flex w-full flex-col items-center gap-4 text-center sm:gap-6">
           <motion.h1 {...fadeInTop()} className="text-2xl font-bold text-dark drop-shadow-xl sm:text-3xl">
             MI <br className="xs:hidden" />
@@ -61,7 +58,7 @@ export default function CurrentAccount({ redirect }) {
             <CurrentAccountCard {...CC} key={index} />
           ))}
         </ScrollShadow>
-      </motion.main>
+      </main>
     </AnimatePresence>
   );
 }

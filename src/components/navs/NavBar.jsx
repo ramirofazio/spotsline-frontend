@@ -21,9 +21,10 @@ import AwsImage from "../images/AwsImage";
 import { toast } from "sonner";
 import { DefaultButton } from "..";
 import ManageClientsModal from "../modals/ManageClientsModal";
-import Loader from "../Spinner";
 import { actionProducts } from "src/redux/reducers";
 import Spinner from "../Spinner";
+import { images } from "src/assets";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function NavBar() {
   const { pathname } = useLocation();
@@ -99,12 +100,20 @@ export default function NavBar() {
       maxWidth="full"
     >
       <Link to="/" onClick={() => pathname !== "/" && setLoading(true)}>
-        <AwsImage
-          type="logos"
-          identify="logoBlack"
-          className={`w-24 transition hover:scale-110 hover:animate-pulse hover:cursor-pointer sm:w-24 md:w-32`}
-          hidden={isMenuOpen ? true : false}
-        />
+        <AnimatePresence>
+          {!isMenuOpen && (
+            <motion.img
+              key="navbar-icon"
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.2 }}
+              exit={{ opacity: 0, scale: 0 }}
+              src={images.logoBlack}
+              loading="lazy"
+              className={`w-24 transition hover:scale-110 hover:animate-pulse hover:cursor-pointer sm:w-24 md:w-32`}
+            />
+          )}
+        </AnimatePresence>
       </Link>
 
       <div className="hidden items-center justify-start gap-6 sm:flex">

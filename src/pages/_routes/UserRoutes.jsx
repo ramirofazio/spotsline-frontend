@@ -56,7 +56,7 @@ export const userRoutesPaths = [
 
       {
         path: "/user/profile/cc",
-        element: <CurrentAccount redirect={true} />,
+        element: <CurrentAccount />,
         loader: async () => {
           try {
             const userCA = await APISpot.user.getCurrentAccounts();
