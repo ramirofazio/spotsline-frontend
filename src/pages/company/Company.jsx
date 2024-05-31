@@ -29,7 +29,7 @@ export function Company() {
         >
           <img
             loading="lazy"
-            className="h-[250px] min-w-[150px] rounded-xl md:min-w-[250px]"
+            className="h-[250px] min-w-[150px] rounded-xl object-cover md:min-w-[250px]"
             src={images.empresaTrabajador}
             alt="empreasa-trabajador"
           />
@@ -57,7 +57,7 @@ export function Company() {
           </p>
           <img
             loading="lazy"
-            className="h-[250px] min-w-[150px] rounded-xl md:min-w-[250px]"
+            className="h-[250px] min-w-[150px] rounded-xl object-cover md:min-w-[250px]"
             src={images.empresaTrabajador}
             alt="empreasa-trabajador"
           />
@@ -69,7 +69,7 @@ export function Company() {
         >
           <img
             loading="lazy"
-            className="h-[250px] min-w-[150px] rounded-xl md:min-w-[250px]"
+            className="h-[250px] min-w-[150px] rounded-xl object-cover md:min-w-[250px]"
             src={images.empresaTrabajador}
             alt="empreasa-trabajador"
           />

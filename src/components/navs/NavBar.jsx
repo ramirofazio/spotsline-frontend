@@ -14,7 +14,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { links } from ".";
-import { Link, NavLink, useLoaderData, useLocation } from "react-router-dom";
+import { Link, NavLink, useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import { getOfStorage } from "src/utils/localStorage";
 import { useDispatch, useSelector } from "react-redux";
 import AwsImage from "../images/AwsImage";
@@ -73,7 +73,7 @@ export default function NavBar() {
   if (loading) {
     setTimeout(() => {
       setLoading(false);
-    }, 2500);
+    }, 2000);
   }
 
   const handleLogOut = () => {
@@ -146,6 +146,7 @@ export default function NavBar() {
       />
 
       <MobileContent
+        setLoading={setLoading}
         web_role={web_role}
         id={id}
         access_token={access_token}
@@ -181,6 +182,7 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
         <DefaultButton
           as={Link}
           to={"/sign-in"}
+          onClick={() => setLoading(true)}
           className={`!p-4 hover:opacity-50`}
           size="md"
           startContent={<i className="ri-user-fill mr-2 text-lg" />}
@@ -192,6 +194,7 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
         <Button
           as={Link}
           to={"/dashboard/vendedores"}
+          onClick={() => setLoading(true)}
           className={`bg-gradient-to-br from-primary to-background transition hover:scale-110`}
           size="md"
           isIconOnly
@@ -276,9 +279,18 @@ function MobileContent({
   setIsMenuOpen,
   handleManageClients,
   categories,
+  setLoading,
 }) {
   const { managedClient } = useSelector((state) => state.seller);
   const { items } = useSelector((state) => state.cart);
+  const navigate = useNavigate();
+
+  const touchAction = (route, callback) => {
+    setLoading(true);
+    setIsMenuOpen(false);
+    navigate(route);
+    callback?.();
+  };
 
   return (
     <NavbarMenu className="mt-8 gap-6 overflow-hidden bg-gradient-to-br from-primary to-white/20">
@@ -289,7 +301,7 @@ function MobileContent({
       {links.map(({ name, path }, i) => {
         return name === "productos" ? (
           <NavbarMenuItem
-            onClick={() => setIsMenuOpen(false)}
+            onClick={() => touchAction()}
             className="flex w-[12rem] items-center gap-1.5 border-b-2  border-dark/50 p-1"
             key={i}
           >
@@ -302,12 +314,11 @@ function MobileContent({
             />
           </NavbarMenuItem>
         ) : (
-          <NavbarMenuItem onClick={() => setIsMenuOpen(false)} className="w-fit" key={i}>
+          <NavbarMenuItem onClick={() => touchAction(path)} className="w-fit" key={i}>
             <NavLink
               className={`flex h-full w-[12rem] items-center gap-1.5 border-b-2  border-dark/50 p-1 ${
                 pathname.includes(name) && "pointer-events-none opacity-50"
               }`}
-              to={path}
             >
               <i className="ri-arrow-right-s-line text-md  !text-secondary"></i>
               <p className="w-full font-primary text-lg uppercase text-dark">{name}</p>
@@ -320,7 +331,7 @@ function MobileContent({
         {!id && !access_token && (
           <DefaultButton
             as={Link}
-            to={"/sign-in"}
+            onPress={() => touchAction("/sign-in")}
             className="bg-gradient-to-tl from-primary to-background shadow-xl"
             size="lg"
             startContent={<i className="ri-user-fill mr-2 text-lg" />}
@@ -332,7 +343,7 @@ function MobileContent({
         {web_role === Number(import.meta.env.VITE_ADMIN_ROLE) && (
           <Button
             as={Link}
-            to={"/dashboard/vendedores"}
+            onPress={() => touchAction("/dashboard/vendedores")}
             className={`bg-gradient-to-tl from-primary to-background shadow-xl`}
             size="lg"
             isIconOnly
@@ -345,8 +356,7 @@ function MobileContent({
           <Button
             id="manage-clients-button"
             onPress={() => {
-              setIsMenuOpen(false);
-              handleManageClients();
+              touchAction("#", handleManageClients);
             }}
             className={`bg-gradient-to-tl from-primary to-background shadow-xl`}
             size="lg"
@@ -362,8 +372,7 @@ function MobileContent({
           <>
             <Button
               as={Link}
-              to={"/user/profile"}
-              onPress={() => setIsMenuOpen(false)}
+              onPress={() => touchAction("/user/profile")}
               className={`bg-gradient-to-tl from-primary to-background shadow-xl ${
                 pathname.includes("/user/profile") && "pointer-events-none to-dark/50 !opacity-50"
               }`}
@@ -375,8 +384,7 @@ function MobileContent({
             <div className="relative flex items-center justify-center drop-shadow-xl">
               <Button
                 as={Link}
-                to="/carrito"
-                onPress={() => setIsMenuOpen(false)}
+                onPress={() => touchAction("/carrito")}
                 className={`relative bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
                   pathname === "/carrito" && "pointer-events-none to-dark/50 !opacity-50"
                 }`}
@@ -399,11 +407,10 @@ function MobileContent({
         {id && access_token && (
           <Button
             as={Link}
-            to="/"
             className={`relative bg-gradient-to-tl from-primary to-background shadow-xl transition hover:scale-110`}
             size="lg"
             isIconOnly
-            onClick={handleLogOut}
+            onPress={() => touchAction("/", handleLogOut)}
           >
             <i className="ri-logout-circle-r-line text-2xl" />
           </Button>
