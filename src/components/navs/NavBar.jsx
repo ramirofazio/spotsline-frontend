@@ -139,11 +139,20 @@ export default function NavBar() {
           </NavbarItem>
         ))}
       </div>
-
-      <NavbarMenuToggle
-        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-        className={`!h-10 !w-10  text-dark sm:hidden`}
-      />
+      <AnimatePresence>
+        <motion.div
+          key="menuToggle-icon"
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.2 }}
+          exit={{ opacity: 0, scale: 0 }}
+        >
+          <NavbarMenuToggle
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            className={`!h-10 !w-10  text-dark sm:hidden`}
+          />
+        </motion.div>
+      </AnimatePresence>
 
       <MobileContent
         setLoading={setLoading}
