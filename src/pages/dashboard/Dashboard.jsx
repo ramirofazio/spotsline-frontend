@@ -4,7 +4,7 @@ import { DefaultButton } from "src/components";
 import FloatingLogos from "src/components/images/FloatingLogos";
 import { Button, Divider, Spinner } from "@nextui-org/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { fadeIn, fadeInTop } from "src/styles/framerVariants";
+import { onViewFadeIn, fadeInTop } from "src/styles/framerVariants";
 
 const selectButtonsData = [
   { name: "VENDEDORES", startIcon: "customer-service", link: "/dashboard/vendedores" },
@@ -129,11 +129,11 @@ function SelectButtons({ loading, setLoading }) {
           startContent={
             <AnimatePresence mode="wait">
               {loading === name ? (
-                <motion.div className="absolute left-10 flex items-center justify-center" {...fadeIn()}>
+                <motion.div className="absolute left-10 flex items-center justify-center" {...onViewFadeIn()}>
                   <Spinner color="secondary" />
                 </motion.div>
               ) : (
-                <motion.div className="absolute left-10 flex items-center justify-center" {...fadeIn()}>
+                <motion.div className="absolute left-10 flex items-center justify-center" {...onViewFadeIn()}>
                   <i
                     className={`ri-${startIcon}-fill  text-xl text-dark ${pathname.includes(link) && "animate-pulse"}`}
                   />

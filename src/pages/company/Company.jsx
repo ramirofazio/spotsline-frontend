@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { DefaultButton } from "src/components";
 import { motion } from "framer-motion";
-import { fadeInLeft, fadeInRight, zoomIn } from "src/styles/framerVariants";
+import { fadeInLeft, fadeInRight, onViewZoomIn } from "src/styles/framerVariants";
 import { images } from "src/assets";
 import PageSimpleHeader from "src/components/PageHeader";
 
@@ -19,7 +19,7 @@ export function Company() {
       />
 
       <section className="relative mx-auto flex h-full w-full flex-col gap-14 p-8 px-10">
-        <motion.h2 {...zoomIn} className="text-center text-2xl font-bold text-dark drop-shadow-xl md:text-4xl">
+        <motion.h2 {...onViewZoomIn} className="text-center text-2xl font-bold text-dark drop-shadow-xl md:text-4xl">
           LA EMPRESA
         </motion.h2>
 

@@ -6,9 +6,10 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
 import { DarkModal, DefaultButton, ShoppingCartSkeleton } from "src/components";
+import { GoBackButton } from "src/components/buttons/GoBackButton";
 import AwsImage from "src/components/images/AwsImage";
 import { actionsShoppingCart } from "src/redux/reducers";
-import { fadeIn, fadeInBottom, fadeInTop, zoomIn } from "src/styles/framerVariants";
+import { onViewFadeIn, onViewFadeInBottom, fadeInTop, onViewZoomIn } from "src/styles/framerVariants";
 import { formatPrices } from "src/utils";
 import { saveInStorage } from "src/utils/localStorage";
 import { useDebouncedCallback } from "use-debounce";
@@ -152,7 +153,7 @@ export default function ShoppingCart() {
         {reduxCart.items.map(({ img, name, price, qty, id, productId, marcaId }, index) => (
           //TODO @Tomi Aca se puede hacer una orquestacion de variants para que quede tipo acordion de arriba hacia abajo. https://www.framer.com/motion/animation/#variants
           <motion.article
-            {...zoomIn}
+            {...onViewZoomIn}
             key={index}
             className="z-10 flex min-w-[80vw] max-w-[50vw] flex-col items-center  gap-6 rounded-xl bg-gradient-to-b from-yellow-200 to-white p-6 md:flex-row md:bg-gradient-to-r lg:gap-12 xl:min-w-[60vw]"
           >
@@ -218,7 +219,7 @@ export default function ShoppingCart() {
       </section>
       <Divider className="h-1 bg-primary" />
       <motion.section
-        {...fadeIn(0.8, 0.2)}
+        {...onViewFadeIn(0.8, 0.2)}
         className="relative m-6 mx-auto flex max-w-[80vw] flex-col items-start  gap-6 overflow-hidden rounded-xl bg-dark/50 p-6 font-secondary font-bold text-white shadow-xl xl:max-w-[60vw]"
       >
         <AwsImage
@@ -242,7 +243,7 @@ export default function ShoppingCart() {
         )}
         <AnimatePresence mode="wait" key="cupon">
           {reduxCart.discount !== 0 && Object.values(reduxCart.coupon)?.length && (
-            <motion.div {...zoomIn} className="relative z-10 flex w-full items-center justify-between">
+            <motion.div {...onViewZoomIn} className="relative z-10 flex w-full items-center justify-between">
               <h3 className="text-md">
                 CUPÓN <strong className="yellow-neon">{reduxCart.coupon.name}</strong>
               </h3>
@@ -263,7 +264,7 @@ export default function ShoppingCart() {
 
         {web_role === Number(import.meta.env.VITE_USER_ROLE) && (
           <motion.div
-            {...fadeInBottom(0.8, 0.3)}
+            {...onViewFadeInBottom(0.8, 0.3)}
             className="mx-auto flex w-full flex-col justify-between gap-6 lg:flex-row lg:items-end"
           >
             <div className="flex flex-col">
@@ -305,7 +306,10 @@ export default function ShoppingCart() {
           </motion.div>
         )}
         {web_role === Number(import.meta.env.VITE_SELLER_ROLE) && (
-          <motion.div {...fadeInBottom()} className="mx-auto flex w-full flex-col justify-center gap-6 lg:flex-row">
+          <motion.div
+            {...onViewFadeInBottom()}
+            className="mx-auto flex w-full flex-col justify-center gap-6 lg:flex-row"
+          >
             <DefaultButton
               onPress={handleAddCartToClient}
               className={"mx-auto !w-60 text-xs lg:mx-0 lg:!w-80 lg:text-sm"}

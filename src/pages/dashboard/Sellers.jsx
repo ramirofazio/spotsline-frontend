@@ -17,7 +17,7 @@ import { BasicInput, DarkModal, DefaultButton } from "src/components";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { isValidEmail } from "src/utils/validation";
 import { AnimatePresence, motion } from "framer-motion";
-import { zoomIn } from "src/styles/framerVariants";
+import { onViewZoomIn } from "src/styles/framerVariants";
 
 const sellers_columns = [
   { label: "Codigo", key: "sellerId" },
@@ -113,7 +113,7 @@ export function SellersPage() {
 
   return (
     <AnimatePresence key={"dashboard-clients"} mode="wait">
-      <motion.main {...zoomIn} className="flex flex-col items-center">
+      <motion.main {...onViewZoomIn} className="flex flex-col items-center">
         <Table
           aria-label="Example table with custom cells"
           isStriped

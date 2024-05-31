@@ -6,14 +6,14 @@ import AwsImage from "src/components/images/AwsImage";
 import { useDispatch } from "react-redux";
 import { actionProducts } from "../../redux/reducers";
 import { motion } from "framer-motion";
-import { fadeIn, fadeInBottom } from "src/styles/framerVariants";
+import { onViewFadeIn, onViewFadeInBottom } from "src/styles/framerVariants";
 
 export default function CategoriesCarrousel() {
   const dispatch = useDispatch();
   const categories = /* getOfStorage("categories") || */ useRouteLoaderData("root");
 
   return (
-    <motion.section {...fadeInBottom()} id="landing-categories-carrousel" className="relative my-10  w-screen">
+    <motion.section {...onViewFadeInBottom()} id="landing-categories-carrousel" className="relative my-10  w-screen">
       <Swiper
         id="carrousel-container"
         modules={[Autoplay]}

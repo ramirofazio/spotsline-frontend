@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import FloatingLogos from "src/components/images/FloatingLogos";
 import { motion } from "framer-motion";
-import { fadeIn, fadeInBottom, fadeInTop, zoomIn } from "src/styles/framerVariants";
+import { onViewFadeIn, onViewFadeInBottom, fadeInTop, onViewZoomIn } from "src/styles/framerVariants";
 
 const featuredFooter = [
   { icon: "ri-tools-fill", text: "fabricantes" },
@@ -12,7 +12,7 @@ const featuredFooter = [
 export default function FeaturedProducts({ products }) {
   return (
     <motion.section
-      {...fadeIn()}
+      {...onViewFadeIn()}
       id="landing-featured-products"
       className="relative my-4 grid place-content-center gap-10 overflow-hidden border-t-[8px] border-secondary bg-gradient-to-b from-background px-4 py-6 sm:px-6 lg:gap-20 xl:px-20"
     >
@@ -23,7 +23,7 @@ export default function FeaturedProducts({ products }) {
       <article className="grid grid-cols-2 grid-rows-3 gap-4 md:grid-flow-row md:grid-cols-4 md:grid-rows-4">
         {products?.map(({ pathfoto, codigo }, index) => (
           <motion.div
-            {...fadeInBottom()}
+            {...onViewFadeInBottom()}
             key={index}
             className={`relative flex items-center bg-gradient-to-br from-primary to-yellow-400 p-1 shadow-md md:row-span-2  lg:min-h-[200px] lg:min-w-[250px] ${
               index === 2
@@ -47,7 +47,7 @@ export default function FeaturedProducts({ products }) {
         ))}
       </article>
 
-      <motion.article {...zoomIn} className="flex items-center justify-around  md:mx-20 xl:mx-auto xl:w-[40%]">
+      <motion.article {...onViewZoomIn} className="flex items-center justify-around  md:mx-20 xl:mx-auto xl:w-[40%]">
         {featuredFooter.map(({ icon, text }, index) => (
           <div key={index} className="flex flex-grow flex-col items-center">
             <i className={`${icon} text-4xl text-primary drop-shadow-xl sm:text-6xl`} />

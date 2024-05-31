@@ -117,7 +117,7 @@ export function Profile() {
         <Divider className="absolute bottom-0 mx-auto h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
       </header>
       <div className="md:grid md:grid-cols-2">
-        <motion.section {...fadeInLeft()} className="flex flex-col items-center justify-start gap-2 p-10 pt-10">
+        <motion.section {...fadeInLeft()} className="flex flex-col items-center justify-start gap-2 p-6 pt-10">
           <div className="relative ">
             <Avatar
               loading="lazy"
@@ -179,11 +179,7 @@ export function Profile() {
             {selectButtonsData.map(({ name, startIcon }) => (
               <Button
                 key={name}
-                onPress={() =>
-                  name === "MI CC"
-                    ? toast.warning("Este modulo todavia no esta disponible") /*navigate("cc") */
-                    : handleSelect(name)
-                }
+                onPress={() => (name === "MI CC" ? navigate("cc") : handleSelect(name))}
                 startContent={<i className={`ri-${startIcon}-fill text-xl text-dark transition`} />}
                 endContent={
                   <i
@@ -207,7 +203,6 @@ export function Profile() {
             <div key={index}>{name === selectedSection && component}</div>
           ))}
         </motion.section>
-        <Divider className="mx-auto my-8 h-[3px] w-screen rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:hidden" />
       </div>
     </main>
   );

@@ -40,7 +40,7 @@ export function DarkModal({
             </ModalHeader>
             <ModalBody>{children}</ModalBody>
             <div className="absolute -bottom-20 -left-24">
-              <AwsImage type="logos" identify="logoWhite" className="w-[60%] -rotate-12" />
+              <AwsImage type="logos" identify="logoWhite" className="w-[60%] -rotate-12 blur-md" />
             </div>
           </main>
         )}
