@@ -295,8 +295,8 @@ function MobileContent({
   const navigate = useNavigate();
 
   const touchAction = (route, callback) => {
-    setLoading(true);
     setIsMenuOpen(false);
+    setLoading(true);
     navigate(route);
     callback?.();
   };
