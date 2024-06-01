@@ -10,6 +10,7 @@ export default function CustomSelect({
   onChange,
   labelClass,
   baseClass,
+  selectedKeys,
   ...props
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,6 +25,7 @@ export default function CustomSelect({
       label={label}
       onOpenChange={(open) => open !== isOpen && setIsOpen(open)}
       selectorIcon={<i />}
+      selectedKeys={2}
       endContent={
         <i
           className={`${

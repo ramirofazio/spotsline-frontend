@@ -2,10 +2,15 @@ import { Image, SelectItem } from "@nextui-org/react";
 import colors from "../../../data/colors.json";
 import { assets } from "src/assets";
 import CustomSelect from "src/components/form/CustomSelect";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function SelectVariant({ variants, currentVariant, setCurrentVariant }) {
   const [thisVariant, setThisVariant] = useState(currentVariant);
+
+  useEffect(() => {
+    console.log("DESDE SELECT", currentVariant);
+    setThisVariant(currentVariant);
+  }, [currentVariant]);
 
   const handleChange = (e) => {
     const newVariant = variants.find((v) => v.description === e.target.value);

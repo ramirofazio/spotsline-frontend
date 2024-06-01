@@ -1,14 +1,14 @@
 // Import Swiper React components
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
+import { useEffect } from "react";
 
 export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
   console.log(variants);
-
   const pagination = {
     clickable: true,
     renderBullet: function (index, className) {
@@ -21,9 +21,13 @@ export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
     console.log("swipeo", newVariant);
     setCurrentVariant(newVariant);
   };
-
+  // useEffect(() => {
+  //   console.log("EFFECT");
+  //   console.log(swiper);
+  // }, [currentVariant]);
   return (
     <Swiper
+      initialSlide={2}
       modules={[Pagination]}
       pagination={pagination}
       scrollbar={{ draggable: false }}
