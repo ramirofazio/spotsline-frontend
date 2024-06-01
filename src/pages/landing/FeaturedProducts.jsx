@@ -20,12 +20,12 @@ export default function FeaturedProducts({ products }) {
       <motion.h1 {...fadeInTop()} className="mx-auto w-full text-center text-2xl font-bold sm:mt-4 sm:text-4xl">
         PRODUCTOS DESTACADOS
       </motion.h1>
-      <article className="grid grid-cols-2 grid-rows-3 gap-4 md:grid-flow-row md:grid-cols-4 md:grid-rows-4">
+      <article className="mx-auto grid w-[80%] grid-cols-2 grid-rows-3 gap-4 md:grid-flow-row md:grid-cols-4 md:grid-rows-4 lg:w-[85%]">
         {products?.map(({ pathfoto, codigo }, index) => (
           <motion.div
             {...fadeInBottom()}
             key={index}
-            className={`relative flex items-center bg-gradient-to-br from-primary to-yellow-400 p-1 shadow-md md:row-span-2  lg:min-h-[200px] lg:min-w-[250px] ${
+            className={`relative flex items-center bg-gradient-to-br from-primary to-yellow-400 p-1 shadow-md md:row-span-2  lg:min-h-[175px] lg:min-w-[200px] ${
               index === 2
                 ? "col-span-2 md:col-span-1  md:row-span-2"
                 : index === 1 && "md:grid-rows-subgrid md:col-span-2 md:row-span-4"
