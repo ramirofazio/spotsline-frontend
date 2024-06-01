@@ -45,7 +45,9 @@ export function Contact() {
         const file = target.files[0];
         const sizeLimit = 40 * 1024 * 1024;
         if (file.size >= sizeLimit) {
+          target.value = "";
           toast.error("el archivo es muy grande");
+          return prev;
         } else return { ...prev, file };
       } else if (target.name === "email") {
         setEmailErr(isValidEmail(target.value));
@@ -98,7 +100,7 @@ export function Contact() {
         <article className="mt-4 flex flex-col gap-3">
           <BasicInput
             startContentIcon="ri-user-fill text-xl text-secondary"
-            value={emailData.name}
+            value={emailData?.name}
             onChange={handleChange}
             placeholder="Ingrese su nombre completo"
             name="name"
@@ -111,7 +113,7 @@ export function Contact() {
 
           <BasicInput
             startContentIcon="ri-mail-fill text-xl text-secondary"
-            value={emailData.email}
+            value={emailData?.email}
             onChange={handleChange}
             placeholder="Ingrese su email"
             name="email"
@@ -125,7 +127,7 @@ export function Contact() {
           />
           <BasicInput
             startContentIcon="ri-file-text-fill text-xl text-secondary"
-            value={emailData.subject}
+            value={emailData?.subject}
             onChange={handleChange}
             placeholder="Ingrese un asunto"
             name="subject"
@@ -137,7 +139,7 @@ export function Contact() {
           />
           <Textarea
             variant="underlined"
-            value={emailData.message}
+            value={emailData?.message}
             onChange={handleChange}
             isRequired
             name="message"
@@ -156,17 +158,18 @@ export function Contact() {
           <label
             htmlFor="upload-avatar"
             className={`relative mx-auto mt-4 flex w-full max-w-full cursor-pointer items-center gap-2 overflow-hidden rounded-md border-2 bg-primary/30 px-4 py-2 transition hover:bg-secondary/20 ${
-              emailData.file && " border-green-600"
+              emailData?.file && " border-green-600"
             }`}
           >
             <i
               className={`text-2xl font-bold text-black ${
-                emailData.file ? "ri-check-line text-green-600" : "ri-file-upload-line"
+                emailData?.file ? "ri-check-line text-green-600" : "ri-file-upload-line"
               }  `}
             ></i>
             <p className="text-red-500">*</p>
-            <p className="overflow-hidden text-center">{emailData.file ? emailData.file.name : "Cargue su CV"}</p>
+            <p className="overflow-hidden text-center">{emailData?.file ? emailData?.file.name : "Cargue su CV"}</p>
             <input
+              ref={inputFileRef}
               name="file"
               onChange={handleChange}
               title="Cargar imagenes"
@@ -176,7 +179,7 @@ export function Contact() {
               className={`invisible absolute right-0 top-0 h-full w-full border-2 `}
             />
           </label>
-          {!emailData.file ? (
+          {!emailData?.file ? (
             <p className="mx-auto">(maximo 40mb)</p>
           ) : (
             <i
@@ -192,7 +195,7 @@ export function Contact() {
 
           <DefaultButton
             isLoading={loading}
-            isDisabled={loading || !emailData.message || (!emailData.file && true) || emailErr}
+            isDisabled={loading || !emailData?.message || (!emailData?.file && true) || emailErr}
             className="mx-auto my-3"
             type="submit"
             onDisabled="opacity-30"
