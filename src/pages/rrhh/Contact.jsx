@@ -169,7 +169,6 @@ export function Contact() {
             <p className="text-red-500">*</p>
             <p className="overflow-hidden text-center">{emailData?.file ? emailData?.file.name : "Cargue su CV"}</p>
             <input
-              ref={inputFileRef}
               name="file"
               onChange={handleChange}
               title="Cargar imagenes"
