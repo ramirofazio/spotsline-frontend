@@ -75,6 +75,10 @@ export function DetailProduct() {
     };
   }, []);
 
+  useEffect(() => {
+    console.log("CURRENT", currentVariant);
+  }, [currentVariant]);
+
   function addProductToShoppingCart() {
     setLoading(true);
     const currentPrice = `precio${managedClient.priceList ? managedClient.priceList : priceList}`;
@@ -113,7 +117,11 @@ export function DetailProduct() {
   return (
     <main className="mt-30 mb-10 min-h-[500px] max-w-7xl flex-wrap px-6 md:mt-32 md:flex md:gap-6 lg:mx-auto lg:gap-10 lg:px-12">
       <div className="w-[50%]">
-        <VariantSwiper variants={product?.variants} />
+        <VariantSwiper
+          variants={product?.variants}
+          currentVariant={currentVariant}
+          setCurrentVariant={setCurrentVariant}
+        />
       </div>
       {/* <Images variants={product.variants} currentVariant={currentVariant} setCurrentVariant={setCurrentVariant} /> */}
       <section className="my-10 md:my-0 md:flex-1">

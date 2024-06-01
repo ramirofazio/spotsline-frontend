@@ -6,10 +6,8 @@ import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
-export function VariantSwiper({ variants }) {
+export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
   console.log(variants);
-
-  const bullet = <picture>holaaaa</picture>;
 
   const pagination = {
     clickable: true,
@@ -18,12 +16,11 @@ export function VariantSwiper({ variants }) {
     },
   };
 
-  // const pagination = {
-  //   clickable: true,
-  //   renderBullet: function (index, className) {
-  //     return '<div class="' + className + '">' + (index + 1) + "</div";
-  //   },
-  // };
+  const handleVariantChange = (variantIndex) => {
+    const newVariant = variants[variantIndex];
+    console.log("swipeo", newVariant);
+    setCurrentVariant(newVariant);
+  };
 
   return (
     <Swiper
@@ -32,7 +29,7 @@ export function VariantSwiper({ variants }) {
       scrollbar={{ draggable: false }}
       spaceBetween={10}
       slidesPerView={1}
-      onSlideChange={() => console.log("slide change")}
+      onSlideChange={({ activeIndex }) => handleVariantChange(activeIndex)}
       onSwiper={(swiper) => console.log(swiper)}
       className="border-2 border-green-400"
     >
