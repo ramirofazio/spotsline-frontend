@@ -69,8 +69,11 @@ export function Contact() {
             <strong> necesidades</strong>. Si te gustan los <strong>desafíos</strong>, tenés ganas de aprender y querés
             formar parte de <strong>nuestro equipo</strong>, adjuntá tu <strong>CV</strong> o escribinos a{" "}
             <u
-              className="transition hover:opacity-50"
-              onClick={() => navigator.clipboard.writeText("rrhh@spotsline.com.ar")}
+              className="cursor-pointer transition hover:opacity-50"
+              onClick={() => {
+                navigator.clipboard.writeText("rrhh@spotsline.com.ar");
+                toast.success("email copiado en portapapeles");
+              }}
             >
               rrhh@spotsline.com.ar
               <i className="ri-file-copy-fill yellowGradient icons h-4 w-4" />
