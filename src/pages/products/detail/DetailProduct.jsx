@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
 import { assets } from "src/assets";
@@ -19,49 +19,28 @@ export function DetailProduct() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const product = useLoaderData();
 
   const { email, priceList } = useSelector((state) => state.user);
   const { managedClient } = useSelector((state) => state.seller);
   const { items } = useSelector((state) => state.cart);
 
   const [loading, setLoading] = useState(false);
-  const [product, setProduct] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentVariant, setCurrentVariant] = useState(getOfStorage("currentVariant"));
+  // const [product, setProduct] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentVariant, setCurrentVariant] = useState(null /* getOfStorage("currentVariant") */);
   const [qty, setQty] = useState(getOfStorage("qty") || 1);
 
   useEffect(() => {
     document.title = "SPOTSLINE - Cargando...";
-    APISpot.product // TODO estaria bueno fetchear la data en el loader de react-router
-      .getOne({ id })
-      .then(({ data }) => {
-        const map = {};
-        let variants = [];
-        data.variants.map((variant, description) => {
-          const { subRub } = variant;
-          if (!map[subRub]) {
-            map[subRub] = description;
-            variants.push(variant);
-          }
-        });
-        data.variants = variants;
-        setProduct(data);
-        const localVariant = getOfStorage("currentVariant");
 
-        setCurrentVariant(localVariant || data.variants[0]);
-        document.title = "SPOTSLINE - " + data.description;
-      })
-      .catch((err) => {
-        toast.error(err.message);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    const localVariant = getOfStorage("currentVariant"); // re ajustar variante del localstorage con el nuevo flujo
 
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    setCurrentVariant(product.variants[0]);
+    document.title = "SPOTSLINE - " + product.description;
 
     return () => (document.title = "SPOTSLINE");
-  }, [id]);
+  }, []);
 
   useEffect(() => {
     saveInStorage("currentVariant", currentVariant);
@@ -132,6 +111,7 @@ export function DetailProduct() {
             <SelectVariant
               variants={product.variants}
               currentVariant={currentVariant}
+              // defaultSelectedKeys={currentVariant.description}
               setCurrentVariant={setCurrentVariant}
             />
             <SelectQuantity qty={qty} setQty={setQty} />

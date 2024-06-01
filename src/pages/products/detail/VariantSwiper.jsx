@@ -27,7 +27,7 @@ export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
   // }, [currentVariant]);
   return (
     <Swiper
-      initialSlide={2}
+      initialSlide={0}
       modules={[Pagination]}
       pagination={pagination}
       scrollbar={{ draggable: false }}
