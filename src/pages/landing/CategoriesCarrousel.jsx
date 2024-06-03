@@ -6,7 +6,7 @@ import AwsImage from "src/components/images/AwsImage";
 import { useDispatch } from "react-redux";
 import { actionProducts } from "../../redux/reducers";
 import { motion } from "framer-motion";
-import { onViewFadeIn, onViewFadeInBottom } from "src/styles/framerVariants";
+import { onViewFadeInBottom } from "src/styles/framerVariants";
 
 export default function CategoriesCarrousel() {
   const dispatch = useDispatch();

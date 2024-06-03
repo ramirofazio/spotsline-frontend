@@ -1,4 +1,4 @@
-import { Input, Button, Divider, Image, useDisclosure, Textarea } from "@nextui-org/react";
+import { Input, Button, Divider, Image, useDisclosure, Textarea, Tooltip } from "@nextui-org/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,7 +21,7 @@ export default function ShoppingCart() {
   const dispatch = useDispatch();
 
   const reduxCart = useSelector((state) => state.cart);
-  const { web_role, fantasyName } = useSelector((state) => state.user);
+  const { web_role } = useSelector((state) => state.user);
   const { managedClient } = useSelector((state) => state.seller);
 
   const [discountCode, setDiscountCode] = useState("");
@@ -336,9 +336,10 @@ export default function ShoppingCart() {
 
 function PickDateModal({ isOpen, onOpenChange, items, coupon, discount }) {
   const user = useSelector((state) => state.user);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+  const [isTestUser, setIsTestUser] = useState(false);
+  const [error, setError] = useState(false);
   const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
 
@@ -388,42 +389,84 @@ function PickDateModal({ isOpen, onOpenChange, items, coupon, discount }) {
     return maxDate.toISOString().split("T")[0];
   };
 
+  useEffect(() => {
+    if (user.email === "user@spotsline.com.ar") {
+      setIsTestUser(true);
+    }
+  }, []);
+
   return (
-    <DarkModal
-      isOpen={isOpen}
-      onOpenChange={onOpenChange}
-      title={"FECHA DE ENTREGA"}
-      description={"Seleccione fecha de entrega para el pedido"}
-      size="xl"
-      modalClassName={"flex items-center"}
-    >
-      <form className={`z-20 mx-auto flex w-80 flex-col items-center justify-start gap-10 px-5`}>
-        <input
-          type="date"
-          value={date}
-          min={getMinDate()}
-          max={getMaxDate()}
-          onChange={(e) => {
-            setDate(e.target.value);
-            if (date !== "") setError(false);
-          }}
-          className={`${
-            error && "border-2 border-red-500"
-          } w-full rounded-full bg-background p-2 text-center font-bold tracking-widest text-dark transition hover:cursor-pointer focus:outline-none`}
-        />
-        <Textarea
-          maxRows={3}
-          maxLength={250}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          label="Observaciones"
-          placeholder="Escriba detalles de la compra de ser necesario"
-          className="max-w-xs"
-        />
-        <DefaultButton onPress={handleCreateCheckout} className={"mx-auto lg:mx-0"} isLoading={loading}>
-          IR A PAGAR
-        </DefaultButton>
-      </form>
-    </DarkModal>
+    <>
+      <DarkModal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        title={"FECHA DE ENTREGA"}
+        description={"Seleccione fecha de entrega para el pedido"}
+        size="xl"
+        modalClassName={"flex items-center"}
+      >
+        <form className={`z-20 mx-auto flex w-80 flex-col items-center justify-start gap-10 px-5`}>
+          <input
+            type="date"
+            value={date}
+            min={getMinDate()}
+            max={getMaxDate()}
+            onChange={(e) => {
+              setDate(e.target.value);
+              if (date !== "") setError(false);
+            }}
+            className={`${
+              error && "border-2 border-red-500"
+            } w-full rounded-full bg-background p-2 text-center font-bold tracking-widest text-dark transition hover:cursor-pointer focus:outline-none`}
+          />
+          <Textarea
+            maxRows={3}
+            maxLength={250}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            label="Observaciones"
+            placeholder="Escriba detalles de la compra de ser necesario"
+            className="max-w-xs"
+          />
+          <DefaultButton onPress={handleCreateCheckout} className={"mx-auto lg:mx-0"} isLoading={loading}>
+            IR A PAGAR
+          </DefaultButton>
+          {isTestUser && import.meta.env.VITE_ENV !== "production" && (
+            <div className="flex w-full flex-col items-center gap-3 text-background">
+              <h5 className="flex items-center gap-3 font-bold uppercase underline">
+                Tarjeta de prueba ;)
+                <i
+                  className="ri-external-link-line icons text-lg text-primary"
+                  onClick={() => window.open("https://mobbex.dev/medios-de-pago-para-pruebas#hbsLJ")}
+                />
+              </h5>
+              <CopyItem title={"Tarjeta"} text={"4507990000000010"} copyText={"4507990000000010"} />
+              <CopyItem title={"Vencimiento"} text={"12/34"} copyText={"12/34"} />
+              <CopyItem title={"Nombre"} text={"Demo"} copyText={"Demo"} />
+              <CopyItem title={"DNI"} text={"12123123"} copyText={"12123123"} />
+              <CopyItem title={"CVV"} text={"200 / 400 / 003"} copyText={"200 / 400 / 003"} info="a" />
+            </div>
+          )}
+        </form>
+      </DarkModal>
+    </>
+  );
+}
+
+function CopyItem({ title, text, copyText, info }) {
+  return (
+    <span className="relative flex w-full items-center gap-2 rounded-md border border-background p-1 px-3 shadow-xl">
+      <strong>{title}:</strong>
+      <p className="uppercase text-primary/50 underline">{text}</p>
+      <i
+        className="ri-file-copy-line icons text-lg text-primary"
+        onClick={() => navigator.clipboard.writeText(copyText)}
+      />
+      {info && (
+        <Tooltip content="200: Pago exitoso. 400: Pago denegado. 003: Pago en proceso">
+          <i className="ri-information-line icons absolute -right-10 text-lg text-primary" />
+        </Tooltip>
+      )}
+    </span>
   );
 }

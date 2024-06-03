@@ -33,7 +33,11 @@ export function Products() {
 
   return (
     <>
-      <PageSimpleHeader image={images.empresa} title={"NUESTROS PRODUCTOS"} subtitle={"Descubre nuestros productos"} />
+      <PageSimpleHeader
+        image={images.empresaMachines}
+        title={"NUESTROS PRODUCTOS"}
+        subtitle={"Descubre nuestros productos"}
+      />
       <main className="flex gap-x-4 bg-[#D9D9D9] p-10">
         <article className="my-10 hidden pl-5 font-secondary md:inline">
           <h2 className="text-xl font-semibold">Categorías de Productos</h2>

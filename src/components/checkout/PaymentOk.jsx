@@ -7,6 +7,7 @@ import { APISpot } from "src/api";
 import { toast } from "sonner";
 import { deleteOfStorage, getOfStorage } from "src/utils/localStorage";
 import { actionsShoppingCart } from "src/redux/reducers";
+import Spinner from "../Spinner";
 
 export function PaymentOk({ transactionId, type }) {
   const dispatch = useDispatch();
@@ -19,29 +20,27 @@ export function PaymentOk({ transactionId, type }) {
 
   useEffect(() => {
     onOpen();
+    setLoading(true);
 
-    return () => {
-      setLoading(true);
-
-      try {
-        if (orderBody) {
-          APISpot.user.createOrder({ ...orderBody, transactionId, type }).then((res) => {
-            if (res) {
-              APISpot.cart.deleteCart(id, false);
-              dispatch(actionsShoppingCart.clearCart());
-              deleteOfStorage("orderBody");
-              toast.success("Orden de compra creada con exito", { description: "¡Gracias por comprar en Spotsline!" });
-            }
-          });
-        } else {
-          toast.info("Faltan datos para crear la orden");
-        }
-      } catch (e) {
-        console.log(e);
-      } finally {
-        setLoading(false);
+    try {
+      if (orderBody) {
+        console.log("aca entro?");
+        APISpot.user.createOrder({ ...orderBody, transactionId, type }).then((res) => {
+          if (res) {
+            APISpot.cart.deleteCart(id, false);
+            dispatch(actionsShoppingCart.clearCart());
+            deleteOfStorage("orderBody");
+            toast.success("Orden de compra creada con exito", { description: "¡Gracias por comprar en Spotsline!" });
+          }
+        });
+      } else {
+        toast.info("Faltan datos para crear la orden");
       }
-    };
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   return (
@@ -51,6 +50,7 @@ export function PaymentOk({ transactionId, type }) {
       title={"¡GRACIAS POR TU COMPRA!"}
       description={"Si llegaste hasta acá porque registramos tu pedido con EXITO"}
     >
+      {loading && <Spinner />}
       <i className="ri-close-line icons absolute right-0 top-0 text-xl text-background" onClick={() => onClose()} />
       <main className="z-20 flex flex-col items-center gap-6">
         <p className="font-secondary text-sm text-background">
