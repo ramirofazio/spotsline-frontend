@@ -2,9 +2,13 @@ import { NavLink } from "react-router-dom";
 
 export function GoBackButton({ className, textClassName, iconClassName }) {
   return (
-    <NavLink to={-1} className={`icons absolute left-4 top-4 flex items-center hover:opacity-50 ${className}`}>
-      <i className={`ri-arrow-left-s-line yellowGradient text-4xl font-normal  ${iconClassName}`} />
-      <p className={`white-neon font-secondary ${textClassName}`}>VOLVER</p>
+    <NavLink to={-1} className={`icons z-50 flex items-center gap-2 hover:opacity-50 ${className}`}>
+      <div className="flex aspect-square h-8 w-8 items-center justify-center rounded-full bg-primary/80 md:h-10 md:w-10">
+        <i
+          className={`ri-arrow-left-s-line flex h-8 w-8 items-center justify-center text-2xl font-normal md:text-3xl  ${iconClassName}`}
+        />
+      </div>
+      <p className={`font-secondary text-sm font-semibold text-dark md:text-lg ${textClassName}`}>VOLVER</p>
     </NavLink>
   );
 }

@@ -20,7 +20,7 @@ import { DarkModal, DefaultButton } from "src/components";
 import { Link, useLoaderData, useNavigate } from "react-router-dom";
 import { formatPrices } from "src/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { zoomIn } from "src/styles/framerVariants";
+import { onViewZoomIn } from "src/styles/framerVariants";
 
 const marcas_columns = [
   { label: "código", key: "codigo" },
@@ -153,7 +153,7 @@ export function ProductsPage() {
 
   return (
     <AnimatePresence key={"dashboard-products"} mode="wait">
-      <motion.main {...zoomIn} className="flex flex-col items-center">
+      <motion.main {...onViewZoomIn} className="flex flex-col items-center">
         <Table
           aria-label="Example table with custom cells"
           isStriped

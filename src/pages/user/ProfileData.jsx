@@ -7,7 +7,7 @@ import { ChangePasswordModal } from "../signIn/ChangePasswordModal";
 import { APISpot } from "src/api";
 import { useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
-import { zoomIn } from "src/styles/framerVariants";
+import { onViewZoomIn, zoomIn } from "src/styles/framerVariants";
 
 const inputFields = [
   { name: "username", startIcon: "ri-user-fill", label: "NOMBRE COMPLETO" },
@@ -86,7 +86,11 @@ export default function ProfileData() {
 
   return (
     <AnimatePresence mode="wait">
-      <motion.main {...zoomIn} className="relative flex flex-col items-center gap-6 py-10 text-center">
+      <motion.main
+        {...zoomIn}
+        key="profile-data-page"
+        className="relative flex flex-col items-center gap-6 py-10 text-center"
+      >
         <header className="md:w-full md:text-left">
           <h2 className="text-xl font-bold">DATOS PERSONALES</h2>
           <Divider className="my-2 hidden h-[2px] rounded-xl bg-dark md:flex lg:w-80" />

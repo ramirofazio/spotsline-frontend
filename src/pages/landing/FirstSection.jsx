@@ -2,13 +2,13 @@ import { Link } from "react-router-dom";
 import { DefaultButton } from "src/components";
 import AwsImage from "src/components/images/AwsImage";
 import { motion } from "framer-motion";
-import { fadeIn } from "src/styles/framerVariants";
+import { onViewFadeIn } from "src/styles/framerVariants";
 import { images } from "src/assets";
 
 export default function FirstSection() {
   return (
     <motion.section
-      {...fadeIn()}
+      {...onViewFadeIn()}
       id="landing-first"
       className="relative grid  h-screen w-screen place-items-center overflow-hidden"
     >

@@ -72,7 +72,7 @@ export function SignIn() {
   };
 
   return (
-    <main className="relative h-screen w-screen overflow-hidden">
+    <main className="relative h-screen w-screen overflow-hidden text-center">
       <img
         src={images.signInBackground}
         className="absolute h-full w-full object-cover"
@@ -81,13 +81,17 @@ export function SignIn() {
       />
 
       <div className="grid h-full w-full place-content-center place-items-center bg-black/30 backdrop-blur-md">
-        <GoBackButton className="absolute left-4 top-4" />
+        <GoBackButton className="absolute left-4 top-4 md:left-10 md:top-10" textClassName={"!text-background"} />
         <motion.section
           {...zoomIn}
           className=" relative flex min-h-[60vh] min-w-[60vw] flex-col items-center gap-4 overflow-hidden rounded-xl bg-black/10 p-12  shadow-md"
         >
           <div className="absolute -right-40 -top-14 -z-10 xl:-right-60 xl:-top-20">
-            <AwsImage type="logos" identify="logoBlack" className="!-z-10 w-80 rotate-12 !opacity-50 xl:w-[30vw]" />
+            <AwsImage
+              type="logos"
+              identify="logoBlack"
+              className="!-z-10 w-80 rotate-12 !opacity-50 blur-sm xl:w-[30vw]"
+            />
           </div>
           <div className="grid place-items-center text-center md:-mt-8">
             <AwsImage type="logos" identify="logoYellow" className="w-16 md:w-32" />
@@ -126,7 +130,11 @@ export function SignIn() {
             </strong>
           </p>
           <div className="absolute -bottom-14 -left-40 -z-10 xl:-bottom-32 xl:-left-64">
-            <AwsImage type="logos" identify="logoBlack" className="!-z-10 w-80 -rotate-12 !opacity-50 xl:w-[30vw]" />
+            <AwsImage
+              type="logos"
+              identify="logoBlack"
+              className="!-z-10 w-80 -rotate-12 !opacity-50 blur-sm xl:w-[30vw]"
+            />
           </div>
         </motion.section>
       </div>

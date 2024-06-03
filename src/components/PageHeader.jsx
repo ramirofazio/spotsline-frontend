@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { fadeInBottom, fadeInTop } from "src/styles/framerVariants";
+import { onViewFadeInBottom, fadeInTop } from "src/styles/framerVariants";
 
 export default function PageSimpleHeader({ image, title, subtitle, className }) {
   return (
@@ -17,7 +17,7 @@ export default function PageSimpleHeader({ image, title, subtitle, className }) 
 
         {subtitle && (
           <motion.h3
-            {...fadeInBottom(1.5)}
+            {...onViewFadeInBottom(1.5)}
             className="max-w-[300px] text-center font-secondary text-sm font-bold text-background lg:max-w-[500px] lg:text-xl"
           >
             {subtitle}
