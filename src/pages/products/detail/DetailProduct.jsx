@@ -25,6 +25,7 @@ export function DetailProduct() {
 
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   const localVariant = getOfStorage("currentVariant");
   const [currentVariant, setCurrentVariant] = useState(
     localVariant
@@ -35,13 +36,6 @@ export function DetailProduct() {
 
   useEffect(() => {
     document.title = "SPOTSLINE - Cargando...";
-    console.log(product.variants);
-    const localVariant = getOfStorage("currentVariant");
-    if (localVariant) {
-      console.log(product.variants.findIndex((variant) => variant.id === localVariant.id));
-    }
-    // console.log(localVariant);
-    // setCurrentVariant(product.variants[0]);
     document.title = "SPOTSLINE - " + product.description;
 
     return () => (document.title = "SPOTSLINE");

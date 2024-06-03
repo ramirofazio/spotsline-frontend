@@ -18,7 +18,6 @@ function ChangeSlide({ slideIndex }) {
 
 export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
   const [slideIndex, setSlideIndex] = useState(variants.indexOf(currentVariant));
-  console.log(variants, currentVariant, slideIndex);
   const pagination = {
     clickable: true,
     renderBullet: function (index, className) {

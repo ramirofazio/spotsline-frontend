@@ -59,14 +59,6 @@
     @apply transition hover:cursor-pointer hover:opacity-50;
   }
 
-  /* .swiper-pagination-bullet {
-    @apply !mr-3 h-3 w-3 bg-primary/50 border-red-500 border-2;
-  }
-
-  .swiper-pagination-bullet-active {
-    @apply !bg-primary border-red-500 border-2;
-  } */
-
   .white-neon {
     color: #fff;
     text-shadow: 0 0 5px #fff;
