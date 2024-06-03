@@ -12,9 +12,11 @@ export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
   const pagination = {
     clickable: true,
     renderBullet: function (index, className) {
-      return '<img src="' + variants[index].pathImage + '" class="' + className + '"/>';
+      return '<img  src="' + variants[index].pathImage + '" class="' + className + '"/>';
     },
   };
+
+  // onClick on bullet en el onChange
 
   const handleVariantChange = (variantIndex) => {
     const newVariant = variants[variantIndex];

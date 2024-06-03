@@ -28,15 +28,15 @@ export function DetailProduct() {
   const [loading, setLoading] = useState(false);
   // const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentVariant, setCurrentVariant] = useState(null /* getOfStorage("currentVariant") */);
+  const [currentVariant, setCurrentVariant] = useState(product.variants[0] /* getOfStorage("currentVariant") */);
   const [qty, setQty] = useState(getOfStorage("qty") || 1);
 
   useEffect(() => {
     document.title = "SPOTSLINE - Cargando...";
 
-    const localVariant = getOfStorage("currentVariant"); // re ajustar variante del localstorage con el nuevo flujo
+    // const localVariant = getOfStorage("currentVariant"); // re ajustar variante del localstorage con el nuevo flujo
 
-    setCurrentVariant(product.variants[0]);
+    // setCurrentVariant(product.variants[0]);
     document.title = "SPOTSLINE - " + product.description;
 
     return () => (document.title = "SPOTSLINE");
@@ -86,6 +86,7 @@ export function DetailProduct() {
 
   const getVariantPrice = () => {
     const currentPrice = `precio${managedClient.priceList ? managedClient.priceList : priceList}`;
+
     const format = formatPrices(currentVariant[currentPrice] * qty);
     return format;
   };
@@ -102,6 +103,7 @@ export function DetailProduct() {
           setCurrentVariant={setCurrentVariant}
         />
       </div>
+      {/*  OnCilck document.thisvariant */}
       {/* <Images variants={product.variants} currentVariant={currentVariant} setCurrentVariant={setCurrentVariant} /> */}
       <section className="my-10 md:my-0 md:flex-1">
         <h1 className="mb-8 font-primary text-3xl font-bold">{product?.description}</h1>
@@ -111,8 +113,8 @@ export function DetailProduct() {
             <SelectVariant
               variants={product.variants}
               currentVariant={currentVariant}
-              // defaultSelectedKeys={currentVariant.description}
               setCurrentVariant={setCurrentVariant}
+              // defaultSelectedKeys={currentVariant.description}
             />
             <SelectQuantity qty={qty} setQty={setQty} />
             <div className={`flex justify-between ${!qty && "animate-pulse text-red-600"}`}>
