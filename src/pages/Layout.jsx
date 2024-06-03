@@ -11,6 +11,7 @@ import { loadUserData } from "src/utils/loadUserData";
 export default function Layout({ children }) {
   const dispatch = useDispatch();
   const reduxUser = useSelector((state) => state.user);
+  const shoppingCart = useSelector((state) => state.cart);
 
   const autoSaveShoppingCart = useDebouncedCallback(() => {
     if (!reduxUser.id) return;
@@ -28,6 +29,25 @@ export default function Layout({ children }) {
     });
     //? Para no hacer pedidos duplicados espera 1s
   }, [1000]);
+
+  const loadUser = useDebouncedCallback(() => {
+    const user = getOfStorage("user");
+    const access_token = getOfStorage("access_token");
+    const managedClient = getOfStorage("managedClient");
+
+    //? El usuario ya estaba loggeado
+    if (access_token && user) {
+      addAuthWithToken(access_token);
+      dispatch(actionsAuth.setAccessToken(access_token));
+
+      loadUserData(dispatch, access_token, user.email, managedClient);
+    }
+  }, [100]);
+
+  useEffect(() => {
+    //? Para que se guarde cada vez que se modifica el estado de redux
+    autoSaveShoppingCart();
+  }, [shoppingCart]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -51,20 +71,6 @@ export default function Layout({ children }) {
       window.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
-
-  const loadUser = useDebouncedCallback(() => {
-    const user = getOfStorage("user");
-    const access_token = getOfStorage("access_token");
-    const managedClient = getOfStorage("managedClient");
-
-    //? El usuario ya estaba loggeado
-    if (access_token && user) {
-      addAuthWithToken(access_token);
-      dispatch(actionsAuth.setAccessToken(access_token));
-
-      loadUserData(dispatch, access_token, user.email, managedClient);
-    }
-  }, [100]);
 
   useEffect(() => {
     loadUser();

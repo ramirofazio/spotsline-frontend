@@ -3,11 +3,11 @@ import { actionSeller, actionsShoppingCart, actionsUser } from "src/redux/reduce
 
 export const loadUserData = async (dispatch, access_token, email, managedClient) => {
   try {
-    //? Si existe managedClient lo mando para que junte los datos del vendedor y del usuario
     const { user, shoppingCart } = await APISpot.auth.jwtAutoSignIn({
       jwt: access_token,
       email,
-      managedClient: managedClient ?? false,
+      //? Si existe managedClient lo mando para que junte los datos del vendedor y del usuario
+      managedClient: managedClient ? managedClient : false,
     });
 
     if (user.web_role === null) {

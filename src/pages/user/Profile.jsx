@@ -16,6 +16,7 @@ export function Profile() {
 
   const { userData, userCA } = useLoaderData();
   const { managedClient } = useSelector((state) => state.seller);
+
   const [avatar, setAvatar] = useState(null);
   const [loading, setLoading] = useState(true);
   const [avatarLoading, setAvatarLoading] = useState(false);
@@ -31,37 +32,6 @@ export function Profile() {
     { name: "MI PERFIL", startIcon: "user", component: <ProfileData /> },
     { name: "MIS COMPRAS", startIcon: "shopping-cart-2", component: <ProfileOrders /> },
   ]);
-
-  async function updateAvatar() {
-    try {
-      setAvatarLoading(true);
-      await APISpot.user.updateAvatar({
-        formData: avatar.formData,
-        //? Si es un vendedor gestionando manda el id del managedClient
-        userId: managedClient.id ? managedClient.id : userData.id,
-        web_role: "client",
-      });
-      setAvatarLoading(false);
-      toast.success("Avatar actualizado!");
-      userData.avatar = avatar.url;
-      setAvatar(null);
-    } catch (err) {
-      console.log(err);
-      toast.error("error al actualizar");
-    }
-  }
-
-  const handleAvatar = ({ target }) => {
-    const formData = new FormData();
-    formData.append("file", target.files[0]);
-    const newAvatar = URL.createObjectURL(target.files[0]);
-    setAvatar({ url: newAvatar, formData: formData });
-  };
-
-  const handleSelect = (name) => {
-    setSelectedSection(name);
-    saveInStorage("profileSelectedSection", name);
-  };
 
   useEffect(() => {
     //? Se fija si el user tiene o no CC y agrega el boton
@@ -98,6 +68,37 @@ export function Profile() {
       setLoading(false);
     }, 800);
   }, [loading]);
+
+  async function updateAvatar() {
+    try {
+      setAvatarLoading(true);
+      await APISpot.user.updateAvatar({
+        formData: avatar.formData,
+        //? Si es un vendedor gestionando manda el id del managedClient
+        userId: managedClient.id ? managedClient.id : userData.id,
+        web_role: "client",
+      });
+      setAvatarLoading(false);
+      toast.success("Avatar actualizado!");
+      userData.avatar = avatar.url;
+      setAvatar(null);
+    } catch (err) {
+      console.log(err);
+      toast.error("error al actualizar");
+    }
+  }
+
+  const handleAvatar = ({ target }) => {
+    const formData = new FormData();
+    formData.append("file", target.files[0]);
+    const newAvatar = URL.createObjectURL(target.files[0]);
+    setAvatar({ url: newAvatar, formData: formData });
+  };
+
+  const handleSelect = (name) => {
+    setSelectedSection(name);
+    saveInStorage("profileSelectedSection", name);
+  };
 
   if (loading) return <ProfileSkeleton />;
 
