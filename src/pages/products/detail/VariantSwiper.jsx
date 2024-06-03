@@ -1,35 +1,43 @@
 // Import Swiper React components
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
+import { Pagination } from "swiper/modules";
 
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+function ChangeSlide({ slideIndex }) {
+  const swiper = useSwiper();
+  return (
+    <button className="hidden" id="change-slide" onClick={() => swiper.slideTo(slideIndex)}>
+      change slide
+    </button>
+  );
+}
 
 export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
-  console.log(variants);
+  const [slideIndex, setSlideIndex] = useState(variants.indexOf(currentVariant));
+  console.log(variants, currentVariant, slideIndex);
   const pagination = {
     clickable: true,
     renderBullet: function (index, className) {
-      return '<img  src="' + variants[index].pathImage + '" class="' + className + '"/>';
+      return '<img src="' + variants[index].pathImage + '" class="' + className + '" />';
     },
   };
 
-  // onClick on bullet en el onChange
-
   const handleVariantChange = (variantIndex) => {
     const newVariant = variants[variantIndex];
-    console.log("swipeo", newVariant);
     setCurrentVariant(newVariant);
   };
-  // useEffect(() => {
-  //   console.log("EFFECT");
-  //   console.log(swiper);
-  // }, [currentVariant]);
+
+  useEffect(() => {
+    setSlideIndex(variants.indexOf(currentVariant));
+  }, [currentVariant]);
+
   return (
     <Swiper
-      initialSlide={0}
+      initialSlide={slideIndex}
       modules={[Pagination]}
       pagination={pagination}
       scrollbar={{ draggable: false }}
@@ -37,11 +45,11 @@ export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
       slidesPerView={1}
       onSlideChange={({ activeIndex }) => handleVariantChange(activeIndex)}
       onSwiper={(swiper) => console.log(swiper)}
-      className="border-2 border-green-400"
+      className=""
     >
+      <ChangeSlide slideIndex={slideIndex} />
       {variants?.map((variant, i) => (
-        <SwiperSlide key={i} className=" border-2 border-red-500">
-          Slide {i}
+        <SwiperSlide id={variant.id} key={i} className=" rounded-lg border-2 border-white bg-white">
           <img src={variant.pathImage} alt="no taaaaa" />
         </SwiperSlide>
       ))}

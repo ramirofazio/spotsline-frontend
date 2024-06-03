@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
-import { APISpot } from "src/api";
 import { assets } from "src/assets";
 import { SkeletonDetail } from "./SkeletonDetail";
 import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart } from "src/redux/reducers/shoppingCart";
 import colors from "../../../data/colors.json";
-import { Images } from "./Images";
 import { SelectQuantity } from "./SelectQuantity";
 import { SelectVariant } from "./SelectVariant";
 import { DefaultButton } from "src/components";
@@ -26,16 +24,23 @@ export function DetailProduct() {
   const { items } = useSelector((state) => state.cart);
 
   const [loading, setLoading] = useState(false);
-  // const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentVariant, setCurrentVariant] = useState(product.variants[0] /* getOfStorage("currentVariant") */);
+  const localVariant = getOfStorage("currentVariant");
+  const [currentVariant, setCurrentVariant] = useState(
+    localVariant
+      ? product.variants[product.variants.findIndex((variant) => variant.id === localVariant.id)]
+      : product.variants[0]
+  );
   const [qty, setQty] = useState(getOfStorage("qty") || 1);
 
   useEffect(() => {
     document.title = "SPOTSLINE - Cargando...";
-
-    // const localVariant = getOfStorage("currentVariant"); // re ajustar variante del localstorage con el nuevo flujo
-
+    console.log(product.variants);
+    const localVariant = getOfStorage("currentVariant");
+    if (localVariant) {
+      console.log(product.variants.findIndex((variant) => variant.id === localVariant.id));
+    }
+    // console.log(localVariant);
     // setCurrentVariant(product.variants[0]);
     document.title = "SPOTSLINE - " + product.description;
 
@@ -54,10 +59,6 @@ export function DetailProduct() {
     };
   }, []);
 
-  useEffect(() => {
-    console.log("CURRENT", currentVariant);
-  }, [currentVariant]);
-
   function addProductToShoppingCart() {
     setLoading(true);
     const currentPrice = `precio${managedClient.priceList ? managedClient.priceList : priceList}`;
@@ -68,8 +69,7 @@ export function DetailProduct() {
         marcaId: parseInt(id),
         name: currentVariant.description,
         img: currentVariant.pathImage || assets.logos.logoBlack,
-        price:
-          currentVariant[currentPrice] /* Number(currentVariant["precio" + (managedClient.priceList ?? priceList)]) */,
+        price: currentVariant[currentPrice],
         qty: Number(qty),
       })
     );
@@ -103,8 +103,6 @@ export function DetailProduct() {
           setCurrentVariant={setCurrentVariant}
         />
       </div>
-      {/*  OnCilck document.thisvariant */}
-      {/* <Images variants={product.variants} currentVariant={currentVariant} setCurrentVariant={setCurrentVariant} /> */}
       <section className="my-10 md:my-0 md:flex-1">
         <h1 className="mb-8 font-primary text-3xl font-bold">{product?.description}</h1>
 
@@ -125,7 +123,7 @@ export function DetailProduct() {
         )}
         <div className="my-10 w-full rounded-xl bg-primary/20 p-4 shadow-xl">
           <h3 className="mb-4 text-lg font-bold">Colores</h3>
-          <ColorPalette variants={product.variants} />
+          <ColorPalette variants={product.variants} currentVariant={currentVariant} />
         </div>
         {isInCart && (
           <h1 className="mx-auto my-2 w-fit">
@@ -145,7 +143,7 @@ export function DetailProduct() {
   );
 }
 
-function ColorPalette({ variants = [] }) {
+function ColorPalette({ variants = [], currentVariant }) {
   const _colors = new Set();
   variants.forEach((v) => {
     const { subRub } = v;
@@ -155,16 +153,23 @@ function ColorPalette({ variants = [] }) {
       if (externo) _colors.add(externo);
     }
   });
-
+  const colorsArr = Array.from(_colors);
   return (
     <div className="flex flex-col gap-2">
-      {Array.from(_colors).map((interno) => {
+      {colorsArr.map((interno) => {
+        const _interno = interno;
         interno = colors[interno];
         return (
-          <div className="flex" key={`interno:${interno.name}`}>
-            <p className="flex flex-1 items-center gap-2">
+          <div className="flex w-fit" key={`interno:${interno.name}`}>
+            <p
+              className={`flex w-fit flex-1 items-center gap-2 ${
+                _interno === currentVariant?.subRub ? "border-b-[1.5px] border-black" : ""
+              }`}
+            >
               <span
-                className="inline-block aspect-square w-5 items-center rounded-full"
+                className={`inline-block aspect-square w-5 items-center rounded-full ${
+                  _interno === currentVariant?.subRub ? "animate-pulse border-[1.5px] border-black" : ""
+                }`}
                 style={{ background: interno.color }}
               ></span>
               {interno.name}
