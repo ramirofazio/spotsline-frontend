@@ -1,17 +1,12 @@
 import { useDisclosure } from "@nextui-org/react";
-import { Fragment, useEffect } from "react";
+import { Fragment, lazy, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { addAuthWithToken } from "src/api";
-import { FirstSignInModal } from "src/pages/signIn";
-import { ChangePasswordModal } from "src/pages/signIn/ChangePasswordModal";
+const ChangePasswordModal = lazy(() => import("pages/signIn/ChangePasswordModal"));
+const FirstSignInModal = lazy(() => import("pages/signIn/FirstSignInModal"));
 
-export default function AuthValidationModal() {
+export default function AuthValidationModal({ reset, access_token, query_email }) {
   const navigate = useNavigate();
-
-  const params = new URLSearchParams(window.location.search);
-  const reset = Boolean(params.get("reset"));
-  const access_token = params.get("access_token");
-  const query_email = params.get("email");
 
   const { onOpen, onOpenChange, isOpen, onClose } = useDisclosure();
 

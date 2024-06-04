@@ -108,7 +108,7 @@ export default function NavBar() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.2 }}
               exit={{ opacity: 0 }}
-              src={images.logoBlack}
+              src={pathname !== "/" ? images.logoBlack : images.logoWhite}
               loading="lazy"
               className={`w-24 transition hover:scale-110 hover:animate-pulse hover:cursor-pointer sm:w-24 md:w-32`}
             />
@@ -149,7 +149,7 @@ export default function NavBar() {
         >
           <NavbarMenuToggle
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-            className={`!h-10 !w-10  text-dark sm:hidden`}
+            className={`!h-10 !w-10 sm:hidden ${pathname !== "/" ? "text-dark" : "text-background"}`}
           />
         </motion.div>
       </AnimatePresence>

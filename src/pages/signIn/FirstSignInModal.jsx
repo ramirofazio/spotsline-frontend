@@ -12,7 +12,7 @@ const inputFields = [
   { name: "newPasswordConfirm", label: "Confirmar nueva contraseña" },
 ];
 
-export function FirstSignInModal({ navigate }) {
+export default function FirstSignInModal({ navigate }) {
   const dispatch = useDispatch();
 
   const { firstSignIn, email, id } = useSelector((state) => state.user);

@@ -42,4 +42,5 @@ export const images = {
   empresa: "/images/empresa.webp",
   empresaScaled: "/images/empresa-scaled.webp",
   empresaTrabajador: "/images/empresa-trabajador.webp",
+  empresaMachines: "/images/empresa_machines.webp",
 };

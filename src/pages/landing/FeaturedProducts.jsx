@@ -20,7 +20,7 @@ export default function FeaturedProducts({ products }) {
       <motion.h1 {...fadeInTop()} className="mx-auto w-full text-center text-2xl font-bold sm:mt-4 sm:text-4xl">
         PRODUCTOS DESTACADOS
       </motion.h1>
-      <article className="mx-auto grid w-[80%] grid-cols-2 grid-rows-3 gap-4 md:grid-flow-row md:grid-cols-4 md:grid-rows-4 lg:w-[85%]">
+      <article className="grid grid-cols-2 grid-rows-3 gap-4 sm:scale-75 md:grid-flow-row md:grid-cols-4 md:grid-rows-4">
         {products?.map(({ pathfoto, codigo }, index) => (
           <motion.div
             {...onViewFadeInBottom()}
