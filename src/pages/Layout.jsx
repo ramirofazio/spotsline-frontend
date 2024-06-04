@@ -1,15 +1,21 @@
-import { useEffect, Suspense } from "react";
+import { useEffect, Suspense, lazy } from "react";
 import { getOfStorage } from "src/utils/localStorage";
 import { useDispatch, useSelector } from "react-redux";
 import { addAuthWithToken, APISpot } from "src/api";
 import Spinner from "src/components/Spinner";
 import { actionsAuth } from "src/redux/reducers";
-import AuthValidationModal from "src/components/modals/AuthValidationsModal";
+const AuthValidationModal = lazy(() => import("src/components/modals/AuthValidationsModal"));
 import { useDebouncedCallback } from "use-debounce";
 import { loadUserData } from "src/utils/loadUserData";
 
 export default function Layout({ children }) {
   const dispatch = useDispatch();
+
+  const params = new URLSearchParams(window.location.search);
+  const reset = Boolean(params.get("reset"));
+  const access_token = params.get("access_token");
+  const query_email = params.get("email");
+
   const reduxUser = useSelector((state) => state.user);
   const shoppingCart = useSelector((state) => state.cart);
 
@@ -78,8 +84,10 @@ export default function Layout({ children }) {
 
   return (
     <Suspense fallback={<Spinner />}>
-      <AuthValidationModal />
       {children}
+      {reset && access_token && query_email && (
+        <AuthValidationModal reset={reset} access_token={access_token} query_email={query_email} />
+      )}
     </Suspense>
   );
 }

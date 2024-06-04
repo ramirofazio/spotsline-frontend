@@ -1,13 +1,13 @@
 import { Divider, useDisclosure } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { lazy, useEffect, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { BasicInput, DefaultButton } from "src/components";
-import { ChangePasswordModal } from "../signIn/ChangePasswordModal";
 import { APISpot } from "src/api";
 import { useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
-import { onViewZoomIn, zoomIn } from "src/styles/framerVariants";
+import { zoomIn } from "src/styles/framerVariants";
+const ChangePasswordModal = lazy(() => import("pages/signIn/ChangePasswordModal"));
 
 const inputFields = [
   { name: "username", startIcon: "ri-user-fill", label: "NOMBRE COMPLETO" },
@@ -16,7 +16,6 @@ const inputFields = [
   { name: "password", startIcon: "ri-key-line", label: "CONTRASEÑA", pencil: true },
 ];
 
-//TODO Alerta cuando navegan hacia atras para avisar que sus datos no se guardaran o algo asi, puede ser un modal con un boton para que los
 export default function ProfileData() {
   const navigate = useNavigate();
   const { userData } = useLoaderData();
