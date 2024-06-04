@@ -12,6 +12,7 @@ import { DefaultButton } from "src/components";
 import { formatPrices } from "src/utils";
 import { deleteOfStorage, getOfStorage, saveInStorage } from "src/utils/localStorage";
 import { VariantSwiper } from "./VariantSwiper";
+import { GoBackButton } from "src/components/buttons/GoBackButton";
 
 export function DetailProduct() {
   const { id } = useParams();
@@ -90,7 +91,8 @@ export function DetailProduct() {
 
   return (
     <main className="mt-30 mb-10 min-h-[500px] max-w-7xl flex-wrap px-6 md:mt-32 md:flex md:gap-6 lg:mx-auto lg:gap-10 lg:px-12">
-      <div className="w-[50%]">
+      <GoBackButton className="top-28 my-2 md:absolute" />
+      <div className="mx-auto w-full sm:w-[80%] md:w-[50%]">
         <VariantSwiper
           variants={product?.variants}
           currentVariant={currentVariant}

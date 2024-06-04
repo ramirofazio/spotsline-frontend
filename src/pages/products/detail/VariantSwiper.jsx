@@ -39,7 +39,7 @@ export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
       initialSlide={slideIndex}
       modules={[Pagination]}
       pagination={pagination}
-      scrollbar={{ draggable: false }}
+      scrollbar={{ draggable: true }}
       spaceBetween={10}
       slidesPerView={1}
       onSlideChange={({ activeIndex }) => handleVariantChange(activeIndex)}
@@ -48,7 +48,7 @@ export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
     >
       <ChangeSlide slideIndex={slideIndex} />
       {variants?.map((variant, i) => (
-        <SwiperSlide id={variant.id} key={i} className=" rounded-lg border-2 border-white bg-white">
+        <SwiperSlide id={variant.id} key={i} className="mb-4 rounded-lg bg-white ">
           <img src={variant.pathImage} alt="no taaaaa" />
         </SwiperSlide>
       ))}
