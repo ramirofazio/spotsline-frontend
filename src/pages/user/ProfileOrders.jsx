@@ -1,5 +1,6 @@
 import { Divider } from "@nextui-org/react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useSelector } from "react-redux";
 import { Link, useLoaderData } from "react-router-dom";
 import { DefaultButton } from "src/components";
 import BorderedWhiteCard from "src/components/cards/BorderedWhiteCard";
@@ -8,6 +9,7 @@ import { convertISOToDate } from "src/utils";
 
 export default function ProfileOrders() {
   const { userOrders } = useLoaderData();
+  const state = useSelector((state) => state);
 
   return (
     <AnimatePresence mode="wait">
@@ -37,7 +39,11 @@ export default function ProfileOrders() {
               title={convertISOToDate(order.date)}
               description={order.mobbexId}
               text="DETALLES"
-              link={`${order.id}`}
+              link={`/user/profile/${order.id}/${
+                state.user.web_role === parseInt(import.meta.env.VITE_SELLER_ROLE)
+                  ? state.seller.managedClient.id
+                  : state.user.id
+              }`}
               type="order"
             />
           ))}
