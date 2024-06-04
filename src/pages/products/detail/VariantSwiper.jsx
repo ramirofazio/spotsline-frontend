@@ -49,7 +49,7 @@ export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
       <ChangeSlide slideIndex={slideIndex} />
       {variants?.map((variant, i) => (
         <SwiperSlide id={variant.id} key={i} className="mb-4 rounded-lg bg-white ">
-          <img src={variant.pathImage} alt="no taaaaa" />
+          <img src={variant.pathImage} alt="Imagen de producto no disponible" />
         </SwiperSlide>
       ))}
     </Swiper>
