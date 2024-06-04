@@ -1,16 +1,16 @@
-import { Image, SelectItem } from "@nextui-org/react";
+import { SelectItem } from "@nextui-org/react";
 import colors from "../../../data/colors.json";
 import { assets } from "src/assets";
 import CustomSelect from "src/components/form/CustomSelect";
-import { useState } from "react";
 
 export function SelectVariant({ variants, currentVariant, setCurrentVariant }) {
-  const [thisVariant, setThisVariant] = useState(currentVariant);
-
   const handleChange = (e) => {
     const newVariant = variants.find((v) => v.description === e.target.value);
-    setThisVariant(newVariant);
     setCurrentVariant(newVariant);
+    setTimeout(() => {
+      const manualSlide = document.getElementById("change-slide");
+      manualSlide.click();
+    }, 200);
   };
 
   return (
@@ -19,8 +19,9 @@ export function SelectVariant({ variants, currentVariant, setCurrentVariant }) {
       label="Selecciona una variante"
       labelClass={"text-lg text-dark font-semibold"}
       onChange={handleChange}
-      defaultSelectedKeys={[thisVariant.description]}
-      disabledKeys={[thisVariant.description]}
+      defaultSelectedKeys={[currentVariant?.description]}
+      disabledKeys={[currentVariant?.description]}
+      selectedKeys={[currentVariant?.description]}
       className="w-full"
       variant="underlined"
     >

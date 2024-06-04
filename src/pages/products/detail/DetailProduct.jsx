@@ -1,67 +1,46 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
-import { APISpot } from "src/api";
 import { assets } from "src/assets";
 import { SkeletonDetail } from "./SkeletonDetail";
 import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart } from "src/redux/reducers/shoppingCart";
 import colors from "../../../data/colors.json";
-import { Images } from "./Images";
 import { SelectQuantity } from "./SelectQuantity";
 import { SelectVariant } from "./SelectVariant";
 import { DefaultButton } from "src/components";
 import { formatPrices } from "src/utils";
 import { deleteOfStorage, getOfStorage, saveInStorage } from "src/utils/localStorage";
+import { VariantSwiper } from "./VariantSwiper";
 import { GoBackButton } from "src/components/buttons/GoBackButton";
 
 export function DetailProduct() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const product = useLoaderData();
 
   const { email, priceList } = useSelector((state) => state.user);
   const { managedClient } = useSelector((state) => state.seller);
   const { items } = useSelector((state) => state.cart);
 
   const [loading, setLoading] = useState(false);
-  const [product, setProduct] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentVariant, setCurrentVariant] = useState(getOfStorage("currentVariant"));
+  const [isLoading, setIsLoading] = useState(false);
+
+  const localVariant = getOfStorage("currentVariant");
+  const [currentVariant, setCurrentVariant] = useState(
+    localVariant
+      ? product.variants[product.variants.findIndex((variant) => variant.id === localVariant.id)]
+      : product.variants[0]
+  );
   const [qty, setQty] = useState(getOfStorage("qty") || 1);
 
   useEffect(() => {
     document.title = "SPOTSLINE - Cargando...";
-    APISpot.product // TODO estaria bueno fetchear la data en el loader de react-router
-      .getOne({ id })
-      .then(({ data }) => {
-        const map = {};
-        let variants = [];
-        data.variants.map((variant, description) => {
-          const { subRub } = variant;
-          if (!map[subRub]) {
-            map[subRub] = description;
-            variants.push(variant);
-          }
-        });
-        data.variants = variants;
-        setProduct(data);
-        const localVariant = getOfStorage("currentVariant");
-
-        setCurrentVariant(localVariant || data.variants[0]);
-        document.title = "SPOTSLINE - " + data.description;
-      })
-      .catch((err) => {
-        toast.error(err.message);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    document.title = "SPOTSLINE - " + product.description;
 
     return () => (document.title = "SPOTSLINE");
-  }, [id]);
+  }, []);
 
   useEffect(() => {
     saveInStorage("currentVariant", currentVariant);
@@ -85,8 +64,7 @@ export function DetailProduct() {
         marcaId: parseInt(id),
         name: currentVariant.description,
         img: currentVariant.pathImage || assets.logos.logoBlack,
-        price:
-          currentVariant[currentPrice] /* Number(currentVariant["precio" + (managedClient.priceList ?? priceList)]) */,
+        price: currentVariant[currentPrice],
         qty: Number(qty),
       })
     );
@@ -103,6 +81,7 @@ export function DetailProduct() {
 
   const getVariantPrice = () => {
     const currentPrice = `precio${managedClient.priceList ? managedClient.priceList : priceList}`;
+
     const format = formatPrices(currentVariant[currentPrice] * qty);
     return format;
   };
@@ -112,8 +91,14 @@ export function DetailProduct() {
 
   return (
     <main className="mt-30 mb-10 min-h-[500px] max-w-7xl flex-wrap px-6 md:mt-32 md:flex md:gap-6 lg:mx-auto lg:gap-10 lg:px-12">
-      <GoBackButton className={"mb-10 ml-2 mt-4 md:absolute md:left-10 md:top-28"} />
-      <Images variants={product.variants} currentVariant={currentVariant} setCurrentVariant={setCurrentVariant} />
+      <GoBackButton className="top-28 my-2 md:absolute" />
+      <div className="mx-auto w-full sm:w-[80%] md:w-[50%]">
+        <VariantSwiper
+          variants={product?.variants}
+          currentVariant={currentVariant}
+          setCurrentVariant={setCurrentVariant}
+        />
+      </div>
       <section className="my-10 md:my-0 md:flex-1">
         <h1 className="mb-8 font-primary text-3xl font-bold">{product?.description}</h1>
 
@@ -123,6 +108,7 @@ export function DetailProduct() {
               variants={product.variants}
               currentVariant={currentVariant}
               setCurrentVariant={setCurrentVariant}
+              // defaultSelectedKeys={currentVariant.description}
             />
             <SelectQuantity qty={qty} setQty={setQty} />
             <div className={`flex justify-between ${!qty && "animate-pulse text-red-600"}`}>
@@ -133,7 +119,7 @@ export function DetailProduct() {
         )}
         <div className="my-10 w-full rounded-xl bg-primary/20 p-4 shadow-xl">
           <h3 className="mb-4 text-lg font-bold">Colores</h3>
-          <ColorPalette variants={product.variants} />
+          <ColorPalette variants={product.variants} currentVariant={currentVariant} />
         </div>
         {isInCart && (
           <h1 className="mx-auto my-2 w-fit">
@@ -153,7 +139,7 @@ export function DetailProduct() {
   );
 }
 
-function ColorPalette({ variants = [] }) {
+function ColorPalette({ variants = [], currentVariant }) {
   const _colors = new Set();
   variants.forEach((v) => {
     const { subRub } = v;
@@ -163,16 +149,23 @@ function ColorPalette({ variants = [] }) {
       if (externo) _colors.add(externo);
     }
   });
-
+  const colorsArr = Array.from(_colors);
   return (
     <div className="flex flex-col gap-2">
-      {Array.from(_colors).map((interno) => {
+      {colorsArr.map((interno) => {
+        const _interno = interno;
         interno = colors[interno];
         return (
-          <div className="flex" key={`interno:${interno.name}`}>
-            <p className="flex flex-1 items-center gap-2">
+          <div className="flex w-fit" key={`interno:${interno.name}`}>
+            <p
+              className={`flex w-fit flex-1 items-center gap-2 ${
+                _interno === currentVariant?.subRub ? "border-b-[1.5px] border-black" : ""
+              }`}
+            >
               <span
-                className="inline-block aspect-square w-5 items-center rounded-full"
+                className={`inline-block aspect-square w-5 items-center rounded-full ${
+                  _interno === currentVariant?.subRub ? "animate-pulse border-[1.5px] border-black" : ""
+                }`}
                 style={{ background: interno.color }}
               ></span>
               {interno.name}

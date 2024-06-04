@@ -25,7 +25,7 @@ export default function FeaturedProducts({ products }) {
           <motion.div
             {...onViewFadeInBottom()}
             key={index}
-            className={`relative flex items-center bg-gradient-to-br from-primary to-yellow-400 p-1 shadow-md md:row-span-2  lg:min-h-[200px] lg:min-w-[250px] ${
+            className={`relative flex items-center bg-gradient-to-br from-primary to-yellow-400 p-1 shadow-md md:row-span-2  lg:min-h-[175px] lg:min-w-[200px] ${
               index === 2
                 ? "col-span-2 md:col-span-1  md:row-span-2"
                 : index === 1 && "md:grid-rows-subgrid md:col-span-2 md:row-span-4"

@@ -221,9 +221,12 @@ export const APISpot = {
       const res = await BASE_API.get(`/${route.USER}/orders/${id}`);
       return res.data;
     },
-    getOrder: async (id) => {
+    getOrder: async ({ order_id, user_id }) => {
       addAuthWithToken(getOfStorage("access_token"));
-      const res = await BASE_API.get(`/${route.USER}/order/${id}`);
+      const res = await BASE_API.post(`/${route.USER}/one-order`, {
+        order_id,
+        user_id,
+      });
       return res.data;
     },
     updateData: async (body) => {
