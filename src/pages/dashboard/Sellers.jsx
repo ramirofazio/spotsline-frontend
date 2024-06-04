@@ -8,7 +8,6 @@ import {
   TableRow,
   TableCell,
   Tooltip,
-  Spinner,
   useDisclosure,
 } from "@nextui-org/react";
 import { APISpot } from "src/api";
@@ -18,6 +17,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import { isValidEmail } from "src/utils/validation";
 import { AnimatePresence, motion } from "framer-motion";
 import { onViewZoomIn } from "src/styles/framerVariants";
+import Spinner from "src/components/Spinner";
 
 const sellers_columns = [
   { label: "Codigo", key: "sellerId" },
@@ -135,9 +135,7 @@ export function SellersPage() {
           <TableBody
             items={sellers}
             isLoading={loading}
-            loadingContent={
-              <Spinner color="secondary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
-            }
+            loadingContent={<Spinner className={"z-20 !h-auto !w-auto scale-75 rounded-xl p-4"} />}
           >
             {(item) => (
               <TableRow key={item.codigo}>

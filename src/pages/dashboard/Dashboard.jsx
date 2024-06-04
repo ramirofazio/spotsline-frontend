@@ -2,9 +2,10 @@ import { Suspense, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { DefaultButton } from "src/components";
 import FloatingLogos from "src/components/images/FloatingLogos";
-import { Button, Divider, Spinner } from "@nextui-org/react";
+import { Button, Divider, Spinner as NextSpinner } from "@nextui-org/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { onViewFadeIn, fadeInTop } from "src/styles/framerVariants";
+import Spinner from "src/components/Spinner";
 
 const selectButtonsData = [
   { name: "VENDEDORES", startIcon: "customer-service", link: "/dashboard/vendedores" },
@@ -52,7 +53,9 @@ export default function Dashboard({ children }) {
             hide ? "pl-10 lg:col-span-4" : "lg:col-span-3"
           } ${loading && "flex items-center justify-center"}`}
         >
-          <Suspense key={children}>{loading ? <Spinner color="secondary" /> : children}</Suspense>
+          <Suspense key={children}>
+            {loading ? <Spinner className={"!h-auto !w-auto scale-75 rounded-xl p-4"} /> : children}
+          </Suspense>
         </div>
       </section>
     </main>
@@ -130,7 +133,7 @@ function SelectButtons({ loading, setLoading }) {
             <AnimatePresence mode="wait">
               {loading === name ? (
                 <motion.div className="absolute left-10 flex items-center justify-center" {...onViewFadeIn()}>
-                  <Spinner color="secondary" />
+                  <NextSpinner color="secondary" />
                 </motion.div>
               ) : (
                 <motion.div className="absolute left-10 flex items-center justify-center" {...onViewFadeIn()}>

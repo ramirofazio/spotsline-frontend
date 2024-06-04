@@ -2,7 +2,6 @@
 import React, { useCallback } from "react";
 import { useLoaderData } from "react-router-dom";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
-
 import { convertISOToDate, copyToClipboard } from "src/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { onViewZoomIn } from "src/styles/framerVariants";

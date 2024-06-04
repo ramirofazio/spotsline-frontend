@@ -8,9 +8,7 @@ import {
   TableRow,
   TableCell,
   Tooltip,
-  Spinner,
   useDisclosure,
-  Image,
   Divider,
   Chip,
 } from "@nextui-org/react";
@@ -21,6 +19,7 @@ import { Link, useLoaderData, useNavigate } from "react-router-dom";
 import { formatPrices } from "src/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { onViewZoomIn } from "src/styles/framerVariants";
+import Spinner from "src/components/Spinner";
 
 const marcas_columns = [
   { label: "código", key: "codigo" },
@@ -175,9 +174,7 @@ export function ProductsPage() {
           <TableBody
             items={marcas}
             isLoading={loading}
-            loadingContent={
-              <Spinner color="secondary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
-            }
+            loadingContent={<Spinner className={"z-20 !h-auto !w-auto scale-75 rounded-xl p-4"} />}
           >
             {(item) => (
               <TableRow key={item.codigo}>
@@ -367,9 +364,7 @@ export function VariantPage() {
         <TableBody
           items={variants}
           isLoading={loading}
-          loadingContent={
-            <Spinner color="secondary" size="lg" className="z-20 aspect-square h-40 rounded-2xl bg-dark/60" />
-          }
+          loadingContent={<Spinner className={"z-20 !h-auto !w-auto scale-75 rounded-xl p-4"} />}
         >
           {(item) => (
             <TableRow key={item.id}>
@@ -460,7 +455,7 @@ function ImagesModal({ isOpen, onOpenChange, onClose, variant, navigate }) {
               <div className="grid h-[150px] place-items-center">
                 <label htmlFor="upload-images" className="flex flex-col items-center gap-4">
                   {ImageLoading ? (
-                    <Spinner />
+                    <Spinner className={"!h-auto !w-auto scale-75 rounded-xl p-4"} />
                   ) : (
                     <>
                       <p className="text-background">Este producto no tiene imagen</p>
