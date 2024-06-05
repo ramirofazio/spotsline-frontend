@@ -79,8 +79,6 @@ function ProductsView() {
   const { products, search, filters } = useSelector((state) => state.product);
   let [searchParams, setSearchParams] = useSearchParams();
 
-  console.log(products);
-
   useEffect(() => {
     setLoading(true);
     if (products[page]) setLoading(false);

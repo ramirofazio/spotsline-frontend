@@ -19,7 +19,6 @@ export function DetailProduct() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const product = useLoaderData();
-  console.log(product);
   const { email, priceList } = useSelector((state) => state.user);
   const { managedClient } = useSelector((state) => state.seller);
   const { items } = useSelector((state) => state.cart);
@@ -33,7 +32,7 @@ export function DetailProduct() {
       ? product.variants[product.variants.findIndex((variant) => variant.id === localVariant.id)]
       : product.variants[0]
   );
-  console.log(currentVariant);
+
   const [qty, setQty] = useState(getOfStorage("qty") || 1);
 
   useEffect(() => {
