@@ -1,6 +1,6 @@
-// Import Swiper React components
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { Pagination } from "swiper/modules";
+import { assets } from "src/assets";
 
 // Import Swiper styles
 import "swiper/css";
@@ -49,7 +49,7 @@ export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
       <ChangeSlide slideIndex={slideIndex} />
       {variants?.map((variant, i) => (
         <SwiperSlide id={variant.id} key={i} className="mb-4 rounded-lg bg-white ">
-          <img src={variant.pathImage} alt="no taaaaa" />
+          <img src={variant.pathImage || assets.logos.logoBlack} alt="Imagen de producto no disponible" />
         </SwiperSlide>
       ))}
     </Swiper>

@@ -1,3 +1,20 @@
+export const images = {
+  landingBg: "/images/landing-background.webp",
+  signInBackground: "/images/sign-in-background.webp",
+  logoWhite: "/images/logoWhite.webp",
+  logoBlack: "/images/logoBlack.webp",
+  logoYellow: "/images/logoYellow.webp",
+  logoWithDescription: "/images/logoWithDescription.webp",
+  empresa: "/images/empresa.webp",
+  empresaScaled: "/images/empresa-scaled.webp",
+  empresaTrabajador: "/images/empresa-trabajador.webp",
+  empresaMachines: "/images/empresa_machines.webp",
+  empresaWorkspace1: "/images/empresa-workspace1.webp",
+  empresaWorkspace2: "/images/empresa-workspace2.webp",
+};
+
+//! USO DE IMAGENES ESTATICAS CON AWS DEPRECADO!
+
 const BASE_AWS_URL = "https://spotsline-bucket.s3.amazonaws.com";
 
 export const assets = {
@@ -29,18 +46,4 @@ export const assets = {
     5: `${BASE_AWS_URL}/rrhh/rrhh-05.jpg`,
     7: `${BASE_AWS_URL}/rrhh/rrhh-07.jpg`,
   },
-};
-//! LO DE ARRIBA ESTA DEPRECADO
-
-export const images = {
-  landingBg: "/images/landing-background.webp",
-  signInBackground: "/images/sign-in-background.webp",
-  logoWhite: "/images/logoWhite.webp",
-  logoBlack: "/images/logoBlack.webp",
-  logoYellow: "/images/logoYellow.webp",
-  logoWithDescription: "/images/logoWithDescription.webp",
-  empresa: "/images/empresa.webp",
-  empresaScaled: "/images/empresa-scaled.webp",
-  empresaTrabajador: "/images/empresa-trabajador.webp",
-  empresaMachines: "/images/empresa_machines.webp",
 };
