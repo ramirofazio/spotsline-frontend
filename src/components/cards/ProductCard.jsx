@@ -16,6 +16,7 @@ export function ProductCard({ description, codigo, pathfoto }) {
         <motion.div {...onViewFadeInBottom()}>
           <Card className="aspect-square max-h-[400px] min-h-[300px] w-full overflow-visible  bg-white shadow-xl transition hover:scale-105">
             <CardBody className="flex min-h-[100px] items-center justify-center overflow-hidden p-0">
+              {/* SWIPER */}
               <img
                 loading="eager"
                 className="w-full max-w-[250px] object-cover"
