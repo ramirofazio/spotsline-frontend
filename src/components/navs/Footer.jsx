@@ -82,7 +82,7 @@ export default function Footer() {
                 to={path}
                 key={index}
                 onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                className="group -mt-1 flex items-center gap-3 transition hover:scale-125 hover:cursor-pointer"
+                className="group -mt-1 flex items-center gap-3   hover:cursor-pointer"
               >
                 <i className="ri-lightbulb-line tranisiton bg-gradient-to-tl from-secondary to-background bg-clip-text text-xl font-bold text-transparent  transition  group-hover:animate-glow group-hover:text-white" />
                 <span className="font-secondary  capitalize group-hover:drop-shadow-xl">{name}</span>
@@ -94,7 +94,7 @@ export default function Footer() {
             {socialNetworksIcons.map(({ icon, link, text }, index) => (
               <div
                 key={index}
-                className="group -mt-1 flex items-center gap-3 transition hover:scale-125 hover:cursor-pointer"
+                className="group -mt-1 flex items-center gap-3  hover:cursor-pointer"
                 onClick={() => window.open(link)}
               >
                 <i
