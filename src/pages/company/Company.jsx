@@ -58,7 +58,7 @@ export function Company() {
           <img
             loading="lazy"
             className="h-[250px] min-w-[150px] rounded-xl object-cover md:min-w-[250px]"
-            src={images.empresaTrabajador}
+            src={images.empresaWorkspace1}
             alt="empreasa-trabajador"
           />
         </motion.article>
@@ -70,7 +70,7 @@ export function Company() {
           <img
             loading="lazy"
             className="h-[250px] min-w-[150px] rounded-xl object-cover md:min-w-[250px]"
-            src={images.empresaTrabajador}
+            src={images.empresaWorkspace2}
             alt="empreasa-trabajador"
           />
           <p className="max-w-[450px] text-start text-[11px] leading-[11px] sm:text-sm md:max-w-[520px] md:text-base lg:max-w-[580px] lg:text-lg">
