@@ -80,7 +80,7 @@ function ProductsView() {
   let [searchParams, setSearchParams] = useSearchParams();
 
   console.log(products);
-  
+
   useEffect(() => {
     setLoading(true);
     if (products[page]) setLoading(false);
