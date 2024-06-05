@@ -19,7 +19,7 @@ export function DetailProduct() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const product = useLoaderData();
-
+  console.log(product);
   const { email, priceList } = useSelector((state) => state.user);
   const { managedClient } = useSelector((state) => state.seller);
   const { items } = useSelector((state) => state.cart);
@@ -29,10 +29,11 @@ export function DetailProduct() {
 
   const localVariant = getOfStorage("currentVariant");
   const [currentVariant, setCurrentVariant] = useState(
-    localVariant
+    localVariant && localVariant.id
       ? product.variants[product.variants.findIndex((variant) => variant.id === localVariant.id)]
       : product.variants[0]
   );
+  console.log(currentVariant);
   const [qty, setQty] = useState(getOfStorage("qty") || 1);
 
   useEffect(() => {
@@ -87,7 +88,7 @@ export function DetailProduct() {
   };
 
   if (isLoading) return <SkeletonDetail />;
-  const isInCart = items.find((i) => i.productId === currentVariant.id);
+  const isInCart = items?.find((i) => i?.productId === currentVariant?.id);
 
   return (
     <main className="mt-30 mb-10 min-h-[500px] max-w-7xl flex-wrap px-6 md:mt-32 md:flex md:gap-6 lg:mx-auto lg:gap-10 lg:px-12">
@@ -108,7 +109,6 @@ export function DetailProduct() {
               variants={product.variants}
               currentVariant={currentVariant}
               setCurrentVariant={setCurrentVariant}
-              // defaultSelectedKeys={currentVariant.description}
             />
             <SelectQuantity qty={qty} setQty={setQty} />
             <div className={`flex justify-between ${!qty && "animate-pulse text-red-600"}`}>
