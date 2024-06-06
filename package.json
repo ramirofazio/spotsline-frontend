@@ -17,6 +17,7 @@
     "@vercel/analytics": "^1.2.2",
     "axios": "^1.6.1",
     "framer-motion": "^10.16.16",
+    "lenis": "^1.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.1.3",

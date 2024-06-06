@@ -37,7 +37,6 @@
   overflow: scroll;
   margin-top: 0px;
   padding-bottom: 10px;
-  
 }
 
 .swiper-pagination-bullet {
@@ -55,7 +54,6 @@
   background-color: #f6d25d;
   opacity: 1;
 }
-
 
 @layer components {
   .icons {
@@ -88,6 +86,27 @@
 
 ::-webkit-scrollbar-track {
   @apply bg-transparent;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }
 
 .toolsBg {
