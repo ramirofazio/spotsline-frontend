@@ -1,8 +1,16 @@
 import { Player } from "@lottiefiles/react-lottie-player";
 import lottie from "/lottie.json?url";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 const Spinner = ({ className }) => {
+  useEffect(() => {
+    document.body.classList = "overflow-hidden max-h-screen";
+
+    return () => {
+      document.body.classList = "overflow-auto max-h-auto";
+    };
+  }, []);
   return (
     <motion.div
       key="spinner"

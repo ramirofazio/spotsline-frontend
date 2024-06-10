@@ -1,26 +1,22 @@
 import { Divider, Image } from "@nextui-org/react";
-import { NavLink, useLoaderData } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
 import { assets } from "src/assets";
 import { convertISOToDate, copyToClipboard, formatPrices } from "src/utils";
 import { calculateTotal } from "src/redux/reducers/shoppingCart";
+import { GoBackButton } from "src/components/buttons/GoBackButton";
+import { twMerge } from "tailwind-merge";
 
 export default function OrderDetail() {
   const order = useLoaderData();
   const { id, date, mobbexId, total, products, subtotal, coupon, type } = order;
 
   return (
-    <main className="relative flex flex-col items-center gap-6 py-10 pt-20 text-center">
-      <Header
-        title={"RESUMEN DE TU ORDEN"}
-        subTitle={"Consulta los detalles de la orden"}
-        id={id}
-        date={date}
-        type={true}
-      />
-      <Divider className="h-[3px] w-[60vw] rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:hidden" />
-
+    <main className="mx-auto mb-10 flex max-w-5xl flex-col items-center gap-6 px-10 pt-4 text-center md:pt-10 md:text-left xl:gap-10">
+      <GoBackButton className={"self-start"} />
+      <Header title={"RESUMEN DE TU ORDEN"} subTitle={"Detalles de la orden"} id={id} date={date} type={true} />
+      <Divider className="h-[3px] w-screen rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
       <ProductsSection products={products} coupon={coupon} total={total} subtotal={subtotal} />
-      <Divider className="h-[3px] w-[60vw] rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:hidden" />
+      <Divider className="h-[3px] w-screen rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
       <PaymentDetailSection type={type} total={total} date={convertISOToDate(date)} mobbexId={mobbexId} />
     </main>
   );
@@ -28,24 +24,16 @@ export default function OrderDetail() {
 
 function Header({ type = false, title, subTitle, id, date }) {
   return (
-    <header className="w-[70vw] md:text-left">
-      {type && (
-        <NavLink to="/user/profile" className="icons -ml-10 flex items-center self-start md:my-10 md:ml-0">
-          <i className="ri-arrow-left-s-line yellow-neon  animate-pulse text-4xl" />
-          <p className="hidden font-semibold text-secondary underline md:inline">VOLVER</p>
-        </NavLink>
-      )}
-      <h2 className="text-xl font-semibold md:text-2xl">{title}</h2>
-      <Divider className="my-2 hidden h-[3px] w-full rounded-xl bg-gradient-to-r from-primary to-yellow-600 md:flex" />
-      <div className="md:flex md:justify-between">
-        <p className="line-clamp-2 text-xs">
-          {subTitle}{" "}
-          <strong className="yellowGradient icons" onClick={() => copyToClipboard(id)}>
-            <i className="ri-clipboard-line icons yellowGradient mx-1 animate-pulse text-sm" />#
-            {`${id}`.slice(0, 8) + "..."}
+    <header className="w-full text-secondary md:space-y-5">
+      <h2 className="text-2xl font-bold md:text-3xl xl:text-4xl">{title}</h2>
+      <div className="mt-4 flex flex-col gap-4 font-semibold md:flex-row md:justify-between">
+        <p className="w-full text-sm md:text-lg xl:text-xl">
+          {subTitle}
+          <strong className="yellowGradient icons ml-2 animate-pulse" onClick={() => copyToClipboard(id)}>
+            <i className="ri-clipboard-line icons yellowGradient mx-1" />#{id}
           </strong>
         </p>
-        {type && <p className="text-xs">{convertISOToDate(date)}</p>}
+        {type && <p className="text-sm md:text-lg xl:text-xl">{convertISOToDate(date)}</p>}
       </div>
     </header>
   );
@@ -53,25 +41,27 @@ function Header({ type = false, title, subTitle, id, date }) {
 
 function ProductsSection({ products, coupon, total, subtotal }) {
   return (
-    <section className=" gap-10 md:grid md:grid-cols-2 md:place-items-center">
+    <section className="flex w-full flex-col gap-10 md:gap-14 md:py-5">
       {products.map(({ description, quantity, total, image }, index) => (
-        <article
-          className="flex max-h-fit w-[70vw] flex-col items-center justify-between gap-4 md:col-span-2 md:flex-row md:items-stretch"
-          key={index}
-        >
-          <div className="flex items-center space-x-4 rounded-md border-3 border-primary bg-white p-6 text-left shadow-xl">
-            <img
-              loading="lazy"
-              src={image?.length ? image : assets.lights.light}
-              alt={description}
-              className="w-[300px] object-cover"
-            />
-            <h4>{description}</h4>
-          </div>
-          <div className="flex w-full flex-col gap-2">
-            <ProductInfo text={"CANTIDAD"} value={quantity} />
-            <ProductInfo text={"PRECIO UNITARIO"} value={formatPrices(total / quantity)} />
-            <ProductInfo text={"TOTAL"} value={formatPrices(total)} />
+        <article className={twMerge("flex w-full flex-col items-center gap-5 md:gap-10")} key={index}>
+          <h4 className="line-clamp-1 self-start border-b-2 border-secondary text-left font-bold text-secondary md:text-lg xl:text-xl">
+            <strong className="yellowGradient mr-2">{index + 1}:</strong>
+            {description}
+          </h4>
+          <div className="space-y-5 md:grid md:grid-cols-2 md:justify-start md:gap-10 md:space-y-0">
+            <div className="flex max-h-[350px] min-h-[200px] min-w-full items-center overflow-hidden rounded-md border-4 border-primary bg-white p-2 md:p-4">
+              <Image
+                loading="lazy"
+                src={image?.length ? image : assets.lights.light}
+                alt={description + "image"}
+                className="min-h-full w-full min-w-full"
+              />
+            </div>
+            <div className="flex w-full flex-col gap-5 md:justify-start md:gap-8 xl:gap-10">
+              <ProductInfo text={"CANTIDAD"} value={quantity} />
+              <ProductInfo text={"MONTO UNITARIO"} value={formatPrices(total / quantity)} />
+              <ProductInfo text={"TOTAL"} value={formatPrices(total)} />
+            </div>
           </div>
         </article>
       ))}
@@ -106,50 +96,22 @@ function DiscountDetail({ total, coupon, subtotal }) {
 
 function ProductInfo({ text, value }) {
   return (
-    <div className="flex items-center justify-between rounded-md border-3 border-dark/50 p-2 uppercase shadow-md">
-      <p className="yellowGradient w-full text-left">{text}</p>
-      <div className="w-48 text-left">
-        <p className="font-bold">{value}</p>
-      </div>
+    <div className="flex w-full justify-between gap-5 border-b-2 border-secondary px-3 pb-2 text-sm md:text-[16px] xl:text-lg">
+      <p className="yellowGradient text-left">{text}</p>
+      <p className="font-bold">{value}</p>
     </div>
   );
 }
 
 function PaymentDetailSection({ type, total, date, mobbexId }) {
   return (
-    <section className="flex w-[70vw] flex-col items-center justify-between gap-4">
+    <section className="flex w-full flex-col items-center gap-5 md:gap-10">
       <Header title={"DETALLES DE PAGO"} subTitle={"ID de transacción"} id={mobbexId} />
-      <div className="flex flex-col gap-4 md:w-full md:flex-row md:gap-0 md:shadow-md">
-        <CustomTable
-          title="MÉTODO"
-          value={type ? type : "--"}
-          className={"md:rounded-br-none md:rounded-tr-none md:border-r-3 md:shadow-none "}
-        />
-        <CustomTable
-          title="MONTO"
-          value={formatPrices(total)}
-          className={"md:rounded-none md:border-l-0 md:border-r-0 md:shadow-none"}
-        />
-        <CustomTable
-          title="FECHA"
-          value={date}
-          className={"md:rounded-bl-none md:rounded-tl-none md:border-l-3 md:shadow-none "}
-        />
+      <div className="w-full space-y-5 md:space-y-10">
+        <ProductInfo text={"FECHA"} value={date} />
+        <ProductInfo text={"MÉTODO"} value={type ? type : "---"} />
+        <ProductInfo text={"MONTO TOTAL"} value={formatPrices(total)} />
       </div>
     </section>
-  );
-}
-
-function CustomTable({ title, value, className }) {
-  return (
-    <article
-      className={`flex w-[70vw] flex-col items-center justify-center rounded-md border-3 border-dark  bg-white shadow-md ${className}`}
-    >
-      <div className="h-full w-full bg-dark/20">
-        <p className="yellowGradient p-1 text-lg font-bold">{title}</p>
-      </div>
-      <Divider className="h-[2px] bg-dark" />
-      <p className="p-3 text-sm font-semibold uppercase">{value}</p>
-    </article>
   );
 }

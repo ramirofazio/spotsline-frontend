@@ -33,7 +33,7 @@ export default function CurrentAccount() {
       <motion.main
         {...fadeIn()}
         key="cc-page"
-        className="mx-auto flex w-full max-w-4xl flex-col items-center gap-6 pt-20"
+        className="mx-auto flex w-full max-w-5xl flex-col items-center gap-6 pt-20"
       >
         <GoBackButton className={"self-start"} />
         <header className="flex w-full flex-col items-center gap-4 text-center sm:gap-6">

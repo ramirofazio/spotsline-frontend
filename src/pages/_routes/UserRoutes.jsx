@@ -8,6 +8,7 @@ import { getOfStorage } from "src/utils/localStorage";
 import { loadUserData } from "src/utils/loadUserData";
 import { actionsAuth } from "src/redux/reducers";
 import { useDebouncedCallback } from "use-debounce";
+import Footer from "src/components/navs/Footer";
 const CurrentAccount = lazy(() => import("../user/CurrentAccount"));
 const NavBar = lazy(() => import("components/navs/NavBar.jsx"));
 const Profile = lazy(() => import("pages/user/Profile").then((module) => ({ default: module.Profile })));
@@ -22,6 +23,7 @@ export const userRoutesPaths = [
       <Layout>
         <NavBar />
         <UserRoot />
+        <Footer />
       </Layout>
     ),
 

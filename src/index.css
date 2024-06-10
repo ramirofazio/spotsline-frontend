@@ -71,7 +71,7 @@
   }
 
   .yellowGradient {
-    @apply bg-gradient-to-r from-yellow-600 to-yellow-800 bg-clip-text font-bold uppercase text-transparent;
+    @apply bg-gradient-to-r from-yellow-800 to-yellow-600 bg-clip-text font-bold uppercase text-transparent;
   }
 }
 
