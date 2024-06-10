@@ -1,4 +1,4 @@
-import { Input, Button, Divider, Image, useDisclosure, Textarea, Tooltip } from "@nextui-org/react";
+import { Input, Button, Divider, useDisclosure, Textarea, Tooltip } from "@nextui-org/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,7 +6,6 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
 import { DarkModal, DefaultButton, ShoppingCartSkeleton } from "src/components";
-import { GoBackButton } from "src/components/buttons/GoBackButton";
 import AwsImage from "src/components/images/AwsImage";
 import { actionsShoppingCart } from "src/redux/reducers";
 import { onViewFadeIn, onViewFadeInBottom, fadeInTop, onViewZoomIn } from "src/styles/framerVariants";
@@ -142,7 +141,6 @@ export default function ShoppingCart() {
         <Divider className="h-1 w-[105vw] bg-primary lg:-translate-x-10" />
 
         {reduxCart.items.length === 0 && (
-          //? Esto se muestra durante unos segundos aunque haya productos en el carrito
           <motion.div {...fadeInTop()} className="flex flex-col items-center gap-6">
             <h3 className="font-semibold">NO HAY NINGUN PRODUCTO EN TU CARRITO</h3>
             <DefaultButton as={Link} to="/productos/0" className={"w-fit"}>
@@ -238,7 +236,7 @@ export default function ShoppingCart() {
           <h3>SUBTOTAL</h3>
           <h3 className="font-extrabold text-white">{formatPrices(reduxCart.subtotal)}</h3>
         </div>
-        {reduxCart.discount !== 0 && (
+        {reduxCart.discount !== 0 && Object.values(reduxCart.coupon)?.length && (
           <Divider className="h-[3px] rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
         )}
         <AnimatePresence mode="wait" key="cupon">
