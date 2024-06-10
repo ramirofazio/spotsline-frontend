@@ -1,15 +1,10 @@
 import { NavLink } from "react-router-dom";
 import { DefaultButton } from "src/components";
 import AwsImage from "src/components/images/AwsImage";
-import { motion } from "framer-motion";
-import { onViewFadeInBottom } from "src/styles/framerVariants";
 
 export default function SecondSection() {
   return (
-    <motion.section
-      {...onViewFadeInBottom()}
-      className="relative grid w-full place-items-center bg-gradient-to-b from-background to-primary  px-4  sm:px-6 md:px-20"
-    >
+    <section className="relative grid w-full place-items-center bg-gradient-to-b from-background to-primary  px-4  sm:px-6 md:px-20">
       <div className="absolute inset-x-0 top-0 z-20 h-2 !w-screen bg-secondary" />
       <div className="grid w-full  md:grid-cols-2">
         <AwsImage type="lights" identify={"light3"} className="mx-auto w-[250px]  pl-4 lg:w-[350px]" />
@@ -28,6 +23,6 @@ export default function SecondSection() {
           </NavLink>
         </DefaultButton>
       </div>
-    </motion.section>
+    </section>
   );
 }
