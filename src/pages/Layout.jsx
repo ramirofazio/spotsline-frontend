@@ -85,9 +85,7 @@ export default function Layout({ children }) {
   return (
     <Suspense fallback={<Spinner />}>
       {children}
-      {reset && access_token && query_email && (
-        <AuthValidationModal reset={reset} access_token={access_token} query_email={query_email} />
-      )}
+      <AuthValidationModal reset={reset} access_token={access_token} query_email={query_email} />
     </Suspense>
   );
 }
