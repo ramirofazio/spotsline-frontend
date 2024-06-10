@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
-import { Pagination } from "swiper/modules";
+import { Autoplay, Pagination } from "swiper/modules";
 import { assets } from "src/assets";
 
 // Import Swiper styles
@@ -37,19 +37,19 @@ export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
   return (
     <Swiper
       initialSlide={slideIndex}
-      modules={[Pagination]}
+      modules={[Pagination, Autoplay]}
       pagination={pagination}
+      autoplay={{ delay: 4000 }}
       scrollbar={{ draggable: true }}
       spaceBetween={10}
       slidesPerView={1}
       onSlideChange={({ activeIndex }) => handleVariantChange(activeIndex)}
-      onSwiper={(swiper) => console.log(swiper)}
       className=""
     >
       <ChangeSlide slideIndex={slideIndex} />
       {variants?.map((variant, i) => (
         <SwiperSlide id={variant.id} key={i} className="mb-4 rounded-lg bg-white ">
-          <img src={variant.pathImage || assets.logos.logoBlack} alt="Imagen de producto no disponible" />
+          <img src={variant.pathImage || assets.logos.logoBlack} alt={`${variant.description} Image`} />
         </SwiperSlide>
       ))}
     </Swiper>
