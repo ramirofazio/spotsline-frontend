@@ -36,7 +36,7 @@
 }
 
 .swiper-pagination-bullet {
-  @apply flex min-w-[100px] items-center justify-center rounded-md  bg-white transition hover:cursor-pointer hover:bg-primary/10;
+  @apply flex !w-[110px]  items-center justify-center rounded-md  bg-white transition hover:cursor-pointer hover:bg-primary/10;
 }
 
 .swiper-pagination-bullet-active {
