@@ -64,7 +64,7 @@ export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
         scrollbar={{ draggable: true }}
         spaceBetween={10}
         slidesPerView={1}
-        onSlideChange={({ activeIndex }) => handleVariantChange(activeIndex)}
+        onSlideChange={(props) => handleVariantChange(props.realIndex)}
         className="w-full"
       >
         <ChangeSlide slideIndex={slideIndex} />
@@ -81,7 +81,7 @@ export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
                 setBigVariant({ name: variant.description, img: variant.pathImage });
               }}
             />
-            <img
+            <Image
               src={variant.pathImage || assets.logos.logoBlack}
               alt={`${variant.description} Image`}
               className="mx-auto w-full max-w-[500px]"
