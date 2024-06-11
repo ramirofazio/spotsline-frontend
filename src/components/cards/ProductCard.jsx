@@ -13,7 +13,7 @@ import "swiper/css";
 
 export function ProductCard({ description, codigo, pathfoto }) {
   function getDelay() {
-    return Math.floor(Math.random() * 8) + 1;
+    return Math.floor(Math.random() * 2000) + 4000; // Genera un número aleatorio entre 4000 y 6000 milisegundos
   }
   return (
     <AnimatePresence>
@@ -27,7 +27,7 @@ export function ProductCard({ description, codigo, pathfoto }) {
               <Swiper
                 loop={true}
                 autoplay={{
-                  delay: getDelay() * 1000,
+                  delay: getDelay(),
                   disableOnInteraction: false,
                   pauseOnMouseEnter: true,
                 }}
@@ -62,7 +62,7 @@ export function ProductCard({ description, codigo, pathfoto }) {
                     <SwiperSlide>
                       <Image
                         loading="lazy"
-                        src={assets.logos.logoYellow}
+                        src={assets.logos.logoBlack}
                         alt={`product-image-${description}`}
                         className="mx-auto w-full max-w-[250px] object-cover"
                       />
