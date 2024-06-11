@@ -13,7 +13,7 @@ import "swiper/css";
 
 export function ProductCard({ description, codigo, pathfoto }) {
   function getDelay() {
-    return Math.floor(Math.random() * 5) + 1;
+    return Math.floor(Math.random() * 8) + 1;
   }
   return (
     <AnimatePresence>
