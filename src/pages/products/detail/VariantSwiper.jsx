@@ -9,6 +9,7 @@ import "swiper/css/navigation";
 
 import { DarkModal } from "src/components";
 import { Image, useDisclosure } from "@nextui-org/react";
+import { motion } from "framer-motion";
 
 function ChangeSlide({ slideIndex }) {
   const swiper = useSwiper();
@@ -22,6 +23,7 @@ function ChangeSlide({ slideIndex }) {
 export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
   const [slideIndex, setSlideIndex] = useState(variants.indexOf(currentVariant));
   const [bigVariant, setBigVariant] = useState({ name: "", img: "" });
+  let tap = 0;
 
   const { isOpen, onClose, onOpen, onOpenChange } = useDisclosure();
 
@@ -72,10 +74,21 @@ export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
           <SwiperSlide
             id={variant.id}
             key={i}
+            onClick={() => {
+              if (tap === 0) {
+                tap++;
+                setTimeout(() => {
+                  tap = 0;
+                }, 600);
+              } else {
+                onOpen();
+                setBigVariant({ name: variant.description, img: variant.pathImage });
+              }
+            }}
             className="relative flex w-full items-center justify-center rounded-lg border-4 border-primary bg-white"
           >
             <i
-              className="ri-fullscreen-line icons absolute bottom-3 right-3 text-xl text-secondary"
+              className="ri-fullscreen-line icons absolute bottom-3 right-3 z-20 text-xl text-secondary"
               onClick={() => {
                 onOpen();
                 setBigVariant({ name: variant.description, img: variant.pathImage });
@@ -84,7 +97,7 @@ export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
             <Image
               src={variant.pathImage || assets.logos.logoBlack}
               alt={`${variant.description} Image`}
-              className="mx-auto w-full max-w-[500px]"
+              className="mx-auto w-full max-w-[700px]"
             />
           </SwiperSlide>
         ))}
