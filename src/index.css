@@ -32,27 +32,15 @@
 }
 
 .swiper-pagination {
-  display: flex;
-  gap: 6px;
-  overflow: scroll;
-  margin-top: 0px;
-  padding-bottom: 10px;
+  @apply flex w-full min-w-full items-center gap-5 overflow-x-scroll py-6;
 }
 
 .swiper-pagination-bullet {
-  padding: 0px;
-  /* width: 100px; */
-  border: 3px solid #3f3f3f;
-  padding: 1px;
-  opacity: 0.4;
-  background: #3f3f3f;
-  width: 25%;
-  border-radius: 5px;
+  @apply flex min-w-[100px] items-center justify-center rounded-md  bg-white transition hover:cursor-pointer hover:bg-primary/10;
 }
 
 .swiper-pagination-bullet-active {
-  background-color: #f6d25d;
-  opacity: 1;
+  @apply pointer-events-none scale-90 border-4 border-secondary bg-primary/50 opacity-50 transition-all md:border-2;
 }
 
 @layer components {

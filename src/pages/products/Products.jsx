@@ -163,28 +163,37 @@ function Heading({ categories }) {
   }
   return (
     <>
-      <div d className="mb-5 flex w-full items-center gap-1 sm:col-span-2 md:w-full lg:col-span-3 xl:col-span-4">
-        <Input
-          value={_search}
-          onChange={handleChange}
-          onKeyDown={handleSearch}
-          isClearable
-          radius="full"
-          className="md:w-[80%]"
-          labelPlacement=""
-          onClear={onClear}
-          onBlur={() => {
-            if (_search.length && search !== _search) {
-              toast.info('Presiona "Enter" para buscar');
-            }
-            if (!_search.length && search !== _search) {
-              dispatch(actionProducts.resetPageProducts());
-              dispatch(actionProducts.setSearch(""));
-            }
+      <div className="mb-5 flex w-full items-center gap-1 sm:col-span-2 md:w-full lg:col-span-3 xl:col-span-4">
+        <form
+          className="w-full"
+          onSubmit={(e) => {
+            e.preventDefault();
+            dispatch(actionProducts.resetPageProducts());
+            dispatch(actionProducts.setSearch(""));
           }}
-          placeholder="Buscar producto"
-          startContent={<i className="ri-search-line scale-125"></i>}
-        />
+        >
+          <Input
+            value={_search}
+            onChange={handleChange}
+            onKeyDown={handleSearch}
+            isClearable
+            radius="full"
+            className="md:w-[80%]"
+            labelPlacement=""
+            onClear={onClear}
+            onBlur={() => {
+              if (_search.length && search !== _search) {
+                toast.info('Presiona "Enter" para buscar');
+              }
+              if (!_search.length && search !== _search) {
+                dispatch(actionProducts.resetPageProducts());
+                dispatch(actionProducts.setSearch(""));
+              }
+            }}
+            placeholder="Buscar producto"
+            startContent={<i className="ri-search-line scale-125"></i>}
+          />
+        </form>
         <FilterProducts categories={categories} />
       </div>
     </>

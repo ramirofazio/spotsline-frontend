@@ -11,7 +11,7 @@ export default function OrderDetail() {
   const { id, date, mobbexId, total, products, subtotal, coupon, type } = order;
 
   return (
-    <main className="mx-auto mb-10 flex max-w-5xl flex-col items-center gap-6 px-10 pt-4 text-center md:pt-10 md:text-left xl:gap-10">
+    <main className="mx-auto mb-10 flex max-w-7xl flex-col items-center gap-6 px-10 pt-4 text-center md:pt-10 md:text-left xl:gap-10">
       <GoBackButton className={"self-start"} />
       <Header title={"RESUMEN DE TU ORDEN"} subTitle={"Detalles de la orden"} id={id} date={date} type={true} />
       <Divider className="h-[3px] w-screen rounded-xl bg-gradient-to-r from-primary to-yellow-600" />

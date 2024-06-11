@@ -1,4 +1,4 @@
-import { SelectItem } from "@nextui-org/react";
+import { Image, SelectItem } from "@nextui-org/react";
 import colors from "../../../data/colors.json";
 import { assets } from "src/assets";
 import CustomSelect from "src/components/form/CustomSelect";
@@ -22,7 +22,7 @@ export function SelectVariant({ variants, currentVariant, setCurrentVariant }) {
       defaultSelectedKeys={[currentVariant?.description]}
       disabledKeys={[currentVariant?.description]}
       selectedKeys={[currentVariant?.description]}
-      className="w-full"
+      className="w-full px-0"
       variant="underlined"
     >
       {(variant) => {
@@ -47,8 +47,8 @@ export function SelectVariant({ variants, currentVariant, setCurrentVariant }) {
           >
             <div className="flex items-center gap-2">
               <div className="flex-grow-1">
-                <img
-                  loading="eager"
+                <Image
+                  loading="lazy"
                   alt={variant.description}
                   className="aspect-square w-10 rounded-full border-1 border-dark/50 bg-background shadow-xl"
                   src={variant.pathImage || assets.logos.logoBlack}

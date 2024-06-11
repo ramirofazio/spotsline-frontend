@@ -8,7 +8,7 @@ const Spinner = ({ className }) => {
     document.body.classList = "overflow-hidden max-h-screen";
 
     return () => {
-      document.body.classList = "overflow-auto max-h-auto";
+      document.body.classList = "overflow-y-auto overflow-x-hidden max-h-auto";
     };
   }, []);
   return (

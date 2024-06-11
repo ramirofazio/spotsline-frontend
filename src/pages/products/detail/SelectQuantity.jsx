@@ -23,7 +23,7 @@ export function SelectQuantity({ qty, setQty }) {
       onChange={handleChange}
       defaultSelectedKeys={[String(qty)]}
       disabledKeys={[String(qty)]}
-      className="w-full"
+      className="w-full px-0"
       variant="underlined"
     >
       {({ qty, name }) => (
