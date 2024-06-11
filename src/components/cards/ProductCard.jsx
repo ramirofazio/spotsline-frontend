@@ -39,9 +39,9 @@ export function ProductCard({ description, codigo, pathfoto }) {
                 {pathfoto?.length ? (
                   pathfoto.map((path, i) => {
                     return (
-                      <SwiperSlide className=" w-fit " key={i}>
-                        <img
-                          loading="eager"
+                      <SwiperSlide className="w-fit" key={i}>
+                        <Image
+                          loading="lazy"
                           src={path ? path : assets.logos.logoBlack}
                           alt={`product-image-${description}`}
                           className="!my-auto mx-auto !max-h-full w-full max-w-[250px]  bg-white object-cover"
@@ -52,16 +52,16 @@ export function ProductCard({ description, codigo, pathfoto }) {
                 ) : (
                   <>
                     <SwiperSlide>
-                      <img
-                        loading="eager"
+                      <Image
+                        loading="lazy"
                         src={assets.logos.logoWhite}
                         alt={`product-image-${description}`}
                         className="mx-auto  w-full max-w-[250px] object-cover"
                       />
                     </SwiperSlide>
                     <SwiperSlide>
-                      <img
-                        loading="eager"
+                      <Image
+                        loading="lazy"
                         src={assets.logos.logoYellow}
                         alt={`product-image-${description}`}
                         className="mx-auto w-full max-w-[250px] object-cover"
