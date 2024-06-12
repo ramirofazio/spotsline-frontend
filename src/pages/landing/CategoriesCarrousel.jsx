@@ -93,7 +93,7 @@ export default function CategoriesCarrousel() {
   }, []);
 
   const cardContainerStyles =
-    " min-w-[100px] lg:min-w-[300px] min-h-[40px] lg:min-h-[60px] hover:bg-primary/50 hover:border-secondary transition group  cursor-pointer px-5 overflow-hidden  flex items-center justify-center gap-1 mx-5 lg:mx-10 border-3 rounded-full border-primary font-semibold uppercase";
+    " min-w-[100px] lg:min-w-[300px] min-h-[40px] lg:min-h-[60px] hover:bg-primary/50 hover:border-secondary transition group  cursor-pointer px-5 overflow-hidden  flex items-center justify-center gap-1 mx-5 lg:mx-10  border-2 lg:border-3 rounded-full border-primary font-medium lg:font-semibold uppercase";
 
   return (
     <main className="relative  my-6 flex flex-col items-center gap-6 overflow-hidden lg:my-10 lg:gap-10">
