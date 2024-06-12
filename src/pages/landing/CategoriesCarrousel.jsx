@@ -22,7 +22,7 @@ export default function CategoriesCarrousel() {
   const secondRowRef1 = useRef(null);
   const secondRowRef2 = useRef(null);
 
-  const defaultVelocity = 0.025;
+  const defaultVelocity = 0.015;
 
   let velocity1 = defaultVelocity;
   let velocity2 = defaultVelocity;
@@ -33,7 +33,7 @@ export default function CategoriesCarrousel() {
   let direction2 = 1;
 
   const firstRowCategories = categories;
-  const secondRowCategories = [...categories].reverse();
+  const secondRowCategories = [...categories].sort(() => Math.random() - 0.5).reverse();
 
   const [springProps1, setSpringProps1] = useSpring(() => ({ x: 0 }));
   const [springProps2, setSpringProps2] = useSpring(() => ({ x: 0 }));
@@ -102,7 +102,7 @@ export default function CategoriesCarrousel() {
         end: window.innerHeight,
         onUpdate: (e) => (direction1 = e.direction * -1),
       },
-      x: isMobile ? "-500px" : "-800px",
+      x: isMobile ? "-300px" : "-600px",
     });
 
     const animation2 = gsap.to(slider2.current, {
@@ -113,7 +113,7 @@ export default function CategoriesCarrousel() {
         end: window.innerHeight,
         onUpdate: (e) => (direction2 = e.direction),
       },
-      x: isMobile ? "500px" : "800px",
+      x: isMobile ? "300px" : "600px",
     });
 
     requestAnimationFrame(animate);
@@ -126,7 +126,7 @@ export default function CategoriesCarrousel() {
   }, [isMobile]);
 
   return (
-    <main className="relative my-6 flex flex-col items-center gap-6 overflow-hidden lg:my-10 lg:gap-10">
+    <main className="relative flex flex-col items-center gap-6 overflow-hidden py-6 lg:gap-10 lg:py-10">
       <div className="absolute left-0 top-0 z-20 h-full w-[50px] bg-gradient-to-r from-background to-transparent lg:w-[100px]" />
       {/* SLIDER 1 */}
       <animated.div
@@ -185,7 +185,7 @@ const CategoryCard = ({ name, value }) => {
   return (
     <div
       className={twMerge(
-        "group mx-5 flex min-h-[40px] min-w-[100px] cursor-pointer items-center justify-center gap-1 overflow-hidden rounded-full border-2 border-primary px-5 font-medium uppercase transition hover:border-secondary hover:bg-primary/50 lg:mx-10 lg:min-h-[60px] lg:min-w-[300px] lg:border-3 lg:font-semibold"
+        "mx-5 flex min-h-[40px] min-w-[100px] cursor-pointer items-center justify-center gap-1 overflow-hidden rounded-full border border-primary px-5 font-medium uppercase shadow-md transition hover:border-secondary hover:bg-primary/50 lg:mx-10 lg:min-h-[60px] lg:min-w-[300px] lg:font-semibold"
       )}
     >
       <Link onClick={() => dispatch(actionProducts.setCategory(value))} to={`/productos/1?category=${value}`}>
