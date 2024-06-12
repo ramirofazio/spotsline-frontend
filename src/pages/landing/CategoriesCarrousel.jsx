@@ -6,21 +6,23 @@ import { ScrollTrigger } from "gsap/all";
 import { twMerge } from "tailwind-merge";
 import { actionProducts } from "src/redux/reducers";
 import { useMediaQuery } from "src/hoooks/mediaQuerys";
+import { useSpring, animated } from "react-spring";
+import { useDrag } from "@use-gesture/react";
 
 export default function CategoriesCarrousel() {
   const isMobile = useMediaQuery(800);
 
-  const dispatch = useDispatch();
   const categories = useRouteLoaderData("root");
 
   const slider1 = useRef(null);
   const slider2 = useRef(null);
+
   const firstRowRef1 = useRef(null);
   const firstRowRef2 = useRef(null);
   const secondRowRef1 = useRef(null);
   const secondRowRef2 = useRef(null);
 
-  const defaultVelocity = isMobile ? 0.04 : 0.03;
+  const defaultVelocity = 0.025;
 
   let velocity1 = defaultVelocity;
   let velocity2 = defaultVelocity;
@@ -31,7 +33,32 @@ export default function CategoriesCarrousel() {
   let direction2 = 1;
 
   const firstRowCategories = categories;
-  const secondRowCategories = categories.reverse();
+  const secondRowCategories = [...categories].reverse();
+
+  const [springProps1, setSpringProps1] = useSpring(() => ({ x: 0 }));
+  const [springProps2, setSpringProps2] = useSpring(() => ({ x: 0 }));
+
+  const bind1 = useDrag(
+    (state) => {
+      setSpringProps1({ x: state.offset[0] });
+      velocity1 = 0;
+    },
+    {
+      bounds: { left: -window.innerWidth, right: window.innerWidth },
+      rubberband: true,
+    }
+  );
+
+  const bind2 = useDrag(
+    (state) => {
+      setSpringProps2({ x: state.offset[0] });
+      velocity2 = 0;
+    },
+    {
+      bounds: { left: -window.innerWidth, right: window.innerWidth },
+      rubberband: true,
+    }
+  );
 
   const animate = () => {
     if (xPercent1 < -100) {
@@ -51,10 +78,10 @@ export default function CategoriesCarrousel() {
     gsap.set(secondRowRef1.current, { xPercent: xPercent2 });
     gsap.set(secondRowRef2.current, { xPercent: xPercent2 });
 
-    requestAnimationFrame(animate);
-
     xPercent1 += velocity1 * direction1;
     xPercent2 += velocity2 * direction2;
+
+    requestAnimationFrame(animate);
   };
 
   useEffect(() => {
@@ -67,7 +94,7 @@ export default function CategoriesCarrousel() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    gsap.to(slider1.current, {
+    const animation1 = gsap.to(slider1.current, {
       scrollTrigger: {
         trigger: document.body,
         scrub: 2,
@@ -75,10 +102,10 @@ export default function CategoriesCarrousel() {
         end: window.innerHeight,
         onUpdate: (e) => (direction1 = e.direction * -1),
       },
-      x: "-800px",
+      x: isMobile ? "-500px" : "-800px",
     });
 
-    gsap.to(slider2.current, {
+    const animation2 = gsap.to(slider2.current, {
       scrollTrigger: {
         trigger: document.body,
         scrub: 2,
@@ -86,103 +113,84 @@ export default function CategoriesCarrousel() {
         end: window.innerHeight,
         onUpdate: (e) => (direction2 = e.direction),
       },
-      x: "800px",
+      x: isMobile ? "500px" : "800px",
     });
 
     requestAnimationFrame(animate);
-  }, []);
 
-  const cardContainerStyles =
-    " min-w-[100px] lg:min-w-[300px] min-h-[40px] lg:min-h-[60px] hover:bg-primary/50 hover:border-secondary transition group  cursor-pointer px-5 overflow-hidden  flex items-center justify-center gap-1 mx-5 lg:mx-10  border-2 lg:border-3 rounded-full border-primary font-medium lg:font-semibold uppercase";
+    return () => {
+      ScrollTrigger.getAll().forEach((st) => st.kill());
+      animation1.kill();
+      animation2.kill();
+    };
+  }, [isMobile]);
 
   return (
-    <main className="relative  my-6 flex flex-col items-center gap-6 overflow-hidden lg:my-10 lg:gap-10">
+    <main className="relative my-6 flex flex-col items-center gap-6 overflow-hidden lg:my-10 lg:gap-10">
       <div className="absolute left-0 top-0 z-20 h-full w-[50px] bg-gradient-to-r from-background to-transparent lg:w-[100px]" />
       {/* SLIDER 1 */}
-      <div
+      <animated.div
         ref={slider1}
-        className="relative whitespace-nowrap"
+        className="relative whitespace-nowrap hover:cursor-grab"
+        style={{ x: springProps1.x, touchAction: "none" }}
+        onTouchStart={() => (velocity1 = 0)}
+        onTouchMove={() => (velocity1 = 0)}
+        onMouseEnter={() => (velocity1 = 0)}
         onTouchEnd={() => (velocity1 = defaultVelocity)}
         onMouseLeave={() => (velocity1 = defaultVelocity)}
+        {...bind1()}
       >
         <div ref={firstRowRef1} className="relative flex w-fit">
           {firstRowCategories.map((c, index) => (
-            <Link
-              key={index}
-              onClick={() => dispatch(actionProducts.setCategory(c.value))}
-              to={`/productos/1?category=${c.value}`}
-            >
-              <div
-                className={twMerge(cardContainerStyles)}
-                onTouchStart={() => (velocity1 = 0)}
-                onMouseEnter={() => (velocity1 = 0)}
-              >
-                <i className="ri-arrow-right-s-line text-lg text-secondary" /> {c.name}
-              </div>
-            </Link>
+            <CategoryCard key={index} {...c} />
           ))}
         </div>
         <div ref={firstRowRef2} className="absolute left-[100%] top-0 flex w-fit">
           {firstRowCategories.map((c, index) => (
-            <Link
-              key={index}
-              onClick={() => dispatch(actionProducts.setCategory(c.value))}
-              to={`/productos/1?category=${c.value}`}
-            >
-              <div
-                className={twMerge(cardContainerStyles)}
-                onTouchStart={() => (velocity1 = 0)}
-                onMouseEnter={() => (velocity1 = 0)}
-              >
-                <i className="ri-arrow-right-s-line text-lg text-secondary" /> {c.name}
-              </div>
-            </Link>
+            <CategoryCard key={index} {...c} />
           ))}
         </div>
-      </div>
+      </animated.div>
       {/* SLIDER 2 */}
-      <div
+      <animated.div
         ref={slider2}
-        className="relative whitespace-nowrap"
+        className="relative whitespace-nowrap hover:cursor-grab"
+        style={{ x: springProps2.x, touchAction: "none" }}
+        onTouchStart={() => (velocity2 = 0)}
+        onTouchMove={() => (velocity2 = 0)}
+        onMouseEnter={() => (velocity2 = 0)}
         onTouchEnd={() => (velocity2 = defaultVelocity)}
         onMouseLeave={() => (velocity2 = defaultVelocity)}
+        {...bind2()}
       >
         <div ref={secondRowRef1} className="relative flex w-fit">
           {secondRowCategories.map((c, index) => (
-            <Link
-              key={index}
-              onClick={() => dispatch(actionProducts.setCategory(c.value))}
-              to={`/productos/1?category=${c.value}`}
-            >
-              <div
-                className={twMerge(cardContainerStyles)}
-                onTouchStart={() => (velocity2 = 0)}
-                onMouseEnter={() => (velocity2 = 0)}
-              >
-                <i className="ri-arrow-right-s-line text-lg text-secondary" /> {c.name}
-              </div>
-            </Link>
+            <CategoryCard key={index} {...c} />
           ))}
         </div>
         <div ref={secondRowRef2} className="absolute left-[100%] top-0 flex w-fit">
           {secondRowCategories.map((c, index) => (
-            <Link
-              key={index}
-              onClick={() => dispatch(actionProducts.setCategory(c.value))}
-              to={`/productos/1?category=${c.value}`}
-            >
-              <div
-                className={twMerge(cardContainerStyles)}
-                onTouchStart={() => (velocity2 = 0)}
-                onMouseEnter={() => (velocity2 = 0)}
-              >
-                <i className="ri-arrow-right-s-line text-lg text-secondary" /> {c.name}
-              </div>
-            </Link>
+            <CategoryCard key={index} {...c} />
           ))}
         </div>
-      </div>
+      </animated.div>
       <div className="absolute right-0 top-0 z-20 h-full w-[50px] bg-gradient-to-l from-background to-transparent lg:w-[100px]" />
     </main>
   );
 }
+
+const CategoryCard = ({ name, value }) => {
+  const dispatch = useDispatch();
+
+  return (
+    <div
+      className={twMerge(
+        "group mx-5 flex min-h-[40px] min-w-[100px] cursor-pointer items-center justify-center gap-1 overflow-hidden rounded-full border-2 border-primary px-5 font-medium uppercase transition hover:border-secondary hover:bg-primary/50 lg:mx-10 lg:min-h-[60px] lg:min-w-[300px] lg:border-3 lg:font-semibold"
+      )}
+    >
+      <Link onClick={() => dispatch(actionProducts.setCategory(value))} to={`/productos/1?category=${value}`}>
+        <i className="ri-arrow-right-s-line text-lg text-secondary" /> {name}
+      </Link>
+    </div>
+  );
+};
