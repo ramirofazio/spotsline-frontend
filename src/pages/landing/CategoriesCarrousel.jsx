@@ -185,7 +185,7 @@ const CategoryCard = ({ name, value }) => {
   return (
     <div
       className={twMerge(
-        "mx-5 flex min-h-[40px] min-w-[100px] cursor-pointer items-center justify-center gap-1 overflow-hidden rounded-full border border-primary px-5 font-medium uppercase shadow-md transition hover:border-secondary hover:bg-primary/50 lg:mx-10 lg:min-h-[60px] lg:min-w-[300px] lg:font-semibold"
+        "mx-5 flex min-h-[40px] min-w-[100px] cursor-pointer items-center justify-center gap-1 overflow-hidden rounded-full border-2 border-primary px-5 font-medium uppercase shadow-md transition hover:border-secondary hover:bg-primary/50 lg:mx-10 lg:min-h-[60px] lg:min-w-[300px] lg:font-semibold"
       )}
     >
       <Link onClick={() => dispatch(actionProducts.setCategory(value))} to={`/productos/1?category=${value}`}>

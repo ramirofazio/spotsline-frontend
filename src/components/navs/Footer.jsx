@@ -1,8 +1,9 @@
 import { Button, Divider } from "@nextui-org/react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { links } from ".";
 import AwsImage from "../images/AwsImage";
 import FloatingLogos from "../images/FloatingLogos";
+import { DefaultButton } from "..";
 
 const socialNetworksIcons = [
   {
@@ -30,7 +31,21 @@ const socialNetworksIcons = [
 export default function Footer() {
   return (
     <>
-      {/* MOBILE */}
+      {/* MOBILE */}{" "}
+      <section className="relative flex flex-col items-center gap-6 overflow-hidden bg-gradient-to-b from-background to-primary py-6 lg:gap-10 lg:py-10">
+        <div className="z-10 my-10 flex  flex-col gap-5 text-center lg:gap-10">
+          <h2 className="text-2xl font-semibold uppercase text-secondary md:text-3xl">
+            {new Date().getFullYear() - 1986} AÑOS
+          </h2>
+          <p className="text-md font-medium text-secondary/80 md:text-xl">
+            EVOLUCIONANDO Y DESARROLLANDO NUEVOS DISEÑOS <br /> HACIÉNDOLE HONOR A NUESTRA TRAYECTORIA.
+          </p>
+
+          <DefaultButton as={Link} to={"/nosotros"} className="mx-auto w-max min-w-[20vw] shadow-xl">
+            CONOCENOS
+          </DefaultButton>
+        </div>
+      </section>
       <footer className="grid gap-10 bg-gradient-to-b from-primary to-background pt-10 lg:hidden">
         <div className="mx-auto grid w-[80%] gap-2">
           <h1 className="mx-auto text-xl tracking-wider">SPOTSLINE</h1>

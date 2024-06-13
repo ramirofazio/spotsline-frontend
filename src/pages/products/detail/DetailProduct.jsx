@@ -38,20 +38,22 @@ export const DetailProduct = () => {
   useEffect(() => {
     document.title = "SPOTSLINE - " + product.description;
 
-    return () => (document.title = "SPOTSLINE");
+    window.scrollTo({
+      top: 0,
+      behavior: "instant",
+    });
+
+    return () => {
+      document.title = "SPOTSLINE";
+      deleteOfStorage("currentVariant");
+      deleteOfStorage("qty");
+    };
   }, []);
 
   useEffect(() => {
     saveInStorage("currentVariant", currentVariant);
     saveInStorage("qty", qty);
   }, [currentVariant, qty]);
-
-  useEffect(() => {
-    return () => {
-      deleteOfStorage("currentVariant");
-      deleteOfStorage("qty");
-    };
-  }, []);
 
   const addProductToShoppingCart = () => {
     //? Agrega variantes al carrito
@@ -128,7 +130,7 @@ export const DetailProduct = () => {
           >
             {email ? "Agregar al carrito" : "Acceder para ver precios"}
           </DefaultButton>
-          <AnimatePresence key={currentVariant.description}>
+          <AnimatePresence key={currentVariant?.description}>
             {isInCart && (
               <motion.h1
                 initial={{ opacity: 0, scale: 0.7 }}

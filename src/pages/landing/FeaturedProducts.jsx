@@ -1,60 +1,116 @@
-import { NavLink } from "react-router-dom";
-import FloatingLogos from "src/components/images/FloatingLogos";
+import { Link, useLoaderData } from "react-router-dom";
 import { motion } from "framer-motion";
-import { onViewFadeIn, onViewFadeInBottom, fadeInTop, onViewZoomIn } from "src/styles/framerVariants";
+import { twMerge } from "tailwind-merge";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, EffectFlip } from "swiper/modules";
+import { Divider, Image } from "@nextui-org/react";
+import { DefaultButton } from "src/components";
+import { useRef } from "react";
 
 const featuredFooter = [
   { icon: "ri-tools-fill", text: "fabricantes" },
-  { icon: "ri-truck-fill", text: "envios" },
   { icon: "ri-box-3-fill", text: "mayoristas" },
+  { icon: "ri-truck-fill", text: "envios" },
 ];
 
-export default function FeaturedProducts({ products }) {
-  return (
-    <motion.section
-      {...onViewFadeIn()}
-      id="landing-featured-products"
-      className="relative  grid place-content-center gap-10 overflow-hidden border-t-[8px] border-secondary bg-gradient-to-b from-background px-4 py-6 sm:px-6 lg:gap-20 xl:px-20"
-    >
-      <FloatingLogos positions={["-top-20 -right-40", "-top-32 -left-40"]} qty={2} />
-      <motion.h1 {...fadeInTop()} className="mx-auto w-full text-center text-2xl font-bold sm:mt-4 sm:text-4xl">
-        PRODUCTOS DESTACADOS
-      </motion.h1>
-      <article className="grid grid-cols-2 grid-rows-3 gap-4 sm:scale-75 md:grid-flow-row md:grid-cols-4 md:grid-rows-4">
-        {products?.map(({ pathfoto, codigo }, index) => (
-          <motion.div
-            {...onViewFadeInBottom()}
-            key={index}
-            className={`relative flex items-center bg-gradient-to-br from-primary to-yellow-400 p-1 shadow-md md:row-span-2  lg:min-h-[175px] lg:min-w-[200px] ${
-              index === 2
-                ? "col-span-2 md:col-span-1  md:row-span-2"
-                : index === 1 && "md:grid-rows-subgrid md:col-span-2 md:row-span-4"
-            }`}
-          >
-            <NavLink
-              to={`/producto/${codigo}`}
-              className="group flex h-full w-full items-center justify-center overflow-hidden bg-slate-50 transition hover:cursor-pointer"
-            >
-              <img
-                loading="lazy"
-                src={pathfoto}
-                className={`z-20 scale-90 transition group-hover:translate-x-6 group-hover:opacity-60 ${
-                  index === 2 && "scale-125 lg:scale-125"
-                }  ${index === 1 && "lg:scale-100"}`}
-              />
-            </NavLink>
-          </motion.div>
-        ))}
-      </article>
+export default function FeaturedProducts() {
+  const featuredProducts = useLoaderData();
+  const container = useRef(null);
 
-      <motion.article {...onViewZoomIn} className="flex items-center justify-around  md:mx-20 xl:mx-auto xl:w-[40%]">
-        {featuredFooter.map(({ icon, text }, index) => (
-          <div key={index} className="flex flex-grow flex-col items-center">
-            <i className={`${icon} text-4xl text-primary drop-shadow-xl sm:text-6xl`} />
-            <p className="-mt-1 font-secondary text-xs uppercase text-black md:m-0 md:text-sm">{text}</p>
-          </div>
+  return (
+    <section
+      ref={container}
+      className="relative flex min-h-screen flex-col items-center gap-6 overflow-hidden py-6 lg:gap-10 lg:py-10"
+    >
+      <Header />
+      <div className="flex flex-col gap-20 pt-5 sm:pt-0 md:gap-32 lg:gap-40">
+        {featuredProducts.map((product, index) => (
+          <FeaturedCard key={index} {...product} index={index} />
         ))}
-      </motion.article>
-    </motion.section>
+      </div>
+      <div className="mt-10 flex w-full items-center justify-center gap-10 px-10 lg:mt-20">
+        {featuredFooter.map(({ icon, text }, index) => (
+          <article
+            key={index}
+            className={twMerge(
+              "flex min-h-[100px] w-full flex-col items-center justify-center space-y-5 overflow-visible lg:space-y-8"
+            )}
+          >
+            <i
+              className={twMerge(
+                icon,
+                "yellowGradient text-5xl drop-shadow-xl transition hover:animate-spinner-ease-spin hover:drop-shadow-none lg:text-6xl"
+              )}
+            />
+            <p className="hidden text-sm font-semibold uppercase md:block lg:text-lg">{text}</p>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
+
+const Header = () => {
+  return (
+    <header className="flex w-full flex-col items-center gap-2 px-10 text-center md:max-w-[70vw] md:gap-5 md:space-y-5">
+      <h2 className="text-2xl font-semibold uppercase text-secondary md:text-3xl">Los más elegidos</h2>
+      <p className="text-md font-medium text-secondary/80 md:text-xl">
+        Descubrí nuestros mejores productos en relación precio-diseño-calidad
+      </p>
+      <i className="ri-arrow-down-s-line mt-5 animate-bounce self-center text-4xl md:!mt-10 md:text-5xl" />
+    </header>
+  );
+};
+
+const FeaturedCard = ({ codigo, id, name, variantsImages, index }) => {
+  return (
+    <article
+      id={id}
+      className={twMerge(
+        "relative flex h-[60vh] w-screen flex-col items-center justify-center gap-10 lg:!h-[55vh] lg:flex-row lg:justify-between xl:!h-[60vh] xs:h-[50vh]",
+        index % 2 !== 0 && "lg:flex-row-reverse"
+      )}
+    >
+      <div
+        className={twMerge(
+          "flex w-[80vw] flex-1 items-center justify-center self-start overflow-hidden rounded-r-full border-2 border-l-0 border-primary bg-gradient-to-l from-secondary/30 to-white shadow-xl lg:w-[50vw] lg:flex-1 lg:self-stretch",
+          index % 2 !== 0 && "self-end rounded-l-full rounded-r-none border-l-2 border-r-0 bg-gradient-to-r"
+        )}
+      >
+        <Swiper
+          loop={true}
+          autoplay={{
+            delay: 6000,
+            disableOnInteraction: true,
+            reverseDirection: index % 2 !== 0,
+          }}
+          flipEffect={{ slideShadows: false }}
+          modules={[Autoplay]}
+          className={twMerge("-translate-x-2", index % 2 !== 0 && "translate-x-2")}
+        >
+          {variantsImages?.map(({ pathfoto2 }, i) => {
+            return (
+              <SwiperSlide className="cursor-grab" key={i}>
+                <Image loading="lazy" src={pathfoto2} alt={`featured-product-image-${name}`} className="xl:scale-90" />
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
+      </div>
+      <div className="flex flex-col gap-5 text-center lg:h-full lg:w-fit lg:flex-1 lg:items-center lg:justify-center lg:gap-10">
+        <h3 className="text-lg font-semibold tracking-wider text-secondary  md:text-2xl lg:text-3xl xl:font-bold xs:text-xl">
+          {name}
+        </h3>
+        {/* <p>{descri}</p>*/}
+        <DefaultButton
+          as={Link}
+          to={`producto/${codigo}`}
+          endContent={<i className="ri-arrow-right-up-line text-sm lg:text-lg" />}
+          className={"text-sm lg:w-80 lg:text-lg"}
+        >
+          CONOCER MAS
+        </DefaultButton>
+      </div>
+    </article>
+  );
+};

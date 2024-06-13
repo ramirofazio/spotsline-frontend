@@ -93,8 +93,8 @@ export const APISpot = {
     getOne: ({ id }) => {
       return BASE_API.get(`/${route.PRODUCTS}/detail/${id}`);
     },
-    getFeaturedProducts: ({ take }) => {
-      return BASE_API.get(`/${route.PRODUCTS}/featured?take=${take}`);
+    getFeaturedProducts: () => {
+      return BASE_API.get(`/${route.PRODUCTS}/featured`);
     },
     getPaginatedProducts: (take, skip) => {
       return BASE_API.get(`/${route.PRODUCTS}/pag?take=${take}&&skip=${skip}`);
