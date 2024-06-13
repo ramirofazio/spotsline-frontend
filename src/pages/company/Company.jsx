@@ -75,7 +75,7 @@ export function Company() {
           />
           <p className="max-w-[450px] text-start text-[11px] leading-[11px] sm:text-sm md:max-w-[520px] md:text-base lg:max-w-[580px] lg:text-lg">
             Como hemos mencionado anteriormente, somos una empresa nacional que desde el día de su fundación, ha crecido
-            con <strong>honestidad</strong> y <strong>esfuerzo</strong>. Es nuestro objetivo que este sitio web pueda
+            con <strong>honestidad</strong> y <strong>esfuerzo</strong>. Es nuestro objetivo que este sitio web pueda{" "}
             <strong>satisfacer</strong> todas vuestras necesidades y permita una <strong>mayor conexión</strong> entre
             ustedes y nuestra gente. Gracias por contar con nosotros.
           </p>
