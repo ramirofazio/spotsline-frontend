@@ -40,8 +40,8 @@ export const publicRoutesPaths = [
         path: "/",
         loader: async () => {
           try {
-            const featured = (await APISpot.product.getFeaturedProducts({ take: 5 })).data;
-            return featured;
+            const featuredProducts = (await APISpot.product.getFeaturedProducts()).data;
+            return featuredProducts;
           } catch (e) {
             return null;
           }
@@ -72,6 +72,8 @@ export const publicRoutesPaths = [
             data.variants = variants;
             return data;
           } catch (e) {
+            console.log(e);
+
             return null;
           }
         },
