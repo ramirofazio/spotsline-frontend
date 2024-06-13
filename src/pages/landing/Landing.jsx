@@ -8,6 +8,7 @@ import { AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
 import { Divider } from "@nextui-org/react";
 import Lenis from "lenis";
+import { deleteOfStorage } from "src/utils/localStorage";
 
 export function Landing() {
   const { id } = useSelector((state) => state.user);
@@ -32,6 +33,10 @@ export function Landing() {
     }
 
     requestAnimationFrame(raf);
+
+    //? Borro residuos de localStorage
+    deleteOfStorage("currentVariant");
+    deleteOfStorage("qty");
   }, []);
 
   return (
