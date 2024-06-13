@@ -1,4 +1,4 @@
-import { ProductCard } from "src/components/index";
+import { DynamicArrow, ProductCard } from "src/components/index";
 import { PaginationComponent } from "components/index";
 import { Input } from "@nextui-org/react";
 import { useEffect, useState } from "react";
@@ -68,6 +68,7 @@ export function Products() {
           )}
         </section>
       </main>
+      <DynamicArrow />
     </>
   );
 }
