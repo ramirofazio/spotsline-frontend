@@ -30,7 +30,7 @@ const socialNetworksIcons = [
 
 export default function Footer() {
   return (
-    <>
+    <footer>
       {/* MOBILE */}{" "}
       <section className="relative flex flex-col items-center gap-6 overflow-hidden bg-gradient-to-b from-background to-primary py-6 lg:gap-10 lg:py-10">
         <div className="z-10 my-10 flex  flex-col gap-5 text-center lg:gap-10">
@@ -38,7 +38,8 @@ export default function Footer() {
             {new Date().getFullYear() - 1986} AÑOS
           </h2>
           <p className="text-md font-medium text-secondary/80 md:text-xl">
-            EVOLUCIONANDO Y DESARROLLANDO NUEVOS DISEÑOS <br /> HACIÉNDOLE HONOR A NUESTRA TRAYECTORIA.
+            EVOLUCIONANDO Y DESARROLLANDO NUEVOS DISEÑOS <br className="hidden md:block" /> HACIÉNDOLE HONOR A NUESTRA
+            TRAYECTORIA.
           </p>
 
           <DefaultButton as={Link} to={"/nosotros"} className="mx-auto w-max min-w-[20vw] shadow-xl">
@@ -46,7 +47,7 @@ export default function Footer() {
           </DefaultButton>
         </div>
       </section>
-      <footer className="grid gap-10 bg-gradient-to-b from-primary to-background pt-10 lg:hidden">
+      <section className="grid gap-10 bg-gradient-to-b from-primary to-background pt-10 lg:hidden">
         <div className="mx-auto grid w-[80%] gap-2">
           <h1 className="mx-auto text-xl tracking-wider">SPOTSLINE</h1>
           <p className="mx-auto -mt-4 font-slogan text-lg font-bold">Se ve bien.</p>
@@ -75,9 +76,9 @@ export default function Footer() {
         <p className="self-end px-4 pb-1 text-center font-secondary text-sm text-secondary">
           © Copyright {new Date().getFullYear()} Spotsline - Todos los Derechos Reservados
         </p>
-      </footer>
+      </section>
       {/* DESKTOP */}
-      <footer className="relative hidden gap-10 bg-gradient-to-b  from-primary to-background pt-10 lg:grid">
+      <section className="relative hidden gap-10 bg-gradient-to-b  from-primary to-background pt-10 lg:grid">
         <FloatingLogos qty={1} positions={["-top-40 -right-60"]} size={"w-[50vw]"} />
         <section className="flex w-full items-start justify-between gap-4  px-20">
           <div className="flex flex-col items-center">
@@ -136,7 +137,7 @@ export default function Footer() {
         <p className="self-end px-4 pb-1 text-center font-secondary text-sm text-secondary drop-shadow-2xl">
           © Copyright {new Date().getFullYear()} Spotsline - Todos los Derechos Reservados
         </p>
-      </footer>
-    </>
+      </section>
+    </footer>
   );
 }

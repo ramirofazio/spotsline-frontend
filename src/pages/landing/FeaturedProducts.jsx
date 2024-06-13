@@ -1,5 +1,5 @@
 import { Link, useLoaderData } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFlip } from "swiper/modules";
@@ -15,13 +15,9 @@ const featuredFooter = [
 
 export default function FeaturedProducts() {
   const featuredProducts = useLoaderData();
-  const container = useRef(null);
 
   return (
-    <section
-      ref={container}
-      className="relative flex min-h-screen flex-col items-center gap-6 overflow-hidden py-6 lg:gap-10 lg:py-10"
-    >
+    <section className="relative flex min-h-screen flex-col items-center gap-6 overflow-hidden py-6 lg:gap-10 lg:py-10">
       <Header />
       <div className="flex flex-col gap-20 pt-5 sm:pt-0 md:gap-32 lg:gap-40">
         {featuredProducts.map((product, index) => (
@@ -51,27 +47,54 @@ export default function FeaturedProducts() {
 }
 
 const Header = () => {
+  const headerRef = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: headerRef,
+    offset: ["start end", "end end"],
+  });
+
+  const opacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
+
   return (
-    <header className="flex w-full flex-col items-center gap-2 px-10 text-center md:max-w-[70vw] md:gap-5 md:space-y-5">
+    <motion.header
+      ref={headerRef}
+      style={{ opacity }}
+      className="flex w-full flex-col items-center gap-2 px-10 text-center md:max-w-[70vw] md:gap-5 md:space-y-5"
+    >
       <h2 className="text-2xl font-semibold uppercase text-secondary md:text-3xl">Los más elegidos</h2>
       <p className="text-md font-medium text-secondary/80 md:text-xl">
         Descubrí nuestros mejores productos en relación precio-diseño-calidad
       </p>
       <i className="ri-arrow-down-s-line mt-5 animate-bounce self-center text-4xl md:!mt-10 md:text-5xl" />
-    </header>
+    </motion.header>
   );
 };
 
 const FeaturedCard = ({ codigo, id, name, variantsImages, index }) => {
+  const cardRef = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ["start end", "end end"],
+    smooth: 4,
+  });
+
+  const opacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const x = useTransform(scrollYProgress, [0, 1], [index % 2 !== 0 ? 300 : -300, 0]);
+
   return (
-    <article
+    <motion.article
+      style={{ opacity }}
+      ref={cardRef}
       id={id}
       className={twMerge(
         "relative flex h-[60vh] w-screen flex-col items-center justify-center gap-10 lg:!h-[55vh] lg:flex-row lg:justify-between xl:!h-[60vh] xs:h-[50vh]",
         index % 2 !== 0 && "lg:flex-row-reverse"
       )}
     >
-      <div
+      <motion.div
+        style={{ x }}
         className={twMerge(
           "flex w-[80vw] flex-1 items-center justify-center self-start overflow-hidden rounded-r-full border-2 border-l-0 border-primary bg-gradient-to-l from-secondary/30 to-white shadow-xl lg:w-[50vw] lg:flex-1 lg:self-stretch",
           index % 2 !== 0 && "self-end rounded-l-full rounded-r-none border-l-2 border-r-0 bg-gradient-to-r"
@@ -96,7 +119,7 @@ const FeaturedCard = ({ codigo, id, name, variantsImages, index }) => {
             );
           })}
         </Swiper>
-      </div>
+      </motion.div>
       <div className="flex flex-col gap-5 text-center lg:h-full lg:w-fit lg:flex-1 lg:items-center lg:justify-center lg:gap-10">
         <h3 className="text-lg font-semibold tracking-wider text-secondary  md:text-2xl lg:text-3xl xl:font-bold xs:text-xl">
           {name}
@@ -108,9 +131,9 @@ const FeaturedCard = ({ codigo, id, name, variantsImages, index }) => {
           endContent={<i className="ri-arrow-right-up-line text-sm lg:text-lg" />}
           className={"text-sm lg:w-80 lg:text-lg"}
         >
-          CONOCER MAS
+          CONOCER MÁS
         </DefaultButton>
       </div>
-    </article>
+    </motion.article>
   );
 };

@@ -7,6 +7,7 @@ import { PaymentFailed } from "src/components/checkout/PaymentFailed";
 import { AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
 import { Divider } from "@nextui-org/react";
+import Lenis from "lenis";
 
 export function Landing() {
   const { id } = useSelector((state) => state.user);
@@ -22,6 +23,15 @@ export function Landing() {
       top: 0,
       behavior: "instant",
     });
+
+    const lenis = new Lenis({ lerp: 0.08 });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
   }, []);
 
   return (
