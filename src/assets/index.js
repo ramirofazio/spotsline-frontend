@@ -13,8 +13,7 @@ export const images = {
   empresaWorkspace2: "/images/empresa-workspace2.webp",
 };
 
-//! USO DE IMAGENES ESTATICAS CON AWS DEPRECADO!
-
+//! USO DE IMAGENES CON AWS DEPRECADO!
 const BASE_AWS_URL = "https://spotsline-bucket.s3.amazonaws.com";
 
 export const assets = {

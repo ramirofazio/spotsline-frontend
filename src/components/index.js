@@ -7,3 +7,4 @@ export { DefaultButton } from "./buttons/DefaultButton";
 export { PaymentOk } from "./checkout/PaymentOk";
 export { ShoppingCartSkeleton } from "./skeletons";
 export { ProfileSkeleton } from "./skeletons";
+export { DynamicArrow } from "./DynamicArrow";
