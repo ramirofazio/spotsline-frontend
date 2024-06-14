@@ -34,7 +34,7 @@ export function Products() {
   return (
     <>
       <PageSimpleHeader
-        image={images.empresaMachines}
+        image={images.empresaWorkspace2}
         title={"NUESTROS PRODUCTOS"}
         subtitle={"Descubre nuestros productos"}
       />

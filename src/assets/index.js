@@ -7,10 +7,9 @@ export const images = {
   logoWithDescription: "/images/logoWithDescription.webp",
   empresa: "/images/empresa.webp",
   empresaScaled: "/images/empresa-scaled.webp",
-  empresaTrabajador: "/images/empresa-trabajador.webp",
-  empresaMachines: "/images/empresa_machines.webp",
-  empresaWorkspace1: "/images/empresa-workspace1.webp",
-  empresaWorkspace2: "/images/empresa-workspace2.webp",
+  empresaWorkspace1: "/images/empresa-workspace-1.webp",
+  empresaWorkspace2: "/images/empresa-workspace-2.webp",
+  empresaWorkspace3: "/images/empresa-workspace-3.webp",
 };
 
 //! USO DE IMAGENES CON AWS DEPRECADO!
