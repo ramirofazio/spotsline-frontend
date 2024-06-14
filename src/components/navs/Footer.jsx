@@ -47,7 +47,7 @@ export default function Footer() {
         </div>
       </section>
       <section className="relative flex w-full flex-col gap-10 px-10 text-[13px] text-dark lg:mx-auto lg:w-[100%] lg:flex-row lg:justify-between lg:px-20 lg:py-20 lg:text-[20px]">
-        <div className="space-y-10 lg:w-[30vw] xl:space-y-8 2xl:space-y-10">
+        <div className="z-10 space-y-10 lg:w-[30vw] xl:space-y-8 2xl:space-y-10">
           <p className="font-primary text-4xl font-semibold tracking-widest text-dark">SPOTSLINE</p>
           <div>
             <p className="yellowGradient text-[20px] font-semibold xl:text-2xl">Seguinos en</p>
