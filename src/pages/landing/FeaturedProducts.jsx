@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFlip } from "swiper/modules";
 import { Divider, Image } from "@nextui-org/react";
 import { DefaultButton } from "src/components";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const featuredFooter = [
   { icon: "ri-tools-fill", text: "fabricantes" },
@@ -71,8 +71,11 @@ const Header = () => {
   );
 };
 
-const FeaturedCard = ({ codigo, id, name, variantsImages, index }) => {
+const FeaturedCard = ({ codigo, id, name, variants, index }) => {
   const cardRef = useRef(null);
+
+  console.log(variants);
+  const [slideIndex, setSlideIndex] = useState(0);
 
   const { scrollYProgress } = useScroll({
     target: cardRef,
@@ -110,26 +113,39 @@ const FeaturedCard = ({ codigo, id, name, variantsImages, index }) => {
           flipEffect={{ slideShadows: false }}
           modules={[Autoplay]}
           className={twMerge("-translate-x-2", index % 2 !== 0 && "translate-x-2")}
+          onSlideChange={({ realIndex }) => setSlideIndex(realIndex)}
         >
-          {variantsImages?.map(({ pathfoto2 }, i) => {
+          {variants?.map(({ img }, i) => {
             return (
               <SwiperSlide className="cursor-grab" key={i}>
-                <Image loading="lazy" src={pathfoto2} alt={`featured-product-image-${name}`} className="xl:scale-90" />
+                <Image loading="lazy" src={img} alt={`featured-product-image-${name}`} className="xl:scale-90" />
               </SwiperSlide>
             );
           })}
         </Swiper>
       </motion.div>
-      <div className="flex flex-col gap-5 text-center lg:h-full lg:w-fit lg:flex-1 lg:items-center lg:justify-center lg:gap-10">
-        <h3 className="text-lg font-semibold tracking-wider text-secondary  md:text-2xl lg:text-3xl xl:font-bold xs:text-xl">
+      <div
+        className={twMerge(
+          "flex flex-col gap-5 text-center lg:h-full lg:w-fit lg:flex-1 lg:items-center lg:justify-center lg:gap-5"
+        )}
+      >
+        <h2 className="text-lg font-semibold tracking-wider text-dark  md:text-2xl lg:text-3xl xl:font-bold xs:text-xl">
           {name}
-        </h3>
-        {/* <p>{descri}</p>*/}
+        </h2>
+        <div className={twMerge("hidden w-[50%] space-y-5 text-left lg:block", index % 2 !== 0 && "text-right")}>
+          <h3 className="line-clamp-1 text-lg font-medium tracking-wider text-secondary  md:text-xl lg:text-2xl xs:text-lg">
+            {variants[slideIndex].name}
+          </h3>
+          <p className="text-sm">
+            {variants[slideIndex].description ||
+              "DESCRIPCIÓN: Colgante con pantalla grande LAMPARA: E27 MATERIAL: Aluminio esmerilado DIMENSIONES:  Ø: 443mm – H: 326mm CAJA CERRADA:  4 unidades"}
+          </p>
+        </div>
         <DefaultButton
           as={Link}
           to={`producto/${codigo}`}
           endContent={<i className="ri-arrow-right-up-line text-sm lg:text-lg" />}
-          className={"text-sm lg:w-80 lg:text-lg"}
+          className={"mt-5 text-sm lg:w-80 lg:text-lg"}
         >
           CONOCER MÁS
         </DefaultButton>
