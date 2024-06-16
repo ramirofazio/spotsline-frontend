@@ -24,12 +24,10 @@ export function PaymentOk({ transactionId, type }) {
 
     try {
       if (orderBody) {
-        console.log("aca entro?");
         APISpot.user.createOrder({ ...orderBody, transactionId, type }).then((res) => {
           if (res) {
             APISpot.cart.deleteCart(id, false);
             dispatch(actionsShoppingCart.clearCart());
-            deleteOfStorage("orderBody");
             toast.success("Orden de compra creada con exito", { description: "¡Gracias por comprar en Spotsline!" });
           }
         });
@@ -40,6 +38,7 @@ export function PaymentOk({ transactionId, type }) {
       console.log(e);
     } finally {
       setLoading(false);
+      deleteOfStorage("orderBody");
     }
   }, []);
 

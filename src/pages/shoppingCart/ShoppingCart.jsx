@@ -27,7 +27,7 @@ export default function ShoppingCart() {
   const [loading, setLoading] = useState(false);
   const [SkeletonLoading, setSkeletonLoading] = useState(true);
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const handleUpdateCart = useDebouncedCallback(async () => {
     if (reduxCart.id) {
@@ -323,6 +323,7 @@ export default function ShoppingCart() {
         <PickDateModal
           onOpenChange={onOpenChange}
           isOpen={isOpen}
+          onClose={onClose}
           items={reduxCart.items}
           coupon={reduxCart.coupon}
           discount={reduxCart.discount}
@@ -332,7 +333,7 @@ export default function ShoppingCart() {
   );
 }
 
-function PickDateModal({ isOpen, onOpenChange, items, coupon, discount }) {
+function PickDateModal({ isOpen, onOpenChange, onClose, items, coupon, discount }) {
   const user = useSelector((state) => state.user);
 
   const [loading, setLoading] = useState(false);
@@ -398,6 +399,7 @@ function PickDateModal({ isOpen, onOpenChange, items, coupon, discount }) {
       <DarkModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
+        onClose={onClose}
         title={"FECHA DE ENTREGA"}
         description={"Seleccione fecha de entrega para el pedido"}
         size="xl"
