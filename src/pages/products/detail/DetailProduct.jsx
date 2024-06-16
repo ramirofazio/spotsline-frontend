@@ -29,6 +29,9 @@ export const DetailProduct = () => {
 
   const [loading, setLoading] = useState(false);
   const [qty, setQty] = useState(getOfStorage("qty") || 1);
+
+  //TODO ANALIZAR ESTA LOGICA PORQUE HACE COSAS RARAS CUADNO YA EXISTE CURRENT VARIANT EN LOCAL STORAGE Y NO ES DE ESTA MARCA
+  //TODO EN LA LANDING SE BORRA EL STORAGE ESTE, PERO SI VIENEN DE UN LINK Y TIENEN ESTE STORAGE PROBABLEMENTE ROMPA PORQUE NO ENCUENTRA EL ID DE LA VARIANTE EN LA MARCA
   const [currentVariant, setCurrentVariant] = useState(
     localVariant && localVariant.id
       ? product.variants[product.variants.findIndex((variant) => variant.id === localVariant.id)]
@@ -40,7 +43,7 @@ export const DetailProduct = () => {
 
     window.scrollTo({
       top: 0,
-      behavior: "instant",
+      behavior: "smooth",
     });
 
     return () => {

@@ -90,8 +90,8 @@ const shoppingCartSlice = createSlice({
       state.id = action.payload.id || null;
       state.items = action.payload.items || [];
       state.subtotal = calculateSubtotal(state.items);
-      state.total = calculateTotal(state.subtotal, state.discount);
       state.discount = action.payload.discount || 0;
+      state.total = calculateTotal(state.subtotal, state.discount);
       state.coupon = action.payload.coupon;
     },
   },

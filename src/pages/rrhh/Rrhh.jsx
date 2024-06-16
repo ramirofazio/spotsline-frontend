@@ -6,7 +6,7 @@ export function Rrhh() {
   return (
     <section className="min-h-screen">
       <PageSimpleHeader
-        image={images.empresaTrabajador}
+        image={images.empresaWorkspace1}
         title={"¿Queres unirte?"}
         subtitle={"En Spotsline somos un gran equipo humano y profesional."}
       />

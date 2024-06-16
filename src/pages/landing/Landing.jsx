@@ -1,13 +1,14 @@
 import FirstSection from "./FirstSection";
 import CategoriesCarrousel from "./CategoriesCarrousel";
 import FeaturedProducts from "./FeaturedProducts";
-import { PaymentOk } from "src/components";
+import { DynamicArrow, PaymentOk } from "src/components";
 import { useSelector } from "react-redux";
 import { PaymentFailed } from "src/components/checkout/PaymentFailed";
 import { AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
 import { Divider } from "@nextui-org/react";
 import Lenis from "lenis";
+import { deleteOfStorage } from "src/utils/localStorage";
 
 export function Landing() {
   const { id } = useSelector((state) => state.user);
@@ -32,6 +33,10 @@ export function Landing() {
     }
 
     requestAnimationFrame(raf);
+
+    //? Borro residuos de localStorage
+    deleteOfStorage("currentVariant");
+    deleteOfStorage("qty");
   }, []);
 
   return (
@@ -41,6 +46,7 @@ export function Landing() {
       <CategoriesCarrousel />
       <Divider className="h-[3px] w-screen rounded-xl bg-gradient-to-r from-primary to-yellow-600" />
       <FeaturedProducts />
+      <DynamicArrow />
       {mobbex_payment_type && mobbex_transaction_id && id && access_token && mobbex_status === "200" ? (
         <PaymentOk transactionId={mobbex_transaction_id} type={mobbex_payment_type} />
       ) : (
