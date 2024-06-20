@@ -35,8 +35,9 @@ export function Landing() {
     requestAnimationFrame(raf);
 
     //? Borro residuos de localStorage
-    deleteOfStorage("currentVariant");
-    deleteOfStorage("qty");
+    //? COMENTADO PORQUE JODIA
+    //deleteOfStorage("currentVariant");
+    //deleteOfStorage("qty");
   }, []);
 
   return (

@@ -21,21 +21,27 @@ export const DetailProduct = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const localVariant = getOfStorage("currentVariant");
+  //const localVariant = getOfStorage("currentVariant");
 
   const { email, priceList } = useSelector((state) => state.user);
   const { managedClient } = useSelector((state) => state.seller);
   const { items } = useSelector((state) => state.cart);
 
   const [loading, setLoading] = useState(false);
-  const [qty, setQty] = useState(getOfStorage("qty") || 1);
+  const [qty, setQty] = useState(
+    //? COMENTADO PORQUE JODIA
+    //getOfStorage("qty") ||
+    1
+  );
 
   //TODO ANALIZAR ESTA LOGICA PORQUE HACE COSAS RARAS CUADNO YA EXISTE CURRENT VARIANT EN LOCAL STORAGE Y NO ES DE ESTA MARCA
   //TODO EN LA LANDING SE BORRA EL STORAGE ESTE, PERO SI VIENEN DE UN LINK Y TIENEN ESTE STORAGE PROBABLEMENTE ROMPA PORQUE NO ENCUENTRA EL ID DE LA VARIANTE EN LA MARCA
   const [currentVariant, setCurrentVariant] = useState(
-    localVariant && localVariant.id
-      ? product.variants[product.variants.findIndex((variant) => variant.id === localVariant.id)]
-      : product.variants[0]
+    //? COMENTADO PORQUE JODIA
+    // localVariant && localVariant.id
+    //   ? product.variants[product.variants.findIndex((variant) => variant.id === localVariant.id)]
+    //      :
+    product.variants[0]
   );
 
   useEffect(() => {
@@ -48,15 +54,15 @@ export const DetailProduct = () => {
 
     return () => {
       document.title = "SPOTSLINE";
-      deleteOfStorage("currentVariant");
-      deleteOfStorage("qty");
+      //deleteOfStorage("currentVariant");
+      //deleteOfStorage("qty");
     };
   }, []);
 
-  useEffect(() => {
-    saveInStorage("currentVariant", currentVariant);
-    saveInStorage("qty", qty);
-  }, [currentVariant, qty]);
+  //   useEffect(() => {
+  //     saveInStorage("currentVariant", currentVariant);
+  //     saveInStorage("qty", qty);
+  //   }, [currentVariant, qty]);
 
   const addProductToShoppingCart = () => {
     //? Agrega variantes al carrito
