@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Autoplay, EffectCreative, Pagination } from "swiper/modules";
+import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
-import { assets } from "src/assets";
+import { assets, images } from "src/assets";
 
 // Import Swiper styles
 import "swiper/css";
@@ -29,14 +29,22 @@ export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
   const pagination = {
     clickable: true,
     renderBullet: function (index, className) {
-      return '<img src="' + variants[index].pathImage + '" class="' + className + '" />';
+      return (
+        '<img src="' +
+        (variants[index].pathImage ? variants[index].pathImage : images.logoBlack) +
+        '" class="' +
+        className +
+        '" />'
+      );
     },
     //! Los estilos de esto estan en index.css
   };
 
   const handleVariantChange = (variantIndex) => {
-    const newVariant = variants[variantIndex];
-    setCurrentVariant(newVariant);
+    setTimeout(() => {
+      const newVariant = variants[variantIndex];
+      setCurrentVariant(newVariant);
+    }, 200);
   };
 
   useEffect(() => {
@@ -48,17 +56,7 @@ export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
       <Swiper
         initialSlide={slideIndex}
         grabCursor={true}
-        modules={[Pagination, Autoplay, EffectCreative]}
-        effect={"creative"}
-        creativeEffect={{
-          prev: {
-            shadow: true,
-            translate: [0, 0, -400],
-          },
-          next: {
-            translate: ["100%", 0, 0],
-          },
-        }}
+        modules={[Pagination, Autoplay]}
         loop={true}
         pagination={pagination}
         autoplay={{ delay: 4000, disableOnInteraction: true }}
@@ -84,19 +82,19 @@ export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
                 setBigVariant({ name: variant.description, img: variant.pathImage });
               }
             }}
-            className="relative flex w-full items-center justify-center rounded-lg border-2 border-primary bg-white"
+            className="relative grid min-h-[300px] w-full place-content-center  rounded-lg border-2 border-primary bg-white"
           >
             <i
               className="ri-fullscreen-line icons absolute bottom-3 right-3 z-20 text-xl text-secondary"
               onClick={() => {
                 onOpen();
-                setBigVariant({ name: variant.description, img: variant.pathImage });
+                setBigVariant({ name: variant.description, img: variant.pathImage || images.logoBlack });
               }}
             />
             <Image
               src={variant.pathImage || assets.logos.logoBlack}
               alt={`${variant.description} Image`}
-              className="mx-auto w-full max-w-[700px]"
+              className="mx-auto  w-full max-w-[700px]"
             />
           </SwiperSlide>
         ))}
