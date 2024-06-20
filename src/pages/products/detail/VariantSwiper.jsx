@@ -9,7 +9,6 @@ import "swiper/css/navigation";
 
 import { DarkModal } from "src/components";
 import { Image, useDisclosure } from "@nextui-org/react";
-import { motion } from "framer-motion";
 
 function ChangeSlide({ slideIndex }) {
   const swiper = useSwiper();
@@ -85,7 +84,7 @@ export function VariantSwiper({ variants, currentVariant, setCurrentVariant }) {
                 setBigVariant({ name: variant.description, img: variant.pathImage });
               }
             }}
-            className="relative flex w-full items-center justify-center rounded-lg border-4 border-primary bg-white"
+            className="relative flex w-full items-center justify-center rounded-lg border-2 border-primary bg-white"
           >
             <i
               className="ri-fullscreen-line icons absolute bottom-3 right-3 z-20 text-xl text-secondary"

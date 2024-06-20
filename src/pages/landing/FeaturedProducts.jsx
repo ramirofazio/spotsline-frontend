@@ -1,11 +1,12 @@
 import { Link, useLoaderData } from "react-router-dom";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, EffectFlip } from "swiper/modules";
-import { Divider, Image } from "@nextui-org/react";
+import { Autoplay } from "swiper/modules";
+import { Image } from "@nextui-org/react";
 import { DefaultButton } from "src/components";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { formatDescription } from "src/utils";
 
 const featuredFooter = [
   { icon: "ri-tools-fill", text: "fabricantes" },
@@ -71,8 +72,10 @@ const Header = () => {
   );
 };
 
-const FeaturedCard = ({ codigo, id, name, variantsImages, index }) => {
+const FeaturedCard = ({ codigo, id, name, variants, index }) => {
   const cardRef = useRef(null);
+
+  const [slideIndex, setSlideIndex] = useState(0);
 
   const { scrollYProgress } = useScroll({
     target: cardRef,
@@ -89,14 +92,14 @@ const FeaturedCard = ({ codigo, id, name, variantsImages, index }) => {
       ref={cardRef}
       id={id}
       className={twMerge(
-        "relative flex h-[60vh] w-screen flex-col items-center justify-center gap-10 lg:!h-[55vh] lg:flex-row lg:justify-between xl:!h-[60vh] xs:h-[50vh]",
+        "relative flex min-h-[60vh] w-screen flex-col items-center justify-center gap-10 md:min-h-[75vh] lg:!h-[55vh] lg:flex-row lg:justify-between xl:!min-h-[60vh] xs:h-[50vh] xs:min-h-[70vh]",
         index % 2 !== 0 && "lg:flex-row-reverse"
       )}
     >
       <motion.div
         style={{ x }}
         className={twMerge(
-          "flex w-[80vw] flex-1 items-center justify-center self-start overflow-hidden rounded-r-full border-2 border-l-0 border-primary bg-gradient-to-l from-secondary/30 to-white shadow-xl lg:w-[50vw] lg:flex-1 lg:self-stretch",
+          "flex w-[80vw] flex-1 items-center justify-center self-start overflow-hidden rounded-r-full border-2 border-l-0 border-primary bg-gradient-to-l from-secondary/30 to-white shadow-xl md:min-h-[300px] lg:w-[50vw] lg:flex-1 lg:self-stretch xs:w-[70vw]",
           index % 2 !== 0 && "self-end rounded-l-full rounded-r-none border-l-2 border-r-0 bg-gradient-to-r"
         )}
       >
@@ -110,26 +113,38 @@ const FeaturedCard = ({ codigo, id, name, variantsImages, index }) => {
           flipEffect={{ slideShadows: false }}
           modules={[Autoplay]}
           className={twMerge("-translate-x-2", index % 2 !== 0 && "translate-x-2")}
+          onSlideChange={({ realIndex }) => setSlideIndex(realIndex)}
         >
-          {variantsImages?.map(({ pathfoto2 }, i) => {
+          {variants?.map(({ img }, i) => {
             return (
               <SwiperSlide className="cursor-grab" key={i}>
-                <Image loading="lazy" src={pathfoto2} alt={`featured-product-image-${name}`} className="xl:scale-90" />
+                <Image loading="lazy" src={img} alt={`featured-product-image-${name}`} className="xl:scale-90" />
               </SwiperSlide>
             );
           })}
         </Swiper>
       </motion.div>
-      <div className="flex flex-col gap-5 text-center lg:h-full lg:w-fit lg:flex-1 lg:items-center lg:justify-center lg:gap-10">
-        <h3 className="text-lg font-semibold tracking-wider text-secondary  md:text-2xl lg:text-3xl xl:font-bold xs:text-xl">
-          {name}
-        </h3>
-        {/* <p>{descri}</p>*/}
+      <div
+        className={twMerge(
+          "flex flex-col gap-5 overflow-hidden text-center lg:h-full lg:w-fit lg:flex-1 lg:items-center lg:justify-center lg:gap-10"
+        )}
+      >
+        <h2 className="text-lg font-semibold tracking-wider text-dark sm:!text-2xl  xl:font-bold xs:text-xl">{name}</h2>
+
+        <p
+          className="text-left text-sm sm:text-lg"
+          dangerouslySetInnerHTML={{
+            __html: formatDescription(
+              variants[slideIndex].description ||
+                "DESCRIPCIÓN: --- LAMPARA: --- MATERIAL: --- DIMENSIONES: --- CAJA CERRADA: ---"
+            ),
+          }}
+        ></p>
         <DefaultButton
           as={Link}
           to={`producto/${codigo}`}
           endContent={<i className="ri-arrow-right-up-line text-sm lg:text-lg" />}
-          className={"text-sm lg:w-80 lg:text-lg"}
+          className={"mx-auto mt-5 text-sm lg:w-80 lg:text-lg"}
         >
           CONOCER MÁS
         </DefaultButton>
