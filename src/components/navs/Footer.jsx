@@ -33,7 +33,7 @@ export default function Footer() {
   return (
     <footer className="overflow-hidden bg-gradient-to-b from-background to-primary/80 pb-5">
       <section className="relative flex flex-col items-center gap-6 overflow-hidden py-6 lg:gap-10 lg:py-10">
-        <div className="z-10 my-10 flex  flex-col gap-5 text-center lg:gap-10">
+        <div className="z-10 my-10 flex  flex-col gap-5 px-10 text-center lg:gap-10">
           <h2 className="text-2xl font-semibold uppercase text-secondary md:text-3xl">
             {new Date().getFullYear() - 1986} AÑOS
           </h2>

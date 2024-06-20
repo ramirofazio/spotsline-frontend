@@ -40,9 +40,9 @@ export const publicRoutesPaths = [
         path: "/",
         loader: async () => {
           try {
-            const featuredProducts = (await APISpot.product.getFeaturedProducts()).data;
-            return featuredProducts;
+            return await APISpot.product.getFeaturedProducts();
           } catch (e) {
+            console.log(e);
             return null;
           }
         },
@@ -59,21 +59,9 @@ export const publicRoutesPaths = [
         path: "/producto/:id",
         loader: async ({ params }) => {
           try {
-            const data = (await APISpot.product.getOne({ id: params.id })).data;
-            const map = {};
-            let variants = [];
-            data.variants.map((variant, description) => {
-              const { subRub } = variant;
-              if (!map[subRub]) {
-                map[subRub] = description;
-                variants.push(variant);
-              }
-            });
-            data.variants = variants;
-            return data;
+            return await APISpot.product.getOne({ id: params.id });
           } catch (e) {
             console.log(e);
-
             return null;
           }
         },

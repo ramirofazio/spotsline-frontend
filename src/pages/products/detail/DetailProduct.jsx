@@ -9,7 +9,6 @@ import { SelectQuantity } from "./SelectQuantity";
 import { SelectVariant } from "./SelectVariant";
 import { DefaultButton } from "src/components";
 import { formatDescription, formatPrices } from "src/utils";
-import { deleteOfStorage, getOfStorage, saveInStorage } from "src/utils/localStorage";
 import { VariantSwiper } from "./VariantSwiper";
 import { GoBackButton } from "src/components/buttons/GoBackButton";
 import { twMerge } from "tailwind-merge";
@@ -67,7 +66,7 @@ export const DetailProduct = () => {
   const addProductToShoppingCart = () => {
     //? Agrega variantes al carrito
     setLoading(true);
-    const currentPrice = `precio${managedClient.priceList ? managedClient.priceList : priceList}`;
+    const currentPrice = `precio${managedClient.priceList ? managedClient.priceList || 1 : priceList || 1}`;
 
     dispatch(
       addItemToCart({
@@ -92,13 +91,15 @@ export const DetailProduct = () => {
 
   const getVariantPrice = () => {
     //? Manega el precio dinamico para cada usuario dependiendo su `priceList`
-    const currentPrice = `precio${managedClient.priceList ? managedClient.priceList : priceList}`;
+    const currentPrice = `precio${managedClient.priceList ? managedClient.priceList || 1 : priceList || 1}`;
 
     const format = formatPrices(currentVariant[currentPrice] * qty);
     return format;
   };
 
   const isInCart = items?.find((i) => i?.productId === currentVariant?.id);
+
+  console.log(product?.variants);
 
   return (
     <main className="mx-auto mb-10 flex max-w-7xl flex-col items-center gap-6 px-10 pt-4 md:grid md:grid-flow-dense md:grid-cols-2 md:place-items-start md:gap-10">
@@ -111,9 +112,9 @@ export const DetailProduct = () => {
         currentVariant={currentVariant}
         setCurrentVariant={setCurrentVariant}
       />
-      <section className="min-w-full md:col-start-2  md:row-start-3 md:grid md:h-full xl:h-auto xl:gap-20">
+      <section className="min-w-full max-w-full  md:col-start-2 md:row-start-3 md:grid md:h-full xl:h-auto  xl:gap-20">
         {email && (
-          <div className="flex w-full flex-col gap-5 md:gap-20">
+          <div className="flex w-full flex-col gap-5 md:gap-10 lg:gap-20">
             <SelectVariant
               variants={product.variants}
               currentVariant={currentVariant}
@@ -133,7 +134,7 @@ export const DetailProduct = () => {
           <DefaultButton
             isLoading={loading}
             isDisabled={email ? !qty && true : false}
-            className="w-full font-secondary text-[15px] uppercase md:self-end"
+            className="w-full font-secondary text-[15px] uppercase md:mt-10 md:self-end lg:mt-0"
             onPress={email ? addProductToShoppingCart : () => navigate("/sign-in")}
           >
             {email ? "Agregar al carrito" : "Acceder para ver precios"}
@@ -157,7 +158,7 @@ export const DetailProduct = () => {
           </AnimatePresence>
         </div>
       </section>
-      <div className="hidden w-full rounded-md bg-primary/50 p-4 shadow-md md:col-start-1  md:inline lg:col-span-2 lg:p-10">
+      <div className="hidden w-full rounded-md bg-primary/50 p-4 shadow-md md:col-span-2  md:col-start-1 md:inline md:p-10">
         <ColorPalette variants={product.variants} currentVariant={currentVariant} />
       </div>
     </main>
@@ -183,7 +184,7 @@ function ColorPalette({ variants = [], currentVariant }) {
                */
 
   return (
-    <div className="flex flex-col gap-5 lg:flex-row lg:justify-between">
+    <div className="flex flex-col gap-5 md:flex-row md:justify-between">
       <p
         className="text-left text-sm sm:text-lg"
         dangerouslySetInnerHTML={{

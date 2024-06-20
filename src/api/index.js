@@ -90,11 +90,14 @@ export const APISpot = {
         `/${route.PRODUCTS}?take=${take}&&page=${page}&&search=${search}&&category=${category}&&order=${order}`
       );
     },
-    getOne: ({ id }) => {
-      return BASE_API.get(`/${route.PRODUCTS}/detail/${id}`);
+    getOne: async ({ id }) => {
+      const res = await BASE_API.get(`/${route.PRODUCTS}/detail/${id}`);
+
+      return res.data;
     },
-    getFeaturedProducts: () => {
-      return BASE_API.get(`/${route.PRODUCTS}/featured`);
+    getFeaturedProducts: async () => {
+      const res = await BASE_API.get(`/${route.PRODUCTS}/featured`);
+      return res.data;
     },
     getPaginatedProducts: (take, skip) => {
       return BASE_API.get(`/${route.PRODUCTS}/pag?take=${take}&&skip=${skip}`);
