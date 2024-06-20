@@ -40,7 +40,7 @@
 }
 
 .swiper-pagination-bullet-active {
-  @apply pointer-events-none scale-90 border-4 border-secondary bg-primary/50 opacity-50 transition-all md:border-2;
+  @apply pointer-events-none scale-90 border-2 border-secondary bg-primary/50 opacity-50 transition-all md:border-2;
 }
 
 @layer components {

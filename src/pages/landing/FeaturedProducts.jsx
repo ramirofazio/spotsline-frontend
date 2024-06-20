@@ -134,11 +134,10 @@ const FeaturedCard = ({ codigo, id, name, variants, index }) => {
         <p
           className="text-left text-sm sm:text-lg"
           dangerouslySetInnerHTML={{
-            __html:
+            __html: formatDescription(
               variants[slideIndex].description ||
-              formatDescription(
-                "DESCRIPCIÓN: Colgante con pantalla grande LAMPARA: E27 MATERIAL: Aluminio esmerilado DIMENSIONES:  Ø: 443mm – H: 326mm CAJA CERRADA:  4 unidades"
-              ),
+                "DESCRIPCIÓN: --- LAMPARA: --- MATERIAL: --- DIMENSIONES: --- CAJA CERRADA: ---"
+            ),
           }}
         ></p>
         <DefaultButton
