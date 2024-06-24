@@ -94,12 +94,8 @@ function ProductsView() {
     (query) => {
       const { filters, search } = query;
 
-      console.log("filters", filters);
-      console.log("search", search);
-
       let { order, category } = filters;
       if (searchParams.size > 0) {
-        console.log("sus params", searchParams);
         const queryCategory = searchParams.get("category");
         if (queryCategory) {
           category = parseInt(queryCategory);
@@ -114,12 +110,10 @@ function ProductsView() {
         order,
         category,
       };
-      console.log("QUERY", productsQuery);
 
       APISpot.product
         .getAll(productsQuery)
         .then(({ data }) => {
-          console.log("RESULT", data);
           dispatch(actionProducts.setTotalPages(data.metadata.total_pages));
           dispatch(actionProducts.setPageProducts({ page, products: data.rows }));
           setLoading(false);
@@ -135,7 +129,6 @@ function ProductsView() {
   );
 
   useEffect(() => {
-    console.log("effect", search);
     if (!products[page] || search !== "") {
       setLoading(true);
       loadProducts({ filters, search });
@@ -171,7 +164,6 @@ function Heading({ categories }) {
 
   function handleChange({ target }) {
     let value = target.value.trimStart();
-    console.log(value);
     set_Search(value);
   }
 
