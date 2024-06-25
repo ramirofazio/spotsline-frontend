@@ -25,7 +25,7 @@ export function ProductCard({ description, codigo, pathfoto }) {
           <Card className="aspect-square h-[300px] w-full overflow-visible  bg-white shadow-xl transition hover:scale-105">
             <CardBody className="flex h-[150px] items-center justify-center overflow-hidden  p-0">
               <Swiper
-                loop={true}
+                loop={pathfoto.length > 1 ? true : false}
                 autoplay={{
                   delay: getDelay(),
                   disableOnInteraction: false,

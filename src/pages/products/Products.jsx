@@ -13,6 +13,7 @@ import { images } from "src/assets";
 import { AnimatePresence, motion } from "framer-motion";
 import { onViewFadeIn } from "src/styles/framerVariants";
 import PageSimpleHeader from "src/components/PageHeader";
+import { useDebouncedCallback } from "use-debounce";
 
 const TAKE_PRODUCTS = 28;
 
@@ -20,7 +21,7 @@ export function Products() {
   const navigate = useNavigate();
   const categories = useRouteLoaderData("root");
   const { page } = useParams();
-  const { totalPages, filters } = useSelector((state) => state.product);
+  const { totalPages, filters, search } = useSelector((state) => state.product);
 
   useEffect(() => {
     if (!parseInt(page)) navigate("/productos/1");
@@ -31,10 +32,19 @@ export function Products() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  function hasSearchQuery(search) {
+    if (search.length) {
+      console.log("dio true");
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   return (
     <>
       <PageSimpleHeader
-        image={images.empresaWorkspace2}
+        image={images?.empresaWorkspace2}
         title={"NUESTROS PRODUCTOS"}
         subtitle={"Descubre nuestros productos"}
       />
@@ -45,7 +55,7 @@ export function Products() {
             {categories.map((cat, i) => (
               <li
                 key={i}
-                className={cat.value.toString() === filters.category.toString() && "animate-pulse font-bold "}
+                className={cat?.value?.toString() === filters.category.toString() ? "animate-pulse font-bold " : ""}
               >
                 {cat.name}
               </li>
@@ -56,13 +66,13 @@ export function Products() {
         <section className="mx-auto  my-10 gap-3  lg:grid-cols-3 xl:grid-cols-4">
           <Heading categories={categories} />
           {totalPages !== 1 && (
-            <div className=" mx-auto w-fit lg:col-span-3 xl:col-span-4">
+            <div className={` mx-auto w-fit lg:col-span-3 xl:col-span-4 ${hasSearchQuery(search) ? "invisible" : ""}`}>
               <PaginationComponent qty={totalPages} page={parseInt(page)} onChange={handleChangePage} />
             </div>
           )}
           <ProductsView />
           {totalPages !== 1 && (
-            <div className=" mx-auto w-fit lg:col-span-3 xl:col-span-4">
+            <div className={` mx-auto w-fit lg:col-span-3 xl:col-span-4 ${hasSearchQuery(search) ? "invisible" : ""}`}>
               <PaginationComponent qty={totalPages} page={parseInt(page)} onChange={handleChangePage} />
             </div>
           )}
@@ -80,20 +90,26 @@ function ProductsView() {
   const { products, search, filters } = useSelector((state) => state.product);
   let [searchParams, setSearchParams] = useSearchParams();
 
-  useEffect(() => {
-    setLoading(true);
-    if (products[page]) setLoading(false);
-    else {
+  const loadProducts = useDebouncedCallback(
+    (query) => {
+      const { filters, search } = query;
+
       let { order, category } = filters;
-      if (searchParams) {
+      if (searchParams.size > 0) {
         const queryCategory = searchParams.get("category");
         if (queryCategory) {
           category = parseInt(queryCategory);
           dispatch(actionProducts.setCategory(category));
         }
       }
-
-      const productsQuery = { page, take: TAKE_PRODUCTS, search: !search.length ? null : search, order, category };
+      console.log("se recibio" + search + ":)");
+      const productsQuery = {
+        page: !search.length ? page : 1,
+        take: TAKE_PRODUCTS,
+        search: !search.length ? "" : search,
+        order,
+        category,
+      };
 
       APISpot.product
         .getAll(productsQuery)
@@ -103,10 +119,19 @@ function ProductsView() {
           setLoading(false);
         })
         .catch(({ response }) => {
+          console.log("err", response);
           setLoading(false);
           dispatch(actionProducts.setSearch(""));
           toast.error(response.data.message);
         });
+    },
+    [500]
+  );
+
+  useEffect(() => {
+    if (!products[page] || search !== "") {
+      setLoading(true);
+      loadProducts({ filters, search });
     }
   }, [page, search, filters]);
 
@@ -137,10 +162,6 @@ function Heading({ categories }) {
   const [_search, set_Search] = useState("");
   const { search } = useSelector((state) => state.product);
 
-  useEffect(() => {
-    set_Search(search);
-  }, [search]);
-
   function handleChange({ target }) {
     let value = target.value.trimStart();
     set_Search(value);
@@ -148,7 +169,10 @@ function Heading({ categories }) {
 
   function handleSearch({ code }) {
     if (code === "Enter" && _search.length) {
+      console.log("search enviada", _search);
       dispatch(actionProducts.setSearch(_search));
+    } else if (code === "Enter" && !_search.length) {
+      dispatch(actionProducts.setSearch(""));
       dispatch(actionProducts.resetPageProducts());
       navigate("/productos/1");
     }
@@ -169,8 +193,6 @@ function Heading({ categories }) {
           className="w-full"
           onSubmit={(e) => {
             e.preventDefault();
-            dispatch(actionProducts.resetPageProducts());
-            dispatch(actionProducts.setSearch(""));
           }}
         >
           <Input
@@ -186,13 +208,9 @@ function Heading({ categories }) {
               if (_search.length && search !== _search) {
                 toast.info('Presiona "Enter" para buscar');
               }
-              if (!_search.length && search !== _search) {
-                dispatch(actionProducts.resetPageProducts());
-                dispatch(actionProducts.setSearch(""));
-              }
             }}
             placeholder="Buscar producto"
-            startContent={<i className="ri-search-line scale-125"></i>}
+            startContent={<i className="ri-search-line scale-125 "></i>}
           />
         </form>
         <FilterProducts categories={categories} />
