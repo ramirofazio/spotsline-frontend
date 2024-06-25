@@ -64,19 +64,19 @@ export default function ShoppingCart() {
     }
   };
 
-  const resetCart = async () => {
-    try {
-      setLoading(true);
-      dispatch(actionsShoppingCart.clearCart());
-      toast.success(`Se vacio el carrito`);
-    } catch (e) {
-      console.log(e);
-      const backErr = e?.response?.data;
-      toast.error("Hubo un error al aplicar el cupon", { description: backErr ? backErr?.message : e.message });
-    } finally {
-      setLoading(false);
-    }
-  };
+  //   const resetCart = async () => {
+  //     try {
+  //       setLoading(true);
+  //       dispatch(actionsShoppingCart.clearCart());
+  //       toast.success(`Se vacio el carrito`);
+  //     } catch (e) {
+  //       console.log(e);
+  //       const backErr = e?.response?.data;
+  //       toast.error("Hubo un error al aplicar el cupon", { description: backErr ? backErr?.message : e.message });
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
   const handleAddCartToClient = async () => {
     setLoading(true);
@@ -119,14 +119,6 @@ export default function ShoppingCart() {
   return (
     <main className="text-center">
       <section className="relative flex flex-col items-center gap-10 p-6">
-        <DefaultButton
-          isIconOnly={true}
-          onPress={() => resetCart(reduxCart.id)}
-          isDisabled={Boolean(!reduxCart.items.length)}
-          className="invisible absolute bottom-4 right-4 w-4 from-red-600 to-red-600 !px-0 disabled:pointer-events-none disabled:opacity-40 xl:visible"
-        >
-          <i className="ri-delete-bin-line text-2xl"></i>
-        </DefaultButton>
         {web_role === Number(import.meta.env.VITE_USER_ROLE) && (
           <motion.h1 {...fadeInTop()} className="text-3xl font-bold text-dark drop-shadow-xl">
             MI CARRITO
@@ -153,10 +145,10 @@ export default function ShoppingCart() {
           <motion.article
             {...onViewZoomIn}
             key={index}
-            className="z-10 flex min-w-[80vw] max-w-[50vw] flex-col items-center  gap-6 rounded-xl bg-gradient-to-b from-yellow-200 to-white p-6 md:flex-row md:bg-gradient-to-r lg:gap-12 xl:min-w-[60vw]"
+            className="z-10 flex min-w-[80vw] max-w-[50vw] flex-col items-center  gap-6 rounded-xl bg-gradient-to-l from-secondary/30 to-white p-6 md:flex-row md:bg-gradient-to-r lg:gap-12 xl:min-w-[60vw]"
           >
             <NavLink
-              className="flex max-h-[200px] w-fit max-w-[200px] items-center justify-center rounded-xl bg-slate-100 p-5"
+              className="flex max-h-[200px] w-fit max-w-[200px] items-center justify-center rounded-xl border-3 border-primary p-5"
               to={`/producto/${marcaId}`}
             >
               <img
@@ -177,13 +169,6 @@ export default function ShoppingCart() {
                 </p>
               </div>
               <div className="flex w-full items-center justify-between gap-4 text-xl md:w-40">
-                <DefaultButton
-                  isIconOnly={true}
-                  className="w-4 from-red-600 to-red-600"
-                  onPress={() => dispatch(actionsShoppingCart.removeItemFromCart(id ?? productId))}
-                >
-                  <i className="ri-delete-bin-line text-xl text-dark" />
-                </DefaultButton>
                 <div className="flex items-center gap-3 font-secondary font-bold">
                   <Button
                     isIconOnly
@@ -218,20 +203,9 @@ export default function ShoppingCart() {
       <Divider className="h-1 bg-primary" />
       <motion.section
         {...onViewFadeIn(0.8, 0.2)}
-        className="relative m-6 mx-auto flex max-w-[80vw] flex-col items-start  gap-6 overflow-hidden rounded-xl bg-dark/50 p-6 font-secondary font-bold text-white shadow-xl xl:max-w-[60vw]"
+        className="relative m-6 mx-auto flex max-w-[80vw] flex-col items-start  gap-6 overflow-hidden rounded-xl bg-secondary/30 p-6 font-secondary font-bold text-white shadow-xl xl:max-w-[60vw]"
       >
-        <AwsImage
-          type={"logos"}
-          identify={"logoYellow"}
-          className={"absolute -right-20 -top-10 w-60 rotate-12 blur-sm"}
-        />
-        <AwsImage
-          type={"logos"}
-          identify={"logoYellow"}
-          className={"absolute -bottom-10 -left-20 w-60 -rotate-12 blur-sm"}
-        />
-
-        <h2 className="yellow-neon text-xl font-bold tracking-wider">RESUMEN</h2>
+        <h2 className="text-xl font-bold text-dark">RESUMEN</h2>
         <div className="z-10 flex w-full items-center justify-between">
           <h3>SUBTOTAL</h3>
           <h3 className="font-extrabold text-white">{formatPrices(reduxCart.subtotal)}</h3>
