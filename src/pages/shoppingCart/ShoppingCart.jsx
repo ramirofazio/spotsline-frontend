@@ -1,4 +1,4 @@
-import { Input, Button, Divider, useDisclosure, Textarea, Tooltip } from "@nextui-org/react";
+import { Input, Button, Divider, useDisclosure, Textarea } from "@nextui-org/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,7 +6,6 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
 import { DarkModal, DefaultButton, ShoppingCartSkeleton } from "src/components";
-import AwsImage from "src/components/images/AwsImage";
 import { actionsShoppingCart } from "src/redux/reducers";
 import { onViewFadeIn, onViewFadeInBottom, fadeInTop, onViewZoomIn } from "src/styles/framerVariants";
 import { formatPrices } from "src/utils";
@@ -311,7 +310,6 @@ function PickDateModal({ isOpen, onOpenChange, onClose, items, coupon, discount 
   const user = useSelector((state) => state.user);
 
   const [loading, setLoading] = useState(false);
-  const [isTestUser, setIsTestUser] = useState(false);
   const [error, setError] = useState(false);
   const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
@@ -362,12 +360,6 @@ function PickDateModal({ isOpen, onOpenChange, onClose, items, coupon, discount 
     return maxDate.toISOString().split("T")[0];
   };
 
-  useEffect(() => {
-    if (user.email === "user@spotsline.com.ar") {
-      setIsTestUser(true);
-    }
-  }, []);
-
   return (
     <>
       <DarkModal
@@ -405,42 +397,8 @@ function PickDateModal({ isOpen, onOpenChange, onClose, items, coupon, discount 
           <DefaultButton onPress={handleCreateCheckout} className={"mx-auto lg:mx-0"} isLoading={loading}>
             IR A PAGAR
           </DefaultButton>
-          {isTestUser && import.meta.env.VITE_ENV !== "production" && (
-            <div className="flex w-full flex-col items-center gap-3 text-background">
-              <h5 className="flex items-center gap-3 font-bold uppercase underline">
-                Tarjeta de prueba ;)
-                <i
-                  className="ri-external-link-line icons text-lg text-primary"
-                  onClick={() => window.open("https://mobbex.dev/medios-de-pago-para-pruebas#hbsLJ")}
-                />
-              </h5>
-              <CopyItem title={"Tarjeta"} text={"4507990000000010"} copyText={"4507990000000010"} />
-              <CopyItem title={"Vencimiento"} text={"12/34"} copyText={"12/34"} />
-              <CopyItem title={"Nombre"} text={"Demo"} copyText={"Demo"} />
-              <CopyItem title={"DNI"} text={"12123123"} copyText={"12123123"} />
-              <CopyItem title={"CVV"} text={"200 / 400 / 003"} copyText={"200 / 400 / 003"} info="a" />
-            </div>
-          )}
         </form>
       </DarkModal>
     </>
-  );
-}
-
-function CopyItem({ title, text, copyText, info }) {
-  return (
-    <span className="relative flex w-full items-center gap-2 rounded-md border border-background p-1 px-3 shadow-xl">
-      <strong>{title}:</strong>
-      <p className="uppercase text-primary/50 underline">{text}</p>
-      <i
-        className="ri-file-copy-line icons text-lg text-primary"
-        onClick={() => navigator.clipboard.writeText(copyText)}
-      />
-      {info && (
-        <Tooltip content="200: Pago exitoso. 400: Pago denegado. 003: Pago en proceso">
-          <i className="ri-information-line icons absolute -right-10 text-lg text-primary" />
-        </Tooltip>
-      )}
-    </span>
   );
 }
