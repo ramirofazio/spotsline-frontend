@@ -61,6 +61,9 @@ export default function CategoriesCarrousel() {
   );
 
   const animate = () => {
+    const carrousel1 = document.getElementById("category-carrousel-1");
+    const carrousel2 = document.getElementById("category-carrousel-2");
+
     if (xPercent1 < -100) {
       xPercent1 = 0;
     } else if (xPercent1 > 0) {
@@ -73,15 +76,17 @@ export default function CategoriesCarrousel() {
       xPercent2 = -100;
     }
 
-    gsap.set(firstRowRef1.current, { xPercent: xPercent1 });
-    gsap.set(firstRowRef2.current, { xPercent: xPercent1 });
-    gsap.set(secondRowRef1.current, { xPercent: xPercent2 });
-    gsap.set(secondRowRef2.current, { xPercent: xPercent2 });
+    if (carrousel1 && carrousel2) {
+      gsap.set(firstRowRef1.current, { xPercent: xPercent1 });
+      gsap.set(firstRowRef2.current, { xPercent: xPercent1 });
+      gsap.set(secondRowRef1.current, { xPercent: xPercent2 });
+      gsap.set(secondRowRef2.current, { xPercent: xPercent2 });
 
-    xPercent1 += velocity1 * direction1;
-    xPercent2 += velocity2 * direction2;
+      xPercent1 += velocity1 * direction1;
+      xPercent2 += velocity2 * direction2;
 
-    requestAnimationFrame(animate);
+      requestAnimationFrame(animate);
+    }
   };
 
   useEffect(() => {
@@ -130,6 +135,7 @@ export default function CategoriesCarrousel() {
       <div className="absolute left-0 top-0 z-20 h-full w-[50px] bg-gradient-to-r from-background to-transparent lg:w-[100px]" />
       {/* SLIDER 1 */}
       <animated.div
+        id={"category-carrousel-1"}
         ref={slider1}
         className="relative whitespace-nowrap hover:cursor-grab"
         style={{ x: springProps1.x, touchAction: "none" }}
@@ -153,6 +159,7 @@ export default function CategoriesCarrousel() {
       </animated.div>
       {/* SLIDER 2 */}
       <animated.div
+        id={"category-carrousel-2"}
         ref={slider2}
         className="relative whitespace-nowrap hover:cursor-grab"
         style={{ x: springProps2.x, touchAction: "none" }}
