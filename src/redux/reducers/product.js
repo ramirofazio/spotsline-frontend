@@ -64,6 +64,7 @@ const product = createSlice({
     resetFilters: function (state) {
       return {
         ...state,
+        products: {},
         filters: initialFilters,
       };
     },
