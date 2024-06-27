@@ -9,7 +9,7 @@ import { DarkModal, DefaultButton, ShoppingCartSkeleton } from "src/components";
 import { actionsShoppingCart } from "src/redux/reducers";
 import { onViewFadeIn, onViewFadeInBottom, fadeInTop, onViewZoomIn } from "src/styles/framerVariants";
 import { formatPrices } from "src/utils";
-import { saveInStorage } from "src/utils/localStorage";
+//import { saveInStorage } from "src/utils/localStorage";
 import { useDebouncedCallback } from "use-debounce";
 
 const MAX_AMOUNT = 15;
@@ -335,8 +335,10 @@ function PickDateModal({ isOpen, onOpenChange, onClose, items, coupon, discount 
 
       //* Guardo para recuperar en `PaymentOK.jsx`
       const res = await APISpot.checkout.create(body);
+
       if (res) {
-        saveInStorage("orderBody", body);
+        //TODO BORRAR ESTA LINEA CUANDO ESTE EL FLUJO DE MOBBEX CON WEBHOOK
+        // saveInStorage("orderBody", body);
         window.location.replace(res);
       }
     } catch (e) {

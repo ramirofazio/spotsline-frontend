@@ -184,10 +184,7 @@ export const APISpot = {
       const res = await BASE_API.get(`/${route.CURRENT_ACCOUNT}/one/${id}`);
       return res.data;
     },
-    createOrder: async (body) => {
-      const res = await BASE_API.post(`/${route.USER}/create-order`, body);
-      return res.data;
-    },
+
     getProfile: async () => {
       addAuthWithToken(getOfStorage("access_token"));
       //ACA
