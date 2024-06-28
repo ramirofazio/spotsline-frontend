@@ -19,6 +19,8 @@ export function Landing() {
   const mobbex_transaction_id = params.get("transactionId");
 
   useEffect(() => {
+    document.title = "SPOTSLINE - Iluminación Profesional";
+
     window.scrollTo({
       top: 0,
       behavior: "instant",
