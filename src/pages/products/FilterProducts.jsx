@@ -39,6 +39,7 @@ export function FilterProducts({ categories }) {
   const handleFilters = (key, value) => setFilters((cur) => ({ ...cur, [key]: value }));
 
   useEffect(() => {
+    console.log(product.filters);
     setFilters(product.filters);
   }, [product.filters]);
 
@@ -123,8 +124,9 @@ export function FilterProducts({ categories }) {
                   }}
                   radius="full"
                   isIconOnly
-                  className="p-6"
+                  className="p-6 disabled:opacity-40"
                   color="danger"
+                  isDisabled={filters?.order || filters?.category ? false : true}
                 >
                   <i className="ri-refresh-line scale-125"></i>
                 </Button>
