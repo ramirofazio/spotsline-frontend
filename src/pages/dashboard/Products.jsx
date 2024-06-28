@@ -442,12 +442,16 @@ function ImagesModal({ isOpen, onOpenChange, onClose, variant, navigate }) {
   return (
     <DarkModal
       isOpen={isOpen}
-      isDismissable={false}
+      isDismissable={true}
       onOpenChange={onOpenChange}
       title={`GESTIONA LAS IMAGENES DE ${variant.description.toUpperCase()}`}
       size="xl"
       description={"En esta pantalla podras agregar o eliminar fotos de cada producto"}
+      className="relative"
     >
+      <p className="yellowGradient icons absolute flex h-10 w-10 items-center justify-center rounded-xl border-3 border-primary/50 p-2">
+        <i className="ri-add-line text-xl" />
+      </p>
       <main className="flex w-full flex-col items-center justify-between">
         <section className="grid h-full w-full grid-rows-3">
           <div className="row-span-2 flex flex-wrap items-center justify-center gap-3 p-6">
