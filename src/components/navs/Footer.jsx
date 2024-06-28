@@ -1,5 +1,5 @@
 import { Image } from "@nextui-org/react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { DefaultButton } from "..";
 import { images } from "src/assets";
 import { twMerge } from "tailwind-merge";
@@ -90,11 +90,11 @@ const FooterItem = ({ data, title }) => {
     <article className="flex w-full flex-col gap-5">
       <h5 className="yellowGradient text-[20px] font-semibold xl:text-2xl">{title}</h5>
       {data.map(({ link, name }, index) => (
-        <a href={link} key={index} className="w-fit">
+        <NavLink to={link} key={index} className="w-fit">
           <p className="hover:text-primary-violet icons text-[15px] font-medium text-secondary transition xl:text-lg">
             <i className="ri-arrow-right-s-line" /> {name}
           </p>
-        </a>
+        </NavLink>
       ))}
     </article>
   );
