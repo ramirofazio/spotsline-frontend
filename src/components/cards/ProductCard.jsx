@@ -13,7 +13,7 @@ import "swiper/css";
 
 export function ProductCard({ description, codigo, pathfoto }) {
   function getDelay() {
-    return Math.floor(Math.random() * 2000) + 4000; // Genera un número aleatorio entre 4000 y 6000 milisegundos
+    return Math.floor(Math.random() * 4000) + 8000; // Genera un número aleatorio entre 4000 y 6000 milisegundos
   }
   return (
     <AnimatePresence>

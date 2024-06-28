@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { APISpot, addAuthWithToken } from "../../api";
@@ -70,6 +70,10 @@ export function SignIn() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    document.title = "SPOTSLINE - Iniciar Sesión";
+  }, []);
 
   return (
     <main className="relative h-screen w-screen overflow-hidden text-center">

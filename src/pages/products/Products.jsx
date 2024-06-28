@@ -24,6 +24,10 @@ export function Products() {
   const { totalPages, filters, search } = useSelector((state) => state.product);
 
   useEffect(() => {
+    document.title = "SPOTSLINE - Nuestros Productos";
+  }, []);
+
+  useEffect(() => {
     if (!parseInt(page)) navigate("/productos/1");
   }, [page]);
 

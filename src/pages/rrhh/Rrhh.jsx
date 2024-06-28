@@ -5,6 +5,7 @@ import { useEffect } from "react";
 
 export function Rrhh() {
   useEffect(() => {
+    document.title = "SPOTSLINE - Recursos Humanos";
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
