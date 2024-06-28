@@ -102,7 +102,7 @@ function ProductsView() {
           dispatch(actionProducts.setCategory(category));
         }
       }
-      console.log("se recibio" + search + ":)");
+
       const productsQuery = {
         page: !search.length ? page : 1,
         take: TAKE_PRODUCTS,
@@ -114,6 +114,7 @@ function ProductsView() {
       APISpot.product
         .getAll(productsQuery)
         .then(({ data }) => {
+          console.log(data);
           dispatch(actionProducts.setTotalPages(data.metadata.total_pages));
           dispatch(actionProducts.setPageProducts({ page, products: data.rows }));
           setLoading(false);
@@ -165,6 +166,7 @@ function Heading({ categories }) {
   function handleChange({ target }) {
     let value = target.value.trimStart();
     set_Search(value);
+    dispatch(actionProducts.setSearch(value));
   }
 
   function handleSearch({ code }) {
