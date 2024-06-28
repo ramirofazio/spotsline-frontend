@@ -32,20 +32,22 @@ const INFORMACION_LEGAL = [
 export default function Footer() {
   return (
     <footer className="overflow-hidden bg-gradient-to-b from-background to-primary/80 pb-5">
-      <section className="relative flex flex-col items-center gap-6 overflow-hidden py-6 lg:gap-10 lg:py-10">
-        <div className="z-10 my-10 flex  flex-col gap-5 px-10 text-center lg:gap-10">
-          <h2 className="text-2xl font-semibold uppercase text-secondary md:text-3xl">
-            {new Date().getFullYear() - 1986} AÑOS
-          </h2>
-          <p className="text-md font-medium text-secondary/80 md:text-xl">
-            EVOLUCIONANDO Y DESARROLLANDO NUEVOS DISEÑOS <br className="hidden md:block" /> HACIÉNDOLE HONOR A NUESTRA
-            TRAYECTORIA.
-          </p>
-          <DefaultButton as={Link} to={"/empresa"} className="mx-auto w-max min-w-[20vw] shadow-xl">
-            CONOCENOS
-          </DefaultButton>
-        </div>
-      </section>
+      {!window.location.includes("empresa") && (
+        <section className="relative flex flex-col items-center gap-6 overflow-hidden py-6 lg:gap-10 lg:py-10">
+          <div className="z-10 my-10 flex  flex-col gap-5 px-10 text-center lg:gap-10">
+            <h2 className="text-2xl font-semibold uppercase text-secondary md:text-3xl">
+              {new Date().getFullYear() - 1986} AÑOS
+            </h2>
+            <p className="text-md font-medium text-secondary/80 md:text-xl">
+              EVOLUCIONANDO Y DESARROLLANDO NUEVOS DISEÑOS <br className="hidden md:block" /> HACIÉNDOLE HONOR A NUESTRA
+              TRAYECTORIA.
+            </p>
+            <DefaultButton as={Link} to={"/empresa"} className="mx-auto w-max min-w-[20vw] shadow-xl">
+              CONOCENOS
+            </DefaultButton>
+          </div>
+        </section>
+      )}
       <section className="relative flex w-full flex-col gap-10 px-10 text-[13px] text-dark lg:mx-auto lg:w-[100%] lg:flex-row lg:justify-between lg:px-20 lg:py-20 lg:text-[20px]">
         <div className="z-10 space-y-10 lg:w-[30vw] xl:space-y-8 2xl:space-y-10">
           <p className="font-primary text-4xl font-semibold tracking-widest text-dark">SPOTSLINE</p>
