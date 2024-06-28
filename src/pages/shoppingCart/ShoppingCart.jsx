@@ -125,7 +125,6 @@ export default function ShoppingCart() {
           </motion.div>
         )}
         {reduxCart.items.map(({ img, name, price, qty, id, productId, marcaId }, index) => (
-          //TODO @Tomi Aca se puede hacer una orquestacion de variants para que quede tipo acordion de arriba hacia abajo. https://www.framer.com/motion/animation/#variants
           <motion.article
             {...onViewZoomIn}
             key={index}
