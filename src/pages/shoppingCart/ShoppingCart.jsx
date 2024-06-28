@@ -9,7 +9,6 @@ import { DarkModal, DefaultButton, ShoppingCartSkeleton } from "src/components";
 import { actionsShoppingCart } from "src/redux/reducers";
 import { onViewFadeIn, onViewFadeInBottom, fadeInTop, onViewZoomIn } from "src/styles/framerVariants";
 import { formatPrices } from "src/utils";
-//import { saveInStorage } from "src/utils/localStorage";
 import { useDebouncedCallback } from "use-debounce";
 
 const MAX_AMOUNT = 15;
@@ -62,20 +61,6 @@ export default function ShoppingCart() {
       setLoading(false);
     }
   };
-
-  //   const resetCart = async () => {
-  //     try {
-  //       setLoading(true);
-  //       dispatch(actionsShoppingCart.clearCart());
-  //       toast.success(`Se vacio el carrito`);
-  //     } catch (e) {
-  //       console.log(e);
-  //       const backErr = e?.response?.data;
-  //       toast.error("Hubo un error al aplicar el cupon", { description: backErr ? backErr?.message : e.message });
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
 
   const handleAddCartToClient = async () => {
     setLoading(true);
@@ -333,12 +318,9 @@ function PickDateModal({ isOpen, onOpenChange, onClose, items, coupon, discount 
         deliveryDate: new Date(date).toISOString(),
       };
 
-      //* Guardo para recuperar en `PaymentOK.jsx`
       const res = await APISpot.checkout.create(body);
 
       if (res) {
-        //TODO BORRAR ESTA LINEA CUANDO ESTE EL FLUJO DE MOBBEX CON WEBHOOK
-        // saveInStorage("orderBody", body);
         window.location.replace(res);
       }
     } catch (e) {
@@ -358,7 +340,7 @@ function PickDateModal({ isOpen, onOpenChange, onClose, items, coupon, discount 
 
   const getMaxDate = () => {
     const today = new Date();
-    const maxDate = new Date(today.getFullYear(), today.getMonth() + 2, 0); // Obtiene el último día del mes en 2 meses
+    const maxDate = new Date(today.getFullYear(), today.getMonth() + 2, 0);
     return maxDate.toISOString().split("T")[0];
   };
 

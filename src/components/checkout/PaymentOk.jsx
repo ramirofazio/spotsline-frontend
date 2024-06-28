@@ -1,50 +1,19 @@
-//import { useSelector, useDispatch } from "react-redux";
 import { DarkModal, DefaultButton } from "..";
 import { useDisclosure } from "@nextui-org/react";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-// import { APISpot } from "src/api";
-// import { toast } from "sonner";
-// import { deleteOfStorage, getOfStorage } from "src/utils/localStorage";
-// import { actionsShoppingCart } from "src/redux/reducers";
-//import Spinner from "../Spinner";
+import { APISpot } from "src/api";
 
-export function PaymentOk({
-  transactionId,
-  //type
-}) {
-  //const dispatch = useDispatch();
-  //const { id } = useSelector((state) => state.cart);
-  //const orderBody = getOfStorage("orderBody");
+export function PaymentOk({ transactionId }) {
+  const { id } = useSelector((state) => state.cart);
 
   const { onOpen, isOpen, onOpenChange, onClose } = useDisclosure();
 
-  //const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     onOpen();
-
-    //TODO BORRAR ESTO CUANDO ESTE EL FLUJO DE MOBBEX CON WEBHOOK
-    // setLoading(true);
-    // try {
-    //   if (orderBody) {
-    //     APISpot.user.createOrder({ ...orderBody, transactionId, type }).then((res) => {
-    //       if (res) {
-    //         APISpot.cart.deleteCart(id, false);
-    //         dispatch(actionsShoppingCart.clearCart());
-    //         toast.success("Orden de compra creada con exito", { description: "¡Gracias por comprar en Spotsline!" });
-    //       }
-    //     });
-    //   } else {
-    //     toast.info("Faltan datos para crear la orden");
-    //   }
-    // } catch (e) {
-    //   console.log(e);
-    // } finally {
-    //   setLoading(false);
-    //   deleteOfStorage("orderBody");
-    // }
-    //TODO HASTA ACA
+    //? Elimino el shopping cart de la DB
+    APISpot.cart.deleteCart(id, false);
   }, []);
 
   return (
@@ -54,8 +23,7 @@ export function PaymentOk({
       title={"¡GRACIAS POR TU COMPRA!"}
       description={"Si llegaste hasta acá porque registramos tu pedido con EXITO"}
     >
-      {/* {loading && <Spinner />} */}
-      <i className="ri-close-line icons absolute right-0 top-0 text-xl text-background" onClick={() => onClose()} />
+      = <i className="ri-close-line icons absolute right-0 top-0 text-xl text-background" onClick={() => onClose()} />
       <main className="z-20 flex flex-col items-center gap-6">
         <p className="font-secondary text-sm text-background">
           TU ID DE TRANSACCION ES <strong className="icons text-primary underline">#{transactionId}</strong>
