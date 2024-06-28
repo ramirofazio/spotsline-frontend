@@ -150,7 +150,10 @@ function ProductsView() {
   return (
     <AnimatePresence key={page} mode="wait">
       {products && Object.values(products)[0].length ? (
-        <motion.div {...onViewFadeIn()} className="mx-auto grid w-full grid-cols-2 gap-8  p-2 lg:grid-cols-3">
+        <motion.div
+          {...onViewFadeIn()}
+          className="mx-auto grid w-full grid-cols-2 gap-8  p-2 lg:grid-cols-3  xl:grid-cols-4"
+        >
           {products[page].map((p, index) => (
             <ProductCard {...p} key={index} />
           ))}
