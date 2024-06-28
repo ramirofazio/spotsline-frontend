@@ -34,7 +34,6 @@ export function Products() {
 
   function hasSearchQuery(search) {
     if (search.length) {
-      console.log("dio true");
       return true;
     } else {
       return false;
@@ -63,7 +62,7 @@ export function Products() {
           </ul>
         </article>
 
-        <section className="mx-auto  my-10 gap-3  lg:grid-cols-3 xl:grid-cols-4">
+        <section className="mx-auto  my-10 w-full  gap-3 lg:grid-cols-3 xl:grid-cols-4">
           <Heading categories={categories} />
           {totalPages !== 1 && (
             <div className={` mx-auto w-fit lg:col-span-3 xl:col-span-4 ${hasSearchQuery(search) ? "invisible" : ""}`}>
@@ -93,7 +92,7 @@ function ProductsView() {
   const loadProducts = useDebouncedCallback(
     (query) => {
       const { filters, search } = query;
-
+      console.log("Busco", search);
       let { order, category } = filters;
       if (searchParams.size > 0) {
         const queryCategory = searchParams.get("category");
@@ -114,7 +113,7 @@ function ProductsView() {
       APISpot.product
         .getAll(productsQuery)
         .then(({ data }) => {
-          console.log(data);
+          console.log(data.rows);
           dispatch(actionProducts.setTotalPages(data.metadata.total_pages));
           dispatch(actionProducts.setPageProducts({ page, products: data.rows }));
           setLoading(false);
@@ -148,11 +147,22 @@ function ProductsView() {
 
   return (
     <AnimatePresence key={page} mode="wait">
-      <motion.div {...onViewFadeIn()} className="grid w-full grid-cols-2 gap-8 p-2 lg:w-full lg:grid-cols-3">
-        {products[page].map((p, index) => (
-          <ProductCard {...p} key={index} />
-        ))}
-      </motion.div>
+      {products && Object.values(products)[0].length ? (
+        <motion.div {...onViewFadeIn()} className="mx-auto grid w-full grid-cols-2 gap-8  p-2 lg:grid-cols-3">
+          {products[page].map((p, index) => (
+            <ProductCard {...p} key={index} />
+          ))}
+        </motion.div>
+      ) : (
+        <motion.div {...onViewFadeIn()} className="mx-auto  gap-8  p-2">
+          <div className="mx-auto flex w-fit max-w-[95%] flex-col items-center rounded-xl border-2 border-background p-1 shadow-2xl">
+            <i className="ri-information-line yellow-neon animate-pulse text-7xl" />
+            <p>
+              No se encontraron productos al buscar <strong>'{search}'</strong>
+            </p>
+          </div>
+        </motion.div>
+      )}
     </AnimatePresence>
   );
 }
@@ -166,12 +176,15 @@ function Heading({ categories }) {
   function handleChange({ target }) {
     let value = target.value.trimStart();
     set_Search(value);
+    if (!value.length) {
+      console.log(value);
+      dispatch(actionProducts.research());
+    }
     dispatch(actionProducts.setSearch(value));
   }
 
   function handleSearch({ code }) {
     if (code === "Enter" && _search.length) {
-      console.log("search enviada", _search);
       dispatch(actionProducts.setSearch(_search));
     } else if (code === "Enter" && !_search.length) {
       dispatch(actionProducts.setSearch(""));
@@ -190,7 +203,7 @@ function Heading({ categories }) {
   }
   return (
     <>
-      <div className="mb-5 flex w-full items-center gap-1 sm:col-span-2 md:w-full lg:col-span-3 xl:col-span-4">
+      <div className="mb-5 flex w-full items-center gap-1  sm:col-span-2 md:w-full lg:col-span-3 xl:col-span-4">
         <form
           className="w-full"
           onSubmit={(e) => {
@@ -200,19 +213,20 @@ function Heading({ categories }) {
           <Input
             value={_search}
             onChange={handleChange}
-            onKeyDown={handleSearch}
             isClearable
             radius="full"
             className="md:w-[80%]"
             labelPlacement=""
             onClear={onClear}
-            onBlur={() => {
-              if (_search.length && search !== _search) {
-                toast.info('Presiona "Enter" para buscar');
-              }
-            }}
             placeholder="Buscar producto"
             startContent={<i className="ri-search-line scale-125 "></i>}
+            // * Habilitar para buscar con enter
+            // onKeyDown={handleSearch}
+            // onBlur={() => {
+            //   if (_search.length && search !== _search) {
+            //     toast.info('Presiona "Enter" para buscar');
+            //   }
+            // }}
           />
         </form>
         <FilterProducts categories={categories} />
