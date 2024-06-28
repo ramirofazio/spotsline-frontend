@@ -92,7 +92,6 @@ function ProductsView() {
   const loadProducts = useDebouncedCallback(
     (query) => {
       const { filters, search } = query;
-      console.log("Busco", search);
       let { order, category } = filters;
       if (searchParams.size > 0) {
         const queryCategory = searchParams.get("category");
@@ -113,7 +112,6 @@ function ProductsView() {
       APISpot.product
         .getAll(productsQuery)
         .then(({ data }) => {
-          console.log(data.rows);
           dispatch(actionProducts.setTotalPages(data.metadata.total_pages));
           dispatch(actionProducts.setPageProducts({ page, products: data.rows }));
           setLoading(false);
@@ -177,7 +175,6 @@ function Heading({ categories }) {
     let value = target.value.trimStart();
     set_Search(value);
     if (!value.length) {
-      console.log(value);
       dispatch(actionProducts.research());
     }
     dispatch(actionProducts.setSearch(value));
