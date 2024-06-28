@@ -8,6 +8,10 @@ import PageSimpleHeader from "src/components/PageHeader";
 export function Company() {
   useEffect(() => {
     document.title = "Nuestra Empresa";
+    window.scrollTo({
+      top: 0,
+      behavior: "instant",
+    });
   }, []);
 
   return (
