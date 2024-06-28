@@ -84,6 +84,7 @@ export function PublicRoot() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+
   return (
     <main className="overflow-hidden">
       <Outlet />
