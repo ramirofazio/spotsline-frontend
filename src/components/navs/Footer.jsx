@@ -41,7 +41,7 @@ export default function Footer() {
             EVOLUCIONANDO Y DESARROLLANDO NUEVOS DISEÑOS <br className="hidden md:block" /> HACIÉNDOLE HONOR A NUESTRA
             TRAYECTORIA.
           </p>
-          <DefaultButton as={Link} to={"/nosotros"} className="mx-auto w-max min-w-[20vw] shadow-xl">
+          <DefaultButton as={Link} to={"/empresa"} className="mx-auto w-max min-w-[20vw] shadow-xl">
             CONOCENOS
           </DefaultButton>
         </div>
