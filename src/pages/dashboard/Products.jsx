@@ -443,15 +443,13 @@ function ImagesModal({ isOpen, onOpenChange, onClose, variant, navigate }) {
     <DarkModal
       isOpen={isOpen}
       isDismissable={true}
+      hideCloseButton={false}
       onOpenChange={onOpenChange}
       title={`GESTIONA LAS IMAGENES DE ${variant.description.toUpperCase()}`}
       size="xl"
       description={"En esta pantalla podras agregar o eliminar fotos de cada producto"}
       className="relative"
     >
-      <p className="yellowGradient icons absolute flex h-10 w-10 items-center justify-center rounded-xl border-3 border-primary/50 p-2">
-        <i className="ri-add-line text-xl" />
-      </p>
       <main className="flex w-full flex-col items-center justify-between">
         <section className="grid h-full w-full grid-rows-3">
           <div className="row-span-2 flex flex-wrap items-center justify-center gap-3 p-6">
@@ -463,8 +461,8 @@ function ImagesModal({ isOpen, onOpenChange, onClose, variant, navigate }) {
                   ) : (
                     <>
                       <p className="text-background">Este producto no tiene imagen</p>
-                      <p className="yellowGradient icons flex h-10 w-10 items-center justify-center rounded-xl border-3 border-primary/50 p-2">
-                        <i className="ri-add-line text-xl" />
+                      <p className=" yellowGradient icons flex h-10 w-10 items-center justify-center rounded-xl border-3 border-primary/50 p-2">
+                        <i className="ri-add-line  text-xl" />
                       </p>
                     </>
                   )}
@@ -487,10 +485,10 @@ function ImagesModal({ isOpen, onOpenChange, onClose, variant, navigate }) {
               >
                 <Tooltip content="Eliminar esta imagen" delay={1000} color="primary">
                   <Chip
-                    className="text-md icons absolute -right-2 -top-2 z-20 flex aspect-square h-5 w-5 items-center justify-center rounded-full bg-primary text-dark hover:bg-red-600"
+                    className="text-md icons absolute -right-2 -top-2 z-20 m-0 flex aspect-square h-5 w-5 items-center  justify-center rounded-full  bg-primary px-0 py-4 text-dark hover:bg-red-600"
                     onClick={() => setImage("")}
                   >
-                    <i className="ri-close-fill text-lg" />
+                    <i className="ri-close-fill  aspect-square text-lg" />
                   </Chip>
                 </Tooltip>
                 <img
