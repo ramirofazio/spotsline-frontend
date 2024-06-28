@@ -87,7 +87,7 @@ function ProductsView() {
   const { page } = useParams();
   const [loading, setLoading] = useState(false);
   const { products, search, filters } = useSelector((state) => state.product);
-  let [searchParams, setSearchParams] = useSearchParams();
+  let [searchParams] = useSearchParams();
 
   const loadProducts = useDebouncedCallback(
     (query) => {
@@ -180,15 +180,15 @@ function Heading({ categories }) {
     dispatch(actionProducts.setSearch(value));
   }
 
-  function handleSearch({ code }) {
-    if (code === "Enter" && _search.length) {
-      dispatch(actionProducts.setSearch(_search));
-    } else if (code === "Enter" && !_search.length) {
-      dispatch(actionProducts.setSearch(""));
-      dispatch(actionProducts.resetPageProducts());
-      navigate("/productos/1");
-    }
-  }
+  // function handleSearch({ code }) {
+  //   if (code === "Enter" && _search.length) {
+  //     dispatch(actionProducts.setSearch(_search));
+  //   } else if (code === "Enter" && !_search.length) {
+  //     dispatch(actionProducts.setSearch(""));
+  //     dispatch(actionProducts.resetPageProducts());
+  //     navigate("/productos/1");
+  //   }
+  // }
 
   function onClear() {
     if (search !== "") {
