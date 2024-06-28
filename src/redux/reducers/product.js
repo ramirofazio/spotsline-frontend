@@ -31,6 +31,13 @@ const product = createSlice({
         search: action.payload,
       };
     },
+    research: function (state) {
+      return {
+        ...state,
+        products: {},
+        totalPages: 0,
+      };
+    },
     resetPageProducts: function (state) {
       return {
         ...state,
@@ -72,5 +79,13 @@ const product = createSlice({
 });
 
 export const productRdr = product.reducer;
-export const { setPageProducts, setSearch, resetPageProducts, setTotalPages, setFilters, resetFilters, setCategory } =
-  product.actions;
+export const {
+  setPageProducts,
+  setSearch,
+  resetPageProducts,
+  setTotalPages,
+  setFilters,
+  resetFilters,
+  setCategory,
+  research,
+} = product.actions;

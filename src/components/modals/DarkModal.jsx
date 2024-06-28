@@ -13,13 +13,14 @@ export function DarkModal({
   backdrop = "blur",
   size = "xl",
   onClose = false,
+  hideCloseButton = true,
 }) {
   return (
     <Modal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       className={`overflow-hidden rounded-md border-3 border-primary/80 bg-gradient-to-bl from-dark to-secondary/90 p-4 ${modalClassName} text-center`}
-      hideCloseButton
+      hideCloseButton={hideCloseButton}
       isDismissable={isDismissable}
       placement={placement}
       backdrop={backdrop}

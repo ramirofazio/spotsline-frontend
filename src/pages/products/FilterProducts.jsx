@@ -39,15 +39,15 @@ export function FilterProducts({ categories }) {
   const handleFilters = (key, value) => setFilters((cur) => ({ ...cur, [key]: value }));
 
   useEffect(() => {
-    console.log(product.filters);
     setFilters(product.filters);
   }, [product.filters]);
 
   return (
     <>
       <Button
+        isDisabled={Object.values(product.products)[0]?.length ? false : true}
         onClick={onOpen}
-        className="mx-auto bg-transparent hover:bg-secondary hover:text-white"
+        className="mx-auto bg-transparent hover:bg-secondary hover:text-white disabled:opacity-50"
         isIconOnly
         aria-label="Like"
       >
