@@ -8,7 +8,6 @@ import { AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
 import { Divider } from "@nextui-org/react";
 import Lenis from "lenis";
-import { deleteOfStorage } from "src/utils/localStorage";
 
 export function Landing() {
   const { id } = useSelector((state) => state.user);
@@ -20,6 +19,8 @@ export function Landing() {
   const mobbex_transaction_id = params.get("transactionId");
 
   useEffect(() => {
+    document.title = "SPOTSLINE - Iluminación Profesional";
+
     window.scrollTo({
       top: 0,
       behavior: "instant",
@@ -33,11 +34,6 @@ export function Landing() {
     }
 
     requestAnimationFrame(raf);
-
-    //? Borro residuos de localStorage
-    //? COMENTADO PORQUE JODIA
-    //deleteOfStorage("currentVariant");
-    //deleteOfStorage("qty");
   }, []);
 
   return (
@@ -49,7 +45,7 @@ export function Landing() {
       <FeaturedProducts />
       <DynamicArrow />
       {mobbex_payment_type && mobbex_transaction_id && id && access_token && mobbex_status === "200" ? (
-        <PaymentOk transactionId={mobbex_transaction_id} type={mobbex_payment_type} />
+        <PaymentOk transactionId={mobbex_transaction_id} />
       ) : (
         mobbex_status === "0" && <PaymentFailed />
       )}

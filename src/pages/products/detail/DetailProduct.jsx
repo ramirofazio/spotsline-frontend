@@ -44,18 +44,12 @@ export const DetailProduct = () => {
   );
 
   useEffect(() => {
-    document.title = "SPOTSLINE - " + product.description;
+    document.title = `SPOTSLINE - Producto ${product.description}`;
 
     window.scrollTo({
       top: 0,
-      behavior: "smooth",
+      behavior: "instant",
     });
-
-    return () => {
-      document.title = "SPOTSLINE";
-      //deleteOfStorage("currentVariant");
-      //deleteOfStorage("qty");
-    };
   }, []);
 
   //   useEffect(() => {

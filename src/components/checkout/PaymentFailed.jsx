@@ -2,14 +2,12 @@ import { DarkModal, DefaultButton } from "..";
 import { useDisclosure } from "@nextui-org/react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { deleteOfStorage } from "src/utils/localStorage";
 
 export function PaymentFailed() {
   const { onOpen, isOpen, onOpenChange, onClose } = useDisclosure();
 
   useEffect(() => {
     onOpen();
-    deleteOfStorage("orderBody");
   }, []);
 
   return (

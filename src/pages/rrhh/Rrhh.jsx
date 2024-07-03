@@ -1,8 +1,14 @@
 import { images } from "src/assets/index.js";
 import { Contact } from "./Contact.jsx";
 import PageSimpleHeader from "src/components/PageHeader.jsx";
+import { useEffect } from "react";
 
 export function Rrhh() {
+  useEffect(() => {
+    document.title = "SPOTSLINE - Recursos Humanos";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   return (
     <section className="min-h-screen">
       <PageSimpleHeader

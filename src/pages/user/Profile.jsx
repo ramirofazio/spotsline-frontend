@@ -51,7 +51,7 @@ export function Profile() {
   }, [userCA]);
 
   useEffect(() => {
-    document.title = "SPOTSLINE - Perfil de usuario";
+    document.title = `SPOTSLINE - Perfil de ${userData.fantasyName}`;
 
     return () => {
       deleteOfStorage("profileSelectedSection");

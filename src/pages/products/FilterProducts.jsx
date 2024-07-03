@@ -45,8 +45,9 @@ export function FilterProducts({ categories }) {
   return (
     <>
       <Button
+        isDisabled={Object.values(product.products)[0]?.length ? false : true}
         onClick={onOpen}
-        className="mx-auto bg-transparent hover:bg-secondary hover:text-white"
+        className="mx-auto bg-transparent hover:bg-secondary hover:text-white disabled:opacity-50"
         isIconOnly
         aria-label="Like"
       >
@@ -123,8 +124,9 @@ export function FilterProducts({ categories }) {
                   }}
                   radius="full"
                   isIconOnly
-                  className="p-6"
+                  className="p-6 disabled:opacity-40"
                   color="danger"
+                  isDisabled={filters?.order || filters?.category ? false : true}
                 >
                   <i className="ri-refresh-line scale-125"></i>
                 </Button>
