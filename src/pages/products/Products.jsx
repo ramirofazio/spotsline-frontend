@@ -33,7 +33,6 @@ export function Products() {
 
   function handleChangePage(page) {
     navigate("/productos/" + page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function hasSearchQuery(search) {
@@ -66,7 +65,7 @@ export function Products() {
           </ul>
         </article>
 
-        <section className="mx-auto  my-10 w-full  gap-3 lg:grid-cols-3 xl:grid-cols-4">
+        <section className="mx-auto  my-10 w-full gap-3 lg:grid-cols-3 xl:grid-cols-4">
           <Heading categories={categories} />
           {totalPages !== 1 && (
             <div className={` mx-auto w-fit lg:col-span-3 xl:col-span-4 ${hasSearchQuery(search) ? "invisible" : ""}`}>

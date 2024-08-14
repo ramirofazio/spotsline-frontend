@@ -107,20 +107,20 @@ export const DetailProduct = () => {
         setCurrentVariant={setCurrentVariant}
       />
       <section className="min-w-full max-w-full  md:col-start-2 md:row-start-3 md:grid md:h-full xl:h-auto  xl:gap-20">
-        {email && (
-          <div className="flex w-full flex-col gap-5 md:gap-10 lg:gap-20">
-            <SelectVariant
-              variants={product.variants}
-              currentVariant={currentVariant}
-              setCurrentVariant={setCurrentVariant}
-            />
-            <SelectQuantity qty={qty} setQty={setQty} />
+        <div className="flex w-full flex-col gap-5 md:gap-10 lg:gap-20">
+          <SelectVariant
+            variants={product.variants}
+            currentVariant={currentVariant}
+            setCurrentVariant={setCurrentVariant}
+          />
+          <SelectQuantity qty={qty} setQty={setQty} />
+          {email && (
             <div className={`yellowGradient flex justify-between text-xl font-semibold`}>
               <p>TOTAL:</p>
               <p className="font-bold !text-secondary">{getVariantPrice()}</p>
             </div>
-          </div>
-        )}
+          )}
+        </div>
         <div className="my-10 w-full rounded-md bg-primary/50 p-4 shadow-md md:hidden">
           <ColorPalette variants={product.variants} currentVariant={currentVariant} />
         </div>

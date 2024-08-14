@@ -33,8 +33,8 @@ export default function Footer() {
   const { pathname } = useLocation();
 
   return (
-    <footer className="bg-gradient-to-b from-background to-primary/80 pb-5">
-      {pathname === "/" && (
+    <footer className="overflow-hidden bg-gradient-to-b from-background to-primary/80 pb-5">
+      {(pathname === "/" || pathname.includes("product")) && (
         <section className="relative flex flex-col items-center gap-6 overflow-hidden py-6 lg:gap-10 lg:py-10">
           <div className="z-10 my-10 flex  flex-col gap-5 px-10 text-center lg:gap-10">
             <h2 className="text-2xl font-semibold uppercase text-secondary md:text-3xl">
@@ -73,10 +73,12 @@ export default function Footer() {
           Derechos de autor {new Date().getFullYear()} Spotsline SRL. <br className="md:hidden" /> Todos los derechos
           reservados.
         </p>
-        <div className="absolute bottom-0 left-0 hidden -translate-x-32 translate-y-52 lg:block">
+        <div className={twMerge("absolute bottom-0 left-0 hidden -translate-x-32 translate-y-52 lg:block")}>
           <Image src={images.logoBlack} alt="logo-black" className="w-[500px] rotate-12 blur-lg" />
         </div>
-        <div className="absolute right-0 top-0 -translate-y-40 translate-x-52">
+        <div
+          className={twMerge("absolute right-0 top-0  -translate-y-40 translate-x-52", pathname !== "/" && "hidden")}
+        >
           <Image src={images.logoBlack} alt="logo-black" className="w-[500px] -rotate-45 blur-md" />
         </div>
       </section>
