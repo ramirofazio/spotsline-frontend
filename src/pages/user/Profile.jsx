@@ -66,7 +66,7 @@ export function Profile() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 800);
+    }, 600);
   }, [loading]);
 
   async function updateAvatar() {

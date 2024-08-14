@@ -21,11 +21,6 @@ export function Landing() {
   useEffect(() => {
     document.title = "SPOTSLINE - Iluminación Profesional";
 
-    window.scrollTo({
-      top: 0,
-      behavior: "instant",
-    });
-
     const lenis = new Lenis({ lerp: 0.08 });
 
     function raf(time) {

@@ -81,10 +81,6 @@ export const publicRoutesPaths = [
 ];
 
 export function PublicRoot() {
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
-  }, []);
-
   return (
     <main className="overflow-hidden">
       <Outlet />

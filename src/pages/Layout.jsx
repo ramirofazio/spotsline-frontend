@@ -7,9 +7,11 @@ import { actionsAuth } from "src/redux/reducers";
 const AuthValidationModal = lazy(() => import("src/components/modals/AuthValidationsModal"));
 import { useDebouncedCallback } from "use-debounce";
 import { loadUserData } from "src/utils/loadUserData";
+import { useLocation } from "react-router-dom";
 
 export default function Layout({ children }) {
   const dispatch = useDispatch();
+  const { pathname } = useLocation();
 
   const params = new URLSearchParams(window.location.search);
   const reset = Boolean(params.get("reset"));
@@ -81,6 +83,10 @@ export default function Layout({ children }) {
   useEffect(() => {
     loadUser();
   }, []);
+
+  useEffect(() => {
+    window.scrollTo({ behavior: "instant", top: 0 });
+  }, [pathname]);
 
   return (
     <Suspense fallback={<Spinner />}>

@@ -22,7 +22,6 @@ import { toast } from "sonner";
 import { DefaultButton } from "..";
 import ManageClientsModal from "../modals/ManageClientsModal";
 import { actionProducts } from "src/redux/reducers";
-import Spinner from "../Spinner";
 import { images } from "src/assets";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -39,8 +38,6 @@ export default function NavBar() {
   const [blur, setBlur] = React.useState(false);
 
   const categories = getOfStorage("categories") || useLoaderData();
-
-  const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
     isMenuOpen ? setBlur(true) : window.scrollY < 250 && setBlur(false);
@@ -70,12 +67,6 @@ export default function NavBar() {
     }
   });
 
-  if (loading) {
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-  }
-
   const handleLogOut = () => {
     localStorage.clear();
     window.location.replace("/");
@@ -86,9 +77,11 @@ export default function NavBar() {
     onOpen();
   };
 
-  return loading ? (
-    <Spinner />
-  ) : (
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+
+  return (
     <Navbar
       shouldHideOnScroll={pathname !== "/" ? false : true}
       className={`bg-transparent py-4 transition ${pathname !== "/" ? "block bg-background" : "fixed"} ${
@@ -99,7 +92,7 @@ export default function NavBar() {
       onMenuOpenChange={setIsMenuOpen}
       maxWidth="full"
     >
-      <Link to="/" onClick={() => pathname !== "/" && setLoading(true)}>
+      <Link to="/">
         <AnimatePresence>
           {!isMenuOpen && (
             <motion.img
@@ -155,7 +148,6 @@ export default function NavBar() {
       </AnimatePresence>
 
       <MobileContent
-        setLoading={setLoading}
         web_role={web_role}
         id={id}
         access_token={access_token}
@@ -167,7 +159,6 @@ export default function NavBar() {
         handleLogOut={handleLogOut}
       />
       <DesktopContent
-        setLoading={setLoading}
         web_role={web_role}
         id={id}
         access_token={access_token}
@@ -182,7 +173,7 @@ export default function NavBar() {
   );
 }
 
-function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, handleManageClients, setLoading }) {
+function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, handleManageClients }) {
   const { managedClient } = useSelector((state) => state.seller);
   const { items } = useSelector((state) => state.cart);
   return (
@@ -191,7 +182,6 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
         <DefaultButton
           as={Link}
           to={"/sign-in"}
-          onClick={() => setLoading(true)}
           className={`!p-4 hover:opacity-50`}
           size="md"
           startContent={<i className="ri-user-fill mr-2 text-lg" />}
@@ -203,7 +193,6 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
         <Button
           as={Link}
           to={"/dashboard/vendedores"}
-          onClick={() => setLoading(true)}
           className={`bg-gradient-to-br from-primary to-background transition hover:scale-110`}
           size="md"
           isIconOnly
@@ -231,7 +220,6 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
           <Button
             as={Link}
             to={"/user/profile"}
-            onClick={() => setLoading(true)}
             className={`bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
               pathname.includes("/user/profile") && "pointer-events-none to-dark/50 !opacity-50"
             }`}
@@ -244,7 +232,6 @@ function DesktopContent({ web_role, id, access_token, pathname, handleLogOut, ha
             <Button
               as={Link}
               to="/carrito"
-              onClick={() => setLoading(true)}
               className={`relative bg-gradient-to-br from-primary to-background transition hover:scale-110 ${
                 pathname === "/carrito" && "pointer-events-none to-dark/50 !opacity-50"
               }`}
@@ -285,18 +272,14 @@ function MobileContent({
   pathname,
   handleLogOut,
   isMenuOpen,
-  setIsMenuOpen,
   handleManageClients,
   categories,
-  setLoading,
 }) {
   const { managedClient } = useSelector((state) => state.seller);
   const { items } = useSelector((state) => state.cart);
   const navigate = useNavigate();
 
   const touchAction = (route, callback) => {
-    setIsMenuOpen(false);
-    setLoading(true);
     navigate(route);
     callback?.();
   };
@@ -315,12 +298,7 @@ function MobileContent({
             key={i}
           >
             <i className="ri-arrow-right-s-line text-md  !text-secondary"></i>
-            <ProductsTab
-              index={i}
-              className="font-primary text-lg font-semibold text-dark"
-              categories={categories}
-              setIsMenuOpen={setIsMenuOpen}
-            />
+            <ProductsTab index={i} className="font-primary text-lg font-semibold text-dark" categories={categories} />
           </NavbarMenuItem>
         ) : (
           <NavbarMenuItem onClick={() => touchAction(path)} className="w-fit" key={i}>
@@ -436,7 +414,7 @@ function MobileContent({
   );
 }
 
-function ProductsTab({ index, categories, className, setIsMenuOpen }) {
+function ProductsTab({ index, categories, className }) {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
 
@@ -455,7 +433,6 @@ function ProductsTab({ index, categories, className, setIsMenuOpen }) {
           startContent={
             <NavLink
               onClick={() => {
-                setIsMenuOpen(false);
                 dispatch(actionProducts.setCategory(""));
               }}
               className="flex w-full items-center gap-2 p-1.5 "
@@ -474,7 +451,6 @@ function ProductsTab({ index, categories, className, setIsMenuOpen }) {
             startContent={
               <NavLink
                 onClick={() => {
-                  setIsMenuOpen(false);
                   dispatch(actionProducts.setCategory(c.value));
                 }}
                 className="flex w-full items-center gap-2 p-1.5 "

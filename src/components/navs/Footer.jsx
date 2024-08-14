@@ -1,5 +1,5 @@
 import { Image } from "@nextui-org/react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, Router, useLocation } from "react-router-dom";
 import { DefaultButton } from "..";
 import { images } from "src/assets";
 import { twMerge } from "tailwind-merge";
@@ -30,9 +30,11 @@ const INFORMACION_LEGAL = [
 ];
 
 export default function Footer() {
+  const { pathname } = useLocation();
+
   return (
-    <footer className="overflow-hidden bg-gradient-to-b from-background to-primary/80 pb-5">
-      {!window.location.pathname.includes("empresa") && (
+    <footer className="bg-gradient-to-b from-background to-primary/80 pb-5">
+      {pathname === "/" && (
         <section className="relative flex flex-col items-center gap-6 overflow-hidden py-6 lg:gap-10 lg:py-10">
           <div className="z-10 my-10 flex  flex-col gap-5 px-10 text-center lg:gap-10">
             <h2 className="text-2xl font-semibold uppercase text-secondary md:text-3xl">

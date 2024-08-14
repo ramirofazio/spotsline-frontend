@@ -1,14 +1,26 @@
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { useMediaQuery } from "src/hoooks/mediaQuerys";
 
 export const DynamicArrow = () => {
   const isMobile = useMediaQuery(800);
+  const { pathname } = useLocation();
+
+  const [render, setRender] = useState(false);
+
   const { scrollYProgress } = useScroll();
 
   const x = useTransform(scrollYProgress, [0, 0.1], [100, 0]);
   const opacity = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
 
-  const animateX = useSpring(x);
+  useEffect(() => {
+    setTimeout(() => {
+      setRender(true);
+    }, 1500);
+  }, [pathname]);
+
+  if (!render) return null;
 
   return (
     <motion.div
@@ -18,7 +30,7 @@ export const DynamicArrow = () => {
           behavior: "smooth",
         })
       }
-      style={{ x: animateX, opacity }}
+      style={{ x, opacity }}
       className="icons group fixed bottom-0 right-0 z-50 flex h-[60px] w-[60px] items-center justify-center md:h-[100px] md:w-[100px]"
     >
       <i

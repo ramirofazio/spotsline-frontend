@@ -130,10 +130,8 @@ export function AdminRoot() {
   }, [100]);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
     loadUser();
-  }, [document]);
+  }, []);
 
   if (isAdmin) {
     return (

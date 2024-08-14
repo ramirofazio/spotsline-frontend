@@ -1,17 +1,11 @@
 import { Link } from "react-router-dom";
 import { DefaultButton } from "src/components";
 import AwsImage from "src/components/images/AwsImage";
-import { motion } from "framer-motion";
-import { onViewFadeIn } from "src/styles/framerVariants";
 import { images } from "src/assets";
 
 export default function FirstSection() {
   return (
-    <motion.section
-      {...onViewFadeIn()}
-      id="landing-first"
-      className="relative grid  h-screen w-screen place-items-center overflow-hidden"
-    >
+    <section id="landing-first" className="relative grid  h-screen w-screen place-items-center overflow-hidden">
       <img
         src={images.landingBg}
         className="absolute h-full w-full object-cover"
@@ -40,6 +34,6 @@ export default function FirstSection() {
           <strong className="yellow-neon">DESDE EL PRIMER DÍA.</strong>
         </h3>
       </div>
-    </motion.section>
+    </section>
   );
 }
