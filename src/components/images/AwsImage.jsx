@@ -1,9 +1,9 @@
 import { assets } from "src/assets/index";
 
-export default function AwsImage({ type, identify, className, ...props }) {
+export default function AwsImage({ type, identify, className, loading = "lazy", ...props }) {
   return (
     <img
-      loading="lazy"
+      loading={loading}
       radius="none"
       src={assets[type][identify]}
       alt={identify}

@@ -18,7 +18,6 @@ export function Profile() {
   const { managedClient } = useSelector((state) => state.seller);
 
   const [avatar, setAvatar] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [avatarLoading, setAvatarLoading] = useState(false);
   const [selectedSection, setSelectedSection] = useState(() => {
     const local = getOfStorage("profileSelectedSection");
@@ -59,15 +58,8 @@ export function Profile() {
   }, [document]);
 
   useEffect(() => {
-    setLoading(true);
     navigate();
   }, [managedClient]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 600);
-  }, [loading]);
 
   async function updateAvatar() {
     try {
@@ -99,8 +91,6 @@ export function Profile() {
     setSelectedSection(name);
     saveInStorage("profileSelectedSection", name);
   };
-
-  if (loading) return <ProfileSkeleton />;
 
   const avatarSrc = () => {
     if (avatar) return avatar.url;

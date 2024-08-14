@@ -86,15 +86,13 @@ export function SignIn() {
 
       <div className="grid h-full w-full place-content-center place-items-center bg-black/30 backdrop-blur-md">
         <GoBackButton className="absolute left-4 top-4 md:left-10 md:top-10" textClassName={"!text-background"} />
-        <motion.section
-          {...zoomIn}
-          className=" relative flex min-h-[60vh] min-w-[60vw] flex-col items-center gap-4 overflow-hidden rounded-xl bg-black/10 p-12  shadow-md"
-        >
+        <section className=" relative flex min-h-[60vh] min-w-[60vw] flex-col items-center gap-4 overflow-hidden rounded-xl bg-black/10 p-12  shadow-md">
           <div className="absolute -right-40 -top-14 -z-10 xl:-right-60 xl:-top-20">
             <AwsImage
               type="logos"
               identify="logoBlack"
               className="!-z-10 w-80 rotate-12 !opacity-50 blur-sm xl:w-[30vw]"
+              loading="eager"
             />
           </div>
           <div className="grid place-items-center text-center md:-mt-8">
@@ -140,7 +138,7 @@ export function SignIn() {
               className="!-z-10 w-80 -rotate-12 !opacity-50 blur-sm xl:w-[30vw]"
             />
           </div>
-        </motion.section>
+        </section>
       </div>
 
       <InitChangePasswordModal isOpen={isOpen} onOpenChange={onOpenChange} />

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { APISpot } from "src/api";
-import { DarkModal, DefaultButton, ShoppingCartSkeleton } from "src/components";
+import { DarkModal, DefaultButton } from "src/components";
 import { actionsShoppingCart } from "src/redux/reducers";
 import { onViewFadeIn, onViewFadeInBottom, fadeInTop, onViewZoomIn } from "src/styles/framerVariants";
 import { formatPrices } from "src/utils";
@@ -23,7 +23,6 @@ export default function ShoppingCart() {
 
   const [discountCode, setDiscountCode] = useState("");
   const [loading, setLoading] = useState(false);
-  const [SkeletonLoading, setSkeletonLoading] = useState(true);
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
@@ -88,17 +87,8 @@ export default function ShoppingCart() {
   }, [reduxCart]);
 
   useEffect(() => {
-    setTimeout(() => {
-      setSkeletonLoading(false);
-    }, 800);
-  }, [SkeletonLoading]);
-
-  useEffect(() => {
-    setSkeletonLoading(true);
     navigate();
   }, [managedClient]);
-
-  if (SkeletonLoading) return <ShoppingCartSkeleton />;
 
   return (
     <main className="text-center">

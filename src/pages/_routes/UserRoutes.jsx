@@ -1,4 +1,4 @@
-import { lazy, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { DefaultError } from "pages/error/DefaultError";
 import Layout from "../Layout";
@@ -9,6 +9,7 @@ import { loadUserData } from "src/utils/loadUserData";
 import { actionsAuth } from "src/redux/reducers";
 import { useDebouncedCallback } from "use-debounce";
 import Footer from "src/components/navs/Footer";
+import Spinner from "src/components/Spinner";
 const CurrentAccount = lazy(() => import("../user/CurrentAccount"));
 const NavBar = lazy(() => import("components/navs/NavBar.jsx"));
 const Profile = lazy(() => import("pages/user/Profile").then((module) => ({ default: module.Profile })));
@@ -80,8 +81,10 @@ export const userRoutesPaths = [
 export function UserRoot() {
   const dispatch = useDispatch();
   const [isUser, setIsUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const loadUser = useDebouncedCallback(async () => {
+    setLoading(true);
     const user = getOfStorage("user");
     const access_token = getOfStorage("access_token");
 
@@ -100,6 +103,8 @@ export function UserRoot() {
       } else {
         setIsUser(false);
       }
+
+      setLoading(false);
     }
   }, [100]);
 
@@ -107,15 +112,10 @@ export function UserRoot() {
     loadUser();
   }, []);
 
-  if (isUser) {
-    return (
-      <main className="overflow-hidden">
-        <Outlet />
-      </main>
-    );
-  }
-
-  if (isUser === false) {
-    return <DefaultError />;
-  }
+  return (
+    <main className="min-h-screen overflow-hidden">
+      {loading && <Spinner className={"bg-none"} />}
+      {isUser ? <Outlet /> : <DefaultError />}
+    </main>
+  );
 }
