@@ -2,7 +2,6 @@ import { useEffect, Suspense, lazy } from "react";
 import { getOfStorage } from "src/utils/localStorage";
 import { useDispatch, useSelector } from "react-redux";
 import { addAuthWithToken, APISpot } from "src/api";
-import Spinner from "src/components/Spinner";
 import { actionsAuth } from "src/redux/reducers";
 const AuthValidationModal = lazy(() => import("src/components/modals/AuthValidationsModal"));
 import { useDebouncedCallback } from "use-debounce";
@@ -89,7 +88,7 @@ export default function Layout({ children }) {
   }, [pathname]);
 
   return (
-    <Suspense fallback={<Spinner />}>
+    <Suspense fallback={null}>
       {children}
       <AuthValidationModal reset={reset} access_token={access_token} query_email={query_email} />
     </Suspense>
