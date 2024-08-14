@@ -20,7 +20,7 @@ import { onViewZoomIn } from "src/styles/framerVariants";
 import Spinner from "src/components/Spinner";
 
 const columns = [
-  { label: "codigo", key: "name" },
+  { label: "codigo", key: "couponName" },
   { label: "descuento", key: "discountPercentaje" },
   { label: "estado", key: "enabled" },
   { label: "eliminar", key: "eliminar" },
@@ -79,7 +79,7 @@ export function Coupons() {
         );
       case "discountPercentaje":
         return <p className="font-bold">{`${cellValue}%`}</p>;
-      case "name":
+      case "couponName":
         const color = item.enabled ? "bg-green-500" : "bg-red-500";
         return (
           <div className="flex items-center gap-2 font-semibold">
@@ -198,7 +198,7 @@ export function Coupons() {
 function CreateNewCouponModal({ isOpen, onOpenChange, onClose }) {
   //TODO VALIDAR ESTE FORM
   const [loading, setLoading] = useState(false);
-  const [thisCoupon, setThisCoupon] = useState({ name: "", discountPercentaje: "" });
+  const [thisCoupon, setThisCoupon] = useState({ couponName: "", discountPercentaje: "" });
 
   const handleCreateCoupon = async (e) => {
     //? Logica para crear un cupon
@@ -207,7 +207,7 @@ function CreateNewCouponModal({ isOpen, onOpenChange, onClose }) {
 
     try {
       const res = await APISpot.dashboard.createCoupon({
-        name: thisCoupon.name.trim(),
+        couponName: thisCoupon.couponName.trim(),
         discountPercentaje: Number(thisCoupon.discountPercentaje),
       });
       if (res) {
@@ -236,10 +236,10 @@ function CreateNewCouponModal({ isOpen, onOpenChange, onClose }) {
       <form onSubmit={handleCreateCoupon} className="my-4 flex flex-col items-center gap-6">
         <BasicInput
           label={"Codigo"}
-          name={"name"}
+          name={"couponName"}
           startContentIcon={"ri-text font-bold text-xl"}
           onChange={(e) => setThisCoupon({ ...thisCoupon, [e.target.name]: e.target.value.toUpperCase() })}
-          value={thisCoupon.name}
+          value={thisCoupon.couponName}
         />
         <BasicInput
           label={"Descuento (1-100)"}
