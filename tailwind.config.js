@@ -8,19 +8,20 @@ export default {
   theme: {
     extend: {
       animation: {
-        glow: "glow 20s ease-in-out infinite",
+        glow: "glow 40s ease-in-out infinite",
       },
       keyframes: {
         glow: {
-          "0%, 100%": { opacity: 0 },
+          "0%": { opacity: 0 },
+          "0.5%": { opacity: 0 },
+          "1%": { opacity: 0.3 },
+          "1.5%": { opacity: 0 },
           "2%": { opacity: 0.3 },
-          "5%": { opacity: 0 },
-          "7%": { opacity: 0.3 },
-          "10%": { opacity: 0.25 },
-          "15%": { opacity: 0 },
-          "20%": { opacity: 0.45 },
-          "60%": { opacity: 0.5 },
-          "95%": { opacity: 0 },
+          "2.5%": { opacity: 0 },
+          "3%": { opacity: 0.3 },
+          "5%": { opacity: 0.5 },
+          "20%": { opacity: 0.6 },
+          "85%": { opacity: 0.7 },
         },
       },
       colors: {
