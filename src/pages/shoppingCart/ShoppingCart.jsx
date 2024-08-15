@@ -9,6 +9,7 @@ import { DarkModal, DefaultButton } from "src/components";
 import { actionsShoppingCart } from "src/redux/reducers";
 import { onViewFadeIn, onViewFadeInBottom, fadeInTop, onViewZoomIn } from "src/styles/framerVariants";
 import { formatPrices } from "src/utils";
+import { saveInStorage } from "src/utils/localStorage";
 import { useDebouncedCallback } from "use-debounce";
 
 const MAX_AMOUNT = 15;
@@ -91,7 +92,7 @@ export default function ShoppingCart() {
   }, [managedClient]);
 
   return (
-    <main className="text-center">
+    <main className="h-screen text-center">
       <section className="relative flex flex-col items-center gap-10 p-6">
         {web_role === Number(import.meta.env.VITE_USER_ROLE) && (
           <motion.h1 {...fadeInTop()} className="text-3xl font-bold text-dark drop-shadow-xl">
@@ -307,6 +308,9 @@ function PickDateModal({ isOpen, onOpenChange, onClose, items, coupon, discount 
         deliveryDate: new Date(date).toISOString(),
       };
 
+      //TODO ACA HAY QUE REFACTORIZAR Y CREAR EL PEDIDO DE TODAS FORMAS. ANALIZAR RUTAS DE WEBHOOK MOBBEX
+      saveInStorage("orderBody", body);
+
       const res = await APISpot.checkout.create(body);
 
       if (res) {
@@ -368,7 +372,7 @@ function PickDateModal({ isOpen, onOpenChange, onClose, items, coupon, discount 
             className="max-w-xs"
           />
           <DefaultButton onPress={handleCreateCheckout} className={"mx-auto lg:mx-0"} isLoading={loading}>
-            IR A PAGAR
+            FINALIZAR MI PEDIDO
           </DefaultButton>
         </form>
       </DarkModal>

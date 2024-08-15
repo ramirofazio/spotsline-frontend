@@ -19,7 +19,7 @@ export default function FirstSection() {
           identify={"hole7"}
           className="absolute inset-x-0 top-0 mx-auto min-h-[200px] w-screen !max-w-[700px] object-cover drop-shadow-xl sm:min-h-[250px]"
         />
-        <div className="top-50  absolute -z-10 h-80 w-[35%] animate-glow rounded-tl-full rounded-tr-full bg-[#FEFFC4] mix-blend-lighten blur-3xl xl:flex" />
+        <div className="top-50  absolute -z-10 h-80 w-[55%] animate-glow rounded-tl-full rounded-tr-full bg-[#FEFFC4] mix-blend-lighten blur-3xl md:w-[35%] xl:flex" />
         <h1 className="text-5xl md:mt-12 md:text-6xl xl:text-7xl">SPOTSLINE</h1>
         <p className="font-slogan text-2xl font-semibold text-black md:text-3xl xl:text-4xl">Se ve bien.</p>
         <DefaultButton className="my-4 w-max xl:my-8" as={Link} to="/productos/0">

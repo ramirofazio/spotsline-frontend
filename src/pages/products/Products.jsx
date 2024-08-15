@@ -14,6 +14,7 @@ import { onViewFadeIn } from "src/styles/framerVariants";
 import PageSimpleHeader from "src/components/PageHeader";
 import { useDebouncedCallback } from "use-debounce";
 import Spinner from "src/components/Spinner";
+import { twMerge } from "tailwind-merge";
 
 const TAKE_PRODUCTS = 28;
 
@@ -50,7 +51,7 @@ export function Products() {
         title={"NUESTROS PRODUCTOS"}
         subtitle={"Descubre nuestros productos"}
       />
-      <main className="flex gap-x-20 bg-background p-10">
+      <main className="flex w-full gap-x-20 overflow-hidden bg-background p-10">
         <article className="my-10 hidden pl-5 font-secondary md:inline">
           <h2 className="text-xl font-semibold">Categorías de Productos</h2>
           <ul className="text-md mt-6 flex flex-col gap-2 text-dark/80">
@@ -65,19 +66,26 @@ export function Products() {
           </ul>
         </article>
 
-        <section className="mx-auto my-10 w-full gap-3 lg:grid-cols-3 xl:grid-cols-4">
+        <section className="max-w-screen mx-auto my-10 w-full gap-3 overflow-hidden lg:grid-cols-3 xl:grid-cols-4">
           <Heading categories={categories} />
-          {totalPages !== 1 && (
-            <div className={`mx-auto w-fit lg:col-span-3 xl:col-span-4 ${hasSearchQuery(search) ? "invisible" : ""}`}>
-              <PaginationComponent qty={totalPages} page={parseInt(page)} onChange={handleChangePage} />
-            </div>
-          )}
+          <div
+            className={twMerge(
+              "mx-auto w-fit lg:col-span-3 xl:col-span-4",
+              (hasSearchQuery(search) || totalPages <= 1) && "invisible"
+            )}
+          >
+            <PaginationComponent qty={totalPages} page={parseInt(page)} onChange={handleChangePage} />
+          </div>
+
           <ProductsView />
-          {totalPages !== 1 && (
-            <div className={` mx-auto w-fit lg:col-span-3 xl:col-span-4 ${hasSearchQuery(search) ? "invisible" : ""}`}>
-              <PaginationComponent qty={totalPages} page={parseInt(page)} onChange={handleChangePage} />
-            </div>
-          )}
+          <div
+            className={twMerge(
+              "mx-auto w-fit lg:col-span-3 xl:col-span-4",
+              (hasSearchQuery(search) || totalPages <= 1) && "invisible"
+            )}
+          >
+            <PaginationComponent qty={totalPages} page={parseInt(page)} onChange={handleChangePage} />
+          </div>
         </section>
       </main>
       <DynamicArrow />
@@ -137,7 +145,11 @@ function ProductsView() {
   }, [page, search, filters]);
 
   if (loading || !products[page]) {
-    return <Spinner className={"bg-none"} />;
+    return (
+      <div className="relative h-full w-full overflow-hidden">
+        <Spinner className={"bg-none"} />;
+      </div>
+    );
   }
 
   return (
@@ -149,14 +161,9 @@ function ProductsView() {
           ))}
         </div>
       ) : (
-        <motion.div {...onViewFadeIn()} className="mx-auto  gap-8  p-2">
-          <div className="mx-auto flex w-fit max-w-[95%] flex-col items-center rounded-xl border-2 border-background p-1 shadow-2xl">
-            <i className="ri-information-line yellow-neon animate-pulse text-7xl" />
-            <p>
-              No se encontraron productos al buscar <strong>'{search}'</strong>
-            </p>
-          </div>
-        </motion.div>
+        <p className="text-md mx-auto w-full text-center md:text-xl">
+          No se encontraron productos al buscar <strong>'{search}'</strong>
+        </p>
       )}
     </AnimatePresence>
   );
@@ -209,17 +216,12 @@ function Heading({ categories }) {
             onChange={handleChange}
             isClearable
             radius="full"
+            className="text-xl"
+            classNames={{ input: "placeholder:md:text-lg md:text-lg h-[50%]" }}
             labelPlacement=""
             onClear={onClear}
             placeholder="Buscar producto"
-            startContent={<i className="ri-search-line scale-125 "></i>}
-            // * Habilitar para buscar con enter
-            // onKeyDown={handleSearch}
-            // onBlur={() => {
-            //   if (_search.length && search !== _search) {
-            //     toast.info('Presiona "Enter" para buscar');
-            //   }
-            // }}
+            startContent={<i className="ri-search-line mr-2"></i>}
           />
         </form>
         <FilterProducts categories={categories} />
