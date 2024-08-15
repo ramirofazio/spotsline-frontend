@@ -4,7 +4,6 @@ import { Input } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { APISpot } from "src/api";
 import { useNavigate, useParams, useRouteLoaderData, useSearchParams } from "react-router-dom";
-import { SkeletonCard } from "src/components/cards/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import { actionProducts } from "src/redux/reducers";
 import { toast } from "sonner";
@@ -14,6 +13,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { onViewFadeIn } from "src/styles/framerVariants";
 import PageSimpleHeader from "src/components/PageHeader";
 import { useDebouncedCallback } from "use-debounce";
+import Spinner from "src/components/Spinner";
 
 const TAKE_PRODUCTS = 28;
 
@@ -50,10 +50,10 @@ export function Products() {
         title={"NUESTROS PRODUCTOS"}
         subtitle={"Descubre nuestros productos"}
       />
-      <main className="flex gap-x-4 bg-[#D9D9D9] p-10">
+      <main className="flex gap-x-20 bg-background p-10">
         <article className="my-10 hidden pl-5 font-secondary md:inline">
           <h2 className="text-xl font-semibold">Categorías de Productos</h2>
-          <ul className="text-md mt-6 flex flex-col gap-2 pl-4 text-dark/80">
+          <ul className="text-md mt-6 flex flex-col gap-2 text-dark/80">
             {categories.map((cat, i) => (
               <li
                 key={i}
@@ -65,10 +65,10 @@ export function Products() {
           </ul>
         </article>
 
-        <section className="mx-auto  my-10 w-full gap-3 lg:grid-cols-3 xl:grid-cols-4">
+        <section className="mx-auto my-10 w-full gap-3 lg:grid-cols-3 xl:grid-cols-4">
           <Heading categories={categories} />
           {totalPages !== 1 && (
-            <div className={` mx-auto w-fit lg:col-span-3 xl:col-span-4 ${hasSearchQuery(search) ? "invisible" : ""}`}>
+            <div className={`mx-auto w-fit lg:col-span-3 xl:col-span-4 ${hasSearchQuery(search) ? "invisible" : ""}`}>
               <PaginationComponent qty={totalPages} page={parseInt(page)} onChange={handleChangePage} />
             </div>
           )}
@@ -137,26 +137,17 @@ function ProductsView() {
   }, [page, search, filters]);
 
   if (loading || !products[page]) {
-    return (
-      <div className="grid w-full grid-cols-2 gap-8 p-2 lg:w-full lg:grid-cols-3">
-        {Array.from({ length: 12 }).map((_, index) => (
-          <SkeletonCard key={index} />
-        ))}
-      </div>
-    );
+    return <Spinner className={"bg-none"} />;
   }
 
   return (
     <AnimatePresence key={page} mode="wait">
       {products && Object.values(products)[0].length ? (
-        <motion.div
-          {...onViewFadeIn()}
-          className="mx-auto grid w-full grid-cols-2 gap-8  p-2 lg:grid-cols-3  xl:grid-cols-4"
-        >
+        <div className="mx-auto grid w-full grid-cols-2  gap-10  lg:grid-cols-3 xl:grid-cols-4">
           {products[page].map((p, index) => (
             <ProductCard {...p} key={index} />
           ))}
-        </motion.div>
+        </div>
       ) : (
         <motion.div {...onViewFadeIn()} className="mx-auto  gap-8  p-2">
           <div className="mx-auto flex w-fit max-w-[95%] flex-col items-center rounded-xl border-2 border-background p-1 shadow-2xl">
@@ -206,9 +197,9 @@ function Heading({ categories }) {
   }
   return (
     <>
-      <div className="mb-5 flex w-full items-center gap-1  sm:col-span-2 md:w-full lg:col-span-3 xl:col-span-4">
+      <div className="flex  justify-end gap-2 md:gap-10">
         <form
-          className="w-full"
+          className="w-full max-w-[300px]"
           onSubmit={(e) => {
             e.preventDefault();
           }}
@@ -218,7 +209,6 @@ function Heading({ categories }) {
             onChange={handleChange}
             isClearable
             radius="full"
-            className="md:w-[80%]"
             labelPlacement=""
             onClear={onClear}
             placeholder="Buscar producto"

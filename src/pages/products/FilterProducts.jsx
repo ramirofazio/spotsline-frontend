@@ -43,7 +43,7 @@ export function FilterProducts({ categories }) {
   }, [product.filters]);
 
   return (
-    <>
+    <div>
       <Button
         isDisabled={Object.values(product.products)[0]?.length ? false : true}
         onClick={onOpen}
@@ -135,7 +135,7 @@ export function FilterProducts({ categories }) {
           )}
         </ModalContent>
       </Modal>
-    </>
+    </div>
   );
 }
 

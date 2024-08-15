@@ -17,12 +17,9 @@ export function ProductCard({ description, codigo, pathfoto }) {
   }
   return (
     <AnimatePresence>
-      <NavLink
-        className="col-span-2 mx-auto w-[90%] sm:col-span-1 lg:col-span-1 s:w-full  s:max-w-[300px]"
-        to={`/producto/${codigo}`}
-      >
+      <NavLink className="col-span-2 sm:col-span-1 lg:col-span-1 s:w-full" to={`/producto/${codigo}`}>
         <motion.div {...onViewFadeInBottom()}>
-          <Card className="aspect-square h-[300px] w-full overflow-visible  bg-white shadow-xl transition hover:scale-105">
+          <Card className="h-[300px] w-full bg-white shadow-xl transition hover:scale-105">
             <CardBody className="flex h-[150px] items-center justify-center overflow-hidden  p-0">
               <Swiper
                 loop={pathfoto.length > 1 ? true : false}
@@ -34,17 +31,17 @@ export function ProductCard({ description, codigo, pathfoto }) {
                 flipEffect={{ slideShadows: false }}
                 modules={[Autoplay, EffectFlip]}
                 effect="flip"
-                className="mx-auto !flex w-[90%]  !items-center !justify-center "
+                className="h-full w-full"
               >
                 {pathfoto?.length ? (
                   pathfoto.map((path, i) => {
                     return (
-                      <SwiperSlide className="w-fit" key={i}>
-                        <Image
-                          loading="lazy"
+                      <SwiperSlide className="h-full w-full bg-white" key={i}>
+                        <img
+                          loading="eager"
                           src={path ? path : assets.logos.logoBlack}
                           alt={`product-image-${description}`}
-                          className="!my-auto mx-auto !max-h-full w-full max-w-[250px]  bg-white object-cover"
+                          className="mx-auto w-[300px]  bg-white"
                         />
                       </SwiperSlide>
                     );
