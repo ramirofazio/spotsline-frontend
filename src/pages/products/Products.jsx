@@ -66,7 +66,7 @@ export function Products() {
           </ul>
         </article>
 
-        <section className="max-w-screen mx-auto my-10 w-full gap-3 overflow-hidden lg:grid-cols-3 xl:grid-cols-4">
+        <section className="max-w-screen mx-auto my-10 w-full gap-3 lg:grid-cols-3 xl:grid-cols-4">
           <Heading categories={categories} />
           <div
             className={twMerge(

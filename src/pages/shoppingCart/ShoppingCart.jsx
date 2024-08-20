@@ -91,7 +91,7 @@ export default function ShoppingCart() {
   }, [managedClient]);
 
   return (
-    <main className="h-screen text-center">
+    <main className="min-h-screen text-center">
       <section className="relative flex flex-col items-center gap-10 p-6">
         {web_role === Number(import.meta.env.VITE_USER_ROLE) && (
           <motion.h1 {...fadeInTop()} className="text-3xl font-bold text-dark drop-shadow-xl">
