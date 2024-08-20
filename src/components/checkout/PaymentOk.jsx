@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { APISpot } from "src/api";
+import { deleteOfStorage } from "src/utils/localStorage";
 
 export function PaymentOk({ transactionId }) {
   const { id } = useSelector((state) => state.cart);
@@ -14,6 +15,7 @@ export function PaymentOk({ transactionId }) {
     onOpen();
     //? Elimino el shopping cart de la DB
     APISpot.cart.deleteCart(id, false);
+    deleteOfStorage("shoppingCart");
   }, []);
 
   return (
@@ -23,10 +25,10 @@ export function PaymentOk({ transactionId }) {
       title={"¡GRACIAS POR TU COMPRA!"}
       description={"Si llegaste hasta acá porque registramos tu pedido con EXITO"}
     >
-      = <i className="ri-close-line icons absolute right-0 top-0 text-xl text-background" onClick={() => onClose()} />
+      <i className="ri-close-line icons absolute right-0 top-0 text-xl text-background" onClick={() => onClose()} />
       <main className="z-20 flex flex-col items-center gap-6">
         <p className="font-secondary text-sm text-background">
-          TU ID DE TRANSACCION ES <strong className="icons text-primary underline">#{transactionId}</strong>
+          Estamos validando tu pedido y nos contactaremos a la brevedad para confirmarlo
         </p>
 
         <i className="ri-checkbox-circle-fill mx-auto animate-pulse text-7xl text-green-600" />

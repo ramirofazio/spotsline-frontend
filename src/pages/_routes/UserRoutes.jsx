@@ -10,6 +10,7 @@ import { actionsAuth } from "src/redux/reducers";
 import { useDebouncedCallback } from "use-debounce";
 import Footer from "src/components/navs/Footer";
 import Spinner from "src/components/Spinner";
+import Success from "../success/Success";
 const CurrentAccount = lazy(() => import("../user/CurrentAccount"));
 const NavBar = lazy(() => import("components/navs/NavBar.jsx"));
 const Profile = lazy(() => import("pages/user/Profile").then((module) => ({ default: module.Profile })));
@@ -74,6 +75,7 @@ export const userRoutesPaths = [
       },
 
       { path: "/carrito", element: <ShoppingCart /> },
+      { path: "/success", element: <Success /> },
     ],
   },
 ];

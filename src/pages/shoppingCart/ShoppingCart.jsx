@@ -9,7 +9,6 @@ import { DarkModal, DefaultButton } from "src/components";
 import { actionsShoppingCart } from "src/redux/reducers";
 import { onViewFadeIn, onViewFadeInBottom, fadeInTop, onViewZoomIn } from "src/styles/framerVariants";
 import { formatPrices } from "src/utils";
-import { saveInStorage } from "src/utils/localStorage";
 import { useDebouncedCallback } from "use-debounce";
 
 const MAX_AMOUNT = 15;
@@ -290,6 +289,8 @@ function PickDateModal({ isOpen, onOpenChange, onClose, items, coupon, discount 
   const [description, setDescription] = useState("");
 
   const handleCreateCheckout = async () => {
+    console.log("entre");
+
     if (date === "") {
       toast.error("Debe seleccionar la fecha de entrega");
       setError(true);
@@ -308,13 +309,10 @@ function PickDateModal({ isOpen, onOpenChange, onClose, items, coupon, discount 
         deliveryDate: new Date(date).toISOString(),
       };
 
-      //TODO ACA HAY QUE REFACTORIZAR Y CREAR EL PEDIDO DE TODAS FORMAS. ANALIZAR RUTAS DE WEBHOOK MOBBEX
-      saveInStorage("orderBody", body);
+      const status = await APISpot.checkout.createNewOrder(body);
 
-      const res = await APISpot.checkout.create(body);
-
-      if (res) {
-        window.location.replace(res);
+      if (status === 201) {
+        window.location.replace("/success");
       }
     } catch (e) {
       console.log(e);

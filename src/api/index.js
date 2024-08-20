@@ -165,6 +165,10 @@ export const APISpot = {
     },
   },
   checkout: {
+    createNewOrder: async (body) => {
+      const res = await BASE_API.post(`/${route.ORDERS}/create-new-order`, body);
+      return res.status;
+    },
     create: async (body) => {
       const res = await BASE_API.post(`/${route.CHECKOUT}/checkout`, body);
       return res.data;
