@@ -110,8 +110,13 @@ export const APISpot = {
   },
   auth: {
     jwtAutoSignIn: async (body) => {
-      const res = await BASE_API.post(`/${route.AUTH}/jwt-auto-sign-in`, body);
-      return res.data;
+      try {
+        const res = await BASE_API.post(`/${route.AUTH}/jwt-auto-sign-in`, body);
+        return res.data;
+      } catch (e) {
+        console.log(e);
+        localStorage.clear();
+      }
     },
     signIn: async (body) => {
       const res = await BASE_API.post(`/${route.AUTH}/sign-in`, body);
