@@ -2,11 +2,12 @@ import { DarkModal, DefaultButton } from "..";
 import { useDisclosure } from "@nextui-org/react";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { APISpot } from "src/api";
 import { deleteOfStorage } from "src/utils/localStorage";
 
-export function PaymentOk({ transactionId }) {
+export function PaymentOk() {
+  const navigate = useNavigate();
   const { id } = useSelector((state) => state.cart);
 
   const { onOpen, isOpen, onOpenChange, onClose } = useDisclosure();
@@ -17,6 +18,12 @@ export function PaymentOk({ transactionId }) {
     APISpot.cart.deleteCart(id, false);
     deleteOfStorage("shoppingCart");
   }, []);
+
+  useEffect(() => {
+    if (!isOpen) {
+      navigate("/");
+    }
+  }, [onOpenChange]);
 
   return (
     <DarkModal
