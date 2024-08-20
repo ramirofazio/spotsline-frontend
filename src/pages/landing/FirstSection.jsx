@@ -15,6 +15,7 @@ export default function FirstSection() {
 
       <div className="grid h-full w-full place-content-center place-items-center bg-black/30 backdrop-blur-md">
         <AwsImage
+          priority
           type="lights"
           identify={"hole7"}
           className="absolute inset-x-0 top-0 mx-auto min-h-[200px] w-screen !max-w-[700px] object-cover drop-shadow-xl sm:min-h-[250px]"
@@ -26,7 +27,7 @@ export default function FirstSection() {
           VER NUESTROS PRODUCTOS
         </DefaultButton>
         <div className="absolute -left-10 bottom-20 md:-left-20 xl:-left-24">
-          <AwsImage type="lights" identify={"cinema3"} className="w-28 md:w-52 xl:w-60" />
+          <AwsImage priority type="lights" identify={"cinema3"} className="w-28 md:w-52 xl:w-60" />
         </div>
         <h3 className="absolute bottom-10 text-center font-secondary tracking-wider text-white xl:text-2xl">
           LO QUE HACEMOS ILUMINA <br />
