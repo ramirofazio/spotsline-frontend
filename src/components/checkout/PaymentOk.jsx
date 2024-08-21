@@ -21,7 +21,9 @@ export function PaymentOk() {
 
   useEffect(() => {
     if (!isOpen) {
-      navigate("/");
+      setTimeout(() => {
+        navigate("/");
+      }, 10000);
     }
   }, [onOpenChange]);
 
